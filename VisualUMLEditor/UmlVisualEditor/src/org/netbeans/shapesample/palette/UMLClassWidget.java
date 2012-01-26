@@ -22,6 +22,7 @@ import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.*;
+import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 
 import java.awt.*;
@@ -29,7 +30,8 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.action.WidgetAction;
-
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 /**
  * @author David Kaspar
  */
@@ -37,11 +39,19 @@ public class UMLClassWidget extends Widget {
 
     private static final Image IMAGE_CLASS = Utilities.loadImage("org/netbeans/shapesample/palette/class.gif"); // NOI18N
     private static final Image IMAGE_MEMBER = Utilities.loadImage("org/netbeans/shapesample/palette/variablePublic.gif"); // NOI18N
+    
     private static final Image MethodDefaultImage = Utilities.loadImage("org/netbeans/shapesample/palette/MethodDefault.jpg"); // NOI18N
-    private static final Image MethodPublic_Image = Utilities.loadImage("org/netbeans/shapesample/palette/MethodPublic.jpg"); // NOI18N
+    private static final Image MethodPublicImage = Utilities.loadImage("org/netbeans/shapesample/palette/MethodPublic.jpg"); // NOI18N
     private static final Image MethodPrivateImage = Utilities.loadImage("org/netbeans/shapesample/palette/MethodPrivate.jpg"); // NOI18N
-    private static final Image MethodProtected_Image = Utilities.loadImage("org/netbeans/shapesample/palette/MethodProtected.jpg"); // NOI18N
+    private static final Image MethodProtectedImage = Utilities.loadImage("org/netbeans/shapesample/palette/MethodProtected.jpg"); // NOI18N
+    private static final Image AtributeDefaultImage = Utilities.loadImage("org/netbeans/shapesample/palette/AtributeDefault.jpg"); // NOI18N
+    private static final Image AtributePublicImage = Utilities.loadImage("org/netbeans/shapesample/palette/AtributePublic.jpg"); // NOI18N
+    private static final Image AtributePrivateImage = Utilities.loadImage("org/netbeans/shapesample/palette/AtributePrivate.jpg"); // NOI18N
+    private static final Image AtributeProtectedImage = Utilities.loadImage("org/netbeans/shapesample/palette/AtributeProtected.jpg"); // NOI18N
 
+    
+    
+    
     private class pickFinalKeywordForMethod implements SelectProvider {
 
         private int currentFinal = 1;
@@ -201,8 +211,7 @@ public class UMLClassWidget extends Widget {
         }
     }
 
-    final void a() {
-    }
+
 
     private ImageWidget getNextAtributeAccessModifier(int n) {
         ImageWidget Image = new ImageWidget(getScene());
@@ -211,24 +220,20 @@ public class UMLClassWidget extends Widget {
                 Image.setImage(AtributeDefaultImage);
                 break;
             case 2:
-                Image.setImage(AtributePublic_Image);
+                Image.setImage(AtributePublicImage);
                 break;
             case 3:
                 Image.setImage(AtributePrivateImage);
                 break;
             case 4:
-                Image.setImage(AtributeProtected_Image);
+                Image.setImage(AtributeProtectedImage);
                 break;
         }
 
 
         return Image;
     }
-    private static final Image AtributeDefaultImage = Utilities.loadImage("org/netbeans/shapesample/palette/MethodDefault.jpg"); // NOI18N
-    private static final Image AtributePublic_Image = Utilities.loadImage("org/netbeans/shapesample/palette/MethodPublic.jpg"); // NOI18N
-    private static final Image AtributePrivateImage = Utilities.loadImage("org/netbeans/shapesample/palette/MethodPrivate.jpg"); // NOI18N
-    private static final Image AtributeProtected_Image = Utilities.loadImage("org/netbeans/shapesample/palette/MethodProtected.jpg"); // NOI18N
-
+   
     private class pickMethodModifier implements SelectProvider {
 
         private int currentImage = 1;
@@ -262,17 +267,19 @@ public class UMLClassWidget extends Widget {
     private ImageWidget getNextMethodAccessModifier(int n) {
         ImageWidget Image = new ImageWidget(getScene());
         switch (n) {
+
+            
             case 1:
                 Image.setImage(MethodDefaultImage);
                 break;
             case 2:
-                Image.setImage(MethodPublic_Image);
+                Image.setImage(MethodPublicImage);
                 break;
             case 3:
                 Image.setImage(MethodPrivateImage);
                 break;
             case 4:
-                Image.setImage(MethodProtected_Image);
+                Image.setImage(MethodProtectedImage);
                 break;
         }
 
@@ -297,9 +304,30 @@ public class UMLClassWidget extends Widget {
 
         @Override
         public void select(Widget widget, Point point, boolean bln) {
-
+            removeOperation(widget.getParentWidget());
             addOperation(createOperation("metoda "));
-
+            addOperation(createAddOperation());
+            
+            
+            
+            
+            
+            
+             Robot robot=null;
+            try {
+                robot = new Robot();
+            } catch (AWTException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+           
+          robot.mousePress(InputEvent.BUTTON1_MASK);
+          robot.mouseRelease( InputEvent.BUTTON1_MASK);
+          robot.mousePress(InputEvent.BUTTON1_MASK);
+          robot.mouseRelease( InputEvent.BUTTON1_MASK);
+            
+            
+            
+            
         }
     }
 
@@ -320,8 +348,24 @@ public class UMLClassWidget extends Widget {
 
         @Override
         public void select(Widget widget, Point point, boolean bln) {
+            removeMember(widget.getParentWidget());
+          
+            Widget w = createMember("atribut");
+            addMember(w);
+            addMember(createAddMember());
+        
+              Robot robot=null;
+            try {
+                robot = new Robot();
+            } catch (AWTException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+           
+          robot.mousePress(InputEvent.BUTTON1_MASK);
+          robot.mouseRelease(InputEvent.BUTTON1_MASK);
+          robot.mousePress(InputEvent.BUTTON1_MASK);
+          robot.mouseRelease(InputEvent.BUTTON1_MASK);
 
-            addMember(createMember("atribut"));
         }
     }
 
@@ -380,7 +424,9 @@ public class UMLClassWidget extends Widget {
     private WidgetAction deleteOperation = ActionFactory.createSelectAction(new deleteOperation());
     private WidgetAction addMember = ActionFactory.createSelectAction(new addMember());
     private WidgetAction addOperation = ActionFactory.createSelectAction(new addOperation());
-    private WidgetAction pickModifier = ActionFactory.createSelectAction(new pickMethodModifier());
+    private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new pickMethodModifier());
+    private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new pickAtributeModifier());
+    
     private WidgetAction pickStaticKeywordForAtribute = ActionFactory.createSelectAction(new pickStaticKeywordForAtribute());
     private WidgetAction pickFinalKeywordForAtribute = ActionFactory.createSelectAction(new pickFinalKeywordForAtribute());
     private WidgetAction pickStaticKeywordForMethod = ActionFactory.createSelectAction(new pickStaticKeywordForMethod());
@@ -420,10 +466,6 @@ public class UMLClassWidget extends Widget {
         classWidget.addChild(classImage);
 
         className = new LabelWidget(scene);
-        // org.netbeans.api.visual.widget.Bir
-        // className = new TextField(scene);
-        // className.setEnabled(true);
-        // className = new LabelTextFieldEditor();
         className.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         classWidget.addChild(className);
         addChild(classWidget);
@@ -484,13 +526,7 @@ public class UMLClassWidget extends Widget {
         return null;
     }
 
-    Widget w1() {
-        return null;
-    }
-
-    private Widget w2() {
-        return null;
-    }
+  
 
     private Widget createAddOperation() {
         Scene scene = getScene();
@@ -534,11 +570,6 @@ public class UMLClassWidget extends Widget {
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
 
-
-
-
-
-
         return widget;
     }
 
@@ -548,7 +579,7 @@ public class UMLClassWidget extends Widget {
 
         ImageWidget DefaultImage = new ImageWidget(scene);
         DefaultImage.setImage(AtributeDefaultImage);
-        DefaultImage.getActions().addAction(pickModifier);
+        DefaultImage.getActions().addAction(pickAtributeModifier);
         w.addChild(DefaultImage);
 
 
@@ -562,7 +593,7 @@ public class UMLClassWidget extends Widget {
 
         ImageWidget DefaultImage = new ImageWidget(scene);
         DefaultImage.setImage(MethodDefaultImage);
-        DefaultImage.getActions().addAction(pickModifier);
+        DefaultImage.getActions().addAction(pickMethodModifier);
         w.addChild(DefaultImage);
 
 
