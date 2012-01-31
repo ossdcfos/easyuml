@@ -8,7 +8,7 @@
  *
  * When distributing Covered Code, include this CDDL Header Notice in each file
  * and include the License file at http://www.netbeans.org/cddl.txt.
- * If applicable, add the following below the CDDL Header, with the fields
+ * If applicable, add the following below the CDDL Header, with the fieldsWidget
  * enclosed by brackets [] replaced by your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  *
@@ -48,9 +48,216 @@ public class UMLClassWidget extends Widget {
     private static final Image AtributePublicImage = Utilities.loadImage("org/netbeans/shapesample/palette/AtributePublic.jpg"); // NOI18N
     private static final Image AtributePrivateImage = Utilities.loadImage("org/netbeans/shapesample/palette/AtributePrivate.jpg"); // NOI18N
     private static final Image AtributeProtectedImage = Utilities.loadImage("org/netbeans/shapesample/palette/AtributeProtected.jpg"); // NOI18N
+    
+    private LabelWidget classNameWidget;
+    private Widget fieldsWidget;
+    private Widget methodsWidget;
+   
 
+    private WidgetAction addFieldAction = ActionFactory.createSelectAction(new AddFieldAction());
+    private WidgetAction addMethodAction = ActionFactory.createSelectAction(new AddMethodAction());
+    private WidgetAction deleteFieldAction = ActionFactory.createSelectAction(new DeleteFieldAction());
+    private WidgetAction deleteMethodAction = ActionFactory.createSelectAction(new DeleteMethodAction());
+    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditor());
+
+    private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new pickMethodModifier());
+    private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new pickAtributeModifier());
+    private WidgetAction pickStaticKeywordForAtribute = ActionFactory.createSelectAction(new pickStaticKeywordForAtribute());
+    private WidgetAction pickFinalKeywordForAtribute = ActionFactory.createSelectAction(new pickFinalKeywordForAtribute());
+    private WidgetAction pickStaticKeywordForMethod = ActionFactory.createSelectAction(new pickStaticKeywordForMethod());
+    private WidgetAction pickFinalKeywordForMethod = ActionFactory.createSelectAction(new pickFinalKeywordForMethod());
+
+    private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);    
     
-    
+    public UMLClassWidget(Scene scene) {
+        super(scene);
+        setLayout(LayoutFactory.createVerticalFlowLayout());
+        setBorder(BorderFactory.createLineBorder());
+        setOpaque(true);
+        setCheckClipping(true);
+
+        Widget classWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
+        classWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+        classWidget.setBorder(BORDER_4);
+
+        ImageWidget classImage = new ImageWidget(scene);
+        classImage.setImage(IMAGE_CLASS);
+        classWidget.addChild(classImage);
+
+        classNameWidget = new LabelWidget(scene);
+        classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
+        classWidget.addChild(classNameWidget);
+        addChild(classWidget);
+        classNameWidget.getActions().addAction(editorAction);
+        // WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditor());
+
+        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+
+        fieldsWidget = new Widget(scene);
+        fieldsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
+        fieldsWidget.setOpaque(false);
+        fieldsWidget.setBorder(BORDER_4);
+        LabelWidget memberName = new LabelWidget(scene);
+        fieldsWidget.addChild(memberName);
+        addChild(fieldsWidget);
+
+        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+
+        methodsWidget = new Widget(scene);
+        methodsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
+        methodsWidget.setOpaque(false);
+        methodsWidget.setBorder(BORDER_4);
+        LabelWidget operationName = new LabelWidget(scene);
+        fieldsWidget.addChild(operationName);
+        addChild(methodsWidget);
+
+        addField(createAddFieldActionWidget());
+        addMethod(createAddMethodActionWidget());
+    }
+
+    public String getClassName() {
+        return classNameWidget.getLabel();
+    }
+
+    public void setClassName(String className) {
+        this.classNameWidget.setLabel(className);
+
+    }
+
+    public Widget createAddFieldActionWidget() {
+        Scene scene = getScene();
+        Widget widget = new Widget(scene);
+        widget.setLayout(LayoutFactory.createAbsoluteLayout());
+        LabelWidget labelWidget = new LabelWidget(scene);
+        labelWidget.setLabel("+ add field");
+        labelWidget.setForeground(Color.GRAY);
+        labelWidget.setAlignment(LabelWidget.Alignment.CENTER);
+        labelWidget.getActions().addAction(addFieldAction);
+        widget.addChild(labelWidget);
+        return widget;
+    }
+
+
+    private Widget createAddMethodActionWidget() {
+        Scene scene = getScene();
+        Widget widget = new Widget(scene);
+        widget.setLayout(LayoutFactory.createAbsoluteLayout());
+        LabelWidget labelWidget = new LabelWidget(scene);
+        labelWidget.setLabel("+ add method");
+        labelWidget.setForeground(Color.GRAY);
+        labelWidget.setAlignment(LabelWidget.Alignment.CENTER);
+        labelWidget.getActions().addAction(addMethodAction);
+        widget.addChild(labelWidget);
+        return widget;
+    }
+
+    public Widget createFieldWidget(String member) {
+        Scene scene = getScene();
+        Widget widget = new Widget(scene);
+        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+
+        LabelWidget labelMinus = new LabelWidget(scene);
+        labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
+        labelMinus.setLabel("-");
+        labelMinus.getActions().addAction(deleteFieldAction);
+        widget.addChild(labelMinus);
+
+        widget.addChild(createAtributeModifierPicker(scene));
+
+        LabelWidget staticKeyword = new LabelWidget(scene);
+        staticKeyword.setLabel(" _");
+        staticKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
+        widget.addChild(staticKeyword);
+        staticKeyword.getActions().addAction(pickStaticKeywordForAtribute);
+
+        LabelWidget finalKeyword = new LabelWidget(scene);
+        finalKeyword.setLabel(" _ ");
+        finalKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
+        widget.addChild(finalKeyword);
+        finalKeyword.getActions().addAction(pickFinalKeywordForAtribute);
+
+        LabelWidget labelWidget = new LabelWidget(scene);
+        labelWidget.setLabel(member);
+        widget.addChild(labelWidget);
+        labelWidget.getActions().addAction(editorAction);
+
+        return widget;
+    }
+
+    private Widget createAtributeModifierPicker(Scene scene) {
+        Widget w = new Widget(scene);
+        w.setLayout(LayoutFactory.createVerticalFlowLayout());
+
+        ImageWidget DefaultImage = new ImageWidget(scene);
+        DefaultImage.setImage(AtributeDefaultImage);
+        DefaultImage.getActions().addAction(pickAtributeModifier);
+        w.addChild(DefaultImage);
+        return w;
+    }
+
+    private Widget createMethodModifierPicker(Scene scene) {
+        Widget w = new Widget(scene);
+        w.setLayout(LayoutFactory.createVerticalFlowLayout());
+        ImageWidget DefaultImage = new ImageWidget(scene);
+        DefaultImage.setImage(MethodDefaultImage);
+        DefaultImage.getActions().addAction(pickMethodModifier);
+        w.addChild(DefaultImage);
+        return w;
+    }
+
+    public Widget createMethodWidget(String operation) {
+        Scene scene = getScene();
+        Widget widget = new Widget(scene);
+        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+
+        LabelWidget labelMinus = new LabelWidget(scene);
+        labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
+        labelMinus.setLabel("-");
+        labelMinus.getActions().addAction(deleteMethodAction);
+        widget.addChild(labelMinus);
+
+
+        widget.addChild(createMethodModifierPicker(scene));
+
+        LabelWidget staticKeyword = new LabelWidget(scene);
+        staticKeyword.setLabel(" _");
+        staticKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
+        widget.addChild(staticKeyword);
+        staticKeyword.getActions().addAction(pickStaticKeywordForMethod);
+
+        LabelWidget finalKeyword = new LabelWidget(scene);
+        finalKeyword.setLabel(" _ ");
+        finalKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
+        widget.addChild(finalKeyword);
+        finalKeyword.getActions().addAction(pickFinalKeywordForMethod);
+
+        LabelWidget labelWidget = new LabelWidget(scene);
+        labelWidget.setLabel(operation);
+        widget.addChild(labelWidget);
+        labelWidget.getActions().addAction(editorAction);
+
+
+
+        return widget;
+    }
+
+    public void addField(Widget memberWidget) {
+        fieldsWidget.addChild(memberWidget);
+    }
+
+    public void removeField(Widget memberWidget) {
+        fieldsWidget.removeChild(memberWidget);
+    }
+
+    private void addMethod(Widget operationWidget) {
+        methodsWidget.addChild(operationWidget);
+    }
+
+    public void removeMethod(Widget operationWidget) {
+        methodsWidget.removeChild(operationWidget);
+    }
+
+   
     
     private class pickFinalKeywordForMethod implements SelectProvider {
 
@@ -287,9 +494,9 @@ public class UMLClassWidget extends Widget {
         return Image;
     }
 
-    private class addOperation implements SelectProvider {
+    private class AddMethodAction implements SelectProvider {
 
-        public addOperation() {
+        public AddMethodAction() {
         }
 
         @Override
@@ -304,9 +511,9 @@ public class UMLClassWidget extends Widget {
 
         @Override
         public void select(Widget widget, Point point, boolean bln) {
-            removeOperation(widget.getParentWidget());
-            addOperation(createOperation("metoda "));
-            addOperation(createAddOperation());
+            removeMethod(widget.getParentWidget());
+            addMethod(createMethodWidget("metoda "));
+            addMethod(createAddMethodActionWidget());
             
             
             
@@ -331,9 +538,9 @@ public class UMLClassWidget extends Widget {
         }
     }
 
-    private class addMember implements SelectProvider {
+    private class AddFieldAction implements SelectProvider {
 
-        public addMember() {
+        public AddFieldAction() {
         }
 
         @Override
@@ -348,11 +555,11 @@ public class UMLClassWidget extends Widget {
 
         @Override
         public void select(Widget widget, Point point, boolean bln) {
-            removeMember(widget.getParentWidget());
+            removeField(widget.getParentWidget());
           
-            Widget w = createMember("atribut");
-            addMember(w);
-            addMember(createAddMember());
+            Widget w = createFieldWidget("atribut");
+            addField(w);
+            addField(createAddFieldActionWidget());
         
               Robot robot=null;
             try {
@@ -369,9 +576,9 @@ public class UMLClassWidget extends Widget {
         }
     }
 
-    private class deleteOperation implements SelectProvider {
+    private class DeleteMethodAction implements SelectProvider {
 
-        public deleteOperation() {
+        public DeleteMethodAction() {
         }
 
         @Override
@@ -386,13 +593,13 @@ public class UMLClassWidget extends Widget {
 
         @Override
         public void select(Widget widget, Point point, boolean bln) {
-            removeOperation(widget.getParentWidget());
+            removeMethod(widget.getParentWidget());
         }
     }
 
-    private class deleteMember implements SelectProvider {
+    private class DeleteFieldAction implements SelectProvider {
 
-        public deleteMember() {
+        public DeleteFieldAction() {
         }
 
         @Override
@@ -409,29 +616,11 @@ public class UMLClassWidget extends Widget {
 
         @Override
         public void select(Widget widget, Point point, boolean bln) {
-            removeMember(widget.getParentWidget());
+            removeField(widget.getParentWidget());
 
         }
     }
-    private LabelWidget className;
-    private LabelWidget memberName;
-    private LabelWidget operationName;
-    private Widget members;
-    private Widget operations;
-    private static final Border BORDER_4 = BorderFactory.createEmptyBorder(4);
-    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditor());
-    private WidgetAction deleteMember = ActionFactory.createSelectAction(new deleteMember());
-    private WidgetAction deleteOperation = ActionFactory.createSelectAction(new deleteOperation());
-    private WidgetAction addMember = ActionFactory.createSelectAction(new addMember());
-    private WidgetAction addOperation = ActionFactory.createSelectAction(new addOperation());
-    private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new pickMethodModifier());
-    private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new pickAtributeModifier());
     
-    private WidgetAction pickStaticKeywordForAtribute = ActionFactory.createSelectAction(new pickStaticKeywordForAtribute());
-    private WidgetAction pickFinalKeywordForAtribute = ActionFactory.createSelectAction(new pickFinalKeywordForAtribute());
-    private WidgetAction pickStaticKeywordForMethod = ActionFactory.createSelectAction(new pickStaticKeywordForMethod());
-    private WidgetAction pickFinalKeywordForMethod = ActionFactory.createSelectAction(new pickFinalKeywordForMethod());
-
     private class LabelTextFieldEditor implements TextFieldInplaceEditor {
 
         @Override
@@ -448,216 +637,6 @@ public class UMLClassWidget extends Widget {
         public void setText(Widget widget, String text) {
             ((LabelWidget) widget).setLabel(text);
         }
-    }
-
-    public UMLClassWidget(Scene scene) {
-        super(scene);
-        setLayout(LayoutFactory.createVerticalFlowLayout());
-        setBorder(BorderFactory.createLineBorder());
-        setOpaque(true);
-        setCheckClipping(true);
-
-        Widget classWidget = new Widget(scene);
-        classWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-        classWidget.setBorder(BORDER_4);
-
-        ImageWidget classImage = new ImageWidget(scene);
-        classImage.setImage(IMAGE_CLASS);
-        classWidget.addChild(classImage);
-
-        className = new LabelWidget(scene);
-        className.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-        classWidget.addChild(className);
-        addChild(classWidget);
-        className.getActions().addAction(editorAction);
-        // WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditor());
-
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-
-        members = new Widget(scene);
-        members.setLayout(LayoutFactory.createVerticalFlowLayout());
-        members.setOpaque(false);
-        members.setBorder(BORDER_4);
-        memberName = new LabelWidget(scene);
-        members.addChild(memberName);
-        addChild(members);
-
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-
-        operations = new Widget(scene);
-        operations.setLayout(LayoutFactory.createVerticalFlowLayout());
-        operations.setOpaque(false);
-        operations.setBorder(BORDER_4);
-        operationName = new LabelWidget(scene);
-        members.addChild(operationName);
-        addChild(operations);
-
-
-
-
-
-
-        addMember(createAddMember());
-        addOperation(createAddOperation());
-    }
-
-    public String getClassName() {
-        return className.getLabel();
-    }
-
-    public void setClassName(String className) {
-        this.className.setLabel(className);
-
-    }
-
-    public Widget createAddMember() {
-        Scene scene = getScene();
-        Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createAbsoluteLayout());
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel("+ add member");
-        labelWidget.setAlignment(LabelWidget.Alignment.CENTER);
-        labelWidget.getActions().addAction(addMember);
-        widget.addChild(labelWidget);
-        return widget;
-    }
-
-    protected Widget w() {
-        return null;
-    }
-
-  
-
-    private Widget createAddOperation() {
-        Scene scene = getScene();
-        Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createAbsoluteLayout());
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel("+ add operation");
-        labelWidget.setAlignment(LabelWidget.Alignment.CENTER);
-        labelWidget.getActions().addAction(addOperation);
-        widget.addChild(labelWidget);
-        return widget;
-    }
-
-    public Widget createMember(String member) {
-        Scene scene = getScene();
-        Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
-        LabelWidget labelMinus = new LabelWidget(scene);
-        labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-        labelMinus.setLabel("-");
-        labelMinus.getActions().addAction(deleteMember);
-        widget.addChild(labelMinus);
-
-        widget.addChild(createAtributeModifierPicker(scene));
-
-        LabelWidget staticKeyword = new LabelWidget(scene);
-        staticKeyword.setLabel(" _");
-        staticKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-        widget.addChild(staticKeyword);
-        staticKeyword.getActions().addAction(pickStaticKeywordForAtribute);
-
-        LabelWidget finalKeyword = new LabelWidget(scene);
-        finalKeyword.setLabel(" _ ");
-        finalKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-        widget.addChild(finalKeyword);
-        finalKeyword.getActions().addAction(pickFinalKeywordForAtribute);
-
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(member);
-        widget.addChild(labelWidget);
-        labelWidget.getActions().addAction(editorAction);
-
-        return widget;
-    }
-
-    private Widget createAtributeModifierPicker(Scene scene) {
-        Widget w = new Widget(scene);
-        w.setLayout(LayoutFactory.createVerticalFlowLayout());
-
-        ImageWidget DefaultImage = new ImageWidget(scene);
-        DefaultImage.setImage(AtributeDefaultImage);
-        DefaultImage.getActions().addAction(pickAtributeModifier);
-        w.addChild(DefaultImage);
-
-
-
-        return w;
-    }
-
-    private Widget createMethodModifierPicker(Scene scene) {
-        Widget w = new Widget(scene);
-        w.setLayout(LayoutFactory.createVerticalFlowLayout());
-
-        ImageWidget DefaultImage = new ImageWidget(scene);
-        DefaultImage.setImage(MethodDefaultImage);
-        DefaultImage.getActions().addAction(pickMethodModifier);
-        w.addChild(DefaultImage);
-
-
-
-        return w;
-    }
-
-    public Widget createOperation(String operation) {
-        Scene scene = getScene();
-        Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
-        LabelWidget labelMinus = new LabelWidget(scene);
-        labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-        labelMinus.setLabel("-");
-        labelMinus.getActions().addAction(deleteOperation);
-        widget.addChild(labelMinus);
-
-
-        widget.addChild(createMethodModifierPicker(scene));
-
-        LabelWidget staticKeyword = new LabelWidget(scene);
-        staticKeyword.setLabel(" _");
-        staticKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-        widget.addChild(staticKeyword);
-        staticKeyword.getActions().addAction(pickStaticKeywordForMethod);
-
-        LabelWidget finalKeyword = new LabelWidget(scene);
-        finalKeyword.setLabel(" _ ");
-        finalKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-        widget.addChild(finalKeyword);
-        finalKeyword.getActions().addAction(pickFinalKeywordForMethod);
-
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(operation);
-        widget.addChild(labelWidget);
-        labelWidget.getActions().addAction(editorAction);
-
-
-
-        return widget;
-    }
-
-    public void addMember(Widget memberWidget) {
-        members.addChild(memberWidget);
-    }
-
-    public void removeMember(Widget memberWidget) {
-        members.removeChild(memberWidget);
-    }
-
-    private void addOperation(Widget operationWidget) {
-        operations.addChild(operationWidget);
-    }
-
-    public void removeOperation(Widget operationWidget) {
-        operations.removeChild(operationWidget);
-    }
-
-    public void setLabel(String text) {
-        setClassName(text);
-    }
-
-    public Object getLabelWidget() {
-        return className;
-    }
+    }    
+    
 }
