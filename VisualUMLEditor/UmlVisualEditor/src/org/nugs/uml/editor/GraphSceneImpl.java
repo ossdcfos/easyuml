@@ -123,9 +123,9 @@ public class GraphSceneImpl extends GraphScene<MyNode, String> {
         widget.setClassName(" Class 1");
 
 
-        //widget.addField(widget.createFieldWidget("member1"));
-        //widget.addField(widget.createFieldWidget("member2"));
-        //widget.addField(widget.createFieldWidget("member3"));
+        //widget.createAddFieldAction(widget.createFieldWidget("member1"));
+        //widget.createAddFieldAction(widget.createFieldWidget("member2"));
+        //widget.createAddFieldAction(widget.createFieldWidget("member3"));
 
 
         //widget.addOperation(widget.createMethodWidget("operation2"));
