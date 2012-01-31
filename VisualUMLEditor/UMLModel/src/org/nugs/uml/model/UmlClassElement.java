@@ -7,12 +7,12 @@ import java.util.HashMap;
  * @author zoran
  */
 public class UmlClassElement {
-    private HashMap <String, Attribute> attributes;
+    private HashMap <String, Field> fields;
     private HashMap <String, Method> methods;
     private String name;
 
     public UmlClassElement() {
-        attributes = new HashMap <String, Attribute>();
+        fields = new HashMap <String, Field>();
         methods = new HashMap <String, Method>();
     }
 
@@ -21,8 +21,8 @@ public class UmlClassElement {
         this.name = name;
     }
 
-    public HashMap<String, Attribute> getAttributes() {
-        return attributes;
+    public HashMap<String, Field> getFields() {
+        return fields;
     }
 
     public HashMap<String, Method> getMethods() {
@@ -37,16 +37,16 @@ public class UmlClassElement {
         this.name = name;
     }
 
-    public Attribute getAttribute(String name) {
-        return attributes.get(name);
+    public Field getAttribute(String name) {
+        return fields.get(name);
     }
     
-    public void addAttribute(Attribute attribute) {
-        attributes.put(attribute.getName(), attribute);
+    public void addAttribute(Field attribute) {
+        fields.put(attribute.getName(), attribute);
     }
     
     public void removeAttribute(String name) {
-        attributes.remove(name);
+        fields.remove(name);
     }
  
     public Method getMethod(String name) {
