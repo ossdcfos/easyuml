@@ -123,13 +123,13 @@ public class GraphSceneImpl extends GraphScene<MyNode, String> {
         widget.setClassName(" Class 1");
 
 
-        //widget.addMember(widget.createMember("member1"));
-        //widget.addMember(widget.createMember("member2"));
-        //widget.addMember(widget.createMember("member3"));
+        //widget.addField(widget.createFieldWidget("member1"));
+        //widget.addField(widget.createFieldWidget("member2"));
+        //widget.addField(widget.createFieldWidget("member3"));
 
 
-        //widget.addOperation(widget.createOperation("operation2"));
-        //widget.addOperation(widget.createOperation("operation3"));
+        //widget.addOperation(widget.createMethodWidget("operation2"));
+        //widget.addOperation(widget.createMethodWidget("operation3"));
 
         //double-click, the event is consumed while double-clicking only:
         //widget.getLabelWidget().getActions().addAction(editorAction);
