@@ -32,6 +32,7 @@ import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.action.WidgetAction;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import org.nugs.uml.editor.FieldWidget;
 /**
  * @author David Kaspar
  */
@@ -111,8 +112,8 @@ public class UMLClassWidget extends Widget {
         fieldsWidget.addChild(operationName);
         addChild(methodsWidget);
 
-        addField(createAddFieldActionWidget());
-        addMethod(createAddMethodActionWidget());
+        createAddFieldAction(createAddFieldActionWidget());
+        createAddMethodAction(createAddMethodActionWidget());
     }
 
     public String getClassName() {
@@ -151,37 +152,10 @@ public class UMLClassWidget extends Widget {
         return widget;
     }
 
-    public Widget createFieldWidget(String member) {
+    public Widget createFieldWidget(String fieldName) {
         Scene scene = getScene();
-        Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
-        LabelWidget labelMinus = new LabelWidget(scene);
-        labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-        labelMinus.setLabel("-");
-        labelMinus.getActions().addAction(deleteFieldAction);
-        widget.addChild(labelMinus);
-
-        widget.addChild(createAtributeModifierPicker(scene));
-
-        LabelWidget staticKeyword = new LabelWidget(scene);
-        staticKeyword.setLabel(" _");
-        staticKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-        widget.addChild(staticKeyword);
-        staticKeyword.getActions().addAction(pickStaticKeywordForAtribute);
-
-        LabelWidget finalKeyword = new LabelWidget(scene);
-        finalKeyword.setLabel(" _ ");
-        finalKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-        widget.addChild(finalKeyword);
-        finalKeyword.getActions().addAction(pickFinalKeywordForAtribute);
-
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(member);
-        widget.addChild(labelWidget);
-        labelWidget.getActions().addAction(editorAction);
-
-        return widget;
+        FieldWidget fieldWidget = new FieldWidget(fieldname, scene);
+        return fieldWidget;
     }
 
     private Widget createAtributeModifierPicker(Scene scene) {
@@ -205,7 +179,7 @@ public class UMLClassWidget extends Widget {
         return w;
     }
 
-    public Widget createMethodWidget(String operation) {
+    public Widget createMethodWidget(String methodName) {
         Scene scene = getScene();
         Widget widget = new Widget(scene);
         widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
@@ -215,7 +189,6 @@ public class UMLClassWidget extends Widget {
         labelMinus.setLabel("-");
         labelMinus.getActions().addAction(deleteMethodAction);
         widget.addChild(labelMinus);
-
 
         widget.addChild(createMethodModifierPicker(scene));
 
@@ -232,7 +205,7 @@ public class UMLClassWidget extends Widget {
         finalKeyword.getActions().addAction(pickFinalKeywordForMethod);
 
         LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(operation);
+        labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
 
@@ -241,7 +214,7 @@ public class UMLClassWidget extends Widget {
         return widget;
     }
 
-    public void addField(Widget memberWidget) {
+    public void createAddFieldAction(Widget memberWidget) {
         fieldsWidget.addChild(memberWidget);
     }
 
@@ -249,7 +222,7 @@ public class UMLClassWidget extends Widget {
         fieldsWidget.removeChild(memberWidget);
     }
 
-    private void addMethod(Widget operationWidget) {
+    private void createAddMethodAction(Widget operationWidget) {
         methodsWidget.addChild(operationWidget);
     }
 
@@ -512,13 +485,8 @@ public class UMLClassWidget extends Widget {
         @Override
         public void select(Widget widget, Point point, boolean bln) {
             removeMethod(widget.getParentWidget());
-            addMethod(createMethodWidget("metoda "));
-            addMethod(createAddMethodActionWidget());
-            
-            
-            
-            
-            
+            createAddMethodAction(createMethodWidget("metoda "));
+            createAddMethodAction(createAddMethodActionWidget());
             
              Robot robot=null;
             try {
@@ -558,8 +526,8 @@ public class UMLClassWidget extends Widget {
             removeField(widget.getParentWidget());
           
             Widget w = createFieldWidget("atribut");
-            addField(w);
-            addField(createAddFieldActionWidget());
+            createAddFieldAction(w);
+            createAddFieldAction(createAddFieldActionWidget());
         
               Robot robot=null;
             try {
