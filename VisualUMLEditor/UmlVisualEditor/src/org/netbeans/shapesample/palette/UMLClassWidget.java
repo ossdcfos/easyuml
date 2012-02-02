@@ -154,7 +154,36 @@ public class UMLClassWidget extends Widget {
 
     public Widget createFieldWidget(String fieldName) {
         Scene scene = getScene();
-        FieldWidget fieldWidget = new FieldWidget(fieldName, scene);
+       // FieldWidget fieldWidget = new FieldWidget(fieldName, scene);
+
+        Widget fieldWidget = new Widget(scene);
+        fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+
+        LabelWidget labelMinus = new LabelWidget(scene);
+        labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
+        labelMinus.setLabel("-");
+        labelMinus.getActions().addAction(deleteFieldAction);
+        fieldWidget.addChild(labelMinus);
+
+        fieldWidget.addChild(createAtributeModifierPicker(scene));
+
+        LabelWidget staticKeyword = new LabelWidget(scene);
+        staticKeyword.setLabel(" _");
+        staticKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
+        fieldWidget.addChild(staticKeyword);
+        staticKeyword.getActions().addAction(pickStaticKeywordForAtribute);
+
+        LabelWidget finalKeyword = new LabelWidget(scene);
+        finalKeyword.setLabel(" _ ");
+        finalKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
+        fieldWidget.addChild(finalKeyword);
+        finalKeyword.getActions().addAction(pickFinalKeywordForAtribute);
+
+        LabelWidget labelWidget = new LabelWidget(scene);
+        labelWidget.setLabel(fieldName);
+        labelWidget.getActions().addAction(editorAction);        
+        fieldWidget.addChild(labelWidget);
+        
         return fieldWidget;
     }
 

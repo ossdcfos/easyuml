@@ -17,8 +17,8 @@ public class FieldWidget extends Widget {
 
     public FieldWidget(String fieldName, Scene scene) {
         super(scene);
-        
-      // Widget widget = new Widget(scene);
+       /* 
+        Widget widget = new Widget(scene);
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
         LabelWidget labelMinus = new LabelWidget(scene);
@@ -45,7 +45,7 @@ public class FieldWidget extends Widget {
         labelWidget.setLabel(fieldName);
         this.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
-        
+        */
     }
     
 }
