@@ -154,7 +154,7 @@ public class UMLClassWidget extends Widget {
 
     public Widget createFieldWidget(String fieldName) {
         Scene scene = getScene();
-        FieldWidget fieldWidget = new FieldWidget(fieldname, scene);
+        FieldWidget fieldWidget = new FieldWidget(fieldName, scene);
         return fieldWidget;
     }
 
