@@ -10,19 +10,19 @@ public class Method {
     
     private String name;
     private String returnType;
-    private HashMap <String, Argument> arguments;
+    private HashMap <String, MethodArgument> arguments;
 
-    public Method(String name, String returnType, HashMap<String, Argument> arguments) {
+    public Method(String name, String returnType, HashMap<String, MethodArgument> arguments) {
         this.name = name;
         this.returnType = returnType;
         this.arguments = arguments;
     }
 
-    public HashMap<String, Argument> getArguments() {
+    public HashMap<String, MethodArgument> getArguments() {
         return arguments;
     }
 
-    public void setArguments(HashMap<String, Argument> arguments) {
+    public void setArguments(HashMap<String, MethodArgument> arguments) {
         this.arguments = arguments;
     }
 

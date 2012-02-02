@@ -1,11 +1,11 @@
 package org.nugs.uml.model;
 
 
-public class Argument {
+public class MethodArgument {
     String type;
     String name;
 
-    public Argument(String type, String name) {
+    public MethodArgument(String type, String name) {
         this.type = type;
         this.name = name;
     }
