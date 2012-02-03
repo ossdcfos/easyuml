@@ -83,7 +83,7 @@ public class UMLClassWidget extends Widget {
 
         ImageWidget classImage = new ImageWidget(scene);
         classImage.setImage(IMAGE_CLASS);
-        classWidget.addChild(classImage);
+        //classWidget.addChild(classImage);
 
         classNameWidget = new LabelWidget(scene);
         classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
@@ -133,7 +133,7 @@ public class UMLClassWidget extends Widget {
         labelWidget.setLabel("+ add field");
         labelWidget.setForeground(Color.GRAY);
         labelWidget.setAlignment(LabelWidget.Alignment.CENTER);
-        labelWidget.getActions().addAction(addFieldAction);
+        labelWidget.getActions().addAction(addFieldAction);       
         widget.addChild(labelWidget);
         return widget;
     }
