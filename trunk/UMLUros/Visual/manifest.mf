@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.uml.netbeans.visual
+OpenIDE-Module-Localizing-Bundle: org/uml/netbeans/visual/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
