@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><module codename="org.uml.model">
-    <module_version install_time="1352591408269" last="true" origin="installer" specification_version="1.0">
-        <file crc="167866226" name="config/Modules/org-uml-model.xml"/>
-        <file crc="4103937959" name="modules/org-uml-model.jar"/>
-    </module_version>
-</module>
