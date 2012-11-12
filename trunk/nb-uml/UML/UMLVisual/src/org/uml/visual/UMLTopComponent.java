@@ -43,24 +43,27 @@ public final class UMLTopComponent extends TopComponent {
     private UmlClassDiagram umlClassDiagram;
     private ClassDiagramScene classDiagramScene;
     private JScrollPane shapePane;
+
     public UMLTopComponent() {
         initComponents();
         setName(Bundle.CTL_UMLTopComponent());
         setToolTipText(Bundle.HINT_UMLTopComponent());
+        classDiagramScene = new ClassDiagramScene(umlClassDiagram = new UmlClassDiagram());     // Fresh scene with fresh diagram
 //        umlClassDiagram= new umlClassDiagram();
 //       
 //        NeuralNetworkGraphScene scene = new NeuralNetworkGraphScene(nnet);
 //        view = scene.createView();
 //
 //        viewPane.setViewportView(view);
-//        add(scene.createSatelliteView(), BorderLayout.WEST);
-        
-
+        shapePane = new JScrollPane();
+        shapePane.setViewportView(classDiagramScene.createView());
+        add(shapePane, BorderLayout.CENTER);
+        add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
         associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
     }
 
     public UMLTopComponent(UmlClassDiagram umlClassDiagram) {
-        this.umlClassDiagram = umlClassDiagram; 
+        this.umlClassDiagram = umlClassDiagram;
         // nemoj ulazni argument, kazi umlClassDiagram = new()ok
         // sta jos ne valja da izrefaktoris ovako :)
         //brate, aj vidi ovu paletu
@@ -72,22 +75,17 @@ public final class UMLTopComponent extends TopComponent {
         setName(Bundle.CTL_UMLTopComponent());
         setToolTipText(Bundle.HINT_UMLTopComponent());
         setLayout(new BorderLayout());
-        
-        classDiagramScene= new ClassDiagramScene(this.umlClassDiagram);
-        
-        shapePane= new JScrollPane();
-        shapePane.setViewportView(classDiagramScene.createView());
-        add(shapePane, BorderLayout.CENTER);
-        add(classDiagramScene.createSatelliteView(),BorderLayout.WEST);
-        
+
+        classDiagramScene = new ClassDiagramScene(this.umlClassDiagram);
+
+
+
         //implementiraj
         //scene.visualizeNetwork();
-        
+
         associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
     }
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -98,27 +96,13 @@ public final class UMLTopComponent extends TopComponent {
 
         viewPane = new javax.swing.JScrollPane();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(143, 143, 143)
-                .addComponent(viewPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(157, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addComponent(viewPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(143, Short.MAX_VALUE))
-        );
+        setLayout(new java.awt.BorderLayout());
+        add(viewPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane viewPane;
     // End of variables declaration//GEN-END:variables
+
     @Override
     public void componentOpened() {
         // TODO add custom code on component opening

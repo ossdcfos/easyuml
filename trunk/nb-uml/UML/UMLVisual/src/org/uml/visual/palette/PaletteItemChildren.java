@@ -13,12 +13,10 @@ import org.openide.nodes.Node;
  * @author Uros
  */
 public class PaletteItemChildren extends Index.ArrayChildren {
-
-    //TODO Ostavi samo klasu, dodaj interfejs, apstraktnu klasu, i nemoj da koristis "Shapes" vec jbm li ga elements tako nesto smisli da kapiram
-    //e a posto ne dobijam kao argument classDiagram imam posle problem sad cu da ti pokazem
+    
     private PaletteCategory category;
     private String[][] items = new String[][]{
-        {"Class", "Shapes", "org/uml/visual/palette/class.gif", "org.uml.model.UmlClassElement"}, 
+        {"Class", "Shapes", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
         //        {"Method","Shapes","org/uml/visual/palette/methodPublic.gif","org.uml.model.Method"},
     //        {"Variable","Shapes","org/uml/visual/palette/variablePublic.gif","org.uml.model.Field"},
     };
