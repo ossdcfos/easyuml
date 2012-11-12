@@ -4,7 +4,7 @@ import com.sun.nio.sctp.Association;
 import org.netbeans.api.visual.widget.Scene;
 
 /**
- * This class represents a connection between two neurons
+ * This class represents a connection between two classes
  * http://bits.netbeans.org/dev/javadoc/org-netbeans-api-visual/org/netbeans/api/visual/widget/ConnectionWidget.html
  *
  * http://platform.netbeans.org/graph/common-usages.html // conenction anchors

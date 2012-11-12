@@ -14,6 +14,7 @@ import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.UmlClassDiagram;
 import org.uml.visual.palette.PaletteItemNode;
+import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
 /**
  *
@@ -36,10 +37,11 @@ public class ClassDiagramScene extends GraphScene<PaletteItemNode, String> {
         addObject(umlClassDiagram, classDiagramWidget);       // Za kasnije
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
+        getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
         //getActions().addAction(ActionFactory.createPopupMenuAction(new MainPopupMenuProvider()));
 
         //TODO Prebaciti ovo u neki SceneAcceptProvider 
-
+        /* Napravljen SceneAcceptProvider
         getActions().addAction(ActionFactory.createAcceptAction(new AcceptProvider() {
             @Override
             public ConnectorState isAcceptable(Widget widget, Point point, Transferable t) {
@@ -50,7 +52,8 @@ public class ClassDiagramScene extends GraphScene<PaletteItemNode, String> {
             public void accept(Widget widget, Point point, Transferable t) {
                 
             }
-        }));
+        }));*/
+        
     }
 
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
