@@ -16,6 +16,8 @@ import org.uml.model.UmlClassElement;
  */
 class ClassWidget extends IconNodeWidget {
 
+    //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
+    
     UmlClassElement classElement;
 
     public ClassWidget(ClassDiagramScene scene, UmlClassElement umlClassElement) {
