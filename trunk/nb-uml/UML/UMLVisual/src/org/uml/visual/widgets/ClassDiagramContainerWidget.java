@@ -19,7 +19,7 @@ import org.uml.model.UmlClassElement;
 
 /**
  *
- * @author Uros
+ * @author Uros, Marjan
  */
 public class ClassDiagramContainerWidget extends IconNodeWidget {
 
