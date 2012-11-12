@@ -4,6 +4,9 @@
  */
 package org.uml.visual.widgets;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.UmlClassElement;
 
@@ -11,14 +14,14 @@ import org.uml.model.UmlClassElement;
  *
  * @author Uros
  */
-class ClassWidget extends IconNodeWidget{
+class ClassWidget extends IconNodeWidget {
 
     UmlClassElement classElement;
-    
-    public ClassWidget(ClassDiagramScene scene,UmlClassElement umlClassElement) {
-        super(scene); 
-        this.classElement=umlClassElement;
-    } 
- 
-    
+
+    public ClassWidget(ClassDiagramScene scene, UmlClassElement umlClassElement) {
+        super(scene);
+        this.classElement = umlClassElement;
+        setPreferredSize(new Dimension(100, 200));
+        setBorder(BorderFactory.createRoundedBorder(20, 20, Color.white, Color.black));
+    }
 }
