@@ -5,7 +5,7 @@ import org.openide.nodes.Node;
 
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 public class PaletteCategoryChildren extends Children.Keys{
     

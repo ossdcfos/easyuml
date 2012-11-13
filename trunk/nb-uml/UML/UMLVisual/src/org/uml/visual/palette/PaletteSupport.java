@@ -11,7 +11,7 @@ import org.openide.nodes.AbstractNode;
 import org.openide.util.Lookup;
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 public class PaletteSupport {
     

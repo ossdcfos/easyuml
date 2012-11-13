@@ -13,7 +13,7 @@ import org.uml.model.UmlClassElement;
 
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 class ClassWidget extends IconNodeWidget {
 

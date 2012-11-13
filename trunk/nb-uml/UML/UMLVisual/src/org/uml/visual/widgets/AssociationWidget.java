@@ -11,7 +11,7 @@ import org.netbeans.api.visual.widget.Scene;
  */
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 public class AssociationWidget {
     private Association association;

@@ -6,7 +6,7 @@ package org.uml.visual.palette;
 
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 public class PaletteCategory {
     
