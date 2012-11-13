@@ -22,7 +22,7 @@ import org.uml.visual.widgets.actions.SceneAcceptProvider;
  */
 public class ClassDiagramScene extends GraphScene<PaletteItemNode, String> {
 
-    private LayerWidget mainLayer;
+    //private LayerWidget mainLayer;
     private UmlClassDiagram umlClassDiagram;
     private ClassDiagramContainerWidget classDiagramWidget;
 
@@ -31,29 +31,31 @@ public class ClassDiagramScene extends GraphScene<PaletteItemNode, String> {
         this.umlClassDiagram = umlClassDiagram;
         classDiagramWidget = new ClassDiagramContainerWidget(umlClassDiagram, this);
         classDiagramWidget.setPreferredLocation(new Point(100, 10));
-        mainLayer = new LayerWidget(this);
-        mainLayer.addChild(classDiagramWidget);               // Za Kasnije
-        addChild(mainLayer);
-        addObject(umlClassDiagram, classDiagramWidget);       // Za kasnije
+        //mainLayer = new LayerWidget(this);
+        //mainLayer.addChild(classDiagramWidget);               // Za Kasnije
+        //addChild(mainLayer);
+        addChild(classDiagramWidget);
+        //addObject(umlClassDiagram, classDiagramWidget);       // Za kasnije
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
+        getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         //getActions().addAction(ActionFactory.createPopupMenuAction(new MainPopupMenuProvider()));
 
         //TODO Prebaciti ovo u neki SceneAcceptProvider 
         /* Napravljen SceneAcceptProvider
-        getActions().addAction(ActionFactory.createAcceptAction(new AcceptProvider() {
-            @Override
-            public ConnectorState isAcceptable(Widget widget, Point point, Transferable t) {
-                return ConnectorState.ACCEPT;
-            }
+         getActions().addAction(ActionFactory.createAcceptAction(new AcceptProvider() {
+         @Override
+         public ConnectorState isAcceptable(Widget widget, Point point, Transferable t) {
+         return ConnectorState.ACCEPT;
+         }
 
-            @Override
-            public void accept(Widget widget, Point point, Transferable t) {
+         @Override
+         public void accept(Widget widget, Point point, Transferable t) {
                 
-            }
-        }));*/
-        
+         }
+         }));*/
+
     }
 
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 

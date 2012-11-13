@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.border.BorderFactory;
+import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.UmlClassElement;
 
@@ -19,12 +20,14 @@ class ClassWidget extends IconNodeWidget {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     UmlClassElement classElement;
-    
+
     public ClassWidget(ClassDiagramScene scene, UmlClassElement umlClassElement) {
         super(scene);
         this.classElement = umlClassElement;
         setPreferredSize(new Dimension(100, 100));
-        setBorder(BorderFactory.createRoundedBorder(10, 10, Color.white, Color.black));
-        getActions().addAction(ActionFactory.createMoveAction());
+        setBorder(BorderFactory.createResizeBorder(8, Color.BLACK, false));
+        getActions().addAction(ActionFactory.createResizeAction());
+        getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
+
     }
 }
