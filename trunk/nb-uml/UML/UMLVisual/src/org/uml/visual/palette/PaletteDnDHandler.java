@@ -16,7 +16,7 @@ import org.openide.util.datatransfer.ExTransferable;
 
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 public class PaletteDnDHandler extends DragAndDropHandler{
         

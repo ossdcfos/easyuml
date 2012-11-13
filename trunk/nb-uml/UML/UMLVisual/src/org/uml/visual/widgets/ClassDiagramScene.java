@@ -18,7 +18,7 @@ import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 public class ClassDiagramScene extends GraphScene<PaletteItemNode, String> {
 

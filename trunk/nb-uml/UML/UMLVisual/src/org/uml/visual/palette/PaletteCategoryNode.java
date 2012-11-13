@@ -9,7 +9,7 @@ import org.openide.util.lookup.Lookups;
 
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 public class PaletteCategoryNode extends AbstractNode{
 

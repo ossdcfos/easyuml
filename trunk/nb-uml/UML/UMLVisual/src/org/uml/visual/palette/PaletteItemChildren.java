@@ -10,7 +10,7 @@ import org.openide.nodes.Node;
 
 /**
  *
- * @author Uros
+ * @author NUGS
  */
 public class PaletteItemChildren extends Index.ArrayChildren {
     
