@@ -12,7 +12,9 @@ import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.Relation;
 import org.uml.model.UmlClassDiagram;
+import org.uml.model.UmlClassElement;
 import org.uml.visual.palette.PaletteItemNode;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
@@ -20,21 +22,19 @@ import org.uml.visual.widgets.actions.SceneAcceptProvider;
  *
  * @author NUGS
  */
-public class ClassDiagramScene extends GraphScene<PaletteItemNode, String> {
+public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
 
-    //private LayerWidget mainLayer;
+    private LayerWidget mainLayer;
     private UmlClassDiagram umlClassDiagram;
-    private ClassDiagramContainerWidget classDiagramWidget;
 
     public ClassDiagramScene(UmlClassDiagram umlClassDiagram) {
 
         this.umlClassDiagram = umlClassDiagram;
-        classDiagramWidget = new ClassDiagramContainerWidget(umlClassDiagram, this);
-        classDiagramWidget.setPreferredLocation(new Point(100, 10));
-        //mainLayer = new LayerWidget(this);
+        //classDiagramWidget = new ClassDiagramContainerWidget(umlClassDiagram, this);
+        //classDiagramWidget.setPreferredLocation(new Point(100, 10));
+        mainLayer = new LayerWidget(this);
         //mainLayer.addChild(classDiagramWidget);               // Za Kasnije
-        //addChild(mainLayer);
-        addChild(classDiagramWidget);
+        addChild(mainLayer);
         //addObject(umlClassDiagram, classDiagramWidget);       // Za kasnije
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
@@ -75,20 +75,27 @@ public class ClassDiagramScene extends GraphScene<PaletteItemNode, String> {
     }
 
     @Override
-    protected Widget attachNodeWidget(PaletteItemNode n) {
-        return null;
+    protected Widget attachNodeWidget(UmlClassElement n) {
+        ClassWidget widget= new ClassWidget(this, n);
+        widget.getActions().addAction(ActionFactory.createMoveAction());
+        mainLayer.addChild(widget);
+        return widget;
     }
 
     @Override
-    protected Widget attachEdgeWidget(String e) {
-        return null;
+    protected Widget attachEdgeWidget(Relation e) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    protected void attachEdgeSourceAnchor(String e, PaletteItemNode n, PaletteItemNode n1) {
+    protected void attachEdgeSourceAnchor(Relation e, UmlClassElement n, UmlClassElement n1) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    protected void attachEdgeTargetAnchor(String e, PaletteItemNode n, PaletteItemNode n1) {
+    protected void attachEdgeTargetAnchor(Relation e, UmlClassElement n, UmlClassElement n1) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
 }

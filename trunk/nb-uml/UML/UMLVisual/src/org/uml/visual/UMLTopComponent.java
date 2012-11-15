@@ -64,13 +64,6 @@ public final class UMLTopComponent extends TopComponent {
 
     public UMLTopComponent(UmlClassDiagram umlClassDiagram) {
         this.umlClassDiagram = umlClassDiagram;
-        // nemoj ulazni argument, kazi umlClassDiagram = new()ok
-        // sta jos ne valja da izrefaktoris ovako :)
-        //brate, aj vidi ovu paletu
-        //ne znam zasto se ne vidi kad pokrenem
-        // e pazi nesto moj savet ti je da njihov kod odes copy paste pa onda refaktorises. cek da vidim 
-        // pokreni mi projekat haha
-        //ni/s/am znao foru :) cek da ti namestim nesto sto bi moralo po defaultu
         initComponents();
         setName(Bundle.CTL_UMLTopComponent());
         setToolTipText(Bundle.HINT_UMLTopComponent());
