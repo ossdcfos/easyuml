@@ -29,14 +29,17 @@ import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
+import org.uml.model.Field;
 import org.uml.model.UmlClassElement;
+import org.uml.model.Visibility;
+import org.uml.visual.widgets.actions.AddFieldAction;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**
  *
  * @author NUGS
  */
-class ClassWidget extends IconNodeWidget {
+public class ClassWidget extends IconNodeWidget {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     UmlClassElement classElement;
@@ -54,7 +57,7 @@ class ClassWidget extends IconNodeWidget {
     private Widget fieldsWidget;
     private Widget methodsWidget;
     
-  private WidgetAction addFieldAction = ActionFactory.createSelectAction(new AddFieldAction());
+    private WidgetAction addFieldAction = ActionFactory.createSelectAction(new AddFieldAction(this));
     private WidgetAction addMethodAction = ActionFactory.createSelectAction(new AddMethodAction());
     private WidgetAction deleteFieldAction = ActionFactory.createSelectAction(new DeleteFieldAction());
     private WidgetAction deleteMethodAction = ActionFactory.createSelectAction(new DeleteMethodAction());
@@ -92,8 +95,7 @@ class ClassWidget extends IconNodeWidget {
         classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         classWidget.addChild(classNameWidget);
         addChild(classWidget);
-        classNameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction()));
-        
+        classNameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(umlClassElement)));
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
         
            fieldsWidget = new Widget(scene);
@@ -159,7 +161,8 @@ class ClassWidget extends IconNodeWidget {
 
         Widget fieldWidget = new Widget(scene);
         fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
+        
+        
         LabelWidget labelMinus = new LabelWidget(scene);
         labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         labelMinus.setLabel("-");
@@ -182,7 +185,9 @@ class ClassWidget extends IconNodeWidget {
 
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(fieldName);
-        labelWidget.getActions().addAction(editorAction);        
+        labelWidget.getActions().addAction(editorAction);
+        //dodato polje u classElement
+
         fieldWidget.addChild(labelWidget);
         
         return fieldWidget;
@@ -238,7 +243,6 @@ class ClassWidget extends IconNodeWidget {
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
-
 
 
         return widget;
@@ -533,44 +537,6 @@ class ClassWidget extends IconNodeWidget {
             
             
             
-        }
-    }
-
-    private class AddFieldAction implements SelectProvider {
-
-        public AddFieldAction() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            removeField(widget.getParentWidget());
-          
-            Widget w = createFieldWidget("atribut");
-            createAddFieldAction(w);
-            createAddFieldAction(createAddFieldActionWidget());
-        
-              Robot robot=null;
-            try {
-                robot = new Robot();
-            } catch (AWTException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-           
-          robot.mousePress(InputEvent.BUTTON1_MASK);
-          robot.mouseRelease(InputEvent.BUTTON1_MASK);
-          robot.mousePress(InputEvent.BUTTON1_MASK);
-          robot.mouseRelease(InputEvent.BUTTON1_MASK);
-
         }
     }
 

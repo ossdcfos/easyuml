@@ -13,10 +13,10 @@ import org.uml.model.UmlClassElement;
  *
  * @author "NUGS"
  */
-public class LabelTextFieldEditorAction implements TextFieldInplaceEditor{
+public class FieldNameEditorAction implements TextFieldInplaceEditor{
 
     UmlClassElement umlClassElement;
-    public LabelTextFieldEditorAction(UmlClassElement umlClassElement) {
+    public FieldNameEditorAction(UmlClassElement umlClassElement) {
         this.umlClassElement=umlClassElement;
     }
 
@@ -34,8 +34,7 @@ public class LabelTextFieldEditorAction implements TextFieldInplaceEditor{
     @Override
     public void setText(Widget widget, String string) {
         ((LabelWidget) widget).setLabel(string);
-        //podesavam ime konkretnog elementa
-        umlClassElement.setName(string);
+        //podesavam ime konkretnog polja
     }
     
 }
