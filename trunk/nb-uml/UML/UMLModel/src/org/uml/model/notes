@@ -1,0 +1,5 @@
+Modifier (public, private, abstract, final static ...)
+http://docs.oracle.com/javase/6/docs/api/java/lang/reflect/Modifier.html
+
+Member (Method, Field or COnstructor)
+http://docs.oracle.com/javase/6/docs/api/java/lang/reflect/Member.html
