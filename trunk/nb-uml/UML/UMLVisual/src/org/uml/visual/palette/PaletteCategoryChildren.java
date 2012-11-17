@@ -9,7 +9,7 @@ import org.openide.nodes.Node;
  */
 public class PaletteCategoryChildren extends Children.Keys{
     
-        private String[] categories= new String[] {"Shapes"};
+        private String[] categories= new String[] {"Objects", "Relations", "Other"};
 
     public PaletteCategoryChildren() {
     }

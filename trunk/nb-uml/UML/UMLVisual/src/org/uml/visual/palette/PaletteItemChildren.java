@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.palette;
 
 import java.util.ArrayList;
@@ -16,7 +12,16 @@ public class PaletteItemChildren extends Index.ArrayChildren {
     
     private PaletteCategory category;
     private String[][] items = new String[][]{
-        {"Class", "Shapes", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
+        {"Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
+        {"Abstract Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
+        {"Interface", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
+        {"Enum", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
+        
+        {"Is", "Relations", "org/uml/visual/icons/is.gif", "org.uml.model.UmlClassElement"}, 
+        {"Has", "Relations", "org/uml/visual/icons/has.gif", "org.uml.model.UmlClassElement"}, 
+        {"Use", "Relations", "org/uml/visual/icons/use.gif", "org.uml.model.UmlClassElement"}, 
+        
+        {"Notes", "Other", "org/uml/visual/icons/notes.gif", "org.uml.model.UmlClassElement"}, 
         //        {"Method","Shapes","org/uml/visual/palette/methodPublic.gif","org.uml.model.Method"},
     //        {"Variable","Shapes","org/uml/visual/palette/variablePublic.gif","org.uml.model.Field"},
     };

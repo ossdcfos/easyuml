@@ -15,14 +15,26 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.Relation;
 import org.uml.model.UmlClassDiagram;
 import org.uml.model.UmlClassElement;
-import org.uml.visual.palette.PaletteItemNode;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
 /**
  *
+ Shapes-Objects-Objekti 
+    Class 
+    Abstract Class 
+    Interface   
+    Enum 
+Connections-Relationships-Veze 
+    Inheritance 
+    Associattion (Use. Has)
+
+Other-Drugi alati 
+    Comment 
+ * 
  * @author NUGS
- */
+ */                                             /* ClassDiagramComponent, ClassDiagramRelation*/
+                                                // ClassDiagramComponent  - Class, Interface, 
 public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
 
     private LayerWidget mainLayer;
