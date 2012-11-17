@@ -16,6 +16,7 @@ import org.uml.model.Relation;
 import org.uml.model.UmlClassDiagram;
 import org.uml.model.UmlClassElement;
 import org.uml.visual.palette.PaletteItemNode;
+import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
 /**
@@ -36,6 +37,7 @@ public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
         //mainLayer.addChild(classDiagramWidget);               // Za Kasnije
         addChild(mainLayer);
         //addObject(umlClassDiagram, classDiagramWidget);       // Za kasnije
+        
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
@@ -77,7 +79,16 @@ public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
     @Override
     protected Widget attachNodeWidget(UmlClassElement n) {
         ClassWidget widget= new ClassWidget(this, n);
+        widget.setClassName("Class 1");
         widget.getActions().addAction(ActionFactory.createMoveAction());
+        //single-click, the event is not consumed:
+        widget.getActions().addAction(createSelectAction());
+
+        //mouse-dragged, the event is consumed while mouse is dragged:
+        widget.getActions().addAction(ActionFactory.createMoveAction());
+
+        //mouse-over, the event is consumed while the mouse is over the widget:
+        widget.getActions().addAction(createObjectHoverAction());
         mainLayer.addChild(widget);
         return widget;
     }
