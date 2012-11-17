@@ -4,6 +4,7 @@
  */
 package org.uml.model;
 
+import java.awt.Image;
 import java.util.HashMap;
 
 /**
@@ -16,8 +17,16 @@ public class UmlClassElement {
         private HashMap<String,Method> methods;
         private String name;
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+        private Image image;
+
     public UmlClassElement() {
-        
         fields= new HashMap<String, Field>();
         methods= new HashMap<String, Method>();
     }
