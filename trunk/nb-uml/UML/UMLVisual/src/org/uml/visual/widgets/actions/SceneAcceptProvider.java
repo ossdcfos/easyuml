@@ -54,14 +54,20 @@ public class SceneAcceptProvider implements AcceptProvider{
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
            Class<? extends UmlClassElement> droppedClass = (Class<? extends UmlClassElement>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
-                try {
-                    classDiagramScene.addNode((UmlClassElement) droppedClass.newInstance());
+           try {
+                    Image dragImage = getImageFromTransferable(t);
+                    UmlClassElement umlClass= (UmlClassElement) droppedClass.newInstance();
+                    umlClass.setImage(dragImage);
+                    Widget w=classDiagramScene.addNode((UmlClassElement) droppedClass.newInstance());
+                    w.setPreferredLocation(widget.convertLocalToScene(point));
                     //addChild(new ClassWidget((ClassDiagramScene) getScene(), (UmlClassElement) droppedClass.newInstance()));
                 } catch (InstantiationException ex) {
                     Exceptions.printStackTrace(ex);
                 } catch (IllegalAccessException ex) {
                     Exceptions.printStackTrace(ex);
                 }
+                
+                
     }
     
     private Image getImageFromTransferable(Transferable transferable) {
