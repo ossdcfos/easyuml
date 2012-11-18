@@ -14,6 +14,7 @@ import org.netbeans.api.visual.widget.Scene;
  * @author NUGS
  */
 public class AssociationWidget {
+    
     private Association association;
     private ClassWidget src;
     private ClassWidget trg;

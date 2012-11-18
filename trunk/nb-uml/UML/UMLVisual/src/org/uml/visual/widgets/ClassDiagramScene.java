@@ -20,21 +20,14 @@ import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
 /**
  *
- Shapes-Objects-Objekti 
-    Class 
-    Abstract Class 
-    Interface   
-    Enum 
-Connections-Relationships-Veze 
-    Inheritance 
-    Associattion (Use. Has)
-
-Other-Drugi alati 
-    Comment 
- * 
+ * Shapes-Objects-Objekti Class Abstract Class Interface Enum
+ * Connections-Relationships-Veze Inheritance Associattion (Use. Has)
+ *
+ * Other-Drugi alati Comment
+ *
  * @author NUGS
  */                                             /* ClassDiagramComponent, ClassDiagramRelation*/
-                                                // ClassDiagramComponent  - Class, Interface, 
+// ClassDiagramComponent  - Class, Interface, 
 public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
 
     private LayerWidget mainLayer;
@@ -49,7 +42,7 @@ public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
         //mainLayer.addChild(classDiagramWidget);               // Za Kasnije
         addChild(mainLayer);
         //addObject(umlClassDiagram, classDiagramWidget);       // Za kasnije
-        
+
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
@@ -90,7 +83,7 @@ public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
 
     @Override
     protected Widget attachNodeWidget(UmlClassElement n) {
-        ClassWidget widget= new ClassWidget(this, n);
+        ClassWidget widget = new ClassWidget(this, n);
         widget.setClassName("Class 1");
         widget.getActions().addAction(ActionFactory.createMoveAction());
         //single-click, the event is not consumed:
@@ -119,6 +112,4 @@ public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
     protected void attachEdgeTargetAnchor(Relation e, UmlClassElement n, UmlClassElement n1) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-
 }
