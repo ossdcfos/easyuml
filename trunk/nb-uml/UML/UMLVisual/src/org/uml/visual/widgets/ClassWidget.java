@@ -33,7 +33,16 @@ import org.uml.model.Field;
 import org.uml.model.UmlClassElement;
 import org.uml.model.Visibility;
 import org.uml.visual.widgets.actions.AddFieldAction;
+import org.uml.visual.widgets.actions.AddMethodAction;
+import org.uml.visual.widgets.actions.DeleteFieldAction;
+import org.uml.visual.widgets.actions.DeleteMethodAction;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.PickAttributeModifierAction;
+import org.uml.visual.widgets.actions.PickFinalKeywordForAttributeAction;
+import org.uml.visual.widgets.actions.PickFinalKeywordForMethodAction;
+import org.uml.visual.widgets.actions.PickMethodModifierAction;
+import org.uml.visual.widgets.actions.PickStaticKeywordForAttributeAction;
+import org.uml.visual.widgets.actions.PickStaticKeywordForMethodAction;
 
 /**
  *
@@ -58,17 +67,17 @@ public class ClassWidget extends IconNodeWidget {
     private Widget methodsWidget;
     
     private WidgetAction addFieldAction = ActionFactory.createSelectAction(new AddFieldAction(this));
-    private WidgetAction addMethodAction = ActionFactory.createSelectAction(new AddMethodAction());
-    private WidgetAction deleteFieldAction = ActionFactory.createSelectAction(new DeleteFieldAction());
-    private WidgetAction deleteMethodAction = ActionFactory.createSelectAction(new DeleteMethodAction());
-    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditor());
+    private WidgetAction addMethodAction = ActionFactory.createSelectAction(new AddMethodAction(this));
+    private WidgetAction deleteFieldAction = ActionFactory.createSelectAction(new DeleteFieldAction(this));
+    private WidgetAction deleteMethodAction = ActionFactory.createSelectAction(new DeleteMethodAction(this));
+    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(this));
 
-    private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new pickMethodModifier());
-    private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new pickAtributeModifier());
-    private WidgetAction pickStaticKeywordForAtribute = ActionFactory.createSelectAction(new pickStaticKeywordForAtribute());
-    private WidgetAction pickFinalKeywordForAtribute = ActionFactory.createSelectAction(new pickFinalKeywordForAtribute());
-    private WidgetAction pickStaticKeywordForMethod = ActionFactory.createSelectAction(new pickStaticKeywordForMethod());
-    private WidgetAction pickFinalKeywordForMethod = ActionFactory.createSelectAction(new pickFinalKeywordForMethod());
+    private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new PickMethodModifierAction(this));
+    private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new PickAttributeModifierAction(this));
+    private WidgetAction pickStaticKeywordForAtribute = ActionFactory.createSelectAction(new PickStaticKeywordForAttributeAction());
+    private WidgetAction pickFinalKeywordForAtribute = ActionFactory.createSelectAction(new PickFinalKeywordForAttributeAction());
+    private WidgetAction pickStaticKeywordForMethod = ActionFactory.createSelectAction(new PickStaticKeywordForMethodAction());
+    private WidgetAction pickFinalKeywordForMethod = ActionFactory.createSelectAction(new PickFinalKeywordForMethodAction());
     
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
 
@@ -95,10 +104,10 @@ public class ClassWidget extends IconNodeWidget {
         classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         classWidget.addChild(classNameWidget);
         addChild(classWidget);
-        classNameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(umlClassElement)));
+        classNameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(this)));
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
         
-           fieldsWidget = new Widget(scene);
+        fieldsWidget = new Widget(scene);
         fieldsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         fieldsWidget.setOpaque(false);
         fieldsWidget.setBorder(BORDER_4);
@@ -142,7 +151,7 @@ public class ClassWidget extends IconNodeWidget {
     }
 
 
-    private Widget createAddMethodActionWidget() {
+    public Widget createAddMethodActionWidget() {
         Scene scene = getScene();
         Widget widget = new Widget(scene);
         widget.setLayout(LayoutFactory.createAbsoluteLayout());
@@ -256,7 +265,7 @@ public class ClassWidget extends IconNodeWidget {
         fieldsWidget.removeChild(memberWidget);
     }
 
-    private void createAddMethodAction(Widget operationWidget) {
+    public void createAddMethodAction(Widget operationWidget) {
         methodsWidget.addChild(operationWidget);
     }
 
@@ -264,170 +273,7 @@ public class ClassWidget extends IconNodeWidget {
         methodsWidget.removeChild(operationWidget);
     }
 
-   
-    
-    private class pickFinalKeywordForMethod implements SelectProvider {
-
-        private int currentFinal = 1;
-
-        public pickFinalKeywordForMethod() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            if (currentFinal == 1 //&& 
-                    //!((LabelWidget)widget.getParentWidget().getChildren().get(2)).getLabel().equals(" abstract")
-                    ) {
-                System.out.println(((LabelWidget) widget.getParentWidget().getChildren().get(2)).getLabel());
-                //System.out.println( ((LabelWidget)widget.getParentWidget().getChildren().get(2)).getLabel().equals(" static"));
-                ((LabelWidget) widget).setLabel(" final ");
-
-                currentFinal--;
-            } else {
-                ((LabelWidget) widget).setLabel(" _ ");
-
-                currentFinal++;
-            }
-        }
-    }
-
-    private class pickStaticKeywordForMethod implements SelectProvider {
-
-        private int currentStatic = 1;
-
-        public pickStaticKeywordForMethod() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            switch (currentStatic) {
-                case 0:
-                    ((LabelWidget) widget).setLabel(" static");
-                    currentStatic++;
-                    break;
-                case 1:
-                    ((LabelWidget) widget).setLabel(" abstract");
-                    currentStatic++;
-                    break;
-                case 2:
-                    ((LabelWidget) widget).setLabel(" _");
-                    currentStatic = 0;
-                    break;
-            }
-        }
-    }
-
-    private class pickFinalKeywordForAtribute implements SelectProvider {
-
-        private int currentFinal = 1;
-
-        public pickFinalKeywordForAtribute() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            if (currentFinal == 0) {
-                ((LabelWidget) widget).setLabel(" _ ");
-                currentFinal++;
-            } else {
-                ((LabelWidget) widget).setLabel(" final ");
-                currentFinal--;
-            }
-        }
-    }
-
-    private class pickStaticKeywordForAtribute implements SelectProvider {
-
-        private int currentStatic = 1;
-
-        public pickStaticKeywordForAtribute() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            if (currentStatic == 0) {
-                ((LabelWidget) widget).setLabel(" _");
-                currentStatic++;
-            } else {
-                ((LabelWidget) widget).setLabel(" static");
-                currentStatic--;
-            }
-        }
-    }
-
-    private class pickAtributeModifier implements SelectProvider {
-
-        private int currentImage = 1;
-
-        public pickAtributeModifier() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-
-            if (currentImage == 4) {
-                currentImage = 1;
-            } else {
-                currentImage++;
-            }
-            widget.addChild(getNextAtributeAccessModifier(currentImage));
-
-        }
-    }
-
-
-
-    private ImageWidget getNextAtributeAccessModifier(int n) {
+    public ImageWidget getNextAtributeAccessModifier(int n) {
         ImageWidget Image = new ImageWidget(getScene());
         switch (n) {
             case 1:
@@ -448,37 +294,8 @@ public class ClassWidget extends IconNodeWidget {
         return Image;
     }
    
-    private class pickMethodModifier implements SelectProvider {
 
-        private int currentImage = 1;
-
-        public pickMethodModifier() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-
-            if (currentImage == 4) {
-                currentImage = 1;
-            } else {
-                currentImage++;
-            }
-            widget.addChild(getNextMethodAccessModifier(currentImage));
-
-        }
-    }
-
-    private ImageWidget getNextMethodAccessModifier(int n) {
+   public ImageWidget getNextMethodAccessModifier(int n) {
         ImageWidget Image = new ImageWidget(getScene());
         switch (n) {
 
@@ -500,107 +317,6 @@ public class ClassWidget extends IconNodeWidget {
 
         return Image;
     }
-
-    private class AddMethodAction implements SelectProvider {
-
-        public AddMethodAction() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            removeMethod(widget.getParentWidget());
-            createAddMethodAction(createMethodWidget("metoda "));
-            createAddMethodAction(createAddMethodActionWidget());
-            
-             Robot robot=null;
-            try {
-                robot = new Robot();
-            } catch (AWTException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-           
-          robot.mousePress(InputEvent.BUTTON1_MASK);
-          robot.mouseRelease( InputEvent.BUTTON1_MASK);
-          robot.mousePress(InputEvent.BUTTON1_MASK);
-          robot.mouseRelease( InputEvent.BUTTON1_MASK);
-            
-            
-            
-            
-        }
-    }
-
-    private class DeleteMethodAction implements SelectProvider {
-
-        public DeleteMethodAction() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            removeMethod(widget.getParentWidget());
-        }
-    }
-
-    private class DeleteFieldAction implements SelectProvider {
-
-        public DeleteFieldAction() {
-        }
-
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            //throw new UnsupportedOperationException("Not supported yet.");
-            return true;
-        }
-
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            //throw new UnsupportedOperationException("Not supported yet.");
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            removeField(widget.getParentWidget());
-
-        }
-    }
-    
-    private class LabelTextFieldEditor implements TextFieldInplaceEditor {
-
-        @Override
-        public boolean isEnabled(Widget widget) {
-            return true;
-        }
-
-        @Override
-        public String getText(Widget widget) {
-            return ((LabelWidget) widget).getLabel();
-        }
-
-        @Override
-        public void setText(Widget widget, String text) {
-            ((LabelWidget) widget).setLabel(text);
-        }
-    }    
+       
     
 }

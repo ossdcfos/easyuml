@@ -8,6 +8,7 @@ import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.UmlClassElement;
+import org.uml.visual.widgets.ClassWidget;
 
 /**
  *
@@ -15,9 +16,9 @@ import org.uml.model.UmlClassElement;
  */
 public class LabelTextFieldEditorAction implements TextFieldInplaceEditor{
 
-    UmlClassElement umlClassElement;
-    public LabelTextFieldEditorAction(UmlClassElement umlClassElement) {
-        this.umlClassElement=umlClassElement;
+    ClassWidget classWidget;
+    public LabelTextFieldEditorAction(ClassWidget classWidget) {
+        this.classWidget=classWidget;
     }
 
         
@@ -34,8 +35,8 @@ public class LabelTextFieldEditorAction implements TextFieldInplaceEditor{
     @Override
     public void setText(Widget widget, String string) {
         ((LabelWidget) widget).setLabel(string);
-        //podesavam ime konkretnog elementa
-        umlClassElement.setName(string);
+        //TODO podesavam ime konkretnog elementa, ali ga zove i field editor i method editor, kako da resim to?
+        //classWidget.umlClassElement.setName(string);
     }
     
 }
