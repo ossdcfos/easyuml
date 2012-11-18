@@ -54,13 +54,7 @@ public class ClassWidget extends IconNodeWidget {
     UmlClassElement classElement;
     
     private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
-    private static final Image MethodPublicImage = Utilities.loadImage("org/uml/visual/icons/MethodPublic.jpg"); // NOI18N
-    private static final Image MethodPrivateImage = Utilities.loadImage("org/uml/visual/icons/MethodPrivate.jpg"); // NOI18N
-    private static final Image MethodProtectedImage = Utilities.loadImage("org/uml/visual/icons/MethodProtected.jpg"); // NOI18N
     private static final Image AtributeDefaultImage = Utilities.loadImage("org/uml/visual/icons/AtributeDefault.jpg"); // NOI18N
-    private static final Image AtributePublicImage = Utilities.loadImage("org/uml/visual/icons/AtributePublic.jpg"); // NOI18N
-    private static final Image AtributePrivateImage = Utilities.loadImage("org/uml/visual/icons/AtributePrivate.jpg"); // NOI18N
-    private static final Image AtributeProtectedImage = Utilities.loadImage("org/uml/visual/icons/AtributeProtected.jpg"); // NOI18N
     
     private LabelWidget classNameWidget;
     private Widget fieldsWidget;
@@ -272,51 +266,6 @@ public class ClassWidget extends IconNodeWidget {
     public void removeMethod(Widget operationWidget) {
         methodsWidget.removeChild(operationWidget);
     }
-
-    public ImageWidget getNextAtributeAccessModifier(int n) {
-        ImageWidget Image = new ImageWidget(getScene());
-        switch (n) {
-            case 1:
-                Image.setImage(AtributeDefaultImage);
-                break;
-            case 2:
-                Image.setImage(AtributePublicImage);
-                break;
-            case 3:
-                Image.setImage(AtributePrivateImage);
-                break;
-            case 4:
-                Image.setImage(AtributeProtectedImage);
-                break;
-        }
-
-
-        return Image;
-    }
-   
-
-   public ImageWidget getNextMethodAccessModifier(int n) {
-        ImageWidget Image = new ImageWidget(getScene());
-        switch (n) {
-
-            
-            case 1:
-                Image.setImage(MethodDefaultImage);
-                break;
-            case 2:
-                Image.setImage(MethodPublicImage);
-                break;
-            case 3:
-                Image.setImage(MethodPrivateImage);
-                break;
-            case 4:
-                Image.setImage(MethodProtectedImage);
-                break;
-        }
-
-
-        return Image;
-    }
-       
+        
     
 }
