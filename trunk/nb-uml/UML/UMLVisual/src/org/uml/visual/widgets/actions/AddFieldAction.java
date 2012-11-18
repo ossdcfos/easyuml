@@ -18,41 +18,42 @@ import org.uml.visual.widgets.ClassWidget;
  * @author "NUGS"
  */
 public class AddFieldAction implements SelectProvider {
-    
-        ClassWidget classWidget;
+
+    ClassWidget classWidget;
+
     public AddFieldAction(ClassWidget widget) {
-            this.classWidget=widget;
+        this.classWidget = widget;
+    }
+
+    @Override
+    public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
+        return true;
+    }
+
+    @Override
+    public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
+        return true;
+    }
+
+    @Override
+    public void select(Widget widget, Point point, boolean bln) {
+        classWidget.removeField(widget.getParentWidget());
+
+        Widget w = classWidget.createFieldWidget("atribut");
+        classWidget.createAddFieldAction(w);
+        classWidget.createAddFieldAction(classWidget.createAddFieldActionWidget());
+
+        Robot robot = null;
+        try {
+            robot = new Robot();
+        } catch (AWTException ex) {
+            Exceptions.printStackTrace(ex);
         }
 
-        @Override
-        public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
 
-        @Override
-        public boolean isSelectionAllowed(Widget widget, Point point, boolean bln) {
-            return true;
-        }
-
-        @Override
-        public void select(Widget widget, Point point, boolean bln) {
-            classWidget.removeField(widget.getParentWidget());
-            
-            Widget w = classWidget.createFieldWidget("atribut");
-            classWidget.createAddFieldAction(w);
-            classWidget.createAddFieldAction(classWidget.createAddFieldActionWidget());
-        
-              Robot robot=null;
-            try {
-                robot = new Robot();
-            } catch (AWTException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-           
-          robot.mousePress(InputEvent.BUTTON1_MASK);
-          robot.mouseRelease(InputEvent.BUTTON1_MASK);
-          robot.mousePress(InputEvent.BUTTON1_MASK);
-          robot.mouseRelease(InputEvent.BUTTON1_MASK);
-
-        }
+    }
 }
