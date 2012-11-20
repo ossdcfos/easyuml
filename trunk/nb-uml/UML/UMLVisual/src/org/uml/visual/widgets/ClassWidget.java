@@ -4,34 +4,22 @@
  */
 package org.uml.visual.widgets;
 
-import java.awt.AWTException;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Point;
-import java.awt.Robot;
-import java.awt.event.InputEvent;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.SelectProvider;
-import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
-import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.ImageWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
-import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
-import org.uml.model.Field;
 import org.uml.model.UmlClassElement;
-import org.uml.model.Visibility;
 import org.uml.visual.widgets.actions.AddFieldAction;
 import org.uml.visual.widgets.actions.AddMethodAction;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
