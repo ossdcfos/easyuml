@@ -19,7 +19,7 @@ import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
-import org.uml.model.UmlClassElement;
+import org.uml.model.ClassComponent;
 import org.uml.visual.widgets.actions.AddFieldAction;
 import org.uml.visual.widgets.actions.AddMethodAction;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
@@ -39,7 +39,7 @@ import org.uml.visual.widgets.actions.PickStaticKeywordForMethodAction;
 public class ClassWidget extends IconNodeWidget {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
-    UmlClassElement classElement;
+    ClassComponent classComponent;
     
     private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
     private static final Image AtributeDefaultImage = Utilities.loadImage("org/uml/visual/icons/AtributeDefault.jpg"); // NOI18N
@@ -63,10 +63,11 @@ public class ClassWidget extends IconNodeWidget {
     
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
 
-    public ClassWidget(ClassDiagramScene scene, UmlClassElement umlClassElement) {
+    public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
         super(scene);
-        this.classElement = umlClassElement;
-        
+        this.classComponent = classComponent;
+      
+         
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
         setOpaque(true);
@@ -80,7 +81,7 @@ public class ClassWidget extends IconNodeWidget {
         //getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         
         ImageWidget classImage= new ImageWidget(scene);
-        classImage.setImage(classElement.getImage());
+        classImage.setImage(this.classComponent.getImage());
         
         classNameWidget = new LabelWidget(scene);
         classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
@@ -107,6 +108,8 @@ public class ClassWidget extends IconNodeWidget {
         fieldsWidget.addChild(operationName);
         addChild(methodsWidget);
         
+        
+                 this.classNameWidget.setLabel(classComponent.getName());  
         createAddFieldAction(createAddFieldActionWidget());
         createAddMethodAction(createAddMethodActionWidget());
     }

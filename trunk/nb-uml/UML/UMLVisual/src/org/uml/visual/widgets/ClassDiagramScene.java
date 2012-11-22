@@ -12,9 +12,10 @@ import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.Relation;
+import org.uml.model.RelationComponent;
 import org.uml.model.UmlClassDiagram;
-import org.uml.model.UmlClassElement;
+import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
@@ -28,7 +29,7 @@ import org.uml.visual.widgets.actions.SceneAcceptProvider;
  * @author NUGS
  */                                             /* ClassDiagramComponent, ClassDiagramRelation*/
 // ClassDiagramComponent  - Class, Interface, 
-public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
+public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, RelationComponent> {
 
     private LayerWidget mainLayer;
     private UmlClassDiagram umlClassDiagram;
@@ -82,10 +83,9 @@ public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
     }
 
     @Override
-    protected Widget attachNodeWidget(UmlClassElement n) {
-        ClassWidget widget = new ClassWidget(this, n);
-        widget.setClassName("Class 1");
-        widget.getActions().addAction(ActionFactory.createMoveAction());
+    protected Widget attachNodeWidget(ClassDiagramComponent n) {
+        ClassWidget widget = new ClassWidget(this, (ClassComponent)n);
+              widget.getActions().addAction(ActionFactory.createMoveAction());
         //single-click, the event is not consumed:
         widget.getActions().addAction(createSelectAction());
 
@@ -99,17 +99,17 @@ public class ClassDiagramScene extends GraphScene<UmlClassElement, Relation> {
     }
 
     @Override
-    protected Widget attachEdgeWidget(Relation e) {
+    protected Widget attachEdgeWidget(RelationComponent e) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    protected void attachEdgeSourceAnchor(Relation e, UmlClassElement n, UmlClassElement n1) {
+    protected void attachEdgeSourceAnchor(RelationComponent e, ClassDiagramComponent n, ClassDiagramComponent n1) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    protected void attachEdgeTargetAnchor(Relation e, UmlClassElement n, UmlClassElement n1) {
+    protected void attachEdgeTargetAnchor(RelationComponent e, ClassDiagramComponent n, ClassDiagramComponent n1) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

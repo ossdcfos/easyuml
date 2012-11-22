@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets.actions;
 
 import java.awt.Graphics2D;
@@ -19,8 +15,7 @@ import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.uml.model.UmlClassElement;
-import org.uml.visual.widgets.ClassDiagramContainerWidget;
+import org.uml.model.ClassComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
@@ -53,12 +48,12 @@ public class SceneAcceptProvider implements AcceptProvider{
 
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
-           Class<? extends UmlClassElement> droppedClass = (Class<? extends UmlClassElement>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
+           Class<? extends ClassComponent> droppedClass = (Class<? extends ClassComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
            try {
                     Image dragImage = getImageFromTransferable(t);
-                    UmlClassElement umlClass= (UmlClassElement) droppedClass.newInstance();
+                    ClassComponent umlClass= (ClassComponent) droppedClass.newInstance();
                     umlClass.setImage(dragImage);
-                    Widget w=classDiagramScene.addNode((UmlClassElement) droppedClass.newInstance());
+                    Widget w=classDiagramScene.addNode((ClassComponent) droppedClass.newInstance());
                     w.setPreferredLocation(widget.convertLocalToScene(point));
                     //addChild(new ClassWidget((ClassDiagramScene) getScene(), (UmlClassElement) droppedClass.newInstance()));
                 } catch (InstantiationException ex) {
