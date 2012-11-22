@@ -10,28 +10,28 @@ package org.uml.model;
  */
 public class UmlConnectionElement {
     
-    public UmlClassElement fromClass;
-    public UmlClassElement toClass;
+    public ClassComponent fromClass;
+    public ClassComponent toClass;
     public String name;
 
-    public UmlConnectionElement(UmlClassElement fromClass, UmlClassElement toClass) {
+    public UmlConnectionElement(ClassComponent fromClass, ClassComponent toClass) {
         this.fromClass = fromClass;
         this.toClass = toClass;
     }
 
-    public UmlClassElement getFromClass() {
+    public ClassComponent getFromClass() {
         return fromClass;
     }
 
-    public void setFromClass(UmlClassElement fromClass) {
+    public void setFromClass(ClassComponent fromClass) {
         this.fromClass = fromClass;
     }
 
-    public UmlClassElement getToClass() {
+    public ClassComponent getToClass() {
         return toClass;
     }
 
-    public void setToClass(UmlClassElement toClass) {
+    public void setToClass(ClassComponent toClass) {
         this.toClass = toClass;
     }
 

@@ -6,15 +6,8 @@ package org.uml.model;
 
 /**
  *
- * @author "NUGS"
+ * @author zoran
  */
-public class Relation {
-    
-    UmlClassElement src;
-    UmlClassElement trg;
-    
-    public Relation() {
-    }
-    
+public class InterfaceComponent  extends ClassDiagramComponent {
     
 }
