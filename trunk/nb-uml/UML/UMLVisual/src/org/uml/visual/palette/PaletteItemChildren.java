@@ -12,10 +12,10 @@ public class PaletteItemChildren extends Index.ArrayChildren {
     
     private PaletteCategory category;
     private String[][] items = new String[][]{
-        {"Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
-        {"Abstract Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
-        {"Interface", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
-        {"Enum", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.UmlClassElement"}, 
+        {"Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.ClassComponent"}, 
+        {"Abstract Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.ClassComponent"}, 
+        {"Interface", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.InterfaceComponent"}, 
+        {"Enum", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.EnumComponent"}, 
         
         {"Is", "Relations", "org/uml/visual/icons/is.gif", "org.uml.model.UmlClassElement"}, 
         {"Has", "Relations", "org/uml/visual/icons/has.gif", "org.uml.model.UmlClassElement"}, 
