@@ -12,19 +12,19 @@ import java.util.HashMap;
  */
 public class UmlClassDiagram {
     
-    private HashMap<String, UmlClassElement> classes;
-    private HashMap<String, UmlConnectionElement> connections;
+    private HashMap<String, ClassDiagramComponent> classes;
+    private HashMap<String, RelationComponent> connections;
 
     public UmlClassDiagram() {
         
-        this.classes=new HashMap<String, UmlClassElement>();
+        this.classes=new HashMap<String, ClassDiagramComponent>();
     }
 
-    public HashMap<String, UmlClassElement> getClasses() {
+    public HashMap<String, ClassDiagramComponent> getClasses() {
         return classes;
     }
 
-    public void setClasses(HashMap<String, UmlClassElement> classes) {
+    public void setClasses(HashMap<String, ClassDiagramComponent> classes) {
         this.classes = classes;
     }
     

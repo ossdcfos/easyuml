@@ -11,11 +11,11 @@ import java.util.HashMap;
  *
  * @author Uros
  */
-public class UmlClassElement {
+public class ClassComponent extends ClassDiagramComponent {
     
         private HashMap<String,Field> fields;
         private HashMap<String,Method> methods;
-        private String name;
+
 
     public Image getImage() {
         return image;
@@ -26,13 +26,14 @@ public class UmlClassElement {
     }
         private Image image;
 
-    public UmlClassElement() {
+    public ClassComponent() {
+        this.setName("UntitedClass");
         fields= new HashMap<String, Field>();
         methods= new HashMap<String, Method>();
     }
 
-    public UmlClassElement(String name) {
-        this.name = name;
+    public ClassComponent(String name) {
+        super(name);
     }
 
     public HashMap<String, Field> getFields() {
@@ -43,13 +44,7 @@ public class UmlClassElement {
         return methods;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
     
     public Field getAttribute (String name) {
         return fields.get(name);
