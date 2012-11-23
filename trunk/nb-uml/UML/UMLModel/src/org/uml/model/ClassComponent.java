@@ -7,6 +7,9 @@ package org.uml.model;
 import java.awt.Image;
 import java.util.HashMap;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 /**
  *
  * @author Uros

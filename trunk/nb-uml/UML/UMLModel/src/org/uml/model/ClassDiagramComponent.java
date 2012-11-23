@@ -4,14 +4,20 @@
  */
 package org.uml.model;
 
+import java.lang.reflect.Member;
+import java.util.HashMap;
+
 /**
  *
  * @author zoran
  */
 public class ClassDiagramComponent {
-            private String name;
+            private String name;     // class, interface or enum name              
+            private HashMap<String,Member> members;            
+            
 
     public ClassDiagramComponent() {
+        members = new HashMap<String, Member>(); 
     }
 
             
