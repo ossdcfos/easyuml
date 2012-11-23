@@ -8,10 +8,12 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.RelationComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.visual.providers.ScenePopupMenuProvider;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
 /**
@@ -28,6 +30,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
     private LayerWidget mainLayer;
     private ClassDiagram umlClassDiagram;
+    private ScenePopupMenuProvider menu;
 
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
@@ -42,6 +45,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
+        getActions().addAction(ActionFactory.createPopupMenuAction(getMenu()));   // Da se ne pravi nova instanca na svaki desni klik!
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         //getActions().addAction(ActionFactory.createPopupMenuAction(new MainPopupMenuProvider()));
 
@@ -79,8 +83,14 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent n) {
-        ClassWidget widget = new ClassWidget(this, (ClassComponent)n);
-              widget.getActions().addAction(ActionFactory.createMoveAction());
+        ClassWidget widget = null;
+        if (n instanceof ClassComponent) {                      // Mozda refleksijom da pretavaramo imena komponente u widgete ili neko mapiranje kao u Neurophu? 
+            widget = UmlWidgetFactory.createClassWidget(this, (ClassComponent) n);
+        } else {
+            widget = new ClassWidget(this, null);
+        }
+
+        widget.getActions().addAction(ActionFactory.createMoveAction());
         //single-click, the event is not consumed:
         widget.getActions().addAction(createSelectAction());
 
@@ -106,5 +116,25 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     @Override
     protected void attachEdgeTargetAnchor(RelationComponent e, ClassDiagramComponent n, ClassDiagramComponent n1) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * @return the menu
+     */
+    public ScenePopupMenuProvider getMenu() {
+        if (menu == null) {
+            menu = new ScenePopupMenuProvider(this);
+        }
+        return menu;
+    }
+
+    /**
+     * Ads widget to main layer
+     *
+     * @param widget
+     */
+    public void addWidget(IconNodeWidget widget) {
+        mainLayer.addChild(widget);
+        validate();
     }
 }
