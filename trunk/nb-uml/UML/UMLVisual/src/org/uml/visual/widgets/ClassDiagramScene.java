@@ -13,7 +13,7 @@ import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.RelationComponent;
-import org.uml.model.UmlClassDiagram;
+import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
@@ -32,9 +32,9 @@ import org.uml.visual.widgets.actions.SceneAcceptProvider;
 public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, RelationComponent> {
 
     private LayerWidget mainLayer;
-    private UmlClassDiagram umlClassDiagram;
+    private ClassDiagram umlClassDiagram;
 
-    public ClassDiagramScene(UmlClassDiagram umlClassDiagram) {
+    public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
         this.umlClassDiagram = umlClassDiagram;
         //classDiagramWidget = new ClassDiagramContainerWidget(umlClassDiagram, this);
@@ -78,7 +78,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 //        }
 //        return o instanceof Image ? (Image) o : ImageUtilities.loadImage("org/uml/visual/icons/class.gif");
 //    }
-    public UmlClassDiagram getUmlClassDiagram() {
+    public ClassDiagram getUmlClassDiagram() {
         return umlClassDiagram;
     }
 
