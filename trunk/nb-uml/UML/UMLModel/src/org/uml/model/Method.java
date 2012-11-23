@@ -6,24 +6,15 @@ import java.util.HashMap;
  *
  * @author Uros
  */
-public class Method {
+public class Method extends Member {
     
-    private String name;
     private String returnType;
     private HashMap <String,MethodArgument> arguments;
 
     public Method(String name, String returnType, HashMap<String,MethodArgument> arguments) {
-        this.name = name;
+        super(name);
         this.returnType = returnType;
         this.arguments = arguments;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getReturnType() {

@@ -5,10 +5,11 @@
 package org.uml.model;
 
 /**
- *
+ * This should also be a member as in reflection api.
+ * put all this stuff in subclasses
  * @author zoran
  */
-public class Member {
+public class Member { 
     private String name;
     private int modifier;
     private ClassDiagramComponent declaringClass;
