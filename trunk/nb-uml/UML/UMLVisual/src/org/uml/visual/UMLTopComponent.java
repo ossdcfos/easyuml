@@ -13,7 +13,7 @@ import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
-import org.uml.model.UmlClassDiagram;
+import org.uml.model.ClassDiagram;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 
@@ -40,7 +40,7 @@ preferredID = "UMLTopComponent")
 })
 public final class UMLTopComponent extends TopComponent {
 
-    private UmlClassDiagram umlClassDiagram;
+    private ClassDiagram umlClassDiagram;
     private ClassDiagramScene classDiagramScene;
     private JScrollPane shapePane;
 
@@ -48,7 +48,7 @@ public final class UMLTopComponent extends TopComponent {
         initComponents();
         setName(Bundle.CTL_UMLTopComponent());
         setToolTipText(Bundle.HINT_UMLTopComponent());
-        classDiagramScene = new ClassDiagramScene(umlClassDiagram = new UmlClassDiagram());     // Fresh scene with fresh diagram
+        classDiagramScene = new ClassDiagramScene(umlClassDiagram = new ClassDiagram());     // Fresh scene with fresh diagram
 //        umlClassDiagram= new umlClassDiagram();
 //       
 //        NeuralNetworkGraphScene scene = new NeuralNetworkGraphScene(nnet);
@@ -62,7 +62,7 @@ public final class UMLTopComponent extends TopComponent {
         associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
     }
 
-    public UMLTopComponent(UmlClassDiagram umlClassDiagram) {
+    public UMLTopComponent(ClassDiagram umlClassDiagram) {
         this.umlClassDiagram = umlClassDiagram;
         initComponents();
         setName(Bundle.CTL_UMLTopComponent());
