@@ -4,26 +4,19 @@ package org.uml.model;
  *
  * @author Uros
  */
-public class Field  /* treba da nasledjuje member a u membberu da bude visibility*/{
+public class Field extends Member /* treba da nasledjuje member a u membberu da bude visibility*/{
     
-        private String name;
         private String type;
         private Visibility visibility;
         private boolean isStatic;
 
     public Field(String name, String type, Visibility visibility) {
-        this.name = name;
+        super(name);
         this.type = type;
         this.visibility = visibility;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Visibility getVisibility() {
         return visibility;
