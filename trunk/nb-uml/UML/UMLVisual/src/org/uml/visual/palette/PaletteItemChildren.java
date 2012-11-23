@@ -13,15 +13,15 @@ public class PaletteItemChildren extends Index.ArrayChildren {
     private PaletteCategory category;
     private String[][] items = new String[][]{
         {"Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.ClassComponent"}, 
-        {"Abstract Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.ClassComponent"}, 
         {"Interface", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.InterfaceComponent"}, 
         {"Enum", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.EnumComponent"}, 
         
         {"Is", "Relations", "org/uml/visual/icons/is.gif", "org.uml.model.UmlClassElement"}, 
         {"Has", "Relations", "org/uml/visual/icons/has.gif", "org.uml.model.UmlClassElement"}, 
         {"Use", "Relations", "org/uml/visual/icons/use.gif", "org.uml.model.UmlClassElement"}, 
+        {"Implements", "Relations", "org/uml/visual/icons/use.gif", "org.uml.model.UmlClassElement"},
         
-        {"Notes", "Other", "org/uml/visual/icons/notes.gif", "org.uml.model.UmlClassElement"}, 
+//        {"Notes", "Other", "org/uml/visual/icons/notes.gif", "org.uml.model.UmlClassElement"}, 
         //        {"Method","Shapes","org/uml/visual/palette/methodPublic.gif","org.uml.model.Method"},
     //        {"Variable","Shapes","org/uml/visual/palette/variablePublic.gif","org.uml.model.Field"},
     };
