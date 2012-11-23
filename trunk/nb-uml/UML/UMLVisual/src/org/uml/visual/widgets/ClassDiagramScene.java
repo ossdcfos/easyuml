@@ -4,11 +4,7 @@
  */
 package org.uml.visual.widgets;
 
-import java.awt.Point;
-import java.awt.datatransfer.Transferable;
-import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
@@ -16,7 +12,6 @@ import org.uml.model.RelationComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
 /**
