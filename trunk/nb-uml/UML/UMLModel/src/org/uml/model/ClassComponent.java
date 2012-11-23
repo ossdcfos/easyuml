@@ -13,6 +13,7 @@ import java.util.HashMap;
  */
 public class ClassComponent extends ClassDiagramComponent {
     
+        private Image image; // ovo treba stavit iu widget a ne ovde....
         private HashMap<String,Field> fields;
         private HashMap<String,Method> methods;
 
@@ -24,7 +25,7 @@ public class ClassComponent extends ClassDiagramComponent {
     public void setImage(Image image) {
         this.image = image;
     }
-        private Image image;
+       
 
     public ClassComponent() {
         this.setName("UntitedClass");
