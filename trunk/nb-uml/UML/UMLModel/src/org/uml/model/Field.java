@@ -4,7 +4,7 @@ package org.uml.model;
  *
  * @author Uros
  */
-public class Field {
+public class Field  /* treba da nasledjuje member a u membberu da bude visibility*/{
     
         private String name;
         private String type;
