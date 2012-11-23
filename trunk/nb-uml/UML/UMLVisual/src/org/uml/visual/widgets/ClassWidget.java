@@ -20,6 +20,8 @@ import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagramComponent;
+import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.widgets.actions.AddFieldAction;
 import org.uml.visual.widgets.actions.AddMethodAction;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
@@ -36,10 +38,12 @@ import org.uml.visual.widgets.actions.PickStaticKeywordForMethodAction;
  *
  * @author NUGS
  */
-public class ClassWidget extends IconNodeWidget {
+public class ClassWidget extends IconNodeWidget{
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
+
+   
     
     private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
     private static final Image AtributeDefaultImage = Utilities.loadImage("org/uml/visual/icons/AtributeDefault.jpg"); // NOI18N
@@ -109,9 +113,11 @@ public class ClassWidget extends IconNodeWidget {
         addChild(methodsWidget);
         
         
-                 this.classNameWidget.setLabel(classComponent.getName());  
+        this.classNameWidget.setLabel(classComponent.getName());  
         createAddFieldAction(createAddFieldActionWidget());
         createAddMethodAction(createAddMethodActionWidget());
+        
+        getActions().addAction(ActionFactory.createConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
     }
      public String getClassName() {
         return classNameWidget.getLabel();
@@ -241,6 +247,9 @@ public class ClassWidget extends IconNodeWidget {
 
         return widget;
     }
+     public ClassComponent getClassComponent() {
+        return classComponent;
+    }
 
     public void createAddFieldAction(Widget memberWidget) {
         fieldsWidget.addChild(memberWidget);
@@ -257,6 +266,7 @@ public class ClassWidget extends IconNodeWidget {
     public void removeMethod(Widget operationWidget) {
         methodsWidget.removeChild(operationWidget);
     }
+
         
     
 }

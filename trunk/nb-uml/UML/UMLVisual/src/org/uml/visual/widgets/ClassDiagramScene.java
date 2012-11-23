@@ -5,7 +5,13 @@
 package org.uml.visual.widgets;
 
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.WidgetAction;
+import org.netbeans.api.visual.anchor.Anchor;
+import org.netbeans.api.visual.anchor.AnchorFactory;
+import org.netbeans.api.visual.anchor.AnchorShape;
+import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.graph.GraphScene;
+import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
@@ -13,6 +19,7 @@ import org.uml.model.RelationComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ScenePopupMenuProvider;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
@@ -32,6 +39,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     private ClassDiagram umlClassDiagram;
     private ScenePopupMenuProvider menu;
 
+    private LayerWidget connectionLayer;
+    private LayerWidget interractionLayer;
+    
+
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
         this.umlClassDiagram = umlClassDiagram;
@@ -41,7 +52,11 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         //mainLayer.addChild(classDiagramWidget);               // Za Kasnije
         addChild(mainLayer);
         //addObject(umlClassDiagram, classDiagramWidget);       // Za kasnije
-
+        connectionLayer= new LayerWidget(this);
+        addChild(connectionLayer);
+        interractionLayer= new LayerWidget(this);
+        addChild(interractionLayer);
+        //getActions().addAction(connectAction);
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
@@ -99,23 +114,42 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
         //mouse-over, the event is consumed while the mouse is over the widget:
         widget.getActions().addAction(createObjectHoverAction());
+
         mainLayer.addChild(widget);
         return widget;
     }
 
     @Override
     protected Widget attachEdgeWidget(RelationComponent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ConnectionWidget widget= new ConnectionWidget(this);
+        widget.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
+        widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
+        WidgetAction.Chain actions= widget.getActions();
+        actions.addAction(createObjectHoverAction());
+        actions.addAction(createSelectAction());
+        //reconnectAction;
+        connectionLayer.addChild(widget);
+        return widget;
     }
 
     @Override
-    protected void attachEdgeSourceAnchor(RelationComponent e, ClassDiagramComponent n, ClassDiagramComponent n1) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    protected void attachEdgeSourceAnchor(RelationComponent edge, ClassDiagramComponent oldSourceNode, ClassDiagramComponent sourceNode) {
+        ConnectionWidget edgeWidget= (ConnectionWidget) findWidget(edge);
+        Widget sourceNodeWidget= findWidget(sourceNode);
+        Anchor sourceAnchor=AnchorFactory.createRectangularAnchor(sourceNodeWidget);
+        edgeWidget.setSourceAnchor(sourceAnchor);
     }
 
     @Override
-    protected void attachEdgeTargetAnchor(RelationComponent e, ClassDiagramComponent n, ClassDiagramComponent n1) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    protected void attachEdgeTargetAnchor(RelationComponent edge, ClassDiagramComponent oldSourceNode, ClassDiagramComponent targetNode) {
+        ConnectionWidget edgeWidget= (ConnectionWidget) findWidget(edge);
+        Widget targetNodeWidget= findWidget(targetNode);
+        Anchor targetAnchor = AnchorFactory.createRectangularAnchor (targetNodeWidget);
+        edgeWidget.setTargetAnchor (targetAnchor);
+    }
+    
+        public LayerWidget getInterractionLayer() {
+        return interractionLayer;
     }
 
     /**
