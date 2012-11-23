@@ -10,11 +10,34 @@ package org.uml.model;
  */
 public class RelationComponent {
     
-    ClassDiagramComponent src;
-    ClassDiagramComponent trg;
-    
+    ClassDiagramComponent source;
+    ClassDiagramComponent target;
+
     public RelationComponent() {
+    }       
+    
+    public RelationComponent( ClassDiagramComponent source, ClassDiagramComponent target) {
     }
+
+    public ClassDiagramComponent getSource() {
+        return source;
+    }
+
+    public ClassDiagramComponent getTarget() {
+        return target;
+    }
+
+    public void setSource(ClassDiagramComponent source) {
+        this.source = source;
+    }
+
+    public void setTarget(ClassDiagramComponent target) {
+        this.target = target;
+    }
+    
+    
+    
+    
     
     
 }
