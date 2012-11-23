@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 public class ClassDiagramComponent {
             private String name;     // class, interface or enum name              
-            private HashMap<String,Member> members;            
+            private HashMap<String,Member> members; // index of all fields, methods and constructors            
             
 
     public ClassDiagramComponent() {
@@ -36,6 +36,10 @@ public class ClassDiagramComponent {
     
     protected void addMember(Member member) {
         members.put(member.getName(), member);
+    }
+    
+    protected void removeMember(String name) {
+        members.remove(name);
     }
             
 }
