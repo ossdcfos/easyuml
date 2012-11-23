@@ -24,10 +24,7 @@ public class ClassDiagramComponent {
             
     public ClassDiagramComponent(String name) {
         this.name = name;
-    }
-            
-            
-            
+    }                                  
             
     public String getName() {
         return name;
@@ -35,6 +32,10 @@ public class ClassDiagramComponent {
 
     public void setName(String name) {
         this.name = name;
-    }            
+    }    
+    
+    protected void addMember(Member member) {
+        members.put(member.getName(), member);
+    }
             
 }

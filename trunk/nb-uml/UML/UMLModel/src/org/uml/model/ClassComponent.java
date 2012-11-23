@@ -5,6 +5,7 @@
 package org.uml.model;
 
 import java.awt.Image;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 public class ClassComponent extends ClassDiagramComponent {
     
         private Image image; // ovo treba stavit iu widget a ne ovde....
+        private HashMap<String,Constructor> constructors;
         private HashMap<String,Field> fields;
         private HashMap<String,Method> methods;
 
@@ -49,15 +51,16 @@ public class ClassComponent extends ClassDiagramComponent {
 
 
     
-    public Field getAttribute (String name) {
+    public Field getField (String name) {
         return fields.get(name);
     }
     
-    public void addAttribute (Field attribute) {
-        fields.put(attribute.getName(), attribute);
+    public void addField (Field field) {
+        fields.put(field.getName(), field);
+        addMember(field);
     } 
     
-    public void removeAttribute (String name) {
+    public void removeField (String name) {
         fields.remove(name);
     }
     
@@ -67,6 +70,7 @@ public class ClassComponent extends ClassDiagramComponent {
     
     public void addMethod(Method method) {
         methods.put(method.getName(), method);
+        addMember(method);
     }
     
     public void removeMethod(String name) {
