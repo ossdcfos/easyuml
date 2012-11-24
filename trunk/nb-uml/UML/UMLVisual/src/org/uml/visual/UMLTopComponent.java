@@ -5,7 +5,6 @@
 package org.uml.visual;
 
 import java.awt.BorderLayout;
-import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -68,14 +67,13 @@ public final class UMLTopComponent extends TopComponent {
         setName(Bundle.CTL_UMLTopComponent());
         setToolTipText(Bundle.HINT_UMLTopComponent());
         setLayout(new BorderLayout());
-
         classDiagramScene = new ClassDiagramScene(this.umlClassDiagram);
 
 
 
         //implementiraj
         //scene.visualizeNetwork();
-
+       
         associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
     }
 

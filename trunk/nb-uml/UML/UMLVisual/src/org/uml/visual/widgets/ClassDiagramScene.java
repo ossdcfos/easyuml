@@ -37,8 +37,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
     private LayerWidget mainLayer;
     private ClassDiagram umlClassDiagram;
-    private ScenePopupMenuProvider menu;
-
+    
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
     
@@ -59,7 +58,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
-        getActions().addAction(ActionFactory.createPopupMenuAction(getMenu()));   // Da se ne pravi nova instanca na svaki desni klik!
+        getActions().addAction(ActionFactory.createPopupMenuAction( new ScenePopupMenuProvider(this)));   
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         //getActions().addAction(ActionFactory.createPopupMenuAction(new MainPopupMenuProvider()));
     }
@@ -89,15 +88,17 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
             widget = new ClassWidget(this, null);
         }
 
-        widget.getActions().addAction(ActionFactory.createMoveAction());
-        //single-click, the event is not consumed:
-        widget.getActions().addAction(createSelectAction());
-
-        //mouse-dragged, the event is consumed while mouse is dragged:
-        widget.getActions().addAction(ActionFactory.createMoveAction());
-
-        //mouse-over, the event is consumed while the mouse is over the widget:
-        widget.getActions().addAction(createObjectHoverAction());
+        //WARNING Ovo je ukljuceno u Factory Methodu 
+        
+//        widget.getActions().addAction(ActionFactory.createMoveAction());
+//        //single-click, the event is not consumed:
+//        widget.getActions().addAction(createSelectAction());
+//
+//        //mouse-dragged, the event is consumed while mouse is dragged:
+//        widget.getActions().addAction(ActionFactory.createMoveAction());
+//
+//        //mouse-over, the event is consumed while the mouse is over the widget:
+//        widget.getActions().addAction(createObjectHoverAction());
 
         mainLayer.addChild(widget);
         return widget;
@@ -136,15 +137,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return interractionLayer;
     }
 
-    /**
-     * @return the menu
-     */
-    public ScenePopupMenuProvider getMenu() {
-        if (menu == null) {
-            menu = new ScenePopupMenuProvider(this);
-        }
-        return menu;
-    }
+   
 
     /**
      * Ads widget to main layer
