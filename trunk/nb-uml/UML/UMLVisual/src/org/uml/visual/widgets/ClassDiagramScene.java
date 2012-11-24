@@ -56,28 +56,12 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         addChild(connectionLayer);
         interractionLayer= new LayerWidget(this);
         addChild(interractionLayer);
-        //getActions().addAction(connectAction);
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction(getMenu()));   // Da se ne pravi nova instanca na svaki desni klik!
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         //getActions().addAction(ActionFactory.createPopupMenuAction(new MainPopupMenuProvider()));
-
-        //TODO Prebaciti ovo u neki SceneAcceptProvider 
-        /* Napravljen SceneAcceptProvider
-         getActions().addAction(ActionFactory.createAcceptAction(new AcceptProvider() {
-         @Override
-         public ConnectorState isAcceptable(Widget widget, Point point, Transferable t) {
-         return ConnectorState.ACCEPT;
-         }
-
-         @Override
-         public void accept(Widget widget, Point point, Transferable t) {
-                
-         }
-         }));*/
-
     }
 
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
@@ -122,7 +106,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     @Override
     protected Widget attachEdgeWidget(RelationComponent e) {
         ConnectionWidget widget= new ConnectionWidget(this);
-        widget.setTargetAnchorShape(AnchorShape.TRIANGLE_FILLED);
+        widget.setTargetAnchorShape(AnchorShape.NONE);
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
         WidgetAction.Chain actions= widget.getActions();
         actions.addAction(createObjectHoverAction());
