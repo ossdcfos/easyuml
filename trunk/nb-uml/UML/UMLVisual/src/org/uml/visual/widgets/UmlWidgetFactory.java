@@ -6,6 +6,7 @@ package org.uml.visual.widgets;
 
 import org.netbeans.api.visual.action.ActionFactory;
 import org.uml.model.ClassComponent;
+import org.uml.visual.providers.ClassPopupMenuProvider;
 
 /**
  *
@@ -31,7 +32,10 @@ public class UmlWidgetFactory {
         widget.getActions().addAction(ActionFactory.createMoveAction());
 
         //mouse-over, the event is consumed while the mouse is over the widget:
-        widget.getActions().addAction(scene.createObjectHoverAction());
+        widget.getActions().addAction(scene.createObjectHoverAction()); 
+        
+        // Add Menu Provider
+        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(scene)));
 
         return widget;
     }
