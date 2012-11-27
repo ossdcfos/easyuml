@@ -17,6 +17,8 @@ public class RelationComponent {
     }       
     
     public RelationComponent( ClassDiagramComponent source, ClassDiagramComponent target) {
+        this.source=source;
+        this.target=target;
     }
 
     public ClassDiagramComponent getSource() {
