@@ -45,12 +45,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
         this.umlClassDiagram = umlClassDiagram;
-        //classDiagramWidget = new ClassDiagramContainerWidget(umlClassDiagram, this);
-        //classDiagramWidget.setPreferredLocation(new Point(100, 10));
         mainLayer = new LayerWidget(this);
-        //mainLayer.addChild(classDiagramWidget);               // Za Kasnije
         addChild(mainLayer);
-        //addObject(umlClassDiagram, classDiagramWidget);       // Za kasnije
         connectionLayer= new LayerWidget(this);
         addChild(connectionLayer);
         interractionLayer= new LayerWidget(this);
@@ -60,7 +56,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction( new ScenePopupMenuProvider(this)));   
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
-        //getActions().addAction(ActionFactory.createPopupMenuAction(new MainPopupMenuProvider()));
     }
 
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
@@ -148,4 +143,9 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         mainLayer.addChild(widget);
         validate();
     }
+
+    public LayerWidget getConnectionLayer() {
+        return connectionLayer;
+    }
+    
 }

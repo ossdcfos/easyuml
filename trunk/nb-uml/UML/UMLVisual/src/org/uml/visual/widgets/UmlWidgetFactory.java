@@ -6,7 +6,9 @@ package org.uml.visual.widgets;
 
 import org.netbeans.api.visual.action.ActionFactory;
 import org.uml.model.ClassComponent;
+import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
+import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 
 /**
  *
@@ -24,19 +26,29 @@ public class UmlWidgetFactory {
     public static ClassWidget createClassWidget(ClassDiagramScene scene, ClassComponent component) {
         ClassWidget widget = new ClassWidget(scene, component);
 
+        
+        //Create connections, using EXTENDED Connect Action because it resolves conflict with moveAction
+        widget.getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+        
         widget.getActions().addAction(ActionFactory.createMoveAction());
         //single-click, the event is not consumed:
         widget.getActions().addAction(scene.createSelectAction());
 
         //mouse-dragged, the event is consumed while mouse is dragged:
-        widget.getActions().addAction(ActionFactory.createMoveAction());
+        //widget.getActions().addAction(ActionFactory.createMoveAction());
 
         //mouse-over, the event is consumed while the mouse is over the widget:
-        widget.getActions().addAction(scene.createObjectHoverAction()); 
+        //widget.getActions().addAction(scene.createObjectHoverAction()); 
         
         // Add Menu Provider
         widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(scene)));
-
+        
+        //Add connections, denies move action
+        widget.getActions().addAction(ActionFactory.createConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+        
+        //Accept dropping widgets
+        widget.getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(widget)));
+        
         return widget;
     }
 

@@ -15,6 +15,7 @@ import org.openide.util.Lookup;
  */
 public class PaletteSupport {
     
+    
     public static PaletteController createPalette () {
             AbstractNode paletteRoot= new AbstractNode (new PaletteCategoryChildren());
             paletteRoot.setName("Palette Root");
