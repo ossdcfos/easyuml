@@ -16,6 +16,8 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagramComponent;
+import org.uml.model.RelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
@@ -43,7 +45,9 @@ public class SceneAcceptProvider implements AcceptProvider{
                         AffineTransform.getTranslateInstance(point.getLocation().getX(),
                         point.getLocation().getY()),
                         null);
-                return ConnectorState.ACCEPT;
+         DataFlavor flavor= t.getTransferDataFlavors()[2];
+         Class droppedClass= flavor.getRepresentationClass();
+                return canAccept(droppedClass) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
     }
 
     @Override
@@ -75,6 +79,12 @@ public class SceneAcceptProvider implements AcceptProvider{
             ex.printStackTrace();
         }
         return o instanceof Image ? (Image) o : ImageUtilities.loadImage("org/netbeans/shapesample/palette/shape1.png");
+    }
+    
+    public boolean canAccept (Class droppedClass) {
+
+        return droppedClass.equals(ClassDiagramComponent.class)
+                || droppedClass.getSuperclass().equals(ClassDiagramComponent.class);
     }
     
     

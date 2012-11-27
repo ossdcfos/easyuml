@@ -24,6 +24,7 @@ import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.widgets.actions.AddFieldAction;
 import org.uml.visual.widgets.actions.AddMethodAction;
+import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
 import org.uml.visual.widgets.actions.DeleteMethodAction;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
@@ -42,7 +43,7 @@ public class ClassWidget extends IconNodeWidget{
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
-
+    ClassDiagramScene scene;
    
     
     private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
@@ -70,7 +71,7 @@ public class ClassWidget extends IconNodeWidget{
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
         super(scene);
         this.classComponent = classComponent;
-      
+        this.scene=scene;
          
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
@@ -80,9 +81,6 @@ public class ClassWidget extends IconNodeWidget{
         Widget classWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         classWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
         classWidget.setBorder(BORDER_4);
-        
-        //getActions().addAction(ActionFactory.createResizeAction());
-        //getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         
         ImageWidget classImage= new ImageWidget(scene);
         classImage.setImage(this.classComponent.getImage());
@@ -117,7 +115,7 @@ public class ClassWidget extends IconNodeWidget{
         createAddFieldAction(createAddFieldActionWidget());
         createAddMethodAction(createAddMethodActionWidget());
         
-        getActions().addAction(ActionFactory.createConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+        
     }
      public String getClassName() {
         return classNameWidget.getLabel();
@@ -265,6 +263,10 @@ public class ClassWidget extends IconNodeWidget{
 
     public void removeMethod(Widget operationWidget) {
         methodsWidget.removeChild(operationWidget);
+    }
+
+    public ClassDiagramScene getClassDiagramScene() {
+        return scene;
     }
 
         

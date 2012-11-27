@@ -50,9 +50,6 @@ public final class UMLTopComponent extends TopComponent {
         classDiagramScene = new ClassDiagramScene(umlClassDiagram = new ClassDiagram());     // Fresh scene with fresh diagram
 //        umlClassDiagram= new umlClassDiagram();
 //       
-//        NeuralNetworkGraphScene scene = new NeuralNetworkGraphScene(nnet);
-//        view = scene.createView();
-//
 //        viewPane.setViewportView(view);
         shapePane = new JScrollPane();
         shapePane.setViewportView(classDiagramScene.createView());
