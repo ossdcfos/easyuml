@@ -39,21 +39,21 @@ public class AddFieldAction implements SelectProvider {
     public void select(Widget widget, Point point, boolean bln) {
         classWidget.removeField(widget.getParentWidget());
 
-        Widget w = classWidget.createFieldWidget("atribut");
+        Widget w = classWidget.createFieldWidget("atribut ");
         classWidget.createAddFieldAction(w);
         classWidget.createAddFieldAction(classWidget.createAddFieldActionWidget());
-
-        Robot robot = null;
-        try {
-            robot = new Robot();
-        } catch (AWTException ex) {
-            Exceptions.printStackTrace(ex);
+        
+//        Robot robot = null;
+//        try {
+//            robot = new Robot();
+//        } catch (AWTException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//            
+//                robot.mousePress(InputEvent.BUTTON1_MASK);
+//                robot.mouseRelease(InputEvent.BUTTON1_MASK);
+//                robot.mousePress(InputEvent.BUTTON1_MASK);
+//                robot.mouseRelease(InputEvent.BUTTON1_MASK);
+//                
+            }
         }
-
-        robot.mousePress(InputEvent.BUTTON1_MASK);
-        robot.mouseRelease(InputEvent.BUTTON1_MASK);
-        robot.mousePress(InputEvent.BUTTON1_MASK);
-        robot.mouseRelease(InputEvent.BUTTON1_MASK);
-
-    }
-}
