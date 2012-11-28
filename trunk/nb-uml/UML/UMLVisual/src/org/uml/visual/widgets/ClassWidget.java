@@ -7,7 +7,11 @@ package org.uml.visual.widgets;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Point;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.EditProvider;
+import org.netbeans.api.visual.action.SelectProvider;
+import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
@@ -27,6 +31,7 @@ import org.uml.visual.widgets.actions.AddMethodAction;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
 import org.uml.visual.widgets.actions.DeleteMethodAction;
+import org.uml.visual.widgets.actions.SelectAction;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.PickAttributeModifierAction;
 import org.uml.visual.widgets.actions.PickFinalKeywordForAttributeAction;
@@ -59,6 +64,8 @@ public class ClassWidget extends IconNodeWidget{
     private WidgetAction deleteMethodAction = ActionFactory.createSelectAction(new DeleteMethodAction(this));
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(this));
 
+    private WidgetAction selectAction = ActionFactory.createSelectAction(new SelectAction());
+    
     private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new PickMethodModifierAction(this));
     private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new PickAttributeModifierAction(this));
     private WidgetAction pickStaticKeywordForAtribute = ActionFactory.createSelectAction(new PickStaticKeywordForAttributeAction());
@@ -72,7 +79,7 @@ public class ClassWidget extends IconNodeWidget{
         super(scene);
         this.classComponent = classComponent;
         this.scene=scene;
-         
+        
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
         setOpaque(true);
@@ -107,7 +114,7 @@ public class ClassWidget extends IconNodeWidget{
         methodsWidget.setOpaque(false);
         methodsWidget.setBorder(BORDER_4);
         LabelWidget operationName = new LabelWidget(scene);
-        fieldsWidget.addChild(operationName);
+        methodsWidget.addChild(operationName);
         addChild(methodsWidget);
         
         
@@ -129,11 +136,11 @@ public class ClassWidget extends IconNodeWidget{
     public Widget createAddFieldActionWidget() {
         Scene scene = getScene();
         Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createAbsoluteLayout());
+        widget.setLayout(LayoutFactory.createOverlayLayout());
         LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel("+ add field");
+        labelWidget.setLabel("New Field");
         labelWidget.setForeground(Color.GRAY);
-        labelWidget.setAlignment(LabelWidget.Alignment.CENTER);
+        labelWidget.setAlignment(LabelWidget.Alignment.RIGHT);
         labelWidget.getActions().addAction(addFieldAction);       
         widget.addChild(labelWidget);
         return widget;
@@ -143,11 +150,11 @@ public class ClassWidget extends IconNodeWidget{
     public Widget createAddMethodActionWidget() {
         Scene scene = getScene();
         Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createAbsoluteLayout());
+        widget.setLayout(LayoutFactory.createOverlayLayout());
         LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel("+ add method");
+        labelWidget.setLabel("New Method");
         labelWidget.setForeground(Color.GRAY);
-        labelWidget.setAlignment(LabelWidget.Alignment.CENTER);
+        labelWidget.setAlignment(LabelWidget.Alignment.RIGHT);
         labelWidget.getActions().addAction(addMethodAction);
         widget.addChild(labelWidget);
         return widget;
@@ -181,11 +188,12 @@ public class ClassWidget extends IconNodeWidget{
         fieldWidget.addChild(finalKeyword);
         finalKeyword.getActions().addAction(pickFinalKeywordForAtribute);
 
-        LabelWidget labelWidget = new LabelWidget(scene);
+        LabelWidget labelWidget = new LabelWidget(scene); 
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(editorAction);
+        labelWidget.getActions().addAction(selectAction);
         //dodato polje u classElement
-
+        
         fieldWidget.addChild(labelWidget);
         
         return fieldWidget;
@@ -241,6 +249,7 @@ public class ClassWidget extends IconNodeWidget{
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
+        labelWidget.getActions().addAction(selectAction);
 
 
         return widget;
