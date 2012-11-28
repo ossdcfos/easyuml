@@ -20,8 +20,8 @@ public class LabelTextFieldEditorAction implements TextFieldInplaceEditor{
     public LabelTextFieldEditorAction(ClassWidget classWidget) {
         this.classWidget=classWidget;
     }
-
-        
+    
+    
     @Override
     public boolean isEnabled(Widget widget) {
         return true;
