@@ -32,7 +32,7 @@ public class ClassComponent extends ClassDiagramComponent {
        
 
     public ClassComponent() {
-        this.setName("UntitedClass");
+        this.setName("UntitledClass");
         fields= new HashMap<String, Field>();
         methods= new HashMap<String, Method>();
     }
