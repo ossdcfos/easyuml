@@ -278,6 +278,11 @@ public class ClassWidget extends IconNodeWidget{
         return scene;
     }
 
+    @Override
+    public String toString() {
+        return classNameWidget.getLabel();
+    }
+
         
     
 }

@@ -147,5 +147,9 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public LayerWidget getConnectionLayer() {
         return connectionLayer;
     }
+
+    public LayerWidget getMainLayer() {
+        return mainLayer;
+    }
     
 }
