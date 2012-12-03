@@ -7,7 +7,12 @@ package org.uml.visual.dialogs;
 import java.util.List;
 import javax.management.relation.Relation;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.Exceptions;
+import org.uml.model.HasRelationComponent;
+import org.uml.model.ImplementsRelationComponent;
+import org.uml.model.IsRelationComponent;
 import org.uml.model.RelationComponent;
+import org.uml.model.UseRelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 
@@ -44,6 +49,10 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
                 jcbClassesTarget.addItem(widget);
             
         }
+        jcbRelations.addItem(new IsRelationComponent());
+        jcbRelations.addItem(new HasRelationComponent());
+        jcbRelations.addItem(new UseRelationComponent());
+        jcbRelations.addItem(new ImplementsRelationComponent());
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,6 +69,8 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jbtnOk = new javax.swing.JButton();
         jbtnCancel = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jcbRelations = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -87,27 +98,30 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AddRelationshipDialog.class, "AddRelationshipDialog.jLabel3.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jbtnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(jbtnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
+                        .addComponent(jbtnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43)
+                        .addComponent(jbtnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jcbClassesTarget, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jcbClassesSource, 0, 136, Short.MAX_VALUE))))
-                .addGap(54, 54, 54))
+                            .addComponent(jcbClassesSource, 0, 136, Short.MAX_VALUE)
+                            .addComponent(jcbRelations, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(24, 24, 24))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,26 +134,46 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jcbClassesTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbRelations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbtnOk)
                     .addComponent(jbtnCancel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnOkActionPerformed
-        
-        RelationComponent relation = new RelationComponent();
+         try {
+        String packageURL= "org.uml.model.";
+        packageURL += jcbRelations.getSelectedItem().toString()+"RelationComponent";
+       
+        Class<? extends RelationComponent> forName= (Class<? extends RelationComponent>) Class.forName(packageURL);
+        RelationComponent relation = forName.newInstance();
+
+    
         ClassWidget source= (ClassWidget)jcbClassesSource.getSelectedItem();
         ClassWidget target= (ClassWidget)jcbClassesTarget.getSelectedItem();
-        classDiagramScene.addEdge(relation);
-        classDiagramScene.setEdgeSource(relation, source.getClassComponent());
-        classDiagramScene.setEdgeTarget(relation, target.getClassComponent());
-        classDiagramScene.validate();
-        this.dispose();
+        
+         classDiagramScene.addEdge(relation);
+         classDiagramScene.setEdgeSource(relation, source.getClassComponent());
+         classDiagramScene.setEdgeTarget(relation, target.getClassComponent());
+         classDiagramScene.validate();
+         
+        } catch (InstantiationException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IllegalAccessException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+         catch (ClassNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+         }
+            this.dispose();
     }//GEN-LAST:event_jbtnOkActionPerformed
 
     private void jbtnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCancelActionPerformed
@@ -194,9 +228,11 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JButton jbtnCancel;
     private javax.swing.JButton jbtnOk;
     private javax.swing.JComboBox jcbClassesSource;
     private javax.swing.JComboBox jcbClassesTarget;
+    private javax.swing.JComboBox jcbRelations;
     // End of variables declaration//GEN-END:variables
 }
