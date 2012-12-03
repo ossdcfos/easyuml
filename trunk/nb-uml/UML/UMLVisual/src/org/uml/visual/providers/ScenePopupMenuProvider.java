@@ -13,6 +13,7 @@ import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.dialogs.AddClassDialog;
+import org.uml.visual.dialogs.AddRelationshipDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
@@ -23,6 +24,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
     private final JPopupMenu sceneMenu;
     private JMenuItem createClassItem;
+    private JMenuItem createRelationshipItem;
     private ClassDiagramScene scene;
 
     public ScenePopupMenuProvider(ClassDiagramScene scene) {
@@ -45,6 +47,15 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 (new AddClassDialog(null, scene, true)).setVisible(true);
             }
         });
+        createRelationshipItem= new JMenuItem("Add Relationship");
+        createRelationshipItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                (new AddRelationshipDialog(null,scene,true)).setVisible(true);
+            }
+        });
         sceneMenu.add(createClassItem);
+        sceneMenu.add(createRelationshipItem);
     }
 }

@@ -11,6 +11,7 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.ConnectDecorator;
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.visual.providers.ClassConnectDecorator;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.widgets.ClassWidget;
 
@@ -38,6 +39,7 @@ public class ClassWidgetAcceptProvider implements AcceptProvider{
     public void accept(Widget widget, Point point, Transferable t) {
         //classWidget.getActions().addAction(ActionFactory.createConnectAction(classWidget.getClassDiagramScene().getInterractionLayer(), new ClassConnectProvider()));
         //classWidget.getActions().addAction(ActionFactory.createExtendedConnectAction(classWidget.getClassDiagramScene().getInterractionLayer(), new ClassConnectProvider()));
+        classWidget.getActions().addAction(ActionFactory.createExtendedConnectAction(new ClassConnectDecorator(), classWidget.getClassDiagramScene().getInterractionLayer(), new ClassConnectProvider()));
     }
     
 }
