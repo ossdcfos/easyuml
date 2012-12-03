@@ -4,7 +4,11 @@
  */
 package org.uml.visual.dialogs;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarFile;
 import javax.management.relation.Relation;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
@@ -43,16 +47,32 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
     
     
     public void fillCombos () {
-        List<Widget> widgets=classDiagramScene.getMainLayer().getChildren();
-        for(Widget widget: widgets) {           //TODO needs a check if it's a ClassWidget or not
-                jcbClassesSource.addItem(widget);
-                jcbClassesTarget.addItem(widget);
+        try {
+            List<Widget> widgets=classDiagramScene.getMainLayer().getChildren();
+            for(Widget widget: widgets) {           //TODO needs a check if it's a ClassWidget or not
+                    jcbClassesSource.addItem(widget);
+                    jcbClassesTarget.addItem(widget);
+                
+            }
             
+            JarFile jar = new JarFile(new File("build/cluster/modules/org-uml-model.jar"));
+            Enumeration entries= jar.entries();
+            while(entries.hasMoreElements()) {
+                String fullUrl = entries.nextElement().toString();
+                if(fullUrl.startsWith("org/uml/model/")&& fullUrl.contains("RelationComponent")&&!fullUrl.equals("org/uml/model/RelationComponent.class")) {
+                    try {
+                        fullUrl= fullUrl.replace(".class", "");
+                        fullUrl= fullUrl.replace("/", ".");
+                        Class<? extends RelationComponent> forName= (Class<? extends RelationComponent>) Class.forName(fullUrl);
+                        jcbRelations.addItem(forName.newInstance());
+                    } catch (        InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
         }
-        jcbRelations.addItem(new IsRelationComponent());
-        jcbRelations.addItem(new HasRelationComponent());
-        jcbRelations.addItem(new UseRelationComponent());
-        jcbRelations.addItem(new ImplementsRelationComponent());
     }
     /**
      * This method is called from within the constructor to initialize the form.
