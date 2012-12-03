@@ -5,6 +5,7 @@
 package org.uml.visual.dialogs;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
@@ -41,12 +42,12 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.classDiagramScene = classDiagramScene;
-        fillCombos();
+        fillCombos(true);
     }
     
     
     
-    public void fillCombos () {
+    public void fillCombos (boolean isProject) {
         try {
             List<Widget> widgets=classDiagramScene.getMainLayer().getChildren();
             for(Widget widget: widgets) {           //TODO needs a check if it's a ClassWidget or not
@@ -54,8 +55,13 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
                     jcbClassesTarget.addItem(widget);
                 
             }
-            
-            JarFile jar = new JarFile(new File("build/cluster/modules/org-uml-model.jar"));
+            JarFile jar;
+            if(isProject){
+            jar = new JarFile(new File("build/cluster/modules/org-uml-model.jar"));
+            }
+            else {
+            jar = new JarFile(new File("../build/cluster/modules/org-uml-model.jar"));
+            }
             Enumeration entries= jar.entries();
             while(entries.hasMoreElements()) {
                 String fullUrl = entries.nextElement().toString();
@@ -71,7 +77,7 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
                 }
             }
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            fillCombos(false);
         }
     }
     /**
