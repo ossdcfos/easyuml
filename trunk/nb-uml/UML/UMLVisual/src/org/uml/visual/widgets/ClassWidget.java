@@ -290,7 +290,7 @@ public class ClassWidget extends IconNodeWidget{
      @Override
     public void notifyStateChanged(ObjectState previousState, ObjectState newState) {
         super.notifyStateChanged(previousState, newState);
-        setBorder(newState.isSelected() ? RESIZE_BORDER : DEFAULT_BORDER);       
+        setBorder(newState.isSelected() ? (newState.isWidgetHovered() ? RESIZE_BORDER : DEFAULT_BORDER) : DEFAULT_BORDER);       
     }
         
     
