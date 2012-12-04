@@ -30,21 +30,21 @@ public class UmlWidgetFactory {
         //Create connections, using EXTENDED Connect Action because it resolves conflict with moveAction
         widget.getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         
-        widget.getActions().addAction(ActionFactory.createMoveAction());
-        //single-click, the event is not consumed:
+
+        //This need to be here, widget notifyStateChanged listens to this
         widget.getActions().addAction(scene.createSelectAction());
-
+        //Create resize action, needs to be activated BEFORE Move Action
+        widget.getActions().addAction(ActionFactory.createResizeAction());
+        //single-click, the event is not consumed:
         //mouse-dragged, the event is consumed while mouse is dragged:
-        //widget.getActions().addAction(ActionFactory.createMoveAction());
-
+        widget.getActions().addAction(ActionFactory.createMoveAction());
+         
         //mouse-over, the event is consumed while the mouse is over the widget:
-        //widget.getActions().addAction(scene.createObjectHoverAction()); 
+        //widget.getActions().addAction(scene.createWidgetHoverAction()); 
         
         // Add Menu Provider
         widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(scene)));
         
-        //Add connections, denies move action
-        widget.getActions().addAction(ActionFactory.createConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         
         //Accept dropping widgets
         widget.getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(widget)));

@@ -56,6 +56,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction( new ScenePopupMenuProvider(this)));   
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
+        
     }
 
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
