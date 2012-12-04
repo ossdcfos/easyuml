@@ -40,7 +40,7 @@ public class UmlWidgetFactory {
         widget.getActions().addAction(ActionFactory.createMoveAction());
          
         //mouse-over, the event is consumed while the mouse is over the widget:
-        //widget.getActions().addAction(scene.createWidgetHoverAction()); 
+        widget.getActions().addAction(scene.createWidgetHoverAction()); 
         
         // Add Menu Provider
         widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(scene)));
