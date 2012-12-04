@@ -16,6 +16,7 @@ import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
+import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.ImageWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
@@ -48,11 +49,15 @@ public class ClassWidget extends IconNodeWidget{
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
-    ClassDiagramScene scene;
-   
-    
+    ClassDiagramScene scene;   
     private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
     private static final Image AtributeDefaultImage = Utilities.loadImage("org/uml/visual/icons/AtributeDefault.jpg"); // NOI18N
+    
+    
+    private static final Border RESIZE_BORDER = 
+        BorderFactory.createResizeBorder(4, Color.black, true);
+    private static final Border DEFAULT_BORDER = 
+        BorderFactory.createLineBorder();
     
     private LabelWidget classNameWidget;
     private Widget fieldsWidget;
@@ -79,7 +84,7 @@ public class ClassWidget extends IconNodeWidget{
         super(scene);
         this.classComponent = classComponent;
         this.scene=scene;
-        
+        setChildConstraint(getImageWidget(), 1);
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
         setOpaque(true);
@@ -89,9 +94,8 @@ public class ClassWidget extends IconNodeWidget{
         classWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
         classWidget.setBorder(BORDER_4);
         
-        ImageWidget classImage= new ImageWidget(scene);
-        classImage.setImage(this.classComponent.getImage());
-        
+        //ImageWidget classImage= new ImageWidget(scene);
+        //classImage.setImage(this.classComponent.getImage());
         classNameWidget = new LabelWidget(scene);
         classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         classWidget.addChild(classNameWidget);
@@ -282,7 +286,12 @@ public class ClassWidget extends IconNodeWidget{
     public String toString() {
         return classNameWidget.getLabel();
     }
-
+    
+     @Override
+    public void notifyStateChanged(ObjectState previousState, ObjectState newState) {
+        super.notifyStateChanged(previousState, newState);
+        setBorder(newState.isSelected() ? RESIZE_BORDER : DEFAULT_BORDER);       
+    }
         
     
 }
