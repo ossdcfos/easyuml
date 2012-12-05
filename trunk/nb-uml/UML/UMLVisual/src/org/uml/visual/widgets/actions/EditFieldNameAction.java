@@ -19,7 +19,7 @@ import org.openide.util.Exceptions;
  *
  * @author Jelena
  */
-public class EditFieldAction implements SelectProvider{
+public class EditFieldNameAction implements SelectProvider{
 
     @Override
     public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {

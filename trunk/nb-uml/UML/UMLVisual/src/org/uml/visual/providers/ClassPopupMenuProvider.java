@@ -23,12 +23,18 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private ClassWidget classWidget;
     private JPopupMenu menu;
     private JMenuItem deleteWidget;
+    private JMenuItem addAtrinute;
+    private JMenuItem addMethod;
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
         this.classWidget = classWidget;
         menu = new JPopupMenu("Class Menu");
         (deleteWidget = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
         menu.add(deleteWidget);
+        (addAtrinute = new JMenuItem("Add Atribute")).addActionListener(addAtributeListener);
+        menu.add(addAtrinute);
+        (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
+        menu.add(addMethod);
     }
     /**
      * Remove Widget Listener
@@ -39,6 +45,22 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
            classWidget.removeFromParent();
+        }
+    };
+    ActionListener addAtributeListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Widget w = classWidget.createFieldWidget(" Atribute");
+            classWidget.createAddFieldAction(w);
+            classWidget.getScene().validate();
+        }
+    };
+    ActionListener addMethodListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+            classWidget.createAddMethodAction(classWidget.createMethodWidget(" Method()"));
+            classWidget.getScene().validate();
         }
     };
 
