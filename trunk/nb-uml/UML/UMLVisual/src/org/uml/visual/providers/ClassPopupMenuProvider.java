@@ -54,7 +54,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             Widget w = classWidget.createFieldWidget(" Atribute");
-            classWidget.createAddFieldAction(w);
+            classWidget.createFieldAction(w);
             classWidget.getScene().validate();
         }
     };
@@ -62,14 +62,14 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            classWidget.createAddMethodAction(classWidget.createMethodWidget(" Method()"));
+            classWidget.createMethodAction(classWidget.createMethodWidget(" Method()"));
             classWidget.getScene().validate();
         }
     };
     ActionListener addConstructorListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            classWidget.createAddMethodAction(classWidget.createMethodWidget(classWidget.getClassName()+"()"));
+            classWidget.createMethodAction(classWidget.createMethodWidget(classWidget.getClassName()+"()"));
             classWidget.getScene().validate();
             addConstructor.setEnabled(false);
         }
