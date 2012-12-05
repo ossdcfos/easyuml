@@ -12,6 +12,7 @@ import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.ClassWidget;
 
 /**
  *
@@ -19,12 +20,12 @@ import org.uml.visual.widgets.ClassDiagramScene;
  */
 public class ClassPopupMenuProvider implements PopupMenuProvider {
 
-    private ClassDiagramScene scene;
+    private ClassWidget classWidget;
     private JPopupMenu menu;
     private JMenuItem deleteWidget;
 
-    public ClassPopupMenuProvider(ClassDiagramScene scene) {
-        this.scene = scene;
+    public ClassPopupMenuProvider(ClassWidget classWidget) {
+        this.classWidget = classWidget;
         menu = new JPopupMenu("Class Menu");
         (deleteWidget = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
         menu.add(deleteWidget);
@@ -37,7 +38,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // izbrisi widget
+           classWidget.removeFromParent();
         }
     };
 

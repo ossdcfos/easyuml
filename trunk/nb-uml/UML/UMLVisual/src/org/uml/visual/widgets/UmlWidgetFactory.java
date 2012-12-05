@@ -7,7 +7,9 @@ package org.uml.visual.widgets;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.uml.model.ClassComponent;
 import org.uml.visual.providers.ClassConnectProvider;
+import org.uml.visual.providers.ClassHoverProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
+import org.uml.visual.providers.ClassSelectProvider;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 
 /**
@@ -30,8 +32,9 @@ public class UmlWidgetFactory {
         //Create connections, using EXTENDED Connect Action because it resolves conflict with moveAction
         widget.getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         
-
+        
         //This need to be here, widget notifyStateChanged listens to this
+        //TODO Make Select and Hover Action outside scene, without blue marker
         widget.getActions().addAction(scene.createSelectAction());
         //Create resize action, needs to be activated BEFORE Move Action
         widget.getActions().addAction(ActionFactory.createResizeAction());
@@ -40,11 +43,10 @@ public class UmlWidgetFactory {
         widget.getActions().addAction(ActionFactory.createMoveAction());
          
         //mouse-over, the event is consumed while the mouse is over the widget:
-        widget.getActions().addAction(scene.createWidgetHoverAction()); 
-        
+        widget.getActions().addAction(scene.createWidgetHoverAction());
+       
         // Add Menu Provider
-        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(scene)));
-        
+        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(widget)));
         
         //Accept dropping widgets
         widget.getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(widget)));

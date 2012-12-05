@@ -20,6 +20,8 @@ import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.providers.ClassConnectProvider;
+import org.uml.visual.providers.ClassHoverProvider;
+import org.uml.visual.providers.ClassSelectProvider;
 import org.uml.visual.providers.ScenePopupMenuProvider;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
@@ -40,8 +42,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
-    
 
+    
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
         this.umlClassDiagram = umlClassDiagram;
@@ -51,8 +53,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         addChild(connectionLayer);
         interractionLayer= new LayerWidget(this);
         addChild(interractionLayer);
-        getActions().addAction(ActionFactory.createPanAction());
-        getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
+        //getActions().addAction(ActionFactory.createPanAction());
+        //getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction( new ScenePopupMenuProvider(this)));   
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
@@ -152,5 +154,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public LayerWidget getMainLayer() {
         return mainLayer;
     }
+
     
 }
