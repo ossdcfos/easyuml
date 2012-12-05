@@ -1,15 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets;
 
 import org.netbeans.api.visual.action.ActionFactory;
 import org.uml.model.ClassComponent;
 import org.uml.visual.providers.ClassConnectProvider;
-import org.uml.visual.providers.ClassHoverProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
-import org.uml.visual.providers.ClassSelectProvider;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 
 /**
@@ -35,7 +29,7 @@ public class UmlWidgetFactory {
         
         //This need to be here, widget notifyStateChanged listens to this
         //TODO Make Select and Hover Action outside scene, without blue marker
-        widget.getActions().addAction(scene.createSelectAction());
+    //    widget.getActions().addAction(scene.createSelectAction());
         //Create resize action, needs to be activated BEFORE Move Action
         widget.getActions().addAction(ActionFactory.createResizeAction());
         //single-click, the event is not consumed:
@@ -43,7 +37,7 @@ public class UmlWidgetFactory {
         widget.getActions().addAction(ActionFactory.createMoveAction());
          
         //mouse-over, the event is consumed while the mouse is over the widget:
-        widget.getActions().addAction(scene.createWidgetHoverAction());
+      //  widget.getActions().addAction(scene.createWidgetHoverAction());
        
         // Add Menu Provider
         widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(widget)));
