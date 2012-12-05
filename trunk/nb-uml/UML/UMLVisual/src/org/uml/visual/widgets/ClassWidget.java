@@ -1,17 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Point;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.EditProvider;
-import org.netbeans.api.visual.action.SelectProvider;
-import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
@@ -25,11 +17,8 @@ import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagramComponent;
-import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.widgets.actions.AddFieldAction;
 import org.uml.visual.widgets.actions.AddMethodAction;
-import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
 import org.uml.visual.widgets.actions.DeleteMethodAction;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
@@ -291,11 +280,11 @@ public class ClassWidget extends IconNodeWidget{
         return classNameWidget.getLabel();
     }
     
-     @Override
-    public void notifyStateChanged(ObjectState previousState, ObjectState newState) {
-        super.notifyStateChanged(previousState, newState);
-        setBorder(newState.isSelected() ? (newState.isHovered() ? RESIZE_BORDER : DEFAULT_BORDER) : DEFAULT_BORDER);
-    }
+//     @Override
+//    public void notifyStateChanged(ObjectState previousState, ObjectState newState) {
+//        super.notifyStateChanged(previousState, newState);
+//        setBorder(newState.isSelected() ? (newState.isHovered() ? RESIZE_BORDER : DEFAULT_BORDER) : DEFAULT_BORDER);
+//    }
         
     
 }

@@ -22,22 +22,26 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
 
     private ClassWidget classWidget;
     private JPopupMenu menu;
-    private JMenuItem deleteWidget;
-    private JMenuItem addAtrinute;
+    private JMenuItem deleteClass;
+    private JMenuItem addField;
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
         this.classWidget = classWidget;
         menu = new JPopupMenu("Class Menu");
-        (deleteWidget = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
-        menu.add(deleteWidget);
-        (addAtrinute = new JMenuItem("Add Atribute")).addActionListener(addAtributeListener);
-        menu.add(addAtrinute);
+
+        (addConstructor = new JMenuItem("Add Constructor")).addActionListener(addConstructorListener);
+        menu.add(addConstructor);        
+        
+        (addField = new JMenuItem("Add Field")).addActionListener(addAtributeListener);
+        menu.add(addField);
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
-        (addConstructor = new JMenuItem("Add Constructor")).addActionListener(addConstructorListener);
-        menu.add(addConstructor);
+        
+        (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
+        menu.add(deleteClass);        
+        
     }
     /**
      * Remove Widget Listener
@@ -53,7 +57,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener addAtributeListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Widget w = classWidget.createFieldWidget(" Atribute");
+            Widget w = classWidget.createFieldWidget("Field");
             classWidget.createFieldAction(w);
             classWidget.getScene().validate();
         }
@@ -62,7 +66,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            classWidget.createMethodAction(classWidget.createMethodWidget(" Method()"));
+            classWidget.createMethodAction(classWidget.createMethodWidget("Method()"));
             classWidget.getScene().validate();
         }
     };
