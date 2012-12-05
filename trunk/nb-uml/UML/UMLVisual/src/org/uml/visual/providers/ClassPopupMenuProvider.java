@@ -25,6 +25,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem deleteWidget;
     private JMenuItem addAtrinute;
     private JMenuItem addMethod;
+    private JMenuItem addConstructor;
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
         this.classWidget = classWidget;
@@ -35,6 +36,8 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         menu.add(addAtrinute);
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
+        (addConstructor = new JMenuItem("Add Constructor")).addActionListener(addConstructorListener);
+        menu.add(addConstructor);
     }
     /**
      * Remove Widget Listener
@@ -61,6 +64,14 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             
             classWidget.createAddMethodAction(classWidget.createMethodWidget(" Method()"));
             classWidget.getScene().validate();
+        }
+    };
+    ActionListener addConstructorListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            classWidget.createAddMethodAction(classWidget.createMethodWidget(classWidget.getClassName()+"()"));
+            classWidget.getScene().validate();
+            addConstructor.setEnabled(false);
         }
     };
 
