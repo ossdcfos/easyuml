@@ -32,7 +32,7 @@ import org.uml.visual.widgets.actions.AddMethodAction;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
 import org.uml.visual.widgets.actions.DeleteMethodAction;
-import org.uml.visual.widgets.actions.SelectAction;
+import org.uml.visual.widgets.actions.EditFieldAction;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.PickAttributeModifierAction;
 import org.uml.visual.widgets.actions.PickFinalKeywordForAttributeAction;
@@ -69,7 +69,7 @@ public class ClassWidget extends IconNodeWidget{
     private WidgetAction deleteMethodAction = ActionFactory.createSelectAction(new DeleteMethodAction(this));
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(this));
 
-    private WidgetAction selectAction = ActionFactory.createSelectAction(new SelectAction());
+    private WidgetAction selectAction = ActionFactory.createSelectAction(new EditFieldAction());
     
     private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new PickMethodModifierAction(this));
     private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new PickAttributeModifierAction(this));
