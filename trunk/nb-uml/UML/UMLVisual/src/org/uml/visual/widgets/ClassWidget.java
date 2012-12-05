@@ -125,8 +125,8 @@ public class ClassWidget extends IconNodeWidget{
         
         
         this.classNameWidget.setLabel(classComponent.getName());  
-//        createAddFieldAction(createAddFieldActionWidget());
-//        createAddMethodAction(createAddMethodActionWidget());
+//        createFieldAction(createAddFieldActionWidget());
+//        createMethodAction(createAddMethodActionWidget());
         
         
     }
@@ -266,7 +266,7 @@ public class ClassWidget extends IconNodeWidget{
         return classComponent;
     }
 
-    public void createAddFieldAction(Widget memberWidget) {
+    public void createFieldAction(Widget memberWidget) {
         fieldsWidget.addChild(memberWidget);
     }
 
@@ -274,7 +274,7 @@ public class ClassWidget extends IconNodeWidget{
         fieldsWidget.removeChild(memberWidget);
     }
 
-    public void createAddMethodAction(Widget operationWidget) {
+    public void createMethodAction(Widget operationWidget) {
         methodsWidget.addChild(operationWidget);
     }
 
