@@ -40,8 +40,8 @@ public class AddFieldAction implements SelectProvider {
         classWidget.removeField(widget.getParentWidget());
 
         Widget w = classWidget.createFieldWidget("atribut ");
-        classWidget.createAddFieldAction(w);
-        classWidget.createAddFieldAction(classWidget.createAddFieldActionWidget());
+        classWidget.createFieldAction(w);
+        classWidget.createFieldAction(classWidget.createAddFieldActionWidget());
         
 //        Robot robot = null;
 //        try {
