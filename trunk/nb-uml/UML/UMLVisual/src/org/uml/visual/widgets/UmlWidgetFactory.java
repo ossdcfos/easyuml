@@ -73,6 +73,6 @@ public class UmlWidgetFactory {
      * @return
      */
     public static InterfaceWidget createInterfaceWidget(ClassDiagramScene scene, InterfaceComponent c) {
-        return new InterfaceWidget(scene);
+        return new InterfaceWidget(scene,c);
     }
 }
