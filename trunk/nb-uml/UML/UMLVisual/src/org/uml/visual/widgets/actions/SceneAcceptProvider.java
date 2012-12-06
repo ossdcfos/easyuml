@@ -15,61 +15,71 @@ import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.RelationComponent;
+import org.uml.model.InterfaceComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
  *
  * @author Uros
  */
-public class SceneAcceptProvider implements AcceptProvider{
-    
+public class SceneAcceptProvider implements AcceptProvider {
+
     private ClassDiagramScene classDiagramScene;
 
     public SceneAcceptProvider(ClassDiagramScene classDiagramScene) {
-   
-        this.classDiagramScene= classDiagramScene;
+
+        this.classDiagramScene = classDiagramScene;
     }
-    
 
     @Override
     public ConnectorState isAcceptable(Widget widget, Point point, Transferable t) {
-         Image dragImage = getImageFromTransferable(t);
-                JComponent view = classDiagramScene.getView();
-                Graphics2D g2 = (Graphics2D) view.getGraphics();
-                Rectangle visRect = view.getVisibleRect();
-                view.paintImmediately(visRect.x, visRect.y, visRect.width, visRect.height);
-                g2.drawImage(dragImage,
-                        AffineTransform.getTranslateInstance(point.getLocation().getX(),
-                        point.getLocation().getY()),
-                        null);
-         DataFlavor flavor= t.getTransferDataFlavors()[2];
-         Class droppedClass= flavor.getRepresentationClass();
-                return canAccept(droppedClass) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
+        Image dragImage = getImageFromTransferable(t);
+        JComponent view = classDiagramScene.getView();
+        Graphics2D g2 = (Graphics2D) view.getGraphics();
+        Rectangle visRect = view.getVisibleRect();
+        view.paintImmediately(visRect.x, visRect.y, visRect.width, visRect.height);
+        g2.drawImage(dragImage,
+                AffineTransform.getTranslateInstance(point.getLocation().getX(),
+                point.getLocation().getY()),
+                null);
+        DataFlavor flavor = t.getTransferDataFlavors()[2];
+        Class droppedClass = flavor.getRepresentationClass();
+        return canAccept(droppedClass) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
     }
 
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
-           Class<? extends ClassComponent> droppedClass = (Class<? extends ClassComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
-           try {
-                    Image dragImage = getImageFromTransferable(t);
-                    ClassComponent umlClass= (ClassComponent) droppedClass.newInstance();
-                    umlClass.setImage(dragImage);
-                    Widget w=classDiagramScene.addNode((ClassComponent) droppedClass.newInstance());
-                    w.setPreferredLocation(widget.convertLocalToScene(point));
-                    
-                    //addChild(new ClassWidget((ClassDiagramScene) getScene(), (UmlClassElement) droppedClass.newInstance()));
-                } catch (InstantiationException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (IllegalAccessException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                
-                
+        Class<? extends ClassDiagramComponent> droppedClass = (Class<? extends ClassDiagramComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
+
+        try {
+            Image dragImage = getImageFromTransferable(t);
+            //                   ClassDiagramComponent umlClass=
+            ClassDiagramComponent newInstance = droppedClass.newInstance();
+            if (newInstance instanceof InterfaceComponent) {
+            }
+            // umlClass.setImage(dragImage);
+            Widget w = classDiagramScene.addNode(droppedClass.newInstance());
+            w.setPreferredLocation(widget.convertLocalToScene(point));
+
+            //addChild(new ClassWidget((ClassDiagramScene) getScene(), (UmlClassElement) droppedClass.newInstance()));
+        } catch (InstantiationException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IllegalAccessException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+//        Class<? extends ClassDiagramComponent> droppedClass =  (Class<? extends ClassDiagramComponent> )t.getTransferDataFlavors()[2].getRepresentationClass();
+//        Class<? extends IconNodeWidget> droppedWidget = (Class<?extends IconNodeWidget>) t.getTransferDataFlavors()[3].getRepresentationClass();
+//        try {
+//            droppedWidget.newInstance();
+//        } catch (InstantiationException ex) {
+//            Exceptions.printStackTrace(ex);
+//        } catch (IllegalAccessException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+
     }
-    
+
     private Image getImageFromTransferable(Transferable transferable) {
         Object o = null;
         try {
@@ -81,12 +91,10 @@ public class SceneAcceptProvider implements AcceptProvider{
         }
         return o instanceof Image ? (Image) o : ImageUtilities.loadImage("org/netbeans/shapesample/palette/shape1.png");
     }
-    
-    public boolean canAccept (Class droppedClass) {
+
+    public boolean canAccept(Class droppedClass) {
 
         return droppedClass.equals(ClassDiagramComponent.class)
                 || droppedClass.getSuperclass().equals(ClassDiagramComponent.class);
     }
-    
-    
 }
