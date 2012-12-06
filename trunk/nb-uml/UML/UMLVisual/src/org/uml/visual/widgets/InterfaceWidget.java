@@ -80,7 +80,7 @@ public class InterfaceWidget extends IconNodeWidget {
         interfaceWidget.addChild(interfaceNameWidget);
         addChild(interfaceWidget);
         interfaceNameWidget.getActions().addAction(selectFieldNameAction);
-        //classNameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(this)));
+        
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
         
         fieldsWidget = new Widget(scene);
