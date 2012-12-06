@@ -79,11 +79,11 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent n) {
-        ClassWidget widget = null;
-        if (n instanceof ClassComponent) {                      // Mozda refleksijom da pretavaramo imena komponente u widgete ili neko mapiranje kao u Neurophu? 
+        IconNodeWidget widget = null;
+        if (!(n instanceof ClassComponent)) {
+            widget = new InterfaceWidget(this);
+        } else {                      // Mozda refleksijom da pretavaramo imena komponente u widgete ili neko mapiranje kao u Neurophu? 
             widget = UmlWidgetFactory.createClassWidget(this, (ClassComponent) n);
-        } else {
-            widget = new ClassWidget(this, null);
         }
 
         //WARNING Ovo je ukljuceno u Factory Methodu 
