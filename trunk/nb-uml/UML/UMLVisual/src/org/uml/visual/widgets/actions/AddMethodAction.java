@@ -37,7 +37,7 @@ public class AddMethodAction implements SelectProvider {
         @Override
         public void select(Widget widget, Point point, boolean bln) {
             classWidget.removeMethod(widget.getParentWidget());
-            classWidget.createMethodAction(classWidget.createMethodWidget("metoda"));
+            classWidget.createMethodAction(classWidget.createMethodWidget("method"));
             classWidget.createMethodAction(classWidget.createAddMethodActionWidget());
             
 //             Robot robot=null;

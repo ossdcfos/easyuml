@@ -1,19 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets.actions;
 
 import java.awt.Point;
-import javax.swing.JComponent;
-import javax.swing.JTextField;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.InplaceEditorProvider;
 import org.netbeans.api.visual.action.SelectProvider;
-import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Exceptions;
 
 /**
  *
