@@ -1,16 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets.actions;
 
-import java.awt.AWTException;
 import java.awt.Point;
-import java.awt.Robot;
-import java.awt.event.InputEvent;
 import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Exceptions;
 import org.uml.visual.widgets.ClassWidget;
 
 /**
@@ -39,7 +31,7 @@ public class AddFieldAction implements SelectProvider {
     public void select(Widget widget, Point point, boolean bln) {
         classWidget.removeField(widget.getParentWidget());
 
-        Widget w = classWidget.createFieldWidget("atribut ");
+        Widget w = classWidget.createFieldWidget("field");
         classWidget.createFieldAction(w);
         classWidget.createFieldAction(classWidget.createAddFieldActionWidget());
         
