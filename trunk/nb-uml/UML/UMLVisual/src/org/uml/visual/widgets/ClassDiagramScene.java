@@ -39,30 +39,29 @@ import org.uml.visual.widgets.actions.SceneAcceptProvider;
  * @author NUGS
  */                                             /* ClassDiagramComponent, ClassDiagramRelation*/
 // ClassDiagramComponent  - Class, Interface, 
+
 public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, RelationComponent> {
 
     private LayerWidget mainLayer;
     private ClassDiagram umlClassDiagram;
-    
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
 
-    
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
         this.umlClassDiagram = umlClassDiagram;
         mainLayer = new LayerWidget(this);
         addChild(mainLayer);
-        connectionLayer= new LayerWidget(this);
+        connectionLayer = new LayerWidget(this);
         addChild(connectionLayer);
-        interractionLayer= new LayerWidget(this);
+        interractionLayer = new LayerWidget(this);
         addChild(interractionLayer);
         //getActions().addAction(ActionFactory.createPanAction());
         //getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
-        getActions().addAction(ActionFactory.createPopupMenuAction( new ScenePopupMenuProvider(this)));   
+        getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
-        
+
     }
 
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
@@ -96,7 +95,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         }
 
         //WARNING Ovo je ukljuceno u Factory Methodu 
-        
+
 //        widget.getActions().addAction(ActionFactory.createMoveAction());
 //        //single-click, the event is not consumed:
 //        widget.getActions().addAction(createSelectAction());
@@ -113,7 +112,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
     @Override
     protected Widget attachEdgeWidget(RelationComponent e) {
-        ConnectionWidget widget= new ConnectionWidget(this);
+        ConnectionWidget widget = new ConnectionWidget(this);
         widget.setTargetAnchorShape(AnchorShape.NONE);
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());
@@ -131,25 +130,23 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
     @Override
     protected void attachEdgeSourceAnchor(RelationComponent edge, ClassDiagramComponent oldSourceNode, ClassDiagramComponent sourceNode) {
-        ConnectionWidget edgeWidget= (ConnectionWidget) findWidget(edge);
-        Widget sourceNodeWidget= findWidget(sourceNode);
-        Anchor sourceAnchor=AnchorFactory.createRectangularAnchor(sourceNodeWidget);
+        ConnectionWidget edgeWidget = (ConnectionWidget) findWidget(edge);
+        Widget sourceNodeWidget = findWidget(sourceNode);
+        Anchor sourceAnchor = AnchorFactory.createRectangularAnchor(sourceNodeWidget);
         edgeWidget.setSourceAnchor(sourceAnchor);
     }
 
     @Override
     protected void attachEdgeTargetAnchor(RelationComponent edge, ClassDiagramComponent oldSourceNode, ClassDiagramComponent targetNode) {
-        ConnectionWidget edgeWidget= (ConnectionWidget) findWidget(edge);
-        Widget targetNodeWidget= findWidget(targetNode);
-        Anchor targetAnchor = AnchorFactory.createRectangularAnchor (targetNodeWidget);
-        edgeWidget.setTargetAnchor (targetAnchor);
-    }
-    
-        public LayerWidget getInterractionLayer() {
-        return interractionLayer;
+        ConnectionWidget edgeWidget = (ConnectionWidget) findWidget(edge);
+        Widget targetNodeWidget = findWidget(targetNode);
+        Anchor targetAnchor = AnchorFactory.createRectangularAnchor(targetNodeWidget);
+        edgeWidget.setTargetAnchor(targetAnchor);
     }
 
-   
+    public LayerWidget getInterractionLayer() {
+        return interractionLayer;
+    }
 
     /**
      * Ads widget to main layer
@@ -168,6 +165,4 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public LayerWidget getMainLayer() {
         return mainLayer;
     }
-
-    
 }

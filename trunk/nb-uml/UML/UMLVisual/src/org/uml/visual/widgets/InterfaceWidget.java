@@ -18,20 +18,26 @@ import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
-import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.InterfaceComponent;
-import org.uml.visual.widgets.actions.AddFieldAction;
-import org.uml.visual.widgets.actions.AddMethodAction;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
-import org.uml.visual.widgets.actions.PickAttributeModifierAction;
-import org.uml.visual.widgets.actions.PickMethodModifierAction;
 
 /**
  *
  * @author hrza
  */
 public class InterfaceWidget extends IconNodeWidget {
+
+    private InterfaceComponent component;
+
+ 
+
     
+    public InterfaceWidget(Scene scene, InterfaceComponent component) {
+        super(scene);
+        this.component = component;
+    }
+
     InterfaceComponent interfaceComponent;
     ClassDiagramScene scene;
     private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
@@ -58,7 +64,7 @@ public class InterfaceWidget extends IconNodeWidget {
     
     public InterfaceWidget(ClassDiagramScene scene, InterfaceComponent interfaceComponent) {
         super(scene);
-        this.interfaceComponent = interfaceComponent;
+        this.interfaceComponent = new InterfaceComponent();
         this.scene=scene;
         setChildConstraint(getImageWidget(), 1);
         setLayout(LayoutFactory.createVerticalFlowLayout());
