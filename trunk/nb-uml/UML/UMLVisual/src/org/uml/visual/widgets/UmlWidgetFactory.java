@@ -93,7 +93,9 @@ public class UmlWidgetFactory {
         
         widget.getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         
-        widget.getActions().addAction(ActionFactory.createMoveAction());
+        
+        widget.getActions ().addAction (ActionFactory.createAlignWithMoveAction (widget.getClassDiagramScene().getMainLayer(), widget.getClassDiagramScene().getInterractionLayer(), null));
+        //widget.getActions().addAction(ActionFactory.createMoveAction());
         
         InputMap inputMap = new InputMap ();
         inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction"); 
@@ -116,6 +118,9 @@ public class UmlWidgetFactory {
     public static EnumWidget createEnumWidget (ClassDiagramScene scene, EnumComponent c) {
     
             EnumWidget widget= new EnumWidget (scene, c);
+            
+            widget.getActions ().addAction (ActionFactory.createAlignWithMoveAction (widget.getClassDiagramScene().getMainLayer(), widget.getClassDiagramScene().getInterractionLayer(), null));
+            
             return widget;
     }
 }

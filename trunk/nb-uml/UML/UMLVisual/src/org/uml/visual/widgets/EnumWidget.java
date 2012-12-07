@@ -85,5 +85,9 @@ public class EnumWidget extends IconNodeWidget{
         
        
     }
+
+        public ClassDiagramScene getClassDiagramScene() {
+        return scene;
+    }
     
 }

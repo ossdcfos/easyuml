@@ -113,6 +113,10 @@ public class InterfaceWidget extends IconNodeWidget {
     public String toString() {
         return interfaceNameWidget.getLabel();
     }
+
+    public ClassDiagramScene getClassDiagramScene() {
+        return scene;
+    }
     
     
     
