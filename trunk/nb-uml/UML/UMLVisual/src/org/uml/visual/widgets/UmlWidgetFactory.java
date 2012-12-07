@@ -73,6 +73,13 @@ public class UmlWidgetFactory {
      * @return
      */
     public static InterfaceWidget createInterfaceWidget(ClassDiagramScene scene, InterfaceComponent c) {
-        return new InterfaceWidget(scene,c);
+        
+        InterfaceWidget widget= new InterfaceWidget(scene, c);
+        
+        widget.getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+        
+        widget.getActions().addAction(ActionFactory.createMoveAction());
+        
+        return widget;
     }
 }
