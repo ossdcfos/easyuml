@@ -16,8 +16,10 @@ import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
+import org.uml.visual.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.actions.AddFieldAction;
 import org.uml.visual.widgets.actions.AddMethodAction;
+import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
 import org.uml.visual.widgets.actions.DeleteMethodAction;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
@@ -113,6 +115,11 @@ public class ClassWidget extends IconNodeWidget{
         
         
         this.classNameWidget.setLabel(classComponent.getName());  
+        getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(this)));
+        getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
+        getActions ().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
+        getActions().addAction(ActionFactory.createResizeAction());
+        
 //        createFieldAction(createAddFieldActionWidget());
 //        createMethodAction(createAddMethodActionWidget());
         

@@ -10,13 +10,14 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.ConnectorState;
+import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Exceptions;
+import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.ImageUtilities;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.InterfaceComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
@@ -51,33 +52,14 @@ public class SceneAcceptProvider implements AcceptProvider {
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
         Class<? extends ClassDiagramComponent> droppedClass = (Class<? extends ClassDiagramComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
-
+        Class<? extends IconNodeWidget> droppedWidget = (Class<? extends IconNodeWidget>) t.getTransferDataFlavors()[3].getRepresentationClass();
         try {
-           // Image dragImage = getImageFromTransferable(t);
-            ClassDiagramComponent newInstance = droppedClass.newInstance();
-            if (newInstance instanceof InterfaceComponent) {
-                // add ne interface to diagram
-            }
-            // umlClass.setImage(dragImage);
-            Widget w = classDiagramScene.addNode(droppedClass.newInstance());
-            w.setPreferredLocation(widget.convertLocalToScene(point));            
-            
-
-            //addChild(new ClassWidget((ClassDiagramScene) getScene(), (UmlClassElement) droppedClass.newInstance()));
-        } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
+            IconNodeWidget newInstance = droppedWidget.getConstructor(ClassDiagramScene.class, droppedClass).newInstance(classDiagramScene, droppedClass.newInstance());
+            newInstance.setPreferredLocation(widget.convertLocalToScene(point));
+            classDiagramScene.addWidget(newInstance);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
-//        Class<? extends ClassDiagramComponent> droppedClass =  (Class<? extends ClassDiagramComponent> )t.getTransferDataFlavors()[2].getRepresentationClass();
-//        Class<? extends IconNodeWidget> droppedWidget = (Class<?extends IconNodeWidget>) t.getTransferDataFlavors()[3].getRepresentationClass();
-//        try {
-//            droppedWidget.newInstance();
-//        } catch (InstantiationException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (IllegalAccessException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
 
     }
 
