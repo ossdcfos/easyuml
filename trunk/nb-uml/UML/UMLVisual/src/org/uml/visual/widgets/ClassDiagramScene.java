@@ -4,6 +4,7 @@
  */
 package org.uml.visual.widgets;
 
+import javax.swing.InputMap;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.anchor.Anchor;
@@ -11,6 +12,7 @@ import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.anchor.AnchorShape;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.graph.GraphScene;
+import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
@@ -108,9 +110,14 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         ConnectionWidget widget= new ConnectionWidget(this);
         widget.setTargetAnchorShape(AnchorShape.NONE);
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
+        widget.setRouter(RouterFactory.createFreeRouter());
+        widget.setPaintControlPoints (true);
+        widget.setControlPointShape (PointShape.SQUARE_FILLED_BIG);
         WidgetAction.Chain actions= widget.getActions();
         actions.addAction(createObjectHoverAction());
         actions.addAction(createSelectAction());
+        actions.addAction(ActionFactory.createAddRemoveControlPointAction());
+        actions.addAction (ActionFactory.createMoveControlPointAction (ActionFactory.createFreeMoveControlPointProvider (), ConnectionWidget.RoutingPolicy.UPDATE_END_POINTS_ONLY));
         //reconnectAction;
         connectionLayer.addChild(widget);
         return widget;

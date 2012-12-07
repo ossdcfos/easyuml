@@ -1,11 +1,16 @@
 package org.uml.visual.widgets;
 
+import java.awt.event.KeyEvent;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.uml.model.ClassComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
+import org.uml.visual.widgets.actions.DeleteClassAction;
 
 /**
  *
@@ -35,8 +40,8 @@ public class UmlWidgetFactory {
         widget.getActions().addAction(ActionFactory.createResizeAction());
         //single-click, the event is not consumed:
         //mouse-dragged, the event is consumed while mouse is dragged:
-        widget.getActions().addAction(ActionFactory.createMoveAction());
-
+        //widget.getActions().addAction(ActionFactory.createMoveAction());
+        widget.getActions ().addAction (ActionFactory.createAlignWithMoveAction (widget.getClassDiagramScene().getMainLayer(), widget.getClassDiagramScene().getInterractionLayer(), null));
         //mouse-over, the event is consumed while the mouse is over the widget:
         //  widget.getActions().addAction(scene.createWidgetHoverAction());
 
@@ -45,8 +50,17 @@ public class UmlWidgetFactory {
 
         //Accept dropping widgets
         widget.getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(widget)));
+        
+        //widget.getActions ().addAction (ActionFactory.createAlignWithMoveAction (widget.getClassDiagramScene().getMainLayer(), widget.getClassDiagramScene().getInterractionLayer(), null));
 
-        return widget;
+        InputMap inputMap = new InputMap ();
+        inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");
+        
+       ActionMap actionMap = new ActionMap ();
+       actionMap.put ("myAction", new DeleteClassAction (widget));
+       
+       widget.getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
+       return widget;
     }
 
     /**
@@ -79,6 +93,14 @@ public class UmlWidgetFactory {
         widget.getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         
         widget.getActions().addAction(ActionFactory.createMoveAction());
+        
+        InputMap inputMap = new InputMap ();
+        inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction"); 
+        
+       ActionMap actionMap = new ActionMap ();
+       actionMap.put ("myAction", new DeleteClassAction (widget));
+       
+       widget.getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
         
         return widget;
     }
