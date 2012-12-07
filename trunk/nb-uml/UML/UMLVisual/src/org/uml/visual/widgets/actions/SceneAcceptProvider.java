@@ -61,7 +61,7 @@ public class SceneAcceptProvider implements AcceptProvider {
             // umlClass.setImage(dragImage);
             Widget w = classDiagramScene.addNode(droppedClass.newInstance());
             w.setPreferredLocation(widget.convertLocalToScene(point));            
-
+            
 
             //addChild(new ClassWidget((ClassDiagramScene) getScene(), (UmlClassElement) droppedClass.newInstance()));
         } catch (InstantiationException ex) {

@@ -6,6 +6,7 @@ import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.uml.model.ClassComponent;
+import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
@@ -103,5 +104,18 @@ public class UmlWidgetFactory {
        widget.getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
         
         return widget;
+    }
+    
+    /**
+     * Creates new instance of EnumWidget
+     *
+     * @param scene
+     * @param c
+     * @return
+     */
+    public static EnumWidget createEnumWidget (ClassDiagramScene scene, EnumComponent c) {
+    
+            EnumWidget widget= new EnumWidget (scene, c);
+            return widget;
     }
 }

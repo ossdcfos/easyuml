@@ -21,6 +21,7 @@ import org.uml.model.RelationComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassHoverProvider;
@@ -84,7 +85,12 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     protected Widget attachNodeWidget(ClassDiagramComponent n) {
         IconNodeWidget widget = null;
         if (!(n instanceof ClassComponent)) {
+            if(!(n instanceof EnumComponent)) {
             widget = UmlWidgetFactory.createInterfaceWidget(this, (InterfaceComponent) n);
+            }
+            else {
+            widget= UmlWidgetFactory.createEnumWidget(this, (EnumComponent) n);
+            }
         } else {                      // Mozda refleksijom da pretavaramo imena komponente u widgete ili neko mapiranje kao u Neurophu? 
             widget = UmlWidgetFactory.createClassWidget(this, (ClassComponent) n);
         }
