@@ -104,5 +104,16 @@ public class InterfaceWidget extends IconNodeWidget {
         
         this.interfaceNameWidget.setLabel(interfaceComponent.getName());
     }
+
+    public InterfaceComponent getInterfaceComponent() {
+        return interfaceComponent;
+    }
+
+    @Override
+    public String toString() {
+        return interfaceNameWidget.getLabel();
+    }
+    
+    
     
 }
