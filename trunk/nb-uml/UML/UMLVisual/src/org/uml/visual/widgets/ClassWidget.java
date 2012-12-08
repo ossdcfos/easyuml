@@ -20,6 +20,8 @@ import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagramComponent;
+import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.actions.AddFieldAction;
@@ -120,38 +122,13 @@ public class ClassWidget extends IconNodeWidget{
         addChild(methodsWidget);
         
         
-        this.classNameWidget.setLabel(classComponent.getName());  
+        this.classNameWidget.setLabel(classComponent.getName());
+         
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
-
-
-        //This need to be here, widget notifyStateChanged listens to this
-        //TODO Make Select and Hover Action outside scene, without blue marker
-        //    widget.getActions().addAction(scene.createSelectAction());
-        //Create resize action, needs to be activated BEFORE Move Action
-        getActions().addAction(ActionFactory.createResizeAction());
-        //single-click, the event is not consumed:
-        //mouse-dragged, the event is consumed while mouse is dragged:
-        //widget.getActions().addAction(ActionFactory.createMoveAction());
         getActions ().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
-        //mouse-over, the event is consumed while the mouse is over the widget:
-        //  widget.getActions().addAction(scene.createWidgetHoverAction());
-
-        // Add Menu Provider
-        getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
-
-        //Accept dropping widgets
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(this)));
-        
-        //widget.getActions ().addAction (ActionFactory.createAlignWithMoveAction (widget.getClassDiagramScene().getMainLayer(), widget.getClassDiagramScene().getInterractionLayer(), null));
-
-        InputMap inputMap = new InputMap ();
-        inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");
-        
-       ActionMap actionMap = new ActionMap ();
-       actionMap.put ("myAction", new DeleteClassAction (this));
-       
-       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
-        
+        getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
+        getActions().addAction(ActionFactory.createResizeAction());
 //        createFieldAction(createAddFieldActionWidget());
 //        createMethodAction(createAddMethodActionWidget());
         
@@ -289,9 +266,9 @@ public class ClassWidget extends IconNodeWidget{
 
         return widget;
     }
-     public ClassComponent getClassComponent() {
+    /* public ClassComponent getClassComponent() {
         return classComponent;
-    }
+    }*/
 
     public void createFieldAction(Widget memberWidget) {
         fieldsWidget.addChild(memberWidget);
@@ -323,6 +300,10 @@ public class ClassWidget extends IconNodeWidget{
 //        super.notifyStateChanged(previousState, newState);
 //        setBorder(newState.isSelected() ? (newState.isHovered() ? RESIZE_BORDER : DEFAULT_BORDER) : DEFAULT_BORDER);
 //    }
+
+    public ClassComponent getComponent() {
+        return classComponent;
+    }
         
     
 }

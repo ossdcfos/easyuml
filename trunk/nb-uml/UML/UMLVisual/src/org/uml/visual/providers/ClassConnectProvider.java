@@ -57,32 +57,32 @@ public class ClassConnectProvider implements ConnectProvider{
             ClassWidget source= (ClassWidget) sourceWidget;
             ClassWidget target= (ClassWidget) targetWidget;
             scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getClassComponent());
-            scene.setEdgeTarget(relation, target.getClassComponent());
+            scene.setEdgeSource(relation,source.getComponent());
+            scene.setEdgeTarget(relation,target.getComponent());
         }
         if ((sourceWidget instanceof InterfaceWidget) && (targetWidget instanceof ClassWidget)) {
             ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
             InterfaceWidget source= (InterfaceWidget) sourceWidget;
             ClassWidget target= (ClassWidget) targetWidget;
             scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getInterfaceComponent());
-            scene.setEdgeTarget(relation, target.getClassComponent());
+            scene.setEdgeSource(relation,source.getComponent());
+            scene.setEdgeTarget(relation, target.getComponent());
         }
           if ((sourceWidget instanceof ClassWidget) && (targetWidget instanceof InterfaceWidget)) {
             ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
             ClassWidget source= (ClassWidget) sourceWidget;
             InterfaceWidget target= (InterfaceWidget) targetWidget;
             scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getClassComponent());
-            scene.setEdgeTarget(relation, target.getInterfaceComponent());
+            scene.setEdgeSource(relation,source.getComponent());
+            scene.setEdgeTarget(relation, target.getComponent());
         }
           if ((sourceWidget instanceof InterfaceWidget) && (targetWidget instanceof InterfaceWidget)) {
             ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
             InterfaceWidget source= (InterfaceWidget) sourceWidget;
             InterfaceWidget target= (InterfaceWidget) targetWidget;
             scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getInterfaceComponent());
-            scene.setEdgeTarget(relation, target.getInterfaceComponent());
+            scene.setEdgeSource(relation,source.getComponent());
+            scene.setEdgeTarget(relation, target.getComponent());
         }
     }
     

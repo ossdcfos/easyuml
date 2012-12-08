@@ -13,12 +13,10 @@ import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
-import org.uml.model.ClassDiagramComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
 
@@ -26,17 +24,7 @@ import org.uml.visual.widgets.actions.EditFieldNameAction;
  *
  * @author hrza
  */
-public class InterfaceWidget extends IconNodeWidget {
-
-    private InterfaceComponent component;
-
- 
-
-    
-    public InterfaceWidget(Scene scene, InterfaceComponent component) {
-        super(scene);
-        this.component = component;
-    }
+public class InterfaceWidget extends IconNodeWidget{
 
     InterfaceComponent interfaceComponent;
     ClassDiagramScene scene;
@@ -64,7 +52,7 @@ public class InterfaceWidget extends IconNodeWidget {
     
     public InterfaceWidget(ClassDiagramScene scene, InterfaceComponent interfaceComponent) {
         super(scene);
-        this.interfaceComponent = new InterfaceComponent();
+        this.interfaceComponent = interfaceComponent;
         this.scene=scene;
         setChildConstraint(getImageWidget(), 1);
         setLayout(LayoutFactory.createVerticalFlowLayout());
@@ -110,8 +98,8 @@ public class InterfaceWidget extends IconNodeWidget {
         
         this.interfaceNameWidget.setLabel(interfaceComponent.getName());
     }
-
-    public InterfaceComponent getInterfaceComponent() {
+    
+    public InterfaceComponent getComponent() {
         return interfaceComponent;
     }
 

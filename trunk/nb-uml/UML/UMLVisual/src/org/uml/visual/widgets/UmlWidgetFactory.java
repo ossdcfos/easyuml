@@ -91,7 +91,7 @@ public class UmlWidgetFactory {
         
         InterfaceWidget widget= new InterfaceWidget(scene, c);
         
-        widget.getActions().addAction(ActionFactory.createConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+        widget.getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         
         
         widget.getActions ().addAction (ActionFactory.createAlignWithMoveAction (widget.getClassDiagramScene().getMainLayer(), widget.getClassDiagramScene().getInterractionLayer(), null));
