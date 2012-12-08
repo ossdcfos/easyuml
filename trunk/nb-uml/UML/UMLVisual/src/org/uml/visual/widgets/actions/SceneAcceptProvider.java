@@ -17,8 +17,10 @@ import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.ImageUtilities;
+import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.ClassWidget;
 
 /**
  *
@@ -52,11 +54,11 @@ public class SceneAcceptProvider implements AcceptProvider {
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
         Class<? extends ClassDiagramComponent> droppedClass = (Class<? extends ClassDiagramComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
-        Class<? extends IconNodeWidget> droppedWidget = (Class<? extends IconNodeWidget>) t.getTransferDataFlavors()[3].getRepresentationClass();
+        //Class<? extends IconNodeWidget> droppedWidget = (Class<? extends IconNodeWidget>) t.getTransferDataFlavors()[3].getRepresentationClass();
         try {
-            IconNodeWidget newInstance = droppedWidget.getConstructor(ClassDiagramScene.class, droppedClass).newInstance(classDiagramScene, droppedClass.newInstance());
-            newInstance.setPreferredLocation(widget.convertLocalToScene(point));
-            classDiagramScene.addWidget(newInstance);
+           //IconNodeWidget newInstance = droppedWidget.getConstructor(ClassDiagramScene.class, droppedClass).newInstance(classDiagramScene, droppedClass.newInstance());          
+            Widget w=classDiagramScene.addNode(droppedClass.newInstance());
+            w.setPreferredLocation(widget.convertLocalToScene(point));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }

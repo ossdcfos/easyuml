@@ -187,29 +187,29 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
         ClassWidget source= (ClassWidget)jcbClassesSource.getSelectedItem();
         ClassWidget target= (ClassWidget)jcbClassesTarget.getSelectedItem();        
          classDiagramScene.addEdge(relation);
-         classDiagramScene.setEdgeSource(relation, source.getClassComponent());
-         classDiagramScene.setEdgeTarget(relation, target.getClassComponent());
+         classDiagramScene.setEdgeSource(relation, source.getComponent());
+         classDiagramScene.setEdgeTarget(relation, target.getComponent());
     }
     else if (jcbClassesSource.getSelectedItem() instanceof InterfaceWidget && jcbClassesTarget.getSelectedItem() instanceof ClassWidget) {
          InterfaceWidget source= (InterfaceWidget)jcbClassesSource.getSelectedItem();
          ClassWidget target= (ClassWidget)jcbClassesTarget.getSelectedItem();        
          classDiagramScene.addEdge(relation);
-         classDiagramScene.setEdgeSource(relation, source.getInterfaceComponent());
-         classDiagramScene.setEdgeTarget(relation, target.getClassComponent());
+         classDiagramScene.setEdgeSource(relation, source.getComponent());
+         classDiagramScene.setEdgeTarget(relation, target.getComponent());
     }
     else if (jcbClassesSource.getSelectedItem() instanceof ClassWidget && jcbClassesTarget.getSelectedItem() instanceof InterfaceWidget) {
          ClassWidget source= (ClassWidget)jcbClassesSource.getSelectedItem();
          InterfaceWidget target= (InterfaceWidget)jcbClassesTarget.getSelectedItem();        
          classDiagramScene.addEdge(relation);
-         classDiagramScene.setEdgeSource(relation, source.getClassComponent());
-         classDiagramScene.setEdgeTarget(relation, target.getInterfaceComponent());
+         classDiagramScene.setEdgeSource(relation, source.getComponent());
+         classDiagramScene.setEdgeTarget(relation, target.getComponent());
     }
         else if (jcbClassesSource.getSelectedItem() instanceof InterfaceWidget && jcbClassesTarget.getSelectedItem() instanceof InterfaceWidget) {
          InterfaceWidget source= (InterfaceWidget)jcbClassesSource.getSelectedItem();
          InterfaceWidget target= (InterfaceWidget)jcbClassesTarget.getSelectedItem();        
          classDiagramScene.addEdge(relation);
-         classDiagramScene.setEdgeSource(relation, source.getInterfaceComponent());
-         classDiagramScene.setEdgeTarget(relation, target.getInterfaceComponent());
+         classDiagramScene.setEdgeSource(relation, source.getComponent());
+         classDiagramScene.setEdgeTarget(relation, target.getComponent());
     }
          classDiagramScene.validate();
          
