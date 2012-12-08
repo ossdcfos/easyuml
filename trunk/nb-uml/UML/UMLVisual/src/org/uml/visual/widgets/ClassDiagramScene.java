@@ -110,6 +110,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return widget;
     }
 
+    
     @Override
     protected Widget attachEdgeWidget(RelationComponent e) {
         ConnectionWidget widget = new ConnectionWidget(this);

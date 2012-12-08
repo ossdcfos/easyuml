@@ -3,6 +3,10 @@ package org.uml.visual.widgets;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
@@ -16,10 +20,12 @@ import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
+import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.actions.AddFieldAction;
 import org.uml.visual.widgets.actions.AddMethodAction;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
+import org.uml.visual.widgets.actions.DeleteClassAction;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
 import org.uml.visual.widgets.actions.DeleteMethodAction;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
@@ -115,10 +121,36 @@ public class ClassWidget extends IconNodeWidget{
         
         
         this.classNameWidget.setLabel(classComponent.getName());  
-        getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(this)));
-        getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
-        getActions ().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
+        getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+
+
+        //This need to be here, widget notifyStateChanged listens to this
+        //TODO Make Select and Hover Action outside scene, without blue marker
+        //    widget.getActions().addAction(scene.createSelectAction());
+        //Create resize action, needs to be activated BEFORE Move Action
         getActions().addAction(ActionFactory.createResizeAction());
+        //single-click, the event is not consumed:
+        //mouse-dragged, the event is consumed while mouse is dragged:
+        //widget.getActions().addAction(ActionFactory.createMoveAction());
+        getActions ().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
+        //mouse-over, the event is consumed while the mouse is over the widget:
+        //  widget.getActions().addAction(scene.createWidgetHoverAction());
+
+        // Add Menu Provider
+        getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
+
+        //Accept dropping widgets
+        getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(this)));
+        
+        //widget.getActions ().addAction (ActionFactory.createAlignWithMoveAction (widget.getClassDiagramScene().getMainLayer(), widget.getClassDiagramScene().getInterractionLayer(), null));
+
+        InputMap inputMap = new InputMap ();
+        inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");
+        
+       ActionMap actionMap = new ActionMap ();
+       actionMap.put ("myAction", new DeleteClassAction (this));
+       
+       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
         
 //        createFieldAction(createAddFieldActionWidget());
 //        createMethodAction(createAddMethodActionWidget());
