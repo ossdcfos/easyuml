@@ -15,7 +15,7 @@ public class PaletteItemChildren extends Index.ArrayChildren {
     private String[][] items = new String[][]{
         {"Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.ClassComponent", "org.uml.visual.widgets.ClassWidget"},
         {"Interface", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.InterfaceComponent", "org.uml.visual.widgets.InterfaceWidget"},
-        {"Enum", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.EnumComponent", "org.uml.visual.widgets.InterfaceWidget"},
+        {"Enum", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.EnumComponent", "org.uml.visual.widgets.EnumWidget"},
         {"Is", "Relations", "org/uml/visual/icons/is.gif", "org.uml.model.RelationComponent", "org.uml.visual.widgets.InterfaceWidget"},
         {"Has", "Relations", "org/uml/visual/icons/has.gif", "org.uml.model.RelationComponent", "org.uml.visual.widgets.InterfaceWidget"},
         {"Use", "Relations", "org/uml/visual/icons/use.gif", "org.uml.model.RelationComponent", "org.uml.visual.widgets.InterfaceWidget"},
