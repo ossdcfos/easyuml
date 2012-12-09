@@ -28,7 +28,7 @@ import org.uml.visual.widgets.actions.EditFieldNameAction;
  *
  * @author "NUGS"
  */
-public class EnumWidget extends IconNodeWidget {
+public class EnumWidget extends UMLWidget {
 
     ClassDiagramScene scene;
     EnumComponent enumComponent;
@@ -83,16 +83,7 @@ public class EnumWidget extends IconNodeWidget {
         LabelWidget operationName = new LabelWidget(scene);
         methodsWidget.addChild(operationName);
         addChild(methodsWidget);
-        
-       getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
-       getActions ().addAction (ActionFactory.createAlignWithMoveAction (getClassDiagramScene().getMainLayer(), getClassDiagramScene().getInterractionLayer(), null));
-       //Delete dugme, za sada ne funkcionise kako bi trebalo
-       InputMap inputMap = new InputMap ();
-       inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        
-       ActionMap actionMap = new ActionMap ();
-       actionMap.put ("myAction", new DeleteClassAction (this));     
-       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
-        
+             
 
         this.enumNameWidget.setLabel(enumComponent.getName());
     }
@@ -100,9 +91,15 @@ public class EnumWidget extends IconNodeWidget {
     public ClassDiagramScene getClassDiagramScene() {
         return scene;
     }
-        
+        @Override
         public EnumComponent getComponent () {
             return enumComponent;
         }
+
+    @Override
+    public String toString() {
+        return "ime enuma, dodati label na enum";
+    }
+        
    
 }

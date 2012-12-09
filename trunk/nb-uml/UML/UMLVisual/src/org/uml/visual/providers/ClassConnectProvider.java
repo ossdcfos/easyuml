@@ -14,6 +14,7 @@ import org.uml.model.RelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.InterfaceWidget;
+import org.uml.visual.widgets.UMLWidget;
 
 /**
  *
@@ -30,12 +31,12 @@ public class ClassConnectProvider implements ConnectProvider{
 
     @Override
     public boolean isSourceWidget(Widget sourceWidget) {
-        return (((sourceWidget instanceof ClassWidget)&&(sourceWidget!=null))||((sourceWidget instanceof InterfaceWidget)&&(sourceWidget!=null)));
+        return (((sourceWidget instanceof UMLWidget)&&(sourceWidget!=null)));
     }
 
     @Override
     public ConnectorState isTargetWidget(Widget sourceWidget, Widget targetWidget) {        
-    return (targetWidget instanceof ClassWidget||targetWidget instanceof InterfaceWidget) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
+    return (targetWidget instanceof UMLWidget) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
     }
 
     @Override
@@ -51,38 +52,14 @@ public class ClassConnectProvider implements ConnectProvider{
     @Override
     public void createConnection(Widget sourceWidget, Widget targetWidget) {
        //connect class to class
-        RelationComponent relation= new RelationComponent();
-        if ((sourceWidget instanceof ClassWidget) && (targetWidget instanceof ClassWidget)) {
+        RelationComponent relation= new RelationComponent();        
+        if((sourceWidget instanceof UMLWidget)&& (targetWidget instanceof UMLWidget)) {
             ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
-            ClassWidget source= (ClassWidget) sourceWidget;
-            ClassWidget target= (ClassWidget) targetWidget;
+            UMLWidget source= (UMLWidget) sourceWidget;
+            UMLWidget target= (UMLWidget) targetWidget;
             scene.addEdge(relation);
             scene.setEdgeSource(relation,source.getComponent());
             scene.setEdgeTarget(relation,target.getComponent());
-        }
-        if ((sourceWidget instanceof InterfaceWidget) && (targetWidget instanceof ClassWidget)) {
-            ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
-            InterfaceWidget source= (InterfaceWidget) sourceWidget;
-            ClassWidget target= (ClassWidget) targetWidget;
-            scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getComponent());
-            scene.setEdgeTarget(relation, target.getComponent());
-        }
-          if ((sourceWidget instanceof ClassWidget) && (targetWidget instanceof InterfaceWidget)) {
-            ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
-            ClassWidget source= (ClassWidget) sourceWidget;
-            InterfaceWidget target= (InterfaceWidget) targetWidget;
-            scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getComponent());
-            scene.setEdgeTarget(relation, target.getComponent());
-        }
-          if ((sourceWidget instanceof InterfaceWidget) && (targetWidget instanceof InterfaceWidget)) {
-            ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
-            InterfaceWidget source= (InterfaceWidget) sourceWidget;
-            InterfaceWidget target= (InterfaceWidget) targetWidget;
-            scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getComponent());
-            scene.setEdgeTarget(relation, target.getComponent());
         }
     }
     
