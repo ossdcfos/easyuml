@@ -44,7 +44,7 @@ import org.uml.visual.widgets.actions.PickStaticKeywordForMethodAction;
  *
  * @author NUGS
  */
-public class ClassWidget extends IconNodeWidget{
+public class ClassWidget extends UMLWidget{
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
@@ -124,8 +124,6 @@ public class ClassWidget extends IconNodeWidget{
         
         this.classNameWidget.setLabel(classComponent.getName());
          
-        getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
-        getActions ().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createResizeAction());
@@ -301,6 +299,7 @@ public class ClassWidget extends IconNodeWidget{
 //        setBorder(newState.isSelected() ? (newState.isHovered() ? RESIZE_BORDER : DEFAULT_BORDER) : DEFAULT_BORDER);
 //    }
 
+    @Override
     public ClassComponent getComponent() {
         return classComponent;
     }
