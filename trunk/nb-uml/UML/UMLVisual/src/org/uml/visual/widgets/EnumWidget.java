@@ -5,6 +5,10 @@
 package org.uml.visual.widgets;
 
 import java.awt.Font;
+import java.awt.event.KeyEvent;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
@@ -16,6 +20,8 @@ import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
+import org.uml.visual.providers.ClassConnectProvider;
+import org.uml.visual.widgets.actions.DeleteClassAction;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
 
 /**
@@ -77,7 +83,16 @@ public class EnumWidget extends IconNodeWidget {
         LabelWidget operationName = new LabelWidget(scene);
         methodsWidget.addChild(operationName);
         addChild(methodsWidget);
-
+        
+       getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+       getActions ().addAction (ActionFactory.createAlignWithMoveAction (getClassDiagramScene().getMainLayer(), getClassDiagramScene().getInterractionLayer(), null));
+       //Delete dugme, za sada ne funkcionise kako bi trebalo
+       InputMap inputMap = new InputMap ();
+       inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        
+       ActionMap actionMap = new ActionMap ();
+       actionMap.put ("myAction", new DeleteClassAction (this));     
+       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
+        
 
         this.enumNameWidget.setLabel(enumComponent.getName());
     }

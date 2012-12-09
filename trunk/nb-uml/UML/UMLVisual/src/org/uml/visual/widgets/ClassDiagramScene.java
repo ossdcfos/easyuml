@@ -85,10 +85,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         IconNodeWidget widget = null;
         if (!(n instanceof ClassComponent)) {
             if(!(n instanceof EnumComponent)) {
-            widget = UmlWidgetFactory.createInterfaceWidget(this, (InterfaceComponent) n);
+            widget = new InterfaceWidget(this, (InterfaceComponent) n);
             }
             else {
-            widget= UmlWidgetFactory.createEnumWidget(this, (EnumComponent) n);
+            widget= new EnumWidget(this, (EnumComponent) n);
             }
         } else {                      // Mozda refleksijom da pretavaramo imena komponente u widgete ili neko mapiranje kao u Neurophu? 
             widget = new ClassWidget(this, (ClassComponent) n);
