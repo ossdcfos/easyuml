@@ -13,14 +13,10 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.ConnectorState;
-import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
-import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.ImageUtilities;
-import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ClassWidget;
 
 /**
  *
@@ -59,7 +55,7 @@ public class SceneAcceptProvider implements AcceptProvider {
            //IconNodeWidget newInstance = droppedWidget.getConstructor(ClassDiagramScene.class, droppedClass).newInstance(classDiagramScene, droppedClass.newInstance());          
             Widget w=classDiagramScene.addNode(droppedClass.newInstance());
             w.setPreferredLocation(widget.convertLocalToScene(point));
-        } catch (Exception e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
 
