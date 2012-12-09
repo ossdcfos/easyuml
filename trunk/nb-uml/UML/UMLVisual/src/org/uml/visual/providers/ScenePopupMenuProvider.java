@@ -17,7 +17,6 @@ import org.uml.visual.dialogs.AddClassDialog;
 import org.uml.visual.dialogs.AddRelationshipDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.UmlWidgetFactory;
 
 /**
  *
@@ -47,7 +46,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createClassItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClassWidget widget = UmlWidgetFactory.createClassWidget(scene, new ClassComponent());
+                ClassWidget widget = new ClassWidget(scene, new ClassComponent());
                 scene.addWidget(widget);                
                 
                // (new AddClassDialog(null, scene, true)).setVisible(true);

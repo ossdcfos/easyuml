@@ -8,8 +8,6 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.UmlWidgetFactory;
-
 /**
  *
  * @author hrza
@@ -105,7 +103,7 @@ public class AddClassDialog extends javax.swing.JDialog {
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         int numberOf = Integer.parseInt(txtClassNumber.getText().trim());
         for (int i = 0; i < numberOf; i++) {
-            ClassWidget widget = UmlWidgetFactory.createClassWidget(scene, new ClassComponent());
+            ClassWidget widget = new ClassWidget(scene, new ClassComponent());
             scene.addWidget(widget);
         }
         this.dispose();

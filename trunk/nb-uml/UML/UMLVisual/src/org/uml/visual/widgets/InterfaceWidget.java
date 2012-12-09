@@ -7,6 +7,10 @@ package org.uml.visual.widgets;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
@@ -18,6 +22,8 @@ import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
 import org.uml.model.InterfaceComponent;
+import org.uml.visual.providers.ClassConnectProvider;
+import org.uml.visual.widgets.actions.DeleteClassAction;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
 
 /**
@@ -96,7 +102,16 @@ public class InterfaceWidget extends IconNodeWidget{
         addChild(methodsWidget);
         
         
-        this.interfaceNameWidget.setLabel(interfaceComponent.getName());
+       getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+       getActions ().addAction (ActionFactory.createAlignWithMoveAction (getClassDiagramScene().getMainLayer(), getClassDiagramScene().getInterractionLayer(), null));
+       //Delete dugme, za sada ne funkcionise kako bi trebalo
+       InputMap inputMap = new InputMap ();
+       inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        
+       ActionMap actionMap = new ActionMap ();
+       actionMap.put ("myAction", new DeleteClassAction (this));     
+       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
+        
+       this.interfaceNameWidget.setLabel(interfaceComponent.getName());
     }
     
     public InterfaceComponent getComponent() {
