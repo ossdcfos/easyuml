@@ -16,10 +16,10 @@ import org.uml.visual.widgets.ClassWidget;
  */
 public class LabelTextFieldEditorAction implements TextFieldInplaceEditor{
 
-    ClassWidget classWidget;
-    public LabelTextFieldEditorAction(ClassWidget classWidget) {
-        this.classWidget=classWidget;
-    }
+//    ClassWidget classWidget;
+//    public LabelTextFieldEditorAction(ClassWidget classWidget) {
+//        this.classWidget=classWidget;
+//    }
     
     
     @Override
