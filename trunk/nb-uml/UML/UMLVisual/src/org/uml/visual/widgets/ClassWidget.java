@@ -99,7 +99,9 @@ public class ClassWidget extends UMLWidget{
         classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         classWidget.addChild(classNameWidget);
         addChild(classWidget);
-        classNameWidget.getActions().addAction(selectFieldNameAction);
+        
+        classNameWidget.getActions().addAction(editorAction);                
+        //classNameWidget.getActions().addAction(selectFieldNameAction);
         //classNameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(this)));
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
         
@@ -198,8 +200,8 @@ public class ClassWidget extends UMLWidget{
 
         LabelWidget labelWidget = new LabelWidget(scene); 
         labelWidget.setLabel(fieldName);
-        //labelWidget.getActions().addAction(editorAction);
-        labelWidget.getActions().addAction(selectFieldNameAction);
+        labelWidget.getActions().addAction(editorAction);
+        //labelWidget.getActions().addAction(selectFieldNameAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
         //dodato polje u classElement
         
@@ -257,8 +259,8 @@ public class ClassWidget extends UMLWidget{
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
-        //labelWidget.getActions().addAction(editorAction);
-        labelWidget.getActions().addAction(selectFieldNameAction);
+        labelWidget.getActions().addAction(editorAction);
+       // labelWidget.getActions().addAction(selectFieldNameAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
         
 
