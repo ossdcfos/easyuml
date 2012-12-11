@@ -23,6 +23,7 @@ import org.uml.model.EnumComponent;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.widgets.actions.DeleteClassAction;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
+import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**
  *
@@ -36,6 +37,7 @@ public class EnumWidget extends UMLWidget {
     private Widget fieldsWidget;
     private Widget methodsWidget;
     private WidgetAction selectFieldNameAction = ActionFactory.createSelectAction(new EditFieldNameAction());
+    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
 
     public EnumWidget(ClassDiagramScene scene, EnumComponent enumComponent) {
@@ -62,7 +64,7 @@ public class EnumWidget extends UMLWidget {
         enumNameWidget.setAlignment(LabelWidget.Alignment.CENTER);
         enumWidget.addChild(enumNameWidget);
         addChild(enumWidget);
-        enumNameWidget.getActions().addAction(selectFieldNameAction);
+        enumNameWidget.getActions().addAction(editorAction);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
@@ -84,7 +86,6 @@ public class EnumWidget extends UMLWidget {
         methodsWidget.addChild(operationName);
         addChild(methodsWidget);
              
-
         this.enumNameWidget.setLabel(enumComponent.getName());
     }
 
@@ -98,7 +99,7 @@ public class EnumWidget extends UMLWidget {
 
     @Override
     public String toString() {
-        return "ime enuma, dodati label na enum";
+        return enumComponent.getName();
     }
         
    
