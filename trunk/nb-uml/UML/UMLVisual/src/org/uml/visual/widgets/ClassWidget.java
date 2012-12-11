@@ -66,7 +66,7 @@ public class ClassWidget extends UMLWidget{
     private WidgetAction addMethodAction = ActionFactory.createSelectAction(new AddMethodAction(this));
     private WidgetAction deleteFieldAction = ActionFactory.createSelectAction(new DeleteFieldAction(this));
     private WidgetAction deleteMethodAction = ActionFactory.createSelectAction(new DeleteMethodAction(this));
-    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(this));
+    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
 
     private WidgetAction selectFieldNameAction = ActionFactory.createSelectAction(new EditFieldNameAction());
     
