@@ -6,25 +6,19 @@ package org.uml.visual.widgets;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Image;
-import java.awt.event.KeyEvent;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.netbeans.api.visual.widget.general.IconNodeWidget;
-import org.openide.util.Utilities;
 import org.uml.model.InterfaceComponent;
-import org.uml.visual.providers.ClassConnectProvider;
-import org.uml.visual.widgets.actions.DeleteClassAction;
-import org.uml.visual.widgets.actions.EditFieldNameAction;
+import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
+import org.uml.visual.widgets.actions.InterfacePopupMenuProvider;
+import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**
  *
@@ -34,9 +28,6 @@ public class InterfaceWidget extends UMLWidget{
 
     InterfaceComponent interfaceComponent;
     ClassDiagramScene scene;
-    private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
-    private static final Image AtributeDefaultImage = Utilities.loadImage("org/uml/visual/icons/AtributeDefault.jpg"); // NOI18N
-    
     
     private static final Border RESIZE_BORDER = 
         org.netbeans.api.visual.border.BorderFactory.createResizeBorder(4, Color.black, true);
@@ -44,15 +35,9 @@ public class InterfaceWidget extends UMLWidget{
         org.netbeans.api.visual.border.BorderFactory.createLineBorder();
     
     private LabelWidget interfaceNameWidget;
-    private Widget fieldsWidget;
     private Widget methodsWidget;
     
-//    private WidgetAction addFieldAction = ActionFactory.createSelectAction(new AddFieldAction(this));
-//    private WidgetAction addMethodAction = ActionFactory.createSelectAction(new AddMethodAction(this));
-    private WidgetAction selectFieldNameAction = ActionFactory.createSelectAction(new EditFieldNameAction());
-    
-//    private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new PickMethodModifierAction(this));
-//    private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new PickAttributeModifierAction(this));
+    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
     
@@ -79,17 +64,7 @@ public class InterfaceWidget extends UMLWidget{
         interfaceNameWidget.setAlignment(LabelWidget.Alignment.CENTER);
         interfaceWidget.addChild(interfaceNameWidget);
         addChild(interfaceWidget);
-        interfaceNameWidget.getActions().addAction(selectFieldNameAction);
-        
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-        
-        fieldsWidget = new Widget(scene);
-        fieldsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        fieldsWidget.setOpaque(false);
-        fieldsWidget.setBorder(BORDER_4);
-        LabelWidget memberName = new LabelWidget(scene);
-        fieldsWidget.addChild(memberName);
-        addChild(fieldsWidget);
+        interfaceNameWidget.getActions().addAction(editorAction);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
@@ -101,9 +76,29 @@ public class InterfaceWidget extends UMLWidget{
         methodsWidget.addChild(operationName);
         addChild(methodsWidget);
         
+        this.interfaceNameWidget.setLabel(interfaceComponent.getName());
         
-       this.interfaceNameWidget.setLabel(interfaceComponent.getName());
+        getActions().addAction(ActionFactory.createPopupMenuAction(new InterfacePopupMenuProvider(this)));
     }
+    
+    public void createMethodAction(Widget operationWidget) {
+        methodsWidget.addChild(operationWidget);
+    }
+    
+    public Widget createMethodWidget(String methodName) {
+        Scene scene = getScene();
+        Widget widget = new Widget(scene);
+        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+
+        LabelWidget labelWidget = new LabelWidget(scene);
+        labelWidget.setLabel(methodName);
+        widget.addChild(labelWidget);
+        labelWidget.getActions().addAction(editorAction);
+        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
+        
+        return widget;
+    }
+    
     @Override
     public InterfaceComponent getComponent() {
         return interfaceComponent;
