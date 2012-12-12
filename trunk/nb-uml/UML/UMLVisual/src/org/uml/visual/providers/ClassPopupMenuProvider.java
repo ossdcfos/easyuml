@@ -9,9 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassWidget;
+import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**
  *
@@ -59,14 +62,22 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             Widget w = classWidget.createFieldWidget("Field");
             classWidget.createFieldAction(w);
             classWidget.getScene().validate();
+            
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
+            
         }
     };
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            classWidget.createMethodAction(classWidget.createMethodWidget("Method()"));
+            Widget w = classWidget.createMethodWidget("Method()");
+            classWidget.createMethodAction(w);
             classWidget.getScene().validate();
+            
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };
     ActionListener addConstructorListener = new ActionListener() {

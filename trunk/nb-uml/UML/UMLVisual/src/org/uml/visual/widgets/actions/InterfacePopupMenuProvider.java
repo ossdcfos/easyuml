@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.InterfaceWidget;
 
@@ -38,8 +40,13 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            interfaceWidget.createMethodAction(interfaceWidget.createMethodWidget("Method()"));
+            
+            Widget w = interfaceWidget.createMethodWidget("Method()");
+            interfaceWidget.createMethodAction(w);
             interfaceWidget.getScene().validate();
+            
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };
     

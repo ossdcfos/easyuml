@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.EnumWidget;
@@ -47,8 +49,13 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            enumWidget.createLiteralAction(enumWidget.createLiteralWidget("LITERAL"));
+            
+            Widget w = enumWidget.createLiteralWidget("LITERAL");
+            enumWidget.createLiteralAction(w);
             enumWidget.getScene().validate();
+            
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };
     
@@ -64,14 +71,21 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
             Widget w = enumWidget.createFieldWidget("Field");
             enumWidget.createFieldAction(w);
             enumWidget.getScene().validate();
+            
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            enumWidget.createMethodAction(enumWidget.createMethodWidget("Method()"));
+            Widget w = enumWidget.createMethodWidget("Method()");
+            enumWidget.createMethodAction(w);
             enumWidget.getScene().validate();
+            
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };
 

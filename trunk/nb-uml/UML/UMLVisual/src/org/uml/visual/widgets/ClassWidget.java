@@ -29,6 +29,7 @@ import org.uml.visual.widgets.actions.DeleteClassAction;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
 import org.uml.visual.widgets.actions.DeleteMethodAction;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
+import org.uml.visual.widgets.actions.FieldNameEditorAction;
 import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.PickAttributeModifierAction;
@@ -132,7 +133,7 @@ public class ClassWidget extends UMLWidget{
         Widget fieldWidget = new Widget(scene);
         fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
         
-        fieldWidget.addChild(createAtributeModifierPicker(scene));
+        //fieldWidget.addChild(createAtributeModifierPicker(scene));
 
         LabelWidget labelWidget = new LabelWidget(scene); 
         labelWidget.setLabel(fieldName);
@@ -171,7 +172,7 @@ public class ClassWidget extends UMLWidget{
         Widget widget = new Widget(scene);
         widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
-        widget.addChild(createMethodModifierPicker(scene));
+        //widget.addChild(createMethodModifierPicker(scene));
 
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(methodName);
