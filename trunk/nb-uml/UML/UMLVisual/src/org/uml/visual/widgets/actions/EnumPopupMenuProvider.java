@@ -42,11 +42,6 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
         menu.add(deleteClass);        
         
     }
-    /**
-     * Remove Widget Listener
-     *
-     *
-     */
     
     ActionListener addLiteralListener = new ActionListener() {
 
