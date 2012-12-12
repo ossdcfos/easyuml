@@ -64,18 +64,10 @@ public class ClassWidget extends UMLWidget{
     
     private WidgetAction addFieldAction = ActionFactory.createSelectAction(new AddFieldAction(this));
     private WidgetAction addMethodAction = ActionFactory.createSelectAction(new AddMethodAction(this));
-    private WidgetAction deleteFieldAction = ActionFactory.createSelectAction(new DeleteFieldAction(this));
-    private WidgetAction deleteMethodAction = ActionFactory.createSelectAction(new DeleteMethodAction(this));
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
 
-    private WidgetAction selectFieldNameAction = ActionFactory.createSelectAction(new EditFieldNameAction());
-    
     private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new PickMethodModifierAction(this));
     private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new PickAttributeModifierAction(this));
-    private WidgetAction pickStaticKeywordForAtribute = ActionFactory.createSelectAction(new PickStaticKeywordForAttributeAction());
-    private WidgetAction pickFinalKeywordForAtribute = ActionFactory.createSelectAction(new PickFinalKeywordForAttributeAction());
-    private WidgetAction pickStaticKeywordForMethod = ActionFactory.createSelectAction(new PickStaticKeywordForMethodAction());
-    private WidgetAction pickFinalKeywordForMethod = ActionFactory.createSelectAction(new PickFinalKeywordForMethodAction());
     
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
 
@@ -90,19 +82,19 @@ public class ClassWidget extends UMLWidget{
         setCheckClipping(true);
         
         Widget classWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
-        classWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+        classWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         classWidget.setBorder(BORDER_4);
         
         //ImageWidget classImage= new ImageWidget(scene);
         //classImage.setImage(this.classComponent.getImage());
         classNameWidget = new LabelWidget(scene);
         classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
+        classNameWidget.setAlignment(LabelWidget.Alignment.CENTER);
         classWidget.addChild(classNameWidget);
         addChild(classWidget);
         
         classNameWidget.getActions().addAction(editorAction);                
-        //classNameWidget.getActions().addAction(selectFieldNameAction);
-        //classNameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction(this)));
+        
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
         
         fieldsWidget = new Widget(scene);
@@ -123,15 +115,11 @@ public class ClassWidget extends UMLWidget{
         methodsWidget.addChild(operationName);
         addChild(methodsWidget);
         
-        
         this.classNameWidget.setLabel(classComponent.getName());
          
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createResizeAction());
-//        createFieldAction(createAddFieldActionWidget());
-//        createMethodAction(createAddMethodActionWidget());
-        
         
     }
      public String getClassName() {
@@ -172,39 +160,18 @@ public class ClassWidget extends UMLWidget{
 
     public Widget createFieldWidget(String fieldName) {
         Scene scene = getScene();
-       // FieldWidget fieldWidget = new FieldWidget(fieldName, scene);
 
         Widget fieldWidget = new Widget(scene);
         fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
         
-        
-//        LabelWidget labelMinus = new LabelWidget(scene);
-//        labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-//        labelMinus.setLabel("-");
-//        labelMinus.getActions().addAction(deleteFieldAction);
-//        fieldWidget.addChild(labelMinus);
-
         fieldWidget.addChild(createAtributeModifierPicker(scene));
-
-//        LabelWidget staticKeyword = new LabelWidget(scene);
-//        staticKeyword.setLabel(" _");
-//        staticKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-//        fieldWidget.addChild(staticKeyword);
-//        staticKeyword.getActions().addAction(pickStaticKeywordForAtribute);
-//
-//        LabelWidget finalKeyword = new LabelWidget(scene);
-//        finalKeyword.setLabel(" _ ");
-//        finalKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-//        fieldWidget.addChild(finalKeyword);
-//        finalKeyword.getActions().addAction(pickFinalKeywordForAtribute);
 
         LabelWidget labelWidget = new LabelWidget(scene); 
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(editorAction);
-        //labelWidget.getActions().addAction(selectFieldNameAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
-        //dodato polje u classElement
         
+        //dodato polje u classElement
         fieldWidget.addChild(labelWidget);
         
         return fieldWidget;
@@ -236,39 +203,16 @@ public class ClassWidget extends UMLWidget{
         Widget widget = new Widget(scene);
         widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
-//        LabelWidget labelMinus = new LabelWidget(scene);
-//        labelMinus.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-//        labelMinus.setLabel("-");
-//        labelMinus.getActions().addAction(deleteMethodAction);
-//        widget.addChild(labelMinus);
-
         widget.addChild(createMethodModifierPicker(scene));
-
-//        LabelWidget staticKeyword = new LabelWidget(scene);
-//        staticKeyword.setLabel(" _");
-//        staticKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-//        widget.addChild(staticKeyword);
-//        staticKeyword.getActions().addAction(pickStaticKeywordForMethod);
-//
-//        LabelWidget finalKeyword = new LabelWidget(scene);
-//        finalKeyword.setLabel(" _ ");
-//        finalKeyword.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
-//        widget.addChild(finalKeyword);
-//        finalKeyword.getActions().addAction(pickFinalKeywordForMethod);
 
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
-       // labelWidget.getActions().addAction(selectFieldNameAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
         
-
         return widget;
     }
-    /* public ClassComponent getClassComponent() {
-        return classComponent;
-    }*/
 
     public void createFieldAction(Widget memberWidget) {
         fieldsWidget.addChild(memberWidget);
