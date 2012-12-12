@@ -30,6 +30,7 @@ public class EnumWidget extends UMLWidget {
     ClassDiagramScene scene;
     EnumComponent enumComponent;
     private LabelWidget enumNameWidget;
+    private Widget literalsWidget;
     private Widget fieldsWidget;
     private Widget methodsWidget;
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
@@ -63,6 +64,16 @@ public class EnumWidget extends UMLWidget {
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
+        literalsWidget = new Widget(scene);
+        literalsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
+        literalsWidget.setOpaque(false);
+        literalsWidget.setBorder(BORDER_4);
+        LabelWidget literalName = new LabelWidget(scene);
+        literalsWidget.addChild(literalName);
+        addChild(literalsWidget);
+
+        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+        
         fieldsWidget = new Widget(scene);
         fieldsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         fieldsWidget.setOpaque(false);
@@ -99,6 +110,22 @@ public class EnumWidget extends UMLWidget {
         return enumComponent.getName();
     }
 
+    public Widget createLiteralWidget(String literalName) {
+        Scene scene = getScene();
+
+        Widget literalWidget = new Widget(scene);
+        literalWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+        
+        LabelWidget labelWidget = new LabelWidget(scene); 
+        labelWidget.setLabel(literalName);
+        labelWidget.getActions().addAction(editorAction);
+        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(literalWidget)));
+        
+        literalWidget.addChild(labelWidget);
+        
+        return literalWidget;
+    }
+    
     public Widget createFieldWidget(String fieldName) {
         Scene scene = getScene();
 
@@ -137,6 +164,10 @@ public class EnumWidget extends UMLWidget {
         methodsWidget.addChild(operationWidget);
     }
 
+    public void createLiteralAction(Widget literalWidget) {
+        literalsWidget.addChild(literalWidget);
+    }
+    
     public String getEnumName() {
         return enumComponent.getName();
     }
