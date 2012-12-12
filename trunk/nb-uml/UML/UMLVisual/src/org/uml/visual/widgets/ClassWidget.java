@@ -128,34 +128,6 @@ public class ClassWidget extends UMLWidget{
 
     public void setClassName(String className) {
         this.classNameWidget.setLabel(className);
-
-    }
-
-    public Widget createAddFieldActionWidget() {
-        Scene scene = getScene();
-        Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createOverlayLayout());
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel("New Field");
-        labelWidget.setForeground(Color.GRAY);
-        labelWidget.setAlignment(LabelWidget.Alignment.RIGHT);
-        labelWidget.getActions().addAction(addFieldAction);       
-        widget.addChild(labelWidget);
-        return widget;
-    }
-
-
-    public Widget createAddMethodActionWidget() {
-        Scene scene = getScene();
-        Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createOverlayLayout());
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel("New Method");
-        labelWidget.setForeground(Color.GRAY);
-        labelWidget.setAlignment(LabelWidget.Alignment.RIGHT);
-        labelWidget.getActions().addAction(addMethodAction);
-        widget.addChild(labelWidget);
-        return widget;
     }
 
     public Widget createFieldWidget(String fieldName) {
