@@ -24,8 +24,6 @@ import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
-import org.uml.visual.widgets.actions.AddFieldAction;
-import org.uml.visual.widgets.actions.AddMethodAction;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.actions.DeleteClassAction;
 import org.uml.visual.widgets.actions.DeleteFieldAction;
@@ -62,8 +60,6 @@ public class ClassWidget extends UMLWidget{
     private Widget fieldsWidget;
     private Widget methodsWidget;
     
-    private WidgetAction addFieldAction = ActionFactory.createSelectAction(new AddFieldAction(this));
-    private WidgetAction addMethodAction = ActionFactory.createSelectAction(new AddMethodAction(this));
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
 
     private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new PickMethodModifierAction(this));
