@@ -11,7 +11,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
-import org.netbeans.modules.visual.action.PopupMenuAction;
 import org.uml.visual.widgets.InterfaceWidget;
 
 /**
