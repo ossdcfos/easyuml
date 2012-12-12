@@ -23,6 +23,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
     private EnumWidget enumWidget;
     private JPopupMenu menu;
     private JMenuItem deleteClass;
+    private JMenuItem addLiteral;
     private JMenuItem addField;
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
@@ -31,6 +32,8 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
         this.enumWidget = enumWidget;
         menu = new JPopupMenu("Enum Menu");
 
+        (addLiteral = new JMenuItem("Add Literal")).addActionListener(addLiteralListener);
+        menu.add(addLiteral);
         (addField = new JMenuItem("Add Field")).addActionListener(addAtributeListener);
         menu.add(addField);
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
@@ -44,6 +47,16 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
      *
      *
      */
+    
+    ActionListener addLiteralListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            enumWidget.createLiteralAction(enumWidget.createLiteralWidget("LITERAL"));
+            enumWidget.getScene().validate();
+        }
+    };
+    
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -67,7 +80,6 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
         }
     };
 
-    // TODO Dodati jos listenera za ClassWidgetMeni
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;
