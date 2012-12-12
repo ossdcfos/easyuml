@@ -3,10 +3,6 @@ package org.uml.visual.widgets;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.event.KeyEvent;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
@@ -17,27 +13,15 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagramComponent;
-import org.uml.visual.providers.ClassConnectProvider;
-import org.uml.visual.providers.ClassConnectProvider;
+import org.uml.visual.providers.ClassHoverProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
-import org.uml.visual.widgets.actions.DeleteClassAction;
-import org.uml.visual.widgets.actions.DeleteFieldAction;
-import org.uml.visual.widgets.actions.DeleteMethodAction;
-import org.uml.visual.widgets.actions.EditFieldNameAction;
-import org.uml.visual.widgets.actions.FieldNameEditorAction;
 import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.PickAttributeModifierAction;
-import org.uml.visual.widgets.actions.PickFinalKeywordForAttributeAction;
-import org.uml.visual.widgets.actions.PickFinalKeywordForMethodAction;
 import org.uml.visual.widgets.actions.PickMethodModifierAction;
-import org.uml.visual.widgets.actions.PickStaticKeywordForAttributeAction;
-import org.uml.visual.widgets.actions.PickStaticKeywordForMethodAction;
 
 /**
  *
@@ -117,7 +101,7 @@ public class ClassWidget extends UMLWidget{
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createResizeAction());
-        
+        //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
     }
      public String getClassName() {
         return classNameWidget.getLabel();

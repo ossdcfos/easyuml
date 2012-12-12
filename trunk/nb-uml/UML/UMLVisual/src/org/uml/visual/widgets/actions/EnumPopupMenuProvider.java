@@ -29,6 +29,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
     private JMenuItem addField;
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
+    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
 
     public EnumPopupMenuProvider(EnumWidget enumWidget) {
         this.enumWidget = enumWidget;
@@ -54,7 +55,6 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
             enumWidget.createLiteralAction(w);
             enumWidget.getScene().validate();
             
-            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
             ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };
@@ -72,7 +72,6 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
             enumWidget.createFieldAction(w);
             enumWidget.getScene().validate();
             
-            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
             ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };
@@ -84,7 +83,6 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
             enumWidget.createMethodAction(w);
             enumWidget.getScene().validate();
             
-            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
             ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };

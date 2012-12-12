@@ -28,6 +28,8 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addField;
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
+    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
         this.classWidget = classWidget;
@@ -63,8 +65,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.createFieldAction(w);
             classWidget.getScene().validate();
             
-            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
+            ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(0));
             
         }
     };
@@ -76,8 +77,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.createMethodAction(w);
             classWidget.getScene().validate();
             
-            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
+            ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(0));
         }
     };
     ActionListener addConstructorListener = new ActionListener() {
