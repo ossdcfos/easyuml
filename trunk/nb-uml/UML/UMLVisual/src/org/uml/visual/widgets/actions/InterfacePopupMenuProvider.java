@@ -24,6 +24,8 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider{
     private JPopupMenu menu;
     private JMenuItem deleteInterface;
     private JMenuItem addMethod;
+    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            
 
     public InterfacePopupMenuProvider(InterfaceWidget interfaceWidget) {
         this.interfaceWidget = interfaceWidget;
@@ -45,7 +47,6 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider{
             interfaceWidget.createMethodAction(w);
             interfaceWidget.getScene().validate();
             
-            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
             ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
         }
     };
