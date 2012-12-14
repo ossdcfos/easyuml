@@ -124,7 +124,6 @@ public class ClassWidget extends UMLWidget{
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(editorAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
-        
         //dodato polje u classElement
         fieldWidget.addChild(labelWidget);
         

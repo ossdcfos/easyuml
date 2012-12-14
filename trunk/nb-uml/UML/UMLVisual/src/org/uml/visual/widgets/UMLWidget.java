@@ -28,7 +28,7 @@ public class UMLWidget extends IconNodeWidget{
         
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         getActions().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
-         setMinimumSize(MINDIMENSION);
+        setMinimumSize(MINDIMENSION);
        //Delete dugme, za sada ne funkcionise kako bi trebalo
        InputMap inputMap = new InputMap ();
        inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        
