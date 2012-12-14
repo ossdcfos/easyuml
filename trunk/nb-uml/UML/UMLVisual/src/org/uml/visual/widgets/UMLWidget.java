@@ -4,6 +4,7 @@
  */
 package org.uml.visual.widgets;
 
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -20,12 +21,14 @@ import org.uml.visual.widgets.actions.DeleteClassAction;
  */
 public class UMLWidget extends IconNodeWidget{
 
+    private static final Dimension MINDIMENSION= new Dimension (100,0);
+    
     public UMLWidget(ClassDiagramScene scene) {
         super(scene);
         
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         getActions().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
-        
+         setMinimumSize(MINDIMENSION);
        //Delete dugme, za sada ne funkcionise kako bi trebalo
        InputMap inputMap = new InputMap ();
        inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        

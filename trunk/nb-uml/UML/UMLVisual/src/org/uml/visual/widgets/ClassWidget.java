@@ -51,7 +51,6 @@ public class ClassWidget extends UMLWidget{
     private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new PickAttributeModifierAction(this));
     
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
-
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
         super(scene);
         this.classComponent = classComponent;
@@ -61,6 +60,7 @@ public class ClassWidget extends UMLWidget{
         setBorder(BorderFactory.createLineBorder());
         setOpaque(true);
         setCheckClipping(true);
+       
         
         Widget classWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         classWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
