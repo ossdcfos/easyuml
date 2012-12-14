@@ -12,8 +12,10 @@ import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.anchor.AnchorShape;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.graph.GraphScene;
+import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
+import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
@@ -26,6 +28,7 @@ import org.uml.model.InterfaceComponent;
 import org.uml.visual.providers.ClassConnectProvider;
 import org.uml.visual.providers.ClassHoverProvider;
 import org.uml.visual.providers.ClassSelectProvider;
+import org.uml.visual.providers.ConnectionPopupMenuProvider;
 import org.uml.visual.providers.ScenePopupMenuProvider;
 import org.uml.visual.widgets.actions.SceneAcceptProvider;
 
@@ -113,12 +116,17 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     
     @Override
     protected Widget attachEdgeWidget(RelationComponent e) {
+        //LabelWidget name = new LabelWidget (this, "Relation name");
+        //name.setOpaque (true);
         ConnectionWidget widget = new ConnectionWidget(this);
         widget.setTargetAnchorShape(AnchorShape.NONE);
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());
         widget.setPaintControlPoints (true);
         widget.setControlPointShape (PointShape.SQUARE_FILLED_BIG);
+        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConnectionPopupMenuProvider(widget)));
+        //widget.addChild(name);
+        //widget.setConstraint (name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);
         WidgetAction.Chain actions= widget.getActions();
         actions.addAction(createObjectHoverAction());
         actions.addAction(createSelectAction());
