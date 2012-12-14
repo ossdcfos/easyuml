@@ -19,6 +19,7 @@ import org.uml.model.InterfaceComponent;
 import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.InterfacePopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.MethodPopupMenuProvider;
 
 /**
  *
@@ -94,7 +95,7 @@ public class InterfaceWidget extends UMLWidget{
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
-        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
+        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
         
         return widget;
     }
