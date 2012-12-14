@@ -42,7 +42,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         menu.add(addField);
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
-        
+        menu.addSeparator();
         (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
         menu.add(deleteClass);        
         
