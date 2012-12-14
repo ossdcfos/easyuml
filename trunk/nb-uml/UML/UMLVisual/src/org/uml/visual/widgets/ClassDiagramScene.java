@@ -82,6 +82,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent n) {
+        
         IconNodeWidget widget = null;
         if (!(n instanceof ClassComponent)) {
             if(!(n instanceof EnumComponent)) {
@@ -105,7 +106,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 //
 //        //mouse-over, the event is consumed while the mouse is over the widget:
 //        widget.getActions().addAction(createObjectHoverAction());
-
         mainLayer.addChild(widget);
         return widget;
     }
