@@ -33,7 +33,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider{
         
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
-        
+        menu.addSeparator();
         (deleteInterface= new JMenuItem("Delete Interface")).addActionListener(removeWidgetListener);
         menu.add(deleteInterface);
     }
