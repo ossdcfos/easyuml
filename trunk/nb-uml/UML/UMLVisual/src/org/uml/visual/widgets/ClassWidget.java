@@ -20,6 +20,7 @@ import org.uml.visual.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.MethodPopupMenuProvider;
 import org.uml.visual.widgets.actions.PickAttributeModifierAction;
 import org.uml.visual.widgets.actions.PickMethodModifierAction;
 
@@ -162,7 +163,7 @@ public class ClassWidget extends UMLWidget{
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
-        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
+        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
         
         return widget;
     }
