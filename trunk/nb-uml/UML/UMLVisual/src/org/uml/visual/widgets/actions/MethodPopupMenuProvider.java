@@ -8,7 +8,9 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
@@ -26,18 +28,34 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         private Widget methodWidget;
         private JPopupMenu menu;
         private JMenuItem deleteMethod;
-        private JMenuItem visibility;
-        private JMenuItem modifiers;
+        private JMenu visibilitySubmenu;
+        private JMenu modifiersSubmenu;
+        private JMenuItem privateItem;
+        private JMenuItem publicItem;
+        private JMenuItem protectedItem;
+        private JMenuItem packageItem;
+        private JCheckBoxMenuItem staticJCBMI;
+        private JCheckBoxMenuItem abstractJCBMI;
+        private JCheckBoxMenuItem finalJCBMI;
+        private JCheckBoxMenuItem synchronizedJCBMI;
 
     public MethodPopupMenuProvider(Widget methodWidget) {
         this.methodWidget = methodWidget;
         menu= new JPopupMenu ("Class Menu");
         
-        (visibility = new JMenuItem("Visibility")).addActionListener(changeVisibility);
-        menu.add(visibility);
+        visibilitySubmenu = new JMenu("Visibility");
+        visibilitySubmenu.add(privateItem = new JMenuItem("public"));
+        visibilitySubmenu.add(publicItem =new JMenuItem("private"));
+        visibilitySubmenu.add(protectedItem =new JMenuItem("protected"));
+        visibilitySubmenu.add(packageItem =new JMenuItem("package"));
+        menu.add(visibilitySubmenu);
         
-        (modifiers = new JMenuItem("Modifiers")).addActionListener(changeModifier);
-        menu.add(modifiers);
+        modifiersSubmenu= new JMenu("Modifiers");
+        modifiersSubmenu.add(staticJCBMI= new JCheckBoxMenuItem("static"));
+        modifiersSubmenu.add(abstractJCBMI=new JCheckBoxMenuItem("abstract"));
+        modifiersSubmenu.add(finalJCBMI=new JCheckBoxMenuItem("final"));
+        modifiersSubmenu.add(synchronizedJCBMI=new JCheckBoxMenuItem("synchronized"));
+        menu.add(modifiersSubmenu);
         
         menu.addSeparator();
         
