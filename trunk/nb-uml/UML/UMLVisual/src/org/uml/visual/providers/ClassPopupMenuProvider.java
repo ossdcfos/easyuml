@@ -7,6 +7,7 @@ package org.uml.visual.providers;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -29,7 +30,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-            
+    MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
         this.classWidget = classWidget;
@@ -66,7 +67,15 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.getScene().validate();
             
             ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(0));
-            
+            w.getScene().getView().addMouseListener(mouseListener);
+//            w.getScene().getView().addMouseListener(new MouseAdapter() {
+//
+//                @Override
+//                public void mousePressed(MouseEvent e) {
+//                    super.mousePressed(e);
+//                    ActionFactory.getInplaceEditorController(editorAction).closeEditor(true);
+//                }
+//            });
         }
     };
     ActionListener addMethodListener = new ActionListener() {
@@ -78,6 +87,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.getScene().validate();
             
             ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(0));
+            w.getScene().getView().addMouseListener(mouseListener);
         }
     };
     ActionListener addConstructorListener = new ActionListener() {

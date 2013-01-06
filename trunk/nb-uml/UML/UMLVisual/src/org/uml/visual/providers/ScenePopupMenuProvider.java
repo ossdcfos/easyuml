@@ -7,6 +7,8 @@ package org.uml.visual.providers;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -36,7 +38,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem createRelationshipItem;
     private ClassDiagramScene scene;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-
+    MouseListener mouseListener = new MouseAdapterZaView(editorAction);
+    
     public ScenePopupMenuProvider(ClassDiagramScene scene) {
         this.scene = scene;
         sceneMenu = new JPopupMenu("Diagram menu!");
@@ -58,6 +61,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 scene.addWidget(widget);                
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(0));
                // (new AddClassDialog(null, scene, true)).setVisible(true);
+                scene.getView().addMouseListener(mouseListener);
             }
         });
         createInterfaceItem = new JMenuItem("Add Interface");
@@ -67,6 +71,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 InterfaceWidget widget = new InterfaceWidget(scene, new InterfaceComponent());
                 scene.addWidget(widget);                
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(1));
+                
+                scene.getView().addMouseListener(mouseListener);
             }
         });
         createEnumItem = new JMenuItem("Add Enum");
@@ -76,6 +82,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 EnumWidget widget = new EnumWidget(scene, new EnumComponent());
                 scene.addWidget(widget);                
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(1));
+                scene.getView().addMouseListener(mouseListener);
             }
         });
         createRelationshipItem= new JMenuItem("Add Relationship");
