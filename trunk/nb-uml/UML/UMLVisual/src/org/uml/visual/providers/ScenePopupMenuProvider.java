@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.InplaceEditorProvider;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
@@ -38,6 +39,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem createRelationshipItem;
     private ClassDiagramScene scene;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+    
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
     
     public ScenePopupMenuProvider(ClassDiagramScene scene) {
@@ -58,10 +60,12 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ClassWidget widget = new ClassWidget(scene, new ClassComponent());
-                scene.addWidget(widget);                
-                ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(0));
-               // (new AddClassDialog(null, scene, true)).setVisible(true);
+                scene.addWidget(widget);               
+                //ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(0));
+               ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
+                // (new AddClassDialog(null, scene, true)).setVisible(true);
                 scene.getView().addMouseListener(mouseListener);
+                
             }
         });
         createInterfaceItem = new JMenuItem("Add Interface");
@@ -69,9 +73,9 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             @Override
             public void actionPerformed(ActionEvent e) {
                 InterfaceWidget widget = new InterfaceWidget(scene, new InterfaceComponent());
-                scene.addWidget(widget);                
-                ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(1));
-                
+                scene.addWidget(widget);    
+                //ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(1));
+                ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
             }
         });
@@ -81,7 +85,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             public void actionPerformed(ActionEvent e) {
                 EnumWidget widget = new EnumWidget(scene, new EnumComponent());
                 scene.addWidget(widget);                
-                ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(1));
+                //ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(1));
+                ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
             }
         });
