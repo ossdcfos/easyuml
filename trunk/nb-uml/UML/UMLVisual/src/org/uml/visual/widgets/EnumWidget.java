@@ -171,4 +171,9 @@ public class EnumWidget extends UMLWidget {
     public String getEnumName() {
         return enumComponent.getName();
     }
+
+    @Override
+    public LabelWidget getNameLabel() {
+        return enumNameWidget;
+    }
 }

@@ -202,6 +202,11 @@ public class ClassWidget extends UMLWidget{
     public ClassComponent getComponent() {
         return classComponent;
     }
+
+    @Override
+    public LabelWidget getNameLabel() {
+        return classNameWidget;
+    }
         
     
 }

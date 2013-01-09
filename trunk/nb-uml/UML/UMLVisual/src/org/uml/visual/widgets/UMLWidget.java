@@ -10,6 +10,7 @@ import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.providers.ClassConnectProvider;
@@ -19,7 +20,7 @@ import org.uml.visual.widgets.actions.DeleteClassAction;
  *
  * @author "NUGS"
  */
-public class UMLWidget extends IconNodeWidget{
+abstract public class UMLWidget extends IconNodeWidget{
 
     private static final Dimension MINDIMENSION= new Dimension (100,0);
     
@@ -40,4 +41,6 @@ public class UMLWidget extends IconNodeWidget{
     public ClassDiagramComponent getComponent() {
         return null;
     }
+    
+    abstract public LabelWidget getNameLabel();
 }
