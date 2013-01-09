@@ -113,6 +113,11 @@ public class InterfaceWidget extends UMLWidget{
     public ClassDiagramScene getClassDiagramScene() {
         return scene;
     }
+
+    @Override
+    public LabelWidget getNameLabel() {
+        return interfaceNameWidget;
+    }
     
     
     
