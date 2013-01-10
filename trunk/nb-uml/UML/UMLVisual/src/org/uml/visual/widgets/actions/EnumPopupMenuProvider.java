@@ -7,12 +7,14 @@ package org.uml.visual.widgets.actions;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.visual.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.EnumWidget;
 
@@ -30,6 +32,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+    MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
     public EnumPopupMenuProvider(EnumWidget enumWidget) {
         this.enumWidget = enumWidget;
@@ -56,6 +59,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
             enumWidget.getScene().validate();
             
             ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
+            w.getScene().getView().addMouseListener(mouseListener);
         }
     };
     
@@ -72,7 +76,8 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
             enumWidget.createFieldAction(w);
             enumWidget.getScene().validate();
             
-            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
+            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(1));
+            w.getScene().getView().addMouseListener(mouseListener);
         }
     };
     ActionListener addMethodListener = new ActionListener() {
@@ -83,7 +88,8 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
             enumWidget.createMethodAction(w);
             enumWidget.getScene().validate();
             
-            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
+            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(1));
+            w.getScene().getView().addMouseListener(mouseListener);
         }
     };
 
