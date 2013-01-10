@@ -37,7 +37,9 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
     public EnumPopupMenuProvider(EnumWidget enumWidget) {
         this.enumWidget = enumWidget;
         menu = new JPopupMenu("Enum Menu");
-
+        
+        (addConstructor = new JMenuItem("Add Constructor")).addActionListener(addConstructorListener);
+        menu.add(addConstructor);
         (addLiteral = new JMenuItem("Add Literal")).addActionListener(addLiteralListener);
         menu.add(addLiteral);
         (addField = new JMenuItem("Add Field")).addActionListener(addAtributeListener);
@@ -48,6 +50,14 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
         menu.add(deleteClass);        
         
     }
+    
+    ActionListener addConstructorListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            enumWidget.createMethodAction(enumWidget.createMethodWidget(enumWidget.getEnumName()+"()"));
+            enumWidget.getScene().validate();
+        }
+    };
     
     ActionListener addLiteralListener = new ActionListener() {
 
