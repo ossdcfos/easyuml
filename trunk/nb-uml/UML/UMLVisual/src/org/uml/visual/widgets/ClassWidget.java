@@ -120,6 +120,10 @@ public class ClassWidget extends UMLWidget{
         
         //fieldWidget.addChild(createAtributeModifierPicker(scene));
 
+        LabelWidget visibilityLabel = new LabelWidget(scene);
+        visibilityLabel.setLabel("+");
+        fieldWidget.addChild(visibilityLabel);
+        
         LabelWidget labelWidget = new LabelWidget(scene); 
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(editorAction);
@@ -158,6 +162,10 @@ public class ClassWidget extends UMLWidget{
 
         //widget.addChild(createMethodModifierPicker(scene));
 
+        LabelWidget visibilityLabel = new LabelWidget(scene);
+        visibilityLabel.setLabel("+");
+        widget.addChild(visibilityLabel);
+        
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);

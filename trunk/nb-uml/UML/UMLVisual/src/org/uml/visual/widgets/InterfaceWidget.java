@@ -90,9 +90,14 @@ public class InterfaceWidget extends UMLWidget{
         Scene scene = getScene();
         Widget widget = new Widget(scene);
         widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
+        
+        LabelWidget visibilityLabel = new LabelWidget(scene);
+        visibilityLabel.setLabel("+");
+        widget.addChild(visibilityLabel);
+        
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(methodName);
+        labelWidget.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
