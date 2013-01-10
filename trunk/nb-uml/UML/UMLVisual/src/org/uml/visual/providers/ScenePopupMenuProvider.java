@@ -4,18 +4,22 @@
  */
 package org.uml.visual.providers;
 
+import java.awt.AWTException;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.InplaceEditorProvider;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.Exceptions;
 import org.uml.model.ClassComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
@@ -38,6 +42,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem createEnumItem;
     private JMenuItem createRelationshipItem;
     private ClassDiagramScene scene;
+    private Point popupPoint;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
@@ -50,17 +55,19 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
-
+        popupPoint = point;
         return sceneMenu;
     }
 
     public final void generateMenu() {
+
         createClassItem = new JMenuItem("Add Class");
         createClassItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ClassWidget widget = new ClassWidget(scene, new ClassComponent());
-                scene.addWidget(widget);        
+                widget.setPreferredLocation(popupPoint);
+                scene.addWidget(widget);  
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 // (new AddClassDialog(null, scene, true)).setVisible(true);
                 scene.getView().addMouseListener(mouseListener);
@@ -72,6 +79,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             @Override
             public void actionPerformed(ActionEvent e) {
                 InterfaceWidget widget = new InterfaceWidget(scene, new InterfaceComponent());
+                widget.setPreferredLocation(popupPoint);
                 scene.addWidget(widget);    
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
@@ -82,6 +90,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             @Override
             public void actionPerformed(ActionEvent e) {
                 EnumWidget widget = new EnumWidget(scene, new EnumComponent());
+                widget.setPreferredLocation(popupPoint);
                 scene.addWidget(widget);                
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
