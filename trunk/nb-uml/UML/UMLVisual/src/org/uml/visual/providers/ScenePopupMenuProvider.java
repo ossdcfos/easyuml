@@ -60,9 +60,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ClassWidget widget = new ClassWidget(scene, new ClassComponent());
-                scene.addWidget(widget);               
-                //ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(0));
-               ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
+                scene.addWidget(widget);        
+                ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 // (new AddClassDialog(null, scene, true)).setVisible(true);
                 scene.getView().addMouseListener(mouseListener);
                 
@@ -74,7 +73,6 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             public void actionPerformed(ActionEvent e) {
                 InterfaceWidget widget = new InterfaceWidget(scene, new InterfaceComponent());
                 scene.addWidget(widget);    
-                //ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(1));
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
             }
@@ -85,7 +83,6 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             public void actionPerformed(ActionEvent e) {
                 EnumWidget widget = new EnumWidget(scene, new EnumComponent());
                 scene.addWidget(widget);                
-                //ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getChildren().get(2).getChildren().get(1));
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
             }
