@@ -1,5 +1,6 @@
 package org.uml.visual.widgets.actions;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -12,11 +13,17 @@ import java.io.IOException;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.AcceptProvider;
+import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.ConnectorState;
+import org.netbeans.api.visual.action.InplaceEditorProvider;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.ImageUtilities;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.visual.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.ClassWidget;
+import org.uml.visual.widgets.UMLWidget;
 
 /**
  *
@@ -55,6 +62,10 @@ public class SceneAcceptProvider implements AcceptProvider {
            //IconNodeWidget newInstance = droppedWidget.getConstructor(ClassDiagramScene.class, droppedClass).newInstance(classDiagramScene, droppedClass.newInstance());          
             Widget w=classDiagramScene.addNode(droppedClass.newInstance());
             w.setPreferredLocation(widget.convertLocalToScene(point));
+            classDiagramScene.validate();
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            ActionFactory.getInplaceEditorController(editorAction).openEditor(((UMLWidget)w).getNameLabel());
+            classDiagramScene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
         } catch (InstantiationException | IllegalAccessException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
