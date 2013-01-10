@@ -132,6 +132,10 @@ public class EnumWidget extends UMLWidget {
         Widget fieldWidget = new Widget(scene);
         fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
         
+        LabelWidget visibilityLabel = new LabelWidget(scene);
+        visibilityLabel.setLabel("+");
+        fieldWidget.addChild(visibilityLabel);
+        
         LabelWidget labelWidget = new LabelWidget(scene); 
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(editorAction);
@@ -146,7 +150,11 @@ public class EnumWidget extends UMLWidget {
         Scene scene = getScene();
         Widget widget = new Widget(scene);
         widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
+        
+        LabelWidget visibilityLabel = new LabelWidget(scene);
+        visibilityLabel.setLabel("+");
+        widget.addChild(visibilityLabel);
+        
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
