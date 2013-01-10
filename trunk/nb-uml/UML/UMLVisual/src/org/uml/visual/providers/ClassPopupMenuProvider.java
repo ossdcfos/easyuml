@@ -66,16 +66,9 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.createFieldAction(w);
             classWidget.getScene().validate();
             
-            ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(0));
+            ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(1));
             w.getScene().getView().addMouseListener(mouseListener);
-//            w.getScene().getView().addMouseListener(new MouseAdapter() {
-//
-//                @Override
-//                public void mousePressed(MouseEvent e) {
-//                    super.mousePressed(e);
-//                    ActionFactory.getInplaceEditorController(editorAction).closeEditor(true);
-//                }
-//            });
+         
         }
     };
     ActionListener addMethodListener = new ActionListener() {
@@ -86,7 +79,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.createMethodAction(w);
             classWidget.getScene().validate();
             
-            ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(0));
+            ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(1));
             w.getScene().getView().addMouseListener(mouseListener);
         }
     };
@@ -95,7 +88,6 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         public void actionPerformed(ActionEvent e) {
             classWidget.createMethodAction(classWidget.createMethodWidget(classWidget.getClassName()+"()"));
             classWidget.getScene().validate();
-            addConstructor.setEnabled(false);
         }
     };
 
