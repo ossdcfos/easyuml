@@ -15,7 +15,7 @@ import org.openide.util.Lookup;
  */
 public class PaletteSupport {
     
-    
+  //   @MimeRegistration(mimeType = "text/x-java", service = PaletteController.class)
     public static PaletteController createPalette () {
             AbstractNode paletteRoot= new AbstractNode (new PaletteCategoryChildren());
             paletteRoot.setName("Palette Root");

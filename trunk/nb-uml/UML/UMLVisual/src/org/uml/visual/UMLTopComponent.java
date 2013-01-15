@@ -26,7 +26,7 @@ autostore = false)
     preferredID = "UMLTopComponent",
 //iconBase="SET/PATH/TO/ICON/HERE", 
 persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "explorer", openAtStartup = true)
+@TopComponent.Registration(mode = "editor", openAtStartup = true)
 @ActionID(category = "Window", id = "org.uml.visual.UMLTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
@@ -58,21 +58,19 @@ public final class UMLTopComponent extends TopComponent {
         associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
     }
 
-    public UMLTopComponent(ClassDiagram umlClassDiagram) {
-        this.umlClassDiagram = umlClassDiagram;
-        initComponents();
-        setName(Bundle.CTL_UMLTopComponent());
-        setToolTipText(Bundle.HINT_UMLTopComponent());
-        setLayout(new BorderLayout());
-        classDiagramScene = new ClassDiagramScene(this.umlClassDiagram);
-
-
-
-        //implementiraj
-        //scene.visualizeNetwork();
-       
-        associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
-    }
+//    public UMLTopComponent(ClassDiagram umlClassDiagram) {
+//        this.umlClassDiagram = umlClassDiagram;
+//        initComponents();
+//        setName(Bundle.CTL_UMLTopComponent());
+//        setToolTipText(Bundle.HINT_UMLTopComponent());
+//        setLayout(new BorderLayout());
+//        classDiagramScene = new ClassDiagramScene(this.umlClassDiagram);
+//
+//        //implementiraj
+//        //scene.visualizeNetwork();
+//       
+//        associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
