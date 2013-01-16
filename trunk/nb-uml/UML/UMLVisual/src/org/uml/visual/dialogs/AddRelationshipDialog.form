@@ -28,7 +28,7 @@
                   <Group type="102" attributes="0">
                       <Component id="jbtnOk" min="-2" pref="81" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-                      <Component id="jbtnCancel" pref="77" max="32767" attributes="0"/>
+                      <Component id="jbtnCancel" pref="119" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
@@ -71,7 +71,7 @@
                   <Component id="jbtnOk" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jbtnCancel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="38" max="32767" attributes="0"/>
+              <EmptySpace pref="30" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
