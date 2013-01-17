@@ -40,9 +40,9 @@ import org.uml.visual.widgets.actions.SceneAcceptProvider;
 public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, RelationComponent> {
 
     private LayerWidget mainLayer;
-    private ClassDiagram umlClassDiagram;
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
+    private ClassDiagram umlClassDiagram;
             
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
@@ -80,21 +80,21 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent component) {
         
-        IconNodeWidget widget = null;
-        if (!(component instanceof ClassComponent)) {
-            if(!(component instanceof EnumComponent)) {
-            widget = new InterfaceWidget(this, (InterfaceComponent) component);
-            }
-            else {
-            widget= new EnumWidget(this, (EnumComponent) component);
-            }
-        } else {                      // Mozda refleksijom da pretavaramo imena komponente u widgete ili neko mapiranje kao u Neurophu? 
-            widget = new ClassWidget(this, (ClassComponent) component);
-            
-            
+        UMLWidget widget = null;
+
+        if (component instanceof ClassComponent) {
+          widget = new ClassWidget(this, (ClassComponent) component);          
+        } else if(component instanceof InterfaceComponent) {
+          widget = new InterfaceWidget(this, (InterfaceComponent) component);
+        } else if(component instanceof EnumComponent){
+          widget= new EnumWidget(this, (EnumComponent) component);
+        } else {
+            throw new RuntimeException("Unknown component!");
         }
+        // add block for RelationComponent too!
+        
             
-        //WARNING Ovo je ukljuceno u Factory Methodu 
+        //WARNING Ovo prebaciti u UMLWidget akcije zajednicke za sve komponnete dijagrama
 
 //        widget.getActions().addAction(ActionFactory.createMoveAction());
 //        //single-click, the event is not consumed:
@@ -106,6 +106,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 //        //mouse-over, the event is consumed while the mouse is over the widget:
 //        widget.getActions().addAction(createObjectHoverAction());
         mainLayer.addChild(widget);
+        
+        umlClassDiagram.addComponent(component);
 
         return widget;
     }
