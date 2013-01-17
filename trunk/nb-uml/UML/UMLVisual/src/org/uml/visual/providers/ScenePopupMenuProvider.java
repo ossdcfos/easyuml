@@ -65,11 +65,14 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createClassItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClassWidget widget = new ClassWidget(scene, new ClassComponent());
+                // add neww class component and widget to scene
+                // here we should just add new class component to model, and the scene should be updated elsewhere
+                ClassWidget widget = (ClassWidget)scene.addNode(new ClassComponent());
                 widget.setPreferredLocation(popupPoint);
-                scene.addWidget(widget);  
+                scene.validate();
+                
+                // open editor for class name
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
-                // (new AddClassDialog(null, scene, true)).setVisible(true);
                 scene.getView().addMouseListener(mouseListener);
                 
             }
@@ -78,9 +81,10 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createInterfaceItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                InterfaceWidget widget = new InterfaceWidget(scene, new InterfaceComponent());
+                InterfaceWidget widget = (InterfaceWidget)scene.addNode(new InterfaceComponent());
                 widget.setPreferredLocation(popupPoint);
-                scene.addWidget(widget);    
+                scene.validate();
+
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
             }
@@ -89,13 +93,15 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createEnumItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EnumWidget widget = new EnumWidget(scene, new EnumComponent());
+                EnumWidget widget = (EnumWidget)scene.addNode(new EnumComponent());
                 widget.setPreferredLocation(popupPoint);
-                scene.addWidget(widget);                
+                scene.validate();               
+                
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
             }
         });
+        
         createRelationshipItem= new JMenuItem("Add Relationship");
         createRelationshipItem.addActionListener(new ActionListener() {
 
@@ -104,6 +110,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 (new AddRelationshipDialog(null,scene,true)).setVisible(true);
             }
         });
+        
         sceneMenu.add(createClassItem);
         sceneMenu.add(createInterfaceItem);
         sceneMenu.add(createEnumItem);

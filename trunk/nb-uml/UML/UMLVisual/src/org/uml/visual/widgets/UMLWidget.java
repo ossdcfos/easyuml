@@ -31,13 +31,14 @@ abstract public class UMLWidget extends IconNodeWidget{
         getActions().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
         setMinimumSize(MINDIMENSION);
        //Delete dugme, za sada ne funkcionise kako bi trebalo
-       InputMap inputMap = new InputMap ();
-       inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        
-       ActionMap actionMap = new ActionMap ();
-       actionMap.put ("myAction", new DeleteClassAction (this));     
-       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
+//       InputMap inputMap = new InputMap ();
+//       inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        
+//       ActionMap actionMap = new ActionMap ();
+//       actionMap.put ("myAction", new DeleteClassAction (this));     
+//       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
     }
     
+    // this method should be abstract...
     public ClassDiagramComponent getComponent() {
         return null;
     }
