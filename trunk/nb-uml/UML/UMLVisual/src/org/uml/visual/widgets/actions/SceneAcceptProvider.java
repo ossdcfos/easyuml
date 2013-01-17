@@ -57,13 +57,12 @@ public class SceneAcceptProvider implements AcceptProvider {
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
         Class<? extends ClassDiagramComponent> droppedClass = (Class<? extends ClassDiagramComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
-        //Class<? extends IconNodeWidget> droppedWidget = (Class<? extends IconNodeWidget>) t.getTransferDataFlavors()[3].getRepresentationClass();
         try {
-           //IconNodeWidget newInstance = droppedWidget.getConstructor(ClassDiagramScene.class, droppedClass).newInstance(classDiagramScene, droppedClass.newInstance());          
             Widget w=classDiagramScene.addNode(droppedClass.newInstance());
             w.setPreferredLocation(widget.convertLocalToScene(point));
             
             classDiagramScene.validate();
+        
             WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
             ActionFactory.getInplaceEditorController(editorAction).openEditor(((UMLWidget)w).getNameLabel());
             classDiagramScene.getView().addMouseListener(new MouseAdapterZaView(editorAction));

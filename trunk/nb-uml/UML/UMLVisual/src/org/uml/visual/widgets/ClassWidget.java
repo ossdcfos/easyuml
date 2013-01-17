@@ -8,21 +8,18 @@ import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
-import org.netbeans.api.visual.widget.ImageWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
-import org.uml.visual.providers.ClassHoverProvider;
 import org.uml.visual.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.MethodPopupMenuProvider;
-import org.uml.visual.widgets.actions.PickAttributeModifierAction;
-import org.uml.visual.widgets.actions.PickMethodModifierAction;
+
 
 /**
  *
@@ -48,9 +45,6 @@ public class ClassWidget extends UMLWidget{
     
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
 
-    private WidgetAction pickMethodModifier = ActionFactory.createSelectAction(new PickMethodModifierAction(this));
-    private WidgetAction pickAtributeModifier = ActionFactory.createSelectAction(new PickAttributeModifierAction(this));
-    
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
         super(scene);
@@ -134,26 +128,7 @@ public class ClassWidget extends UMLWidget{
         return fieldWidget;
     }
 
-    private Widget createAtributeModifierPicker(Scene scene) {
-        Widget w = new Widget(scene);
-        w.setLayout(LayoutFactory.createVerticalFlowLayout());
 
-        ImageWidget DefaultImage = new ImageWidget(scene);
-        DefaultImage.setImage(AtributeDefaultImage);
-        DefaultImage.getActions().addAction(pickAtributeModifier);
-        w.addChild(DefaultImage);
-        return w;
-    }
-
-    private Widget createMethodModifierPicker(Scene scene) {
-        Widget w = new Widget(scene);
-        w.setLayout(LayoutFactory.createVerticalFlowLayout());
-        ImageWidget DefaultImage = new ImageWidget(scene);
-        DefaultImage.setImage(MethodDefaultImage);
-        DefaultImage.getActions().addAction(pickMethodModifier);
-        w.addChild(DefaultImage);
-        return w;
-    }
 
     public Widget createMethodWidget(String methodName) {
         Scene scene = getScene();

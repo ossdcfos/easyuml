@@ -78,18 +78,20 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     }
 
     @Override
-    protected Widget attachNodeWidget(ClassDiagramComponent n) {
+    protected Widget attachNodeWidget(ClassDiagramComponent component) {
         
         IconNodeWidget widget = null;
-        if (!(n instanceof ClassComponent)) {
-            if(!(n instanceof EnumComponent)) {
-            widget = new InterfaceWidget(this, (InterfaceComponent) n);
+        if (!(component instanceof ClassComponent)) {
+            if(!(component instanceof EnumComponent)) {
+            widget = new InterfaceWidget(this, (InterfaceComponent) component);
             }
             else {
-            widget= new EnumWidget(this, (EnumComponent) n);
+            widget= new EnumWidget(this, (EnumComponent) component);
             }
         } else {                      // Mozda refleksijom da pretavaramo imena komponente u widgete ili neko mapiranje kao u Neurophu? 
-            widget = new ClassWidget(this, (ClassComponent) n);
+            widget = new ClassWidget(this, (ClassComponent) component);
+            
+            
         }
             
         //WARNING Ovo je ukljuceno u Factory Methodu 
@@ -104,6 +106,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 //        //mouse-over, the event is consumed while the mouse is over the widget:
 //        widget.getActions().addAction(createObjectHoverAction());
         mainLayer.addChild(widget);
+
         return widget;
     }
 
