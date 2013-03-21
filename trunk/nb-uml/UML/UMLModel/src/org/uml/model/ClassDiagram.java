@@ -14,6 +14,8 @@ public class ClassDiagram {
     
     private HashMap<String, ClassDiagramComponent> components; // classes, interfaces or enums
     private HashMap<String, RelationComponent> relations;
+    
+    int compCounter=0;
 
     public ClassDiagram() {
         
@@ -22,7 +24,8 @@ public class ClassDiagram {
     
     public void addComponent(ClassDiagramComponent component) {
         if (components.containsKey(component.getName())) {
-            throw new RuntimeException("Component with same name allready exists!");
+                component.setName(component.getName() + "_"+compCounter);
+                compCounter++;
         }
         
         components.put(component.getName(), component);
