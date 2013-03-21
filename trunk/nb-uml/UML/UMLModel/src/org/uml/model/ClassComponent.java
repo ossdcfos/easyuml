@@ -22,6 +22,7 @@ public class ClassComponent extends ClassDiagramComponent {
         private HashMap<String,Method> methods;
 
 
+
     public Image getImage() {
         return image;
     }
@@ -40,6 +41,10 @@ public class ClassComponent extends ClassDiagramComponent {
     public ClassComponent(String name) {
         super(name);
     }
+
+
+    
+    
 
     public HashMap<String, Field> getFields() {
         return fields;
