@@ -28,6 +28,7 @@ public class ClassDiagram {
                 compCounter++;
         }
         
+        component.setParentDiagram(this);
         components.put(component.getName(), component);
     }
     
