@@ -15,10 +15,10 @@ import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.EnumComponent;
-import org.uml.visual.providers.ClassPopupMenuProvider;
+import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.actions.EditFieldNameAction;
-import org.uml.visual.widgets.actions.EnumPopupMenuProvider;
-import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
+import org.uml.visual.widgets.providers.EnumPopupMenuProvider;
+import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets;
 
 import java.awt.Dimension;
@@ -13,7 +9,7 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.visual.providers.ClassConnectProvider;
+import org.uml.visual.widgets.providers.ClassConnectProvider;
 import org.uml.visual.widgets.actions.DeleteClassAction;
 
 /**

@@ -1,4 +1,4 @@
-package org.uml.visual.widgets.actions;
+package org.uml.visual.widgets.providers;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -19,10 +19,11 @@ import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.ImageUtilities;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.visual.providers.MouseAdapterZaView;
+import org.uml.visual.widgets.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.UMLWidget;
+import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**
  *

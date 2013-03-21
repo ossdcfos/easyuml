@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.uml.visual.widgets.actions;
+package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
 import java.awt.datatransfer.Transferable;
@@ -11,8 +11,8 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.ConnectDecorator;
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.visual.providers.ClassConnectDecorator;
-import org.uml.visual.providers.ClassConnectProvider;
+import org.uml.visual.widgets.providers.ClassConnectDecorator;
+import org.uml.visual.widgets.providers.ClassConnectProvider;
 import org.uml.visual.widgets.ClassWidget;
 
 /**

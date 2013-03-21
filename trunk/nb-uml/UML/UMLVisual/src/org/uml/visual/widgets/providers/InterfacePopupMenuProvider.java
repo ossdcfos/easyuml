@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.uml.visual.widgets.actions;
+package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -14,8 +14,9 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.visual.providers.MouseAdapterZaView;
+import org.uml.visual.widgets.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.InterfaceWidget;
+import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**
  *
