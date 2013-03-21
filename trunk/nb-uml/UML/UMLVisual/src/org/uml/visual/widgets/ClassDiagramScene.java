@@ -22,9 +22,9 @@ import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
-import org.uml.visual.providers.ConnectionPopupMenuProvider;
-import org.uml.visual.providers.ScenePopupMenuProvider;
-import org.uml.visual.widgets.actions.SceneAcceptProvider;
+import org.uml.visual.widgets.providers.ConnectionPopupMenuProvider;
+import org.uml.visual.widgets.providers.ScenePopupMenuProvider;
+import org.uml.visual.widgets.providers.SceneAcceptProvider;
 
 /**
  *

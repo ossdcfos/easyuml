@@ -16,10 +16,10 @@ import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.InterfaceComponent;
-import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
-import org.uml.visual.widgets.actions.InterfacePopupMenuProvider;
+import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
+import org.uml.visual.widgets.providers.InterfacePopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
-import org.uml.visual.widgets.actions.MethodPopupMenuProvider;
+import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
 
 /**
  *

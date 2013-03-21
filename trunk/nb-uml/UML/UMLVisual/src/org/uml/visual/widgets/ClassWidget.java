@@ -14,11 +14,11 @@ import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
-import org.uml.visual.providers.ClassPopupMenuProvider;
-import org.uml.visual.widgets.actions.ClassWidgetAcceptProvider;
-import org.uml.visual.widgets.actions.FieldPopupMenuProvider;
+import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
+import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
+import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
-import org.uml.visual.widgets.actions.MethodPopupMenuProvider;
+import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
 
 
 /**

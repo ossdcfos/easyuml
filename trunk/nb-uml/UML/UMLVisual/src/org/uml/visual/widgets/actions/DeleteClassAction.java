@@ -8,17 +8,18 @@ import org.netbeans.api.visual.widget.Widget;
  *
  * @author "NUGS"
  */
-public class DeleteClassAction extends AbstractAction{
+public class DeleteClassAction extends AbstractAction {
 
-        Widget widget;
-    public DeleteClassAction (Widget widget) {
+    Widget widget;
+
+    public DeleteClassAction(Widget widget) {
         super("Delete Class Action");
-        this.widget=widget;
+        this.widget = widget;
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         widget.removeFromParent();
+        
     }
-    
-    
 }

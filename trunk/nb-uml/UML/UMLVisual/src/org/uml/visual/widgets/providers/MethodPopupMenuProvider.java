@@ -1,4 +1,4 @@
-package org.uml.visual.widgets.actions;
+package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;

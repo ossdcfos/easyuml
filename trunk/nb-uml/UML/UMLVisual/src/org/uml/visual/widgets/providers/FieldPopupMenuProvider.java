@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.uml.visual.widgets.actions;
+package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
