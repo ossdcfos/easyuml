@@ -46,11 +46,6 @@ public class ClassDiagram {
         return components;
     }
 
-    
-    public void remove (String name) {
-        components.remove(name);
-    }
-
     public boolean nameExists(String name) {
         return components.containsKey(name);
     }
