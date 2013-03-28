@@ -14,7 +14,7 @@ import org.uml.model.RelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.InterfaceWidget;
-import org.uml.visual.widgets.UMLWidget;
+import org.uml.visual.widgets.ComponentWidgetBase;
 
 /**
  *
@@ -31,12 +31,12 @@ public class ClassConnectProvider implements ConnectProvider{
 
     @Override
     public boolean isSourceWidget(Widget sourceWidget) {
-        return (((sourceWidget instanceof UMLWidget)&&(sourceWidget!=null)));
+        return (((sourceWidget instanceof ComponentWidgetBase)&&(sourceWidget!=null)));
     }
 
     @Override
     public ConnectorState isTargetWidget(Widget sourceWidget, Widget targetWidget) {        
-    return (targetWidget instanceof UMLWidget) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
+    return (targetWidget instanceof ComponentWidgetBase) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
     }
 
     @Override
@@ -53,10 +53,10 @@ public class ClassConnectProvider implements ConnectProvider{
     public void createConnection(Widget sourceWidget, Widget targetWidget) {
        //connect class to class
         RelationComponent relation= new RelationComponent();        
-        if((sourceWidget instanceof UMLWidget)&& (targetWidget instanceof UMLWidget)) {
+        if((sourceWidget instanceof ComponentWidgetBase)&& (targetWidget instanceof ComponentWidgetBase)) {
             ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
-            UMLWidget source= (UMLWidget) sourceWidget;
-            UMLWidget target= (UMLWidget) targetWidget;
+            ComponentWidgetBase source= (ComponentWidgetBase) sourceWidget;
+            ComponentWidgetBase target= (ComponentWidgetBase) targetWidget;
             scene.addEdge(relation);
             scene.setEdgeSource(relation,source.getComponent());
             scene.setEdgeTarget(relation,target.getComponent());

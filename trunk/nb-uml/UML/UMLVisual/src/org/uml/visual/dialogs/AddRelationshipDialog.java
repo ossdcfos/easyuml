@@ -21,7 +21,7 @@ import org.uml.model.UseRelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.InterfaceWidget;
-import org.uml.visual.widgets.UMLWidget;
+import org.uml.visual.widgets.ComponentWidgetBase;
 
 /**
  *
@@ -184,9 +184,9 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
         Class<? extends RelationComponent> forName= (Class<? extends RelationComponent>) Class.forName(packageURL);
         RelationComponent relation = forName.newInstance();
 
-    if(jcbClassesSource.getSelectedItem() instanceof UMLWidget && jcbClassesTarget.getSelectedItem() instanceof UMLWidget) {
-        UMLWidget source= (UMLWidget) jcbClassesSource.getSelectedItem();
-        UMLWidget target= (UMLWidget)jcbClassesTarget.getSelectedItem(); 
+    if(jcbClassesSource.getSelectedItem() instanceof ComponentWidgetBase && jcbClassesTarget.getSelectedItem() instanceof ComponentWidgetBase) {
+        ComponentWidgetBase source= (ComponentWidgetBase) jcbClassesSource.getSelectedItem();
+        ComponentWidgetBase target= (ComponentWidgetBase)jcbClassesTarget.getSelectedItem(); 
         classDiagramScene.addEdge(relation);
         classDiagramScene.setEdgeSource(relation, source.getComponent());
         classDiagramScene.setEdgeTarget(relation, target.getComponent());

@@ -80,8 +80,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent component) {
         
-        UMLWidget widget = null;
-
+        ComponentWidgetBase widget = null;
+        umlClassDiagram.addComponent(component);
         if (component instanceof ClassComponent) {
           widget = new ClassWidget(this, (ClassComponent) component);          
         } else if(component instanceof InterfaceComponent) {
@@ -94,7 +94,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         // add block for RelationComponent too!
         
             
-        //WARNING Ovo prebaciti u UMLWidget akcije zajednicke za sve komponnete dijagrama
+        //WARNING Ovo prebaciti u ComponentWidgetBase akcije zajednicke za sve komponnete dijagrama
 
 //        widget.getActions().addAction(ActionFactory.createMoveAction());
 //        //single-click, the event is not consumed:
@@ -105,10 +105,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 //
 //        //mouse-over, the event is consumed while the mouse is over the widget:
 //        widget.getActions().addAction(createObjectHoverAction());
+        
+        
         mainLayer.addChild(widget);
         
-        umlClassDiagram.addComponent(component);
-
         return widget;
     }
 

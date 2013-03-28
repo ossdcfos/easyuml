@@ -22,8 +22,10 @@ import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.UMLWidget;
+import org.uml.visual.widgets.Nameable;
+import org.uml.visual.widgets.ComponentWidgetBase;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.NameEditorAction;
 
 /**
  *
@@ -62,10 +64,13 @@ public class SceneAcceptProvider implements AcceptProvider {
             w.setPreferredLocation(widget.convertLocalToScene(point));
             
             classDiagramScene.validate();
-        
-            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-            ActionFactory.getInplaceEditorController(editorAction).openEditor(((UMLWidget)w).getNameLabel());
+            
+//            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+//            ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase)w).getNameLabel());
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction((Nameable)w));
+            ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase)w).getNameLabel());
             classDiagramScene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
+            
         
         } catch (InstantiationException | IllegalAccessException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
