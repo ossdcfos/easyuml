@@ -130,14 +130,13 @@ public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
         if (getNameLabel().getLabel().equals(newName)) {
             return;
         }
-//        try {        
-//            String oldName = interfaceComponent.getName();
-//            interfaceComponent.getParentDiagram().nameExists(newName);
-//            this.interfaceNameWidget.setLabel(newName);
-//            interfaceComponent.setName(newName);
-//            interfaceComponent.getParentDiagram().componentNameChanged(interfaceComponent, oldName);
-//        } catch (Exception ex) {
-//            
-//        }
+        String oldName = interfaceComponent.getName();
+        if (!interfaceComponent.getParentDiagram().nameExists(newName)) {
+            this.interfaceNameWidget.setLabel(newName);
+            interfaceComponent.setName(newName);
+            interfaceComponent.getParentDiagram().componentNameChanged(interfaceComponent, oldName);
+        }
+    // else
+    //    ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
     }
 }
