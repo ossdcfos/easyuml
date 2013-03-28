@@ -16,11 +16,11 @@ import org.uml.visual.widgets.actions.DeleteClassAction;
  *
  * @author "NUGS"
  */
-abstract public class UMLWidget extends IconNodeWidget{
+abstract public class ComponentWidgetBase extends IconNodeWidget implements Nameable{
 
     private static final Dimension MINDIMENSION= new Dimension (100,0);
     
-    public UMLWidget(ClassDiagramScene scene) {
+    public ComponentWidgetBase(ClassDiagramScene scene) {
         super(scene);
         
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));

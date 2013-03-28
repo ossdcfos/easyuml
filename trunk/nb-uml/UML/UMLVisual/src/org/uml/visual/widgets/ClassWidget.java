@@ -12,55 +12,54 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
-
+import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
  *
  * @author NUGS
  */
-public class ClassWidget extends UMLWidget{
+public class ClassWidget extends ComponentWidgetBase implements Nameable {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
-    ClassDiagramScene scene;   
+    ClassDiagramScene scene;
     private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
     private static final Image AtributeDefaultImage = Utilities.loadImage("org/uml/visual/icons/AtributeDefault.jpg"); // NOI18N
-    
-    
-    private static final Border RESIZE_BORDER = 
-        BorderFactory.createResizeBorder(4, Color.black, true);
-    private static final Border DEFAULT_BORDER = 
-        BorderFactory.createLineBorder();
-    
+    private static final Border RESIZE_BORDER =
+            BorderFactory.createResizeBorder(4, Color.black, true);
+    private static final Border DEFAULT_BORDER =
+            BorderFactory.createLineBorder();
     private LabelWidget classNameWidget;
     private Widget fieldsWidget;
     private Widget methodsWidget;
-    
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-
+    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
+
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
         super(scene);
         this.classComponent = classComponent;
-        this.scene=scene;
+        this.scene = scene;
         setChildConstraint(getImageWidget(), 1);
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
         setOpaque(true);
         setCheckClipping(true);
-       
-        
+
+
         Widget classWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         classWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         classWidget.setBorder(BORDER_4);
-        
+
         //ImageWidget classImage= new ImageWidget(scene);
         //classImage.setImage(this.classComponent.getImage());
         classNameWidget = new LabelWidget(scene);
@@ -68,11 +67,11 @@ public class ClassWidget extends UMLWidget{
         classNameWidget.setAlignment(LabelWidget.Alignment.CENTER);
         classWidget.addChild(classNameWidget);
         addChild(classWidget);
-        
-        classNameWidget.getActions().addAction(editorAction);                
-        
+
+        classNameWidget.getActions().addAction(nameEditorAction);
+
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-        
+
         fieldsWidget = new Widget(scene);
         fieldsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         fieldsWidget.setOpaque(false);
@@ -90,15 +89,16 @@ public class ClassWidget extends UMLWidget{
         LabelWidget operationName = new LabelWidget(scene);
         methodsWidget.addChild(operationName);
         addChild(methodsWidget);
-        
+
         this.classNameWidget.setLabel(classComponent.getName());
-         
+
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createResizeAction());
         //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
     }
-     public String getClassName() {
+
+    public String getClassName() {
         return classNameWidget.getLabel();
     }
 
@@ -111,24 +111,22 @@ public class ClassWidget extends UMLWidget{
 
         Widget fieldWidget = new Widget(scene);
         fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-        
+
         //fieldWidget.addChild(createAtributeModifierPicker(scene));
 
         LabelWidget visibilityLabel = new LabelWidget(scene);
         visibilityLabel.setLabel("+");
         fieldWidget.addChild(visibilityLabel);
-        
-        LabelWidget labelWidget = new LabelWidget(scene); 
+
+        LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(editorAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
         //dodato polje u classElement
         fieldWidget.addChild(labelWidget);
-        
+
         return fieldWidget;
     }
-
-
 
     public Widget createMethodWidget(String methodName) {
         Scene scene = getScene();
@@ -140,13 +138,13 @@ public class ClassWidget extends UMLWidget{
         LabelWidget visibilityLabel = new LabelWidget(scene);
         visibilityLabel.setLabel("+");
         widget.addChild(visibilityLabel);
-        
+
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
-        
+
         return widget;
     }
 
@@ -174,13 +172,12 @@ public class ClassWidget extends UMLWidget{
     public String toString() {
         return classNameWidget.getLabel();
     }
-    
+
 //     @Override
 //    public void notifyStateChanged(ObjectState previousState, ObjectState newState) {
 //        super.notifyStateChanged(previousState, newState);
 //        setBorder(newState.isSelected() ? (newState.isHovered() ? RESIZE_BORDER : DEFAULT_BORDER) : DEFAULT_BORDER);
 //    }
-
     @Override
     public ClassComponent getComponent() {
         return classComponent;
@@ -190,6 +187,23 @@ public class ClassWidget extends UMLWidget{
     public LabelWidget getNameLabel() {
         return classNameWidget;
     }
-        
+
+    @Override
+    public void setName(String newName) {
+        if (getNameLabel().getLabel().equals(newName)) {
+            return;
+        }
+
+        String oldName = classComponent.getName();
+        if (!classComponent.getParentDiagram().nameExists(newName)) {
+            this.classNameWidget.setLabel(newName);
+            classComponent.setName(newName);
+            classComponent.getParentDiagram().componentNameChanged(classComponent, oldName);
+        }
+    // else
+    //    ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
+
+
     
+}
 }

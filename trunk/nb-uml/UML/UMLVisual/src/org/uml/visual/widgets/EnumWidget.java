@@ -16,16 +16,16 @@ import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.EnumComponent;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
-import org.uml.visual.widgets.actions.EditFieldNameAction;
 import org.uml.visual.widgets.providers.EnumPopupMenuProvider;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.NameEditorAction;
 
 /**
  *
  * @author "NUGS"
  */
-public class EnumWidget extends UMLWidget {
+public class EnumWidget extends ComponentWidgetBase implements Nameable{
 
     ClassDiagramScene scene;
     EnumComponent enumComponent;
@@ -34,6 +34,7 @@ public class EnumWidget extends UMLWidget {
     private Widget fieldsWidget;
     private Widget methodsWidget;
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
 
     public EnumWidget(ClassDiagramScene scene, EnumComponent enumComponent) {
@@ -60,7 +61,7 @@ public class EnumWidget extends UMLWidget {
         enumNameWidget.setAlignment(LabelWidget.Alignment.CENTER);
         enumWidget.addChild(enumNameWidget);
         addChild(enumWidget);
-        enumNameWidget.getActions().addAction(editorAction);
+        enumNameWidget.getActions().addAction(nameEditorAction);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
@@ -183,5 +184,21 @@ public class EnumWidget extends UMLWidget {
     @Override
     public LabelWidget getNameLabel() {
         return enumNameWidget;
+    }
+
+    @Override
+    public void setName(String newName) {
+        if (getNameLabel().getLabel().equals(newName)) {
+            return;
+        }
+//        try {        
+//            String oldName = enumComponent.getName();
+//            enumComponent.getParentDiagram().nameExists(newName);
+//            this.enumNameWidget.setLabel(newName);
+//            enumComponent.setName(newName);
+//            enumComponent.getParentDiagram().componentNameChanged(enumComponent, oldName);
+//        } catch (Exception ex) {
+//            
+//        }
     }
 }

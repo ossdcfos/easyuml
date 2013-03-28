@@ -19,13 +19,14 @@ import org.uml.model.InterfaceComponent;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.providers.InterfacePopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
 
 /**
  *
  * @author hrza
  */
-public class InterfaceWidget extends UMLWidget{
+public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
 
     InterfaceComponent interfaceComponent;
     ClassDiagramScene scene;
@@ -39,7 +40,7 @@ public class InterfaceWidget extends UMLWidget{
     private Widget methodsWidget;
     
     private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-    
+    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
     
     public InterfaceWidget(ClassDiagramScene scene, InterfaceComponent interfaceComponent) {
@@ -65,7 +66,7 @@ public class InterfaceWidget extends UMLWidget{
         interfaceNameWidget.setAlignment(LabelWidget.Alignment.CENTER);
         interfaceWidget.addChild(interfaceNameWidget);
         addChild(interfaceWidget);
-        interfaceNameWidget.getActions().addAction(editorAction);
+        interfaceNameWidget.getActions().addAction(nameEditorAction);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
@@ -123,7 +124,20 @@ public class InterfaceWidget extends UMLWidget{
     public LabelWidget getNameLabel() {
         return interfaceNameWidget;
     }
-    
-    
-    
+
+    @Override
+    public void setName(String newName) {
+        if (getNameLabel().getLabel().equals(newName)) {
+            return;
+        }
+//        try {        
+//            String oldName = interfaceComponent.getName();
+//            interfaceComponent.getParentDiagram().nameExists(newName);
+//            this.interfaceNameWidget.setLabel(newName);
+//            interfaceComponent.setName(newName);
+//            interfaceComponent.getParentDiagram().componentNameChanged(interfaceComponent, oldName);
+//        } catch (Exception ex) {
+//            
+//        }
+    }
 }
