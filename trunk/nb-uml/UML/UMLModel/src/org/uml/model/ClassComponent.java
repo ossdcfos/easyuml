@@ -81,11 +81,5 @@ public class ClassComponent extends ClassDiagramComponent {
     public void removeMethod(String name) {
         methods.remove(name);
     }
-
-    public void changeName(String newName) {
-        String oldName = getName();
-        setName(newName);
-        parentDiagram.componentNameChanged(this, oldName);
-    }
                       
 }
