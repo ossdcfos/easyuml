@@ -7,9 +7,7 @@ package org.uml.visual.widgets.actions;
 import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Exceptions;
 import org.uml.visual.widgets.Nameable;
-import org.uml.visual.widgets.ComponentWidgetBase;
 
 /**
  *
