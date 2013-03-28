@@ -56,8 +56,8 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+           classWidget.getComponent().getParentDiagram().removeComponent(classWidget.getClassName());
            classWidget.removeFromParent();
-           
            
         }
     };
