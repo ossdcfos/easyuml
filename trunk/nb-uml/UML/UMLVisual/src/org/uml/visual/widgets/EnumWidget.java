@@ -191,14 +191,13 @@ public class EnumWidget extends ComponentWidgetBase implements Nameable{
         if (getNameLabel().getLabel().equals(newName)) {
             return;
         }
-//        try {        
-//            String oldName = enumComponent.getName();
-//            enumComponent.getParentDiagram().nameExists(newName);
-//            this.enumNameWidget.setLabel(newName);
-//            enumComponent.setName(newName);
-//            enumComponent.getParentDiagram().componentNameChanged(enumComponent, oldName);
-//        } catch (Exception ex) {
-//            
-//        }
+        String oldName = enumComponent.getName();
+        if (!enumComponent.getParentDiagram().nameExists(newName)) {
+            this.enumNameWidget.setLabel(newName);
+            enumComponent.setName(newName);
+            enumComponent.getParentDiagram().componentNameChanged(enumComponent, oldName);
+        }
+    // else
+    //    ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
     }
 }
