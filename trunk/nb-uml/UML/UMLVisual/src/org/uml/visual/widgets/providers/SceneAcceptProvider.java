@@ -65,8 +65,6 @@ public class SceneAcceptProvider implements AcceptProvider {
             
             classDiagramScene.validate();
             
-//            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-//            ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase)w).getNameLabel());
             WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction((Nameable)w));
             ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase)w).getNameLabel());
             classDiagramScene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
