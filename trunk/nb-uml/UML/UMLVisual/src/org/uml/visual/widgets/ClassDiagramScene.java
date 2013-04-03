@@ -11,8 +11,10 @@ import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.anchor.AnchorShape;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.graph.GraphScene;
+import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
+import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
@@ -115,8 +117,9 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     
     @Override
     protected Widget attachEdgeWidget(RelationComponent e) {
-        //LabelWidget name = new LabelWidget (this, "Relation name");
-        //name.setOpaque (true);
+        LabelWidget name = new LabelWidget (this, e.getName());
+        name.setOpaque (true);
+        umlClassDiagram.addRelation(e);
         ConnectionWidget widget = new ConnectionWidget(this);
         widget.setTargetAnchorShape(AnchorShape.NONE);
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
@@ -124,8 +127,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         widget.setPaintControlPoints (true);
         widget.setControlPointShape (PointShape.SQUARE_FILLED_BIG);
         widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConnectionPopupMenuProvider(widget)));
-        //widget.addChild(name);
-        //widget.setConstraint (name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);
+        widget.addChild(name);
+        widget.setConstraint (name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);
         WidgetAction.Chain actions= widget.getActions();
         actions.addAction(createObjectHoverAction());
         actions.addAction(createSelectAction());

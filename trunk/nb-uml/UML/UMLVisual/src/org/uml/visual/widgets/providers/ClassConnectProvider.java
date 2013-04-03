@@ -4,13 +4,19 @@
  */
 package org.uml.visual.widgets.providers;
 
+import java.awt.Dialog;
 import java.awt.Point;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import org.netbeans.api.visual.action.ConnectProvider;
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.windows.WindowManager;
+import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.RelationComponent;
+import org.uml.visual.dialogs.ChooseRelationshipDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.InterfaceWidget;
@@ -25,6 +31,7 @@ public class ClassConnectProvider implements ConnectProvider{
     //private ClassDiagramComponent source=null;
     //private ClassDiagramComponent target=null;
     //ClassDiagramScene scene;
+
     public ClassConnectProvider() {
 
     }
@@ -52,15 +59,9 @@ public class ClassConnectProvider implements ConnectProvider{
     @Override
     public void createConnection(Widget sourceWidget, Widget targetWidget) {
        //connect class to class
-        RelationComponent relation= new RelationComponent();        
-        if((sourceWidget instanceof ComponentWidgetBase)&& (targetWidget instanceof ComponentWidgetBase)) {
-            ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
-            ComponentWidgetBase source= (ComponentWidgetBase) sourceWidget;
-            ComponentWidgetBase target= (ComponentWidgetBase) targetWidget;
-            scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getComponent());
-            scene.setEdgeTarget(relation,target.getComponent());
-        }
+        ChooseRelationshipDialog dialog = new ChooseRelationshipDialog(null, sourceWidget, targetWidget, true);
+        dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+        dialog.setVisible(true);
     }
     
 }

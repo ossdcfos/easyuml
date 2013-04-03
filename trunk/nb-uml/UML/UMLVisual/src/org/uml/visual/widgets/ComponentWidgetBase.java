@@ -22,7 +22,6 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
     
     public ComponentWidgetBase(ClassDiagramScene scene) {
         super(scene);
-        
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         getActions().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
         setMinimumSize(MINDIMENSION);
