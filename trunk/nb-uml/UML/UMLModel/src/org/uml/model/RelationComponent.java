@@ -12,13 +12,14 @@ public class RelationComponent {
     
     ClassDiagramComponent source;
     ClassDiagramComponent target;
-
+    private String name;
     public RelationComponent() {
     }       
     
-    public RelationComponent( ClassDiagramComponent source, ClassDiagramComponent target) {
+    public RelationComponent( ClassDiagramComponent source, ClassDiagramComponent target, String name) {
         this.source=source;
         this.target=target;
+        this.name = name;
     }
 
     public ClassDiagramComponent getSource() {
@@ -35,6 +36,14 @@ public class RelationComponent {
 
     public void setTarget(ClassDiagramComponent target) {
         this.target = target;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
     
     
