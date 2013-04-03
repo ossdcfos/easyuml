@@ -47,10 +47,24 @@ public class ClassDiagram {
     public void removeComponent(String name) {
         components.remove(name);
     }
+    
+    public void removeRelation (String name) {
+        relations.remove(name);
+    }
 
     public HashMap<String, ClassDiagramComponent> getComponents() {
         return components;
     }
+
+    public HashMap<String, RelationComponent> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(HashMap<String, RelationComponent> relations) {
+        this.relations = relations;
+    }
+    
+    
 
     public boolean nameExists(String name) {
         return components.containsKey(name);
