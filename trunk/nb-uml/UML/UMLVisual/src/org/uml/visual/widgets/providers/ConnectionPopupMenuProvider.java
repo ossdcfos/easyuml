@@ -15,8 +15,10 @@ import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.windows.WindowManager;
 import org.uml.model.ClassDiagram;
 import org.uml.model.RelationComponent;
+import org.uml.visual.dialogs.ChangeRelationshipTypeDialog;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**
@@ -40,22 +42,19 @@ public class ConnectionPopupMenuProvider implements PopupMenuProvider{
         this.name = name;
         menu=new JPopupMenu("Connection Menu");
         
-        //(setName = new JMenuItem("Change name")).addActionListener(setNameListener);
-        //menu.add(setName);
+        (setName = new JMenuItem("Change relation type")).addActionListener(changeRelationTypeListener);
+        menu.add(setName);
         (removeRelation = new JMenuItem("Remove relation")).addActionListener(removeRelationListener);
         menu.add(removeRelation);
     }
 
-    ActionListener setNameListener = new ActionListener() {
+    ActionListener changeRelationTypeListener = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-        name.setOpaque (true);
-        //widget.addChild(name);
-        //widget.setConstraint (name, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_CENTER, 0.5f);
-        classDiagram.getRelations().get(relationComponent.getName()).setName(name.getLabel());
-        relationComponent.setName(name.getLabel());
-        widget.getScene().validate();
+        ChangeRelationshipTypeDialog dialog = new ChangeRelationshipTypeDialog(null, relationComponent, classDiagram, true);
+        dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+        dialog.setVisible(true);
         }
     };
     
