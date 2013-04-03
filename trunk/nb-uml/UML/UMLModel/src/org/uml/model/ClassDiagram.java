@@ -20,6 +20,7 @@ public class ClassDiagram {
     public ClassDiagram() {
 
         this.components=new HashMap<String, ClassDiagramComponent>();
+        this.relations= new HashMap<String, RelationComponent>();
     }
 
     public void addComponent(ClassDiagramComponent component) {
@@ -36,6 +37,11 @@ public class ClassDiagram {
         for (ClassDiagramComponent classDiagramComponent : components.values()) {
             System.out.println(classDiagramComponent.getName());
         }
+    }
+    
+    public void addRelation (RelationComponent relationComponent){
+        relations.put(relationComponent.getName(), relationComponent);
+        System.out.println(relations.toString());
     }
 
     public void removeComponent(String name) {
