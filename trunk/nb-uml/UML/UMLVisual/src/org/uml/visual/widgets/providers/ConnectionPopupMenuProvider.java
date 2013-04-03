@@ -15,6 +15,8 @@ import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.ClassDiagram;
+import org.uml.model.RelationComponent;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 
 /**
@@ -24,27 +26,45 @@ import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 public class ConnectionPopupMenuProvider implements PopupMenuProvider{
     
     private ConnectionWidget widget;
+    ClassDiagram classDiagram;
+    RelationComponent relationComponent;
+    LabelWidget name;
     private JPopupMenu menu;
     private JMenuItem setName;
-
-    public ConnectionPopupMenuProvider(ConnectionWidget widget) {
+    private JMenuItem removeRelation;
+    
+    public ConnectionPopupMenuProvider(ConnectionWidget widget,ClassDiagram classDiagram,RelationComponent relationComponent,LabelWidget name) {
         this.widget = widget;
+        this.classDiagram= classDiagram;
+        this.relationComponent=relationComponent;
+        this.name = name;
         menu=new JPopupMenu("Connection Menu");
         
-        (setName = new JMenuItem("Set name")).addActionListener(setNameListener);
-        menu.add(setName);
+        //(setName = new JMenuItem("Change name")).addActionListener(setNameListener);
+        //menu.add(setName);
+        (removeRelation = new JMenuItem("Remove relation")).addActionListener(removeRelationListener);
+        menu.add(removeRelation);
     }
 
     ActionListener setNameListener = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-        LabelWidget name = new LabelWidget (widget.getScene(), "Relation name");
-        name.getActions().addAction(ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction()));
         name.setOpaque (true);
-        widget.addChild(name);
-        widget.setConstraint (name, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_CENTER, 0.5f);
+        //widget.addChild(name);
+        //widget.setConstraint (name, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_CENTER, 0.5f);
+        classDiagram.getRelations().get(relationComponent.getName()).setName(name.getLabel());
+        relationComponent.setName(name.getLabel());
         widget.getScene().validate();
+        }
+    };
+    
+    ActionListener removeRelationListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            widget.removeFromParent();
+            classDiagram.getRelations().remove(relationComponent.getName());
         }
     };
     

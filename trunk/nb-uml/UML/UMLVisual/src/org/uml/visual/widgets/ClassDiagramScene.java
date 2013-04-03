@@ -24,6 +24,8 @@ import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
+import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
 import org.uml.visual.widgets.providers.ConnectionPopupMenuProvider;
 import org.uml.visual.widgets.providers.ScenePopupMenuProvider;
 import org.uml.visual.widgets.providers.SceneAcceptProvider;
@@ -126,7 +128,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         widget.setRouter(RouterFactory.createFreeRouter());
         widget.setPaintControlPoints (true);
         widget.setControlPointShape (PointShape.SQUARE_FILLED_BIG);
-        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConnectionPopupMenuProvider(widget)));
+        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConnectionPopupMenuProvider(widget,umlClassDiagram,e,name)));
+        name.getActions().addAction(ActionFactory.createInplaceEditorAction(new RelationLabelTextFieldEditorAction(e,umlClassDiagram)));
         widget.addChild(name);
         widget.setConstraint (name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);
         WidgetAction.Chain actions= widget.getActions();
