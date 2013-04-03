@@ -116,6 +116,7 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
         relation.setTarget(oldRelation.getTarget());
         classDiagram.removeRelation(oldRelation.getName());
         classDiagram.addRelation(relation);
+        oldRelation = relation;
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
