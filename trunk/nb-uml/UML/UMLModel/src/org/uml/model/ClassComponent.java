@@ -1,13 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.model;
 
-import java.awt.Image;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /**
@@ -16,21 +8,10 @@ import java.util.HashMap;
  */
 public class ClassComponent extends ClassDiagramComponent {
     
-        private Image image; // ovo treba stavit iu widget a ne ovde....
         private HashMap<String,Constructor> constructors;
         private HashMap<String,Field> fields;
         private HashMap<String,Method> methods;
-
-
-
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-       
+ 
 
     public ClassComponent() {
         this.setName("UntitledClass");
