@@ -143,7 +143,7 @@ public class ChooseRelationshipDialog extends javax.swing.JDialog {
             ComponentWidgetBase source= (ComponentWidgetBase) sourceWidget;
             ComponentWidgetBase target= (ComponentWidgetBase) targetWidget;
             relation.setSource(source.getComponent());
-            relation.setTarget(relation.getTarget());
+            relation.setTarget(target.getComponent());
             scene.addEdge(relation);
             scene.setEdgeSource(relation,source.getComponent());
             scene.setEdgeTarget(relation,target.getComponent());
