@@ -138,7 +138,7 @@ public class ChooseRelationshipDialog extends javax.swing.JDialog {
     private void buttonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOKActionPerformed
        RelationComponent relation = (RelationComponent) comboBoxRelationship.getSelectedItem();
        relation.setName(textFieldName.getText());     
-       if((sourceWidget instanceof ComponentWidgetBase)&& (targetWidget instanceof ComponentWidgetBase)) {
+       if((sourceWidget instanceof ComponentWidgetBase)&&(targetWidget instanceof ComponentWidgetBase)) {
             ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
             ComponentWidgetBase source= (ComponentWidgetBase) sourceWidget;
             ComponentWidgetBase target= (ComponentWidgetBase) targetWidget;

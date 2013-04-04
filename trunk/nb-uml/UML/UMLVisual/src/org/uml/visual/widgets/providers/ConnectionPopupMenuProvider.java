@@ -9,9 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
-import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
@@ -19,7 +17,7 @@ import org.openide.windows.WindowManager;
 import org.uml.model.ClassDiagram;
 import org.uml.model.RelationComponent;
 import org.uml.visual.dialogs.ChangeRelationshipTypeDialog;
-import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
  *
@@ -52,7 +50,7 @@ public class ConnectionPopupMenuProvider implements PopupMenuProvider{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-        ChangeRelationshipTypeDialog dialog = new ChangeRelationshipTypeDialog(null, relationComponent, classDiagram, true);
+        ChangeRelationshipTypeDialog dialog = new ChangeRelationshipTypeDialog(null, relationComponent, classDiagram, widget, true);
         dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
         dialog.setVisible(true);
         }

@@ -1,16 +1,13 @@
 package org.uml.visual.widgets;
 
+import com.sun.java.swing.plaf.motif.MotifBorders;
 import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.KeyStroke;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.providers.ClassConnectProvider;
-import org.uml.visual.widgets.actions.DeleteClassAction;
 
 /**
  *

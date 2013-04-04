@@ -43,6 +43,7 @@ public class RelationLabelTextFieldEditorAction implements TextFieldInplaceEdito
         relationComponent.setName(string);
         classDiagram.addRelation(relationComponent);
         
+        
             }
     
     
