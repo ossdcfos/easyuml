@@ -2,7 +2,6 @@ package org.uml.visual.widgets;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Image;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
@@ -12,16 +11,13 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Exceptions;
-import org.openide.util.Utilities;
 import org.uml.model.ClassComponent;
+import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
-import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
-import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
-import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
  *
@@ -32,8 +28,6 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
     ClassDiagramScene scene;
-    private static final Image MethodDefaultImage = Utilities.loadImage("org/uml/visual/icons/MethodDefault.jpg"); // NOI18N
-    private static final Image AtributeDefaultImage = Utilities.loadImage("org/uml/visual/icons/AtributeDefault.jpg"); // NOI18N
     private static final Border RESIZE_BORDER =
             BorderFactory.createResizeBorder(4, Color.black, true);
     private static final Border DEFAULT_BORDER =
