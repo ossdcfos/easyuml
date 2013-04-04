@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets;
 
 import java.awt.Font;
@@ -15,7 +11,6 @@ import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.EnumComponent;
-import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.EnumPopupMenuProvider;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
