@@ -4,6 +4,10 @@
  */
 package org.uml.visual.widgets;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Stroke;
+import javax.swing.border.BevelBorder;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.anchor.Anchor;
@@ -123,6 +127,15 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         name.setOpaque (true);
         umlClassDiagram.addRelation(e);
         ConnectionWidget widget = new ConnectionWidget(this);
+        if (e.getClass().getSimpleName().equals("ImplementsRelationComponent")) {
+        final float dash1[] = {10.0f};
+        final BasicStroke dashed =
+        new BasicStroke(1.0f,
+                        BasicStroke.CAP_BUTT,
+                        BasicStroke.JOIN_MITER,
+                        10.0f, dash1, 0.0f);
+         widget.setStroke(dashed);
+        }
         widget.setTargetAnchorShape(AnchorShape.NONE);
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());
@@ -179,4 +192,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public LayerWidget getMainLayer() {
         return mainLayer;
     }
+    
+    
 }

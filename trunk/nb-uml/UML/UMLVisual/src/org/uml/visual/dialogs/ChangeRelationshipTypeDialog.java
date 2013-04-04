@@ -4,13 +4,16 @@
  */
 package org.uml.visual.dialogs;
 
+import java.awt.BasicStroke;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.jar.JarFile;
+import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.openide.util.Exceptions;
 import org.uml.model.ClassDiagram;
 import org.uml.model.RelationComponent;
+import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
  *
@@ -24,17 +27,19 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
     
     RelationComponent oldRelation;
     ClassDiagram classDiagram;
+    ConnectionWidget widget;
     
     public ChangeRelationshipTypeDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
     
-    public ChangeRelationshipTypeDialog(java.awt.Frame parent, RelationComponent oldRelation, ClassDiagram classDiagram, boolean modal) {
+    public ChangeRelationshipTypeDialog(java.awt.Frame parent, RelationComponent oldRelation, ClassDiagram classDiagram,ConnectionWidget widget, boolean modal) {
         super(parent, modal);
         initComponents();
         this.oldRelation = oldRelation;
         this.classDiagram = classDiagram;
+        this.widget = widget;
         fillCombos(true);
     }
 
@@ -49,17 +54,17 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         comboBoxRelation = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        buttonOK = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ChangeRelationshipTypeDialog.class, "ChangeRelationshipTypeDialog.jLabel1.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ChangeRelationshipTypeDialog.class, "ChangeRelationshipTypeDialog.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(buttonOK, org.openide.util.NbBundle.getMessage(ChangeRelationshipTypeDialog.class, "ChangeRelationshipTypeDialog.buttonOK.text")); // NOI18N
+        buttonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonOKActionPerformed(evt);
             }
         });
 
@@ -83,7 +88,7 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
                         .addComponent(comboBoxRelation, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(59, 59, 59)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(57, 57, 57)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(63, Short.MAX_VALUE))
@@ -97,7 +102,7 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
                     .addComponent(comboBoxRelation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(buttonOK)
                     .addComponent(jButton2))
                 .addContainerGap())
         );
@@ -109,16 +114,27 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void buttonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOKActionPerformed
         RelationComponent relation = (RelationComponent) comboBoxRelation.getSelectedItem();
         relation.setName(oldRelation.getName());
         relation.setSource(oldRelation.getSource());
         relation.setTarget(oldRelation.getTarget());
         classDiagram.removeRelation(oldRelation.getName());
-        classDiagram.addRelation(relation);
+        //classDiagram.addRelation(relation);
         oldRelation = relation;
+        classDiagram.addRelation(oldRelation);
+        if (oldRelation.getClass().getSimpleName().equals("ImplementsRelationComponent")) {
+            final float dash1[] = {10.0f};
+        final BasicStroke dashed =
+        new BasicStroke(1.0f,
+                        BasicStroke.CAP_BUTT,
+                        BasicStroke.JOIN_MITER,
+                        10.0f, dash1, 0.0f);
+         widget.setStroke(dashed);
+        }
+     
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_buttonOKActionPerformed
 
     /**
      * @param args the command line arguments
@@ -162,8 +178,8 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonOK;
     private javax.swing.JComboBox comboBoxRelation;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
