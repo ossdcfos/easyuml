@@ -23,6 +23,7 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
+import org.openide.util.ImageUtilities;
 import org.uml.model.RelationComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
@@ -142,6 +143,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         else if (e.getClass().getSimpleName().equals("IsRelationComponent")) {
          widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);
          e.setName("is");
+        }
+        else if (e.getClass().getSimpleName().equals("HasRelationComponent")) {
+         widget.setSourceAnchorShape(AnchorShapeFactory.createImageAnchorShape(ImageUtilities.loadImage("org/uml/visual/icons/rhombus.gif")));
+         widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
         }
         else {
          widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));   
