@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.jar.JarFile;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
+import org.uml.model.ImplementsRelationComponent;
 import org.uml.model.RelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ComponentWidgetBase;
@@ -18,22 +19,22 @@ import org.uml.visual.widgets.ComponentWidgetBase;
  *
  * @author Uros
  */
-public class ChooseRelationshipDialog extends javax.swing.JDialog {
+public class ChooseRelationDialog extends javax.swing.JDialog {
 
     /**
-     * Creates new form ChooseRelationshipDialog
+     * Creates new form ChooseRelationDialog
      */
     
     Widget sourceWidget;
     Widget targetWidget;
 
     
-    public ChooseRelationshipDialog(java.awt.Frame parent, boolean modal) {
+    public ChooseRelationDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
     
-    public ChooseRelationshipDialog(java.awt.Frame parent,Widget sourceWidget,Widget targetWidget, boolean modal) {
+    public ChooseRelationDialog(java.awt.Frame parent,Widget sourceWidget,Widget targetWidget, boolean modal) {
         super(parent, modal);
         initComponents();
         this.sourceWidget = sourceWidget;
@@ -65,25 +66,25 @@ public class ChooseRelationshipDialog extends javax.swing.JDialog {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ChooseRelationshipDialog.class, "ChooseRelationshipDialog.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ChooseRelationDialog.class, "ChooseRelationDialog.jLabel1.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(buttonOK, org.openide.util.NbBundle.getMessage(ChooseRelationshipDialog.class, "ChooseRelationshipDialog.buttonOK.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(buttonOK, org.openide.util.NbBundle.getMessage(ChooseRelationDialog.class, "ChooseRelationDialog.buttonOK.text")); // NOI18N
         buttonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonOKActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(buttonCancel, org.openide.util.NbBundle.getMessage(ChooseRelationshipDialog.class, "ChooseRelationshipDialog.buttonCancel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(buttonCancel, org.openide.util.NbBundle.getMessage(ChooseRelationDialog.class, "ChooseRelationDialog.buttonCancel.text")); // NOI18N
         buttonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonCancelActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(ChooseRelationshipDialog.class, "ChooseRelationshipDialog.jLabel2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(ChooseRelationDialog.class, "ChooseRelationDialog.jLabel2.text")); // NOI18N
 
-        textFieldName.setText(org.openide.util.NbBundle.getMessage(ChooseRelationshipDialog.class, "ChooseRelationshipDialog.textFieldName.text")); // NOI18N
+        textFieldName.setText(org.openide.util.NbBundle.getMessage(ChooseRelationDialog.class, "ChooseRelationDialog.textFieldName.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,7 +133,9 @@ public class ChooseRelationshipDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void comboBoxRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRelationshipActionPerformed
-        // TODO add your handling code here:
+        if (comboBoxRelationship.getSelectedItem() instanceof ImplementsRelationComponent) {
+            textFieldName.setEnabled(false);
+        }
     }//GEN-LAST:event_comboBoxRelationshipActionPerformed
 
     private void buttonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOKActionPerformed
@@ -168,20 +171,20 @@ public class ChooseRelationshipDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChooseRelationshipDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChooseRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChooseRelationshipDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChooseRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChooseRelationshipDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChooseRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChooseRelationshipDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChooseRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ChooseRelationshipDialog dialog = new ChooseRelationshipDialog(new javax.swing.JFrame(), true);
+                ChooseRelationDialog dialog = new ChooseRelationDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

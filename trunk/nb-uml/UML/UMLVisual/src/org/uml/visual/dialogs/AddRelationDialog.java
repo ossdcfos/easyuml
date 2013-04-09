@@ -5,42 +5,34 @@
 package org.uml.visual.dialogs;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarFile;
-import javax.management.relation.Relation;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.ImplementsRelationComponent;
-import org.uml.model.IsRelationComponent;
 import org.uml.model.RelationComponent;
-import org.uml.model.UseRelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.InterfaceWidget;
 import org.uml.visual.widgets.ComponentWidgetBase;
 
 /**
  *
  * @author "NUGS"
  */
-public class AddRelationshipDialog extends javax.swing.JDialog {
+public class AddRelationDialog extends javax.swing.JDialog {
 
     /**
-     * Creates new form AddRelationshipDialog
+     * Creates new form AddRelationDialog
      */
     
     ClassDiagramScene classDiagramScene;
     
-    public AddRelationshipDialog(java.awt.Frame parent, boolean modal) {
+    public AddRelationDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
 
-    public AddRelationshipDialog(java.awt.Frame parent,ClassDiagramScene classDiagramScene,boolean modal) {
+    public AddRelationDialog(java.awt.Frame parent,ClassDiagramScene classDiagramScene,boolean modal) {
         super(parent, modal);
         initComponents();
         this.classDiagramScene = classDiagramScene;
@@ -108,25 +100,25 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AddRelationshipDialog.class, "AddRelationshipDialog.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AddRelationDialog.class, "AddRelationDialog.jLabel1.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(AddRelationshipDialog.class, "AddRelationshipDialog.jLabel2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(AddRelationDialog.class, "AddRelationDialog.jLabel2.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jbtnOk, org.openide.util.NbBundle.getMessage(AddRelationshipDialog.class, "AddRelationshipDialog.jbtnOk.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jbtnOk, org.openide.util.NbBundle.getMessage(AddRelationDialog.class, "AddRelationDialog.jbtnOk.text")); // NOI18N
         jbtnOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtnOkActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jbtnCancel, org.openide.util.NbBundle.getMessage(AddRelationshipDialog.class, "AddRelationshipDialog.jbtnCancel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jbtnCancel, org.openide.util.NbBundle.getMessage(AddRelationDialog.class, "AddRelationDialog.jbtnCancel.text")); // NOI18N
         jbtnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbtnCancelActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AddRelationshipDialog.class, "AddRelationshipDialog.jLabel3.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AddRelationDialog.class, "AddRelationDialog.jLabel3.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -230,20 +222,20 @@ public class AddRelationshipDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddRelationshipDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddRelationshipDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddRelationshipDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddRelationshipDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AddRelationshipDialog dialog = new AddRelationshipDialog(new javax.swing.JFrame(), true);
+                AddRelationDialog dialog = new AddRelationDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

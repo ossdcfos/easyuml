@@ -20,10 +20,11 @@ import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
+import org.openide.windows.WindowManager;
 import org.uml.model.ClassComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
-import org.uml.visual.dialogs.AddRelationshipDialog;
+import org.uml.visual.dialogs.AddRelationDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.EnumWidget;
@@ -107,7 +108,10 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                (new AddRelationshipDialog(null,scene,true)).setVisible(true);
+                AddRelationDialog dialog = new AddRelationDialog(null,scene,true);
+                dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+                dialog.setTitle("Add relation");
+                dialog.setVisible(true);
             }
         });
         

@@ -13,6 +13,7 @@ import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.anchor.Anchor;
 import org.netbeans.api.visual.anchor.AnchorFactory;
 import org.netbeans.api.visual.anchor.AnchorShape;
+import org.netbeans.api.visual.anchor.AnchorShapeFactory;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -135,8 +136,13 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
                         BasicStroke.JOIN_MITER,
                         10.0f, dash1, 0.0f);
          widget.setStroke(dashed);
+         widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
+         name.setLabel("<<implements>>");
         }
-        widget.setTargetAnchorShape(AnchorShape.NONE);
+        if (e.getClass().getSimpleName().equals("IsRelationComponent")) {
+         widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);   
+        }
+        //widget.setTargetAnchorShape(AnchorShape.NONE);
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());
         widget.setPaintControlPoints (true);
