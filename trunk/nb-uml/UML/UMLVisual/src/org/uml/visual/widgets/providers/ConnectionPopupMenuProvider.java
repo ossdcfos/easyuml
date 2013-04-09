@@ -16,7 +16,7 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.windows.WindowManager;
 import org.uml.model.ClassDiagram;
 import org.uml.model.RelationComponent;
-import org.uml.visual.dialogs.ChangeRelationshipTypeDialog;
+import org.uml.visual.dialogs.ChangeRelationTypeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
@@ -50,8 +50,9 @@ public class ConnectionPopupMenuProvider implements PopupMenuProvider{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-        ChangeRelationshipTypeDialog dialog = new ChangeRelationshipTypeDialog(null, relationComponent, classDiagram, widget, true);
+        ChangeRelationTypeDialog dialog = new ChangeRelationTypeDialog(null, relationComponent, classDiagram, widget, true);
         dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+        dialog.setTitle("Change relation type");
         dialog.setVisible(true);
         }
     };

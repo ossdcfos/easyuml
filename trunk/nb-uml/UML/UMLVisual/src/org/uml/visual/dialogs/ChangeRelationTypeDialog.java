@@ -19,22 +19,22 @@ import org.uml.visual.widgets.ClassDiagramScene;
  *
  * @author Uros
  */
-public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
+public class ChangeRelationTypeDialog extends javax.swing.JDialog {
 
     /**
-     * Creates new form ChangeRelationshipTypeDialog
+     * Creates new form ChangeRelationTypeDialog
      */
     
     RelationComponent oldRelation;
     ClassDiagram classDiagram;
     ConnectionWidget widget;
     
-    public ChangeRelationshipTypeDialog(java.awt.Frame parent, boolean modal) {
+    public ChangeRelationTypeDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
     
-    public ChangeRelationshipTypeDialog(java.awt.Frame parent, RelationComponent oldRelation, ClassDiagram classDiagram,ConnectionWidget widget, boolean modal) {
+    public ChangeRelationTypeDialog(java.awt.Frame parent, RelationComponent oldRelation, ClassDiagram classDiagram,ConnectionWidget widget, boolean modal) {
         super(parent, modal);
         initComponents();
         this.oldRelation = oldRelation;
@@ -59,16 +59,16 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ChangeRelationshipTypeDialog.class, "ChangeRelationshipTypeDialog.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.jLabel1.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(buttonOK, org.openide.util.NbBundle.getMessage(ChangeRelationshipTypeDialog.class, "ChangeRelationshipTypeDialog.buttonOK.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(buttonOK, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.buttonOK.text")); // NOI18N
         buttonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonOKActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(ChangeRelationshipTypeDialog.class, "ChangeRelationshipTypeDialog.jButton2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -153,20 +153,20 @@ public class ChangeRelationshipTypeDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChangeRelationshipTypeDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChangeRelationTypeDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChangeRelationshipTypeDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChangeRelationTypeDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChangeRelationshipTypeDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChangeRelationTypeDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChangeRelationshipTypeDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ChangeRelationTypeDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ChangeRelationshipTypeDialog dialog = new ChangeRelationshipTypeDialog(new javax.swing.JFrame(), true);
+                ChangeRelationTypeDialog dialog = new ChangeRelationTypeDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
