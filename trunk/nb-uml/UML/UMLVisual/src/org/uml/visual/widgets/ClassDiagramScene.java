@@ -139,10 +139,13 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
          widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
          name.setLabel("<<implements>>");
         }
-        if (e.getClass().getSimpleName().equals("IsRelationComponent")) {
-         widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);   
+        else if (e.getClass().getSimpleName().equals("IsRelationComponent")) {
+         widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);
+         e.setName("is");
         }
-        //widget.setTargetAnchorShape(AnchorShape.NONE);
+        else {
+         widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));   
+        }
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());
         widget.setPaintControlPoints (true);
