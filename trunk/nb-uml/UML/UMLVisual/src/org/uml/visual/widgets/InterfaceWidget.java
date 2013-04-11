@@ -83,7 +83,7 @@ public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
         getActions().addAction(ActionFactory.createPopupMenuAction(new InterfacePopupMenuProvider(this)));
     }
     
-    public void createMethodAction(Widget operationWidget) {
+    public void addMethodWidget(Widget operationWidget) {
         methodsWidget.addChild(operationWidget);
     }
     
@@ -123,6 +123,11 @@ public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
     @Override
     public LabelWidget getNameLabel() {
         return interfaceNameWidget;
+    }
+    
+    @Override
+    public String getName() {
+        return interfaceNameWidget.getLabel();
     }
 
     @Override

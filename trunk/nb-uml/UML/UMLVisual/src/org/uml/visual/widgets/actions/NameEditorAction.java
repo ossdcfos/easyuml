@@ -40,7 +40,7 @@ public class NameEditorAction implements TextFieldInplaceEditor {
 
 
 
-        //TODO podesavam ime konkretnog elementa, ali ga zove i field editor i method editor, kako da resim to?
-        //classWidget.umlClassElement.setName(string);
+            //TODO podesavam ime konkretnog elementa, ali ga zove i field editor i method editor, kako da resim to?
+            //classWidget.umlClassElement.setName(string);
+        }
     }
-}

@@ -2,6 +2,7 @@ package org.uml.visual.widgets;
 
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
@@ -12,6 +13,8 @@ import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassComponent;
+import org.uml.model.Field;
+import org.uml.model.Method;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
@@ -35,7 +38,7 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
     private LabelWidget classNameWidget;
     private Widget fieldsWidget;
     private Widget methodsWidget;
-    private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+    //private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
 
@@ -92,10 +95,13 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
         //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
     }
 
-    public String getClassName() {
+    @Override
+    public String getName() {
         return classNameWidget.getLabel();
     }
-
+public String getClassName() {
+        return classNameWidget.getLabel();
+    }
     public void setClassName(String className) {
         this.classNameWidget.setLabel(className);
     }
@@ -114,7 +120,7 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
 
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(fieldName);
-        labelWidget.getActions().addAction(editorAction);
+        labelWidget.getActions().addAction(nameEditorAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
         //dodato polje u classElement
         fieldWidget.addChild(labelWidget);
@@ -136,21 +142,25 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
-        labelWidget.getActions().addAction(editorAction);
+        labelWidget.getActions().addAction(nameEditorAction);
         labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
 
         return widget;
     }
 
-    public void createFieldAction(Widget memberWidget) {
-        fieldsWidget.addChild(memberWidget);
+    public void addFieldWidget(FieldWidget fieldWidget) {
+        fieldsWidget.addChild(fieldWidget);
     }
 
     public void removeField(Widget memberWidget) {
         fieldsWidget.removeChild(memberWidget);
     }
 
-    public void createMethodAction(Widget operationWidget) {
+    public void addMethodWidget(MethodWidget operationWidget) {
+        methodsWidget.addChild(operationWidget);
+    }
+    
+    public void addConstructorWidget(ConstructorWidget operationWidget) {
         methodsWidget.addChild(operationWidget);
     }
 
@@ -194,10 +204,13 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
             classComponent.setName(newName);
             classComponent.getParentDiagram().componentNameChanged(classComponent, oldName);
         }
-    // else
-    //    ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
-
+        else {
+            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+            //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
+            JOptionPane.showMessageDialog(this.getScene().getView(), "Greska, ime vec postoji.");
+        }
+    }
+}
 
     
-}
-}
+
