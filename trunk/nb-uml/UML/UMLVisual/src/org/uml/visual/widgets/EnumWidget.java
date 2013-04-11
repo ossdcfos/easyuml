@@ -11,6 +11,8 @@ import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.EnumComponent;
+import org.uml.model.Field;
+import org.uml.model.Method;
 import org.uml.visual.widgets.providers.EnumPopupMenuProvider;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
@@ -160,20 +162,25 @@ public class EnumWidget extends ComponentWidgetBase implements Nameable{
         return widget;
     }
     
-    public void createFieldAction(Widget fieldWidget) {
+    public void addFieldWidget(FieldWidget fieldWidget) {
         fieldsWidget.addChild(fieldWidget);
     }
         
-    public void createMethodAction(Widget operationWidget) {
+    public void addMethodWidget(MethodWidget operationWidget) {
+        methodsWidget.addChild(operationWidget);
+    }
+    
+    public void addConstructorWidget(ConstructorWidget operationWidget) {
         methodsWidget.addChild(operationWidget);
     }
 
-    public void createLiteralAction(Widget literalWidget) {
+    public void addLiteralWidget(Widget literalWidget) {
         literalsWidget.addChild(literalWidget);
     }
     
-    public String getEnumName() {
-        return enumComponent.getName();
+    @Override
+    public String getName() {
+        return enumNameWidget.getLabel();
     }
 
     @Override
@@ -195,4 +202,6 @@ public class EnumWidget extends ComponentWidgetBase implements Nameable{
     // else
     //    ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
     }
+    
+    
 }

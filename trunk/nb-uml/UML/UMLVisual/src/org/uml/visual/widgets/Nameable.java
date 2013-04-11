@@ -10,4 +10,5 @@ package org.uml.visual.widgets;
  */
 public interface Nameable {
     public void setName(String newName);
+    public String getName();
 }

@@ -16,7 +16,7 @@ import org.uml.visual.widgets.providers.ClassConnectProvider;
 abstract public class ComponentWidgetBase extends IconNodeWidget implements Nameable{
 
     private static final Dimension MINDIMENSION= new Dimension (100,0);
-    
+    //atribut name
     public ComponentWidgetBase(ClassDiagramScene scene) {
         super(scene);
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));

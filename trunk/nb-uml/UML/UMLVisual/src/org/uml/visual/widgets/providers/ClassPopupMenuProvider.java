@@ -16,9 +16,17 @@ import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagram;
+import org.uml.model.Constructor;
+import org.uml.model.Field;
+import org.uml.model.Method;
 import org.uml.model.RelationComponent;
+import org.uml.model.Visibility;
 import org.uml.visual.widgets.ClassWidget;
+import org.uml.visual.widgets.ConstructorWidget;
+import org.uml.visual.widgets.FieldWidget;
+import org.uml.visual.widgets.MethodWidget;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.NameEditorAction;
 
 /**
  *
@@ -59,7 +67,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-           classWidget.getComponent().getParentDiagram().removeComponent(classWidget.getClassName());
+           classWidget.getComponent().getParentDiagram().removeComponent(classWidget.getName());
            ClassDiagram classDiagram = classWidget.getComponent().getParentDiagram();
            
            for(Map.Entry<String,RelationComponent> entry : classDiagram.getRelations().entrySet()) {
@@ -77,31 +85,40 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener addAtributeListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Widget w = classWidget.createFieldWidget("Field");
-            classWidget.createFieldAction(w);
+            Field f = new Field("untitledField", null, Visibility.PRIVATE);
+            classWidget.getComponent().addField(f);
+            FieldWidget w = new FieldWidget(classWidget.getClassDiagramScene(), f);
+            classWidget.addFieldWidget(w);
             classWidget.getScene().validate();
             
-            ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(1));
-            w.getScene().getView().addMouseListener(mouseListener);
-         
+            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
+            MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+            classWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            
-            Widget w = classWidget.createMethodWidget("Method()");
-            classWidget.createMethodAction(w);
+            Method m = new Method("untitledMethod", null, null);
+            classWidget.getComponent().addMethod(m);
+            MethodWidget w = new MethodWidget(classWidget.getClassDiagramScene(), m);
+            classWidget.addMethodWidget(w);
             classWidget.getScene().validate();
             
-            ActionFactory.getInplaceEditorController(editorAction).openEditor(w.getChildren().get(1));
-            w.getScene().getView().addMouseListener(mouseListener);
+            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
+            MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+            classWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
     ActionListener addConstructorListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            classWidget.createMethodAction(classWidget.createMethodWidget(classWidget.getClassName()+"()"));
+            Constructor c = new Constructor(classWidget.getName());
+            //classWidget.getComponent().addMethod(operationWidget.getMember());
+            ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
+            classWidget.addConstructorWidget(w);
             classWidget.getScene().validate();
         }
     };

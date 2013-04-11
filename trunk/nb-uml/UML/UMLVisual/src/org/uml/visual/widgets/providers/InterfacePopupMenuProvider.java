@@ -14,9 +14,12 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.Method;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.InterfaceWidget;
+import org.uml.visual.widgets.MethodWidget;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.visual.widgets.actions.NameEditorAction;
 
 /**
  *
@@ -46,12 +49,16 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            Widget w = interfaceWidget.createMethodWidget("Method()");
-            interfaceWidget.createMethodAction(w);
+            Method m = new Method("untitledMethod", null, null);
+            interfaceWidget.getComponent().addMethod(m);
+            MethodWidget w = new MethodWidget(interfaceWidget.getClassDiagramScene(), m);
+            interfaceWidget.addMethodWidget(w);
             interfaceWidget.getScene().validate();
             
-            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(1));
-            w.getScene().getView().addMouseListener(mouseListener);
+            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
+            MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+            interfaceWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
     
@@ -59,6 +66,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider{
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            interfaceWidget.getComponent().getParentDiagram().removeComponent(interfaceWidget.getName());
             interfaceWidget.removeFromParent();
             interfaceWidget.getScene().validate();
         }
