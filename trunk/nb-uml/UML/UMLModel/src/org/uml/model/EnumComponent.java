@@ -35,6 +35,7 @@ public class EnumComponent extends ClassDiagramComponent {
     }
     
     public void addField (Field field) {
+        field.setDeclaringClass(this);
         fields.put(field.getName(), field);
         addMember(field);
     } 
@@ -48,6 +49,7 @@ public class EnumComponent extends ClassDiagramComponent {
     }    
     
     public void addMethod(Method method) {
+        method.setDeclaringClass(this);
         methods.put(method.getName(), method);
         addMember(method);
     }

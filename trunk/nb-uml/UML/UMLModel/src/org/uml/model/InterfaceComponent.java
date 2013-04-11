@@ -26,6 +26,7 @@ public class InterfaceComponent  extends ClassDiagramComponent {
     }    
     
     public void addMethod(Method method) {
+        method.setDeclaringClass(this);
         methods.put(method.getName(), method);
         addMember(method);
     }
