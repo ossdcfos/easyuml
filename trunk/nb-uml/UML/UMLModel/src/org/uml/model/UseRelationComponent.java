@@ -10,6 +10,9 @@ package org.uml.model;
  */
 public class UseRelationComponent extends RelationComponent{
 
+    CardinalityEnum cardinalitySource;
+    CardinalityEnum cardinalityTarget;
+    
     @Override
     public String toString() {
         return "Use";
