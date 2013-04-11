@@ -39,6 +39,10 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         textFieldName = new javax.swing.JTextField();
+        labelCardinalitySource = new javax.swing.JLabel();
+        labelCardinalityTarget = new javax.swing.JLabel();
+        comboBoxCardinalitySource = new javax.swing.JComboBox();
+        comboBoxCardinalityTarget = new javax.swing.JComboBox();
 
         comboBoxRelationship.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -52,6 +56,10 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
 
         textFieldName.setText(org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.textFieldName.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(labelCardinalitySource, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.labelCardinalitySource.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(labelCardinalityTarget, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.labelCardinalityTarget.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -59,12 +67,16 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelCardinalitySource, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                    .addComponent(labelCardinalityTarget, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(comboBoxRelationship, 0, 107, Short.MAX_VALUE)
-                    .addComponent(textFieldName))
+                    .addComponent(textFieldName)
+                    .addComponent(comboBoxCardinalitySource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(comboBoxCardinalityTarget, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -78,7 +90,15 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboBoxRelationship, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboBoxCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelCardinalitySource))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelCardinalityTarget)
+                    .addComponent(comboBoxCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -100,10 +120,22 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
     public JTextField getNameTextField () {
         return textFieldName;
     }
+    
+    public JComboBox getCardinalitySourceComboBox () {
+        return comboBoxCardinalitySource;
+    }
+    
+    public JComboBox getCardinalityTargetComboBox () {
+        return comboBoxCardinalityTarget;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox comboBoxCardinalitySource;
+    private javax.swing.JComboBox comboBoxCardinalityTarget;
     private javax.swing.JComboBox comboBoxRelationship;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel labelCardinalitySource;
+    private javax.swing.JLabel labelCardinalityTarget;
     private javax.swing.JTextField textFieldName;
     // End of variables declaration//GEN-END:variables
 

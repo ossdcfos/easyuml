@@ -19,13 +19,17 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="labelCardinalitySource" max="32767" attributes="0"/>
                   <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
                   <Component id="jLabel1" alignment="0" pref="118" max="32767" attributes="0"/>
+                  <Component id="labelCardinalityTarget" alignment="1" pref="118" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="comboBoxRelationship" alignment="0" pref="107" max="32767" attributes="0"/>
                   <Component id="textFieldName" alignment="0" max="32767" attributes="0"/>
+                  <Component id="comboBoxCardinalitySource" max="32767" attributes="0"/>
+                  <Component id="comboBoxCardinalityTarget" max="32767" attributes="0"/>
               </Group>
               <EmptySpace pref="30" max="32767" attributes="0"/>
           </Group>
@@ -44,7 +48,17 @@
                   <Component id="comboBoxRelationship" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="comboBoxCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="15" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="comboBoxCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -78,6 +92,34 @@
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ChooseRelationPanel.textFieldName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelCardinalitySource">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ChooseRelationPanel.labelCardinalitySource.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelCardinalityTarget">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ChooseRelationPanel.labelCardinalityTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="comboBoxCardinalitySource">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="comboBoxCardinalityTarget">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
         </Property>
       </Properties>
     </Component>
