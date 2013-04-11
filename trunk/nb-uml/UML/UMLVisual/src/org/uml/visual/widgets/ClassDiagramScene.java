@@ -5,9 +5,6 @@
 package org.uml.visual.widgets;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Stroke;
-import javax.swing.border.BevelBorder;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.anchor.Anchor;
@@ -29,6 +26,7 @@ import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
+import org.uml.model.HasRelationComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
@@ -147,6 +145,11 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         else if (e.getClass().getSimpleName().equals("HasRelationComponent")) {
          widget.setSourceAnchorShape(AnchorShapeFactory.createImageAnchorShape(ImageUtilities.loadImage("org/uml/visual/icons/rhombus.gif")));
          widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
+         HasRelationComponent hasRelation = (HasRelationComponent) e;
+         LabelWidget cardinalitySource = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
+         cardinalitySource.setOpaque (true);
+         widget.addChild(cardinalitySource);
+         widget.setConstraint (cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 2f);
         }
         else {
          widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));   

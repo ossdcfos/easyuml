@@ -4,13 +4,10 @@
  */
 package org.uml.visual.widgets.providers;
 
-import java.awt.Dialog;
+
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import org.netbeans.api.visual.action.ConnectProvider;
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Scene;
@@ -18,7 +15,7 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.windows.WindowManager;
+import org.uml.model.CardinalityEnum;
 import org.uml.model.HasRelationComponent;
 import org.uml.model.ImplementsRelationComponent;
 import org.uml.model.IsRelationComponent;
@@ -67,6 +64,9 @@ public class ClassConnectProvider implements ConnectProvider{
     public void createConnection(Widget sourceWidget, Widget targetWidget) {
         
         final ChooseRelationPanel panel = new ChooseRelationPanel();
+        panel.getCardinalitySourceComboBox().setEnabled(false);
+        panel.getCardinalityTargetComboBox().setEnabled(false);
+      
         //connect class to class
         
         if (sourceWidget.getClass().getSimpleName().equals("ClassWidget")&&
@@ -98,8 +98,41 @@ public class ClassConnectProvider implements ConnectProvider{
                     if (panel.getRelationComponents().getSelectedItem() instanceof ImplementsRelationComponent||
                         panel.getRelationComponents().getSelectedItem() instanceof IsRelationComponent){
                         panel.getNameTextField().setEnabled(false);
+                        panel.getCardinalitySourceComboBox().setEnabled(false);
+                        panel.getCardinalityTargetComboBox().setEnabled(false);     
+                    }
+                    if (panel.getRelationComponents().getSelectedItem() instanceof IsRelationComponent) {
+                        panel.getCardinalityTargetComboBox().removeAllItems();
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.One2One);
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2One);
+                        panel.getCardinalitySourceComboBox().setEnabled(false);
+                        panel.getCardinalityTargetComboBox().setEnabled(true);
+                    }
+                    else if (panel.getRelationComponents().getSelectedItem() instanceof HasRelationComponent) {
+                        panel.getNameTextField().setEnabled(true);
+                        panel.getCardinalityTargetComboBox().removeAllItems();
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.One2Many);
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2Many);                 
+                        panel.getCardinalitySourceComboBox().setEnabled(false);
+                        panel.getCardinalityTargetComboBox().setEnabled(true); 
+                    }
+                    else if (panel.getRelationComponents().getSelectedItem() instanceof UseRelationComponent) {
+                        panel.getNameTextField().setEnabled(true);
+                        panel.getCardinalityTargetComboBox().removeAllItems();
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.One2Many);
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2Many);
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.One2One);
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2One);
+                        panel.getCardinalitySourceComboBox().addItem(CardinalityEnum.One2Many);
+                        panel.getCardinalitySourceComboBox().addItem(CardinalityEnum.Zero2Many);
+                        panel.getCardinalitySourceComboBox().addItem(CardinalityEnum.One2One);
+                        panel.getCardinalitySourceComboBox().addItem(CardinalityEnum.Zero2One);
+                        panel.getCardinalitySourceComboBox().setEnabled(true);
+                        panel.getCardinalityTargetComboBox().setEnabled(true); 
                     }
                     else {
+                        panel.getCardinalitySourceComboBox().setEnabled(false);
+                        panel.getCardinalityTargetComboBox().setEnabled(false);
                         panel.getNameTextField().setEnabled(true);
                     }
                         }
@@ -116,6 +149,7 @@ public class ClassConnectProvider implements ConnectProvider{
     private void createRelation(Widget sourceWidget, Widget targetWidget, ChooseRelationPanel panel) {
         
         String msg = "Choose relation";
+        panel.getRelationComponents().setSelectedItem(null);
         DialogDescriptor dd = new DialogDescriptor (panel,msg);
         
         if (DialogDisplayer.getDefault().notify(dd)==NotifyDescriptor.OK_OPTION) {
@@ -125,6 +159,12 @@ public class ClassConnectProvider implements ConnectProvider{
                      ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
                      ComponentWidgetBase source= (ComponentWidgetBase) sourceWidget;
                      ComponentWidgetBase target= (ComponentWidgetBase) targetWidget;
+            if (relation instanceof HasRelationComponent) {
+                HasRelationComponent hasRelation = (HasRelationComponent) relation;
+                hasRelation.setCardinalitySource((CardinalityEnum)panel.getCardinalitySourceComboBox().getSelectedItem());
+                hasRelation.setCardinalityTarget((CardinalityEnum)panel.getCardinalityTargetComboBox().getSelectedItem());
+            }
+         
                      relation.setSource(source.getComponent());
                      relation.setTarget(target.getComponent());
                      scene.addEdge(relation);
