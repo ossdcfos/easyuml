@@ -12,6 +12,7 @@ import org.uml.model.CardinalityEnum;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.ComponentWidgetBase;
 import org.uml.visual.widgets.EnumWidget;
+import org.uml.visual.widgets.InterfaceWidget;
 
 /**
  *
@@ -22,12 +23,12 @@ public class ClassHasRelationPanel extends javax.swing.JPanel {
     /**
      * Creates new form ClassHasRelationPanel
      */
-    ClassWidget classWidget;
+    ComponentWidgetBase compWidget;
     
-    public ClassHasRelationPanel(ClassWidget widget) {
+    public ClassHasRelationPanel(ComponentWidgetBase widget) {
         initComponents();
-        this.classWidget=widget;
-        fillCombo(classWidget);
+        this.compWidget=widget;
+        fillCombo(compWidget);
     }
 
     /**
@@ -106,10 +107,10 @@ public class ClassHasRelationPanel extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldName;
     // End of variables declaration//GEN-END:variables
 
-    private void fillCombo(ClassWidget widget) {
-        List<Widget> widgets =  widget.getClassDiagramScene().getMainLayer().getChildren();
+    private void fillCombo(ComponentWidgetBase widget) {
+        List<Widget> widgets=widget.getClassDiagramScene().getMainLayer().getChildren();
         for (Widget w : widgets) {
-            if ((w instanceof ClassWidget||w instanceof EnumWidget)&&!w.equals(classWidget)) {
+            if ((w instanceof ClassWidget||w instanceof EnumWidget)&&!w.equals(widget)) {
                 comboBoxTarget.addItem(w);
             }
         }

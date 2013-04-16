@@ -27,7 +27,7 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
-    ClassDiagramScene scene;
+
     private static final Border RESIZE_BORDER =
             BorderFactory.createResizeBorder(4, Color.black, true);
     private static final Border DEFAULT_BORDER =
@@ -42,7 +42,6 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
         super(scene);
         this.classComponent = classComponent;
-        this.scene = scene;
         setChildConstraint(getImageWidget(), 1);
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
@@ -163,10 +162,6 @@ public String getClassName() {
 
     public void removeMethod(Widget operationWidget) {
         methodsWidget.removeChild(operationWidget);
-    }
-
-    public ClassDiagramScene getClassDiagramScene() {
-        return scene;
     }
 
     @Override

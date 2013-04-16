@@ -18,8 +18,10 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
 
     private static final Dimension MINDIMENSION= new Dimension (100,0);
     //atribut name
+    ClassDiagramScene scene;
     public ComponentWidgetBase(ClassDiagramScene scene) {
         super(scene);
+        this.scene = scene;
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         getActions().addAction (ActionFactory.createAlignWithMoveAction (scene.getMainLayer(), scene.getInterractionLayer(), null));
         setMinimumSize(MINDIMENSION);
@@ -35,4 +37,8 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
     abstract public ClassDiagramComponent getComponent();
     
     abstract public LabelWidget getNameLabel();
+    
+    public ClassDiagramScene getClassDiagramScene() {
+        return scene;
+    }
 }

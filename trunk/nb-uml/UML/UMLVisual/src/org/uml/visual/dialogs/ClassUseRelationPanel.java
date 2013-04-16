@@ -9,6 +9,7 @@ import javax.swing.JComboBox;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.CardinalityEnum;
 import org.uml.visual.widgets.ClassWidget;
+import org.uml.visual.widgets.ComponentWidgetBase;
 import org.uml.visual.widgets.EnumWidget;
 
 /**
@@ -20,11 +21,11 @@ public class ClassUseRelationPanel extends javax.swing.JPanel {
     /**
      * Creates new form ClassUseRelationPanel
      */
-    ClassWidget classWidget;
+    ComponentWidgetBase compWidget;
     
-    public ClassUseRelationPanel(ClassWidget widget) {
+    public ClassUseRelationPanel(ComponentWidgetBase widget) {
         initComponents();
-        this.classWidget=widget;
+        this.compWidget=widget;
         fillCombos();
     }
 
@@ -129,9 +130,9 @@ public class ClassUseRelationPanel extends javax.swing.JPanel {
 
     private void fillCombos() {
                
-        List<Widget> widgets =  classWidget.getClassDiagramScene().getMainLayer().getChildren();
+        List<Widget> widgets =  compWidget.getClassDiagramScene().getMainLayer().getChildren();
         for (Widget w : widgets) {
-            if ((w instanceof ClassWidget||w instanceof EnumWidget)&&!w.equals(classWidget)) {
+            if ((w instanceof ClassWidget||w instanceof EnumWidget)&&!w.equals(compWidget)) {
                 comboBoxTarget.addItem(w);
             }
         }
