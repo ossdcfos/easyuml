@@ -16,10 +16,10 @@ import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.InterfaceComponent;
-import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
-import org.uml.visual.widgets.providers.InterfacePopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.providers.InterfacePopupMenuProvider;
+import org.uml.visual.widgets.providers.InterfaceWidgetAcceptProvider;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
 
 /**
@@ -29,7 +29,6 @@ import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
 public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
 
     InterfaceComponent interfaceComponent;
-    ClassDiagramScene scene;
     
     private static final Border RESIZE_BORDER = 
         org.netbeans.api.visual.border.BorderFactory.createResizeBorder(4, Color.black, true);
@@ -46,7 +45,6 @@ public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
     public InterfaceWidget(ClassDiagramScene scene, InterfaceComponent interfaceComponent) {
         super(scene);
         this.interfaceComponent = interfaceComponent;
-        this.scene=scene;
         setChildConstraint(getImageWidget(), 1);
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(org.netbeans.api.visual.border.BorderFactory.createLineBorder());
@@ -80,6 +78,7 @@ public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
         
         this.interfaceNameWidget.setLabel(interfaceComponent.getName());
         
+        getActions().addAction(ActionFactory.createAcceptAction(new InterfaceWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new InterfacePopupMenuProvider(this)));
     }
     
@@ -116,9 +115,6 @@ public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
         return interfaceNameWidget.getLabel();
     }
 
-    public ClassDiagramScene getClassDiagramScene() {
-        return scene;
-    }
 
     @Override
     public LabelWidget getNameLabel() {

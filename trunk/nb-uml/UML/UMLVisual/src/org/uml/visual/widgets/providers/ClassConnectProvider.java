@@ -147,7 +147,9 @@ public class ClassConnectProvider implements ConnectProvider{
     }
 
     private void createRelation(Widget sourceWidget, Widget targetWidget, ChooseRelationPanel panel) {
-        
+        if (targetWidget==null) {
+            return;
+        }
         String msg = "Choose relation";
         panel.getRelationComponents().setSelectedItem(null);
         DialogDescriptor dd = new DialogDescriptor (panel,msg);
