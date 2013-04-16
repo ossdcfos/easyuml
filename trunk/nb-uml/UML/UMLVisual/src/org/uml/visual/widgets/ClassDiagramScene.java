@@ -21,14 +21,14 @@ import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.ImageUtilities;
-import org.uml.model.RelationComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.HasRelationComponent;
 import org.uml.model.InterfaceComponent;
-import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.model.RelationComponent;
+import org.uml.model.UseRelationComponent;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
 import org.uml.visual.widgets.providers.ConnectionPopupMenuProvider;
 import org.uml.visual.widgets.providers.ScenePopupMenuProvider;
@@ -127,7 +127,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         name.setOpaque (true);
         umlClassDiagram.addRelation(e);
         ConnectionWidget widget = new ConnectionWidget(this);
-        if (e.getClass().getSimpleName().equals("ImplementsRelationComponent")) {
+        if(e.getClass().getSimpleName().equals("ImplementsRelationComponent")) {
         final float dash1[] = {10.0f};
         final BasicStroke dashed =
         new BasicStroke(1.0f,
@@ -146,13 +146,22 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
          widget.setSourceAnchorShape(AnchorShapeFactory.createImageAnchorShape(ImageUtilities.loadImage("org/uml/visual/icons/rhombus.gif")));
          widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
          HasRelationComponent hasRelation = (HasRelationComponent) e;
-         LabelWidget cardinalitySource = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
-         cardinalitySource.setOpaque (true);
-         widget.addChild(cardinalitySource);
-         widget.setConstraint (cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 2f);
+         LabelWidget cardinalityTarget = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
+         cardinalityTarget.setOpaque (true);
+         widget.addChild(cardinalityTarget);
+         widget.setConstraint (cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 2f);
         }
         else {
-         widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));   
+         widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
+         UseRelationComponent useRelation = (UseRelationComponent) e;
+         LabelWidget cardinalitySource = new LabelWidget(this, useRelation.getCardinalitySource().toString());
+         cardinalitySource.setOpaque (true);
+         widget.addChild(cardinalitySource);
+         widget.setConstraint (cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, -1.5f);
+         LabelWidget cardinalityTarget = new LabelWidget(this, useRelation.getCardinalityTarget().toString());
+         cardinalityTarget.setOpaque (true);
+         widget.addChild(cardinalityTarget);
+         widget.setConstraint (cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 1.5f);
         }
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());
