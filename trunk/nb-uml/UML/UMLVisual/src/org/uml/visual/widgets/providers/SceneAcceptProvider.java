@@ -1,6 +1,5 @@
 package org.uml.visual.widgets.providers;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -19,12 +18,9 @@ import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.ImageUtilities;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.visual.widgets.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.Nameable;
 import org.uml.visual.widgets.ComponentWidgetBase;
-import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
 
 /**
@@ -58,7 +54,11 @@ public class SceneAcceptProvider implements AcceptProvider {
 
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
+        if (t.getTransferDataFlavors()[2].getRepresentationClass().getSimpleName().contains("RelationComponent")) {
+            return;
+        }
         Class<? extends ClassDiagramComponent> droppedClass = (Class<? extends ClassDiagramComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
+        
         try {
             Widget w=classDiagramScene.addNode(droppedClass.newInstance());
             w.setPreferredLocation(widget.convertLocalToScene(point));

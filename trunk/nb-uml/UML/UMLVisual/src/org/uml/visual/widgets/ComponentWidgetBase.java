@@ -8,6 +8,7 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.providers.ClassConnectProvider;
+import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
 
 /**
  *
@@ -31,9 +32,7 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
     }
     
     // this method should be abstract...
-    public ClassDiagramComponent getComponent() {
-        return null;
-    }
+    abstract public ClassDiagramComponent getComponent();
     
     abstract public LabelWidget getNameLabel();
 }

@@ -94,6 +94,12 @@ public class AddRelationDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jcbClassesSource.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbClassesSourceActionPerformed(evt);
+            }
+        });
+
         jcbClassesTarget.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcbClassesTargetActionPerformed(evt);
@@ -204,6 +210,10 @@ public class AddRelationDialog extends javax.swing.JDialog {
     private void jcbClassesTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbClassesTargetActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbClassesTargetActionPerformed
+
+    private void jcbClassesSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbClassesSourceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbClassesSourceActionPerformed
 
     /**
      * @param args the command line arguments
