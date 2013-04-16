@@ -10,12 +10,28 @@ package org.uml.model;
  */
 public class UseRelationComponent extends RelationComponent{
 
-    CardinalityEnum cardinalitySource;
-    CardinalityEnum cardinalityTarget;
+    private CardinalityEnum cardinalitySource;
+    private CardinalityEnum cardinalityTarget;
     
     @Override
     public String toString() {
         return "Use";
+    }
+
+    public CardinalityEnum getCardinalitySource() {
+        return cardinalitySource;
+    }
+
+    public void setCardinalitySource(CardinalityEnum cardinalitySource) {
+        this.cardinalitySource = cardinalitySource;
+    }
+
+    public CardinalityEnum getCardinalityTarget() {
+        return cardinalityTarget;
+    }
+
+    public void setCardinalityTarget(CardinalityEnum cardinalityTarget) {
+        this.cardinalityTarget = cardinalityTarget;
     }
     
 }
