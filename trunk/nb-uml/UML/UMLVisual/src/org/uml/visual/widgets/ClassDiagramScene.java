@@ -21,6 +21,12 @@ import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
+import org.uml.model.RelationComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
@@ -101,7 +107,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         }
         // add block for RelationComponent too!
         
-            
+        
         //WARNING Ovo prebaciti u ComponentWidgetBase akcije zajednicke za sve komponnete dijagrama
 
 //        widget.getActions().addAction(ActionFactory.createMoveAction());
@@ -219,5 +225,17 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return mainLayer;
     }
     
-    
+    @Override
+    public Lookup getLookup() {
+//        if (selection == null) {
+//            return super.getLookup();
+//        }
+//        return new ProxyLookup(
+//                new Lookup[]{
+//                    super.getLookup(),
+//                    Lookups.fixed(getSelectedObjects())
+//                });  
+        return super.getLookup();
+        
+    }
 }
