@@ -13,19 +13,23 @@ import org.openide.nodes.Node;
  */
 public class CategoryChildren extends Children.Keys {
     
+    private Category category;
     private String[] Categories = new String[]{
         "Classes",
         "Interfaces",
         "Enumerations"};
     
-    public CategoryChildren() {
+    public CategoryChildren(Category category) {
+        this.category = category;
     }
     
+    @Override
      protected Node[] createNodes(Object key) {
         Category obj = (Category) key;
         return new Node[] { new CategoryNode( obj ) };
     }
     
+    @Override
     protected void addNotify() {
         super.addNotify();
         Category[] objs = new Category[Categories.length];
