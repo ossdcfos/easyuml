@@ -8,6 +8,7 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Field;
 import org.uml.model.Member;
 import org.uml.visual.widgets.actions.NameEditorAction;
@@ -63,7 +64,7 @@ public class FieldWidget  extends MemberWidgetBase{
 
     @Override
     public String getName() {
-        return fieldNameWidget.getLabel();
+        return fieldComponent.getName();
     }
 
     @Override

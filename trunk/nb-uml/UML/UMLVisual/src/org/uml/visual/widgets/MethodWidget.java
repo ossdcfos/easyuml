@@ -77,7 +77,7 @@ public class MethodWidget extends MemberWidgetBase{
 
     @Override
     public String getName() {
-        return methodNameWidget.getLabel();
+        return methodComponent.getName();
     }
 
     @Override

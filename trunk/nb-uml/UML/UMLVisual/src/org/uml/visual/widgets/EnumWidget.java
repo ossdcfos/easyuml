@@ -117,7 +117,7 @@ public class EnumWidget extends ComponentWidgetBase implements Nameable{
         LabelWidget labelWidget = new LabelWidget(scene); 
         labelWidget.setLabel(literalName);
         labelWidget.getActions().addAction(editorAction);
-        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(literalWidget)));
+        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(literalWidget)));
         
         literalWidget.addChild(labelWidget);
         
@@ -137,7 +137,7 @@ public class EnumWidget extends ComponentWidgetBase implements Nameable{
         LabelWidget labelWidget = new LabelWidget(scene); 
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(editorAction);
-        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
+        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
         
         fieldWidget.addChild(labelWidget);
         
@@ -157,7 +157,7 @@ public class EnumWidget extends ComponentWidgetBase implements Nameable{
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
-        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
+        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
         
         return widget;
     }
