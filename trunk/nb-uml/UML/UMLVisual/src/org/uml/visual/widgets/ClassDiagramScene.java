@@ -57,6 +57,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
     private ClassDiagram umlClassDiagram;
+    InstanceContent content = new InstanceContent();
+    AbstractLookup lookup = new AbstractLookup(content);
             
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
