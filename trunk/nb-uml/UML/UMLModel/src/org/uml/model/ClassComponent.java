@@ -17,6 +17,7 @@ public class ClassComponent extends ClassDiagramComponent {
         this.setName("UntitledClass");
         fields= new HashMap<String, Field>();
         methods= new HashMap<String, Method>();
+        constructors = new HashMap<String, Constructor>();
     }
 
     public ClassComponent(String name) {
@@ -35,8 +36,10 @@ public class ClassComponent extends ClassDiagramComponent {
         return methods;
     }
 
+    public HashMap<String, Constructor> getConstructors() {
+        return constructors;
+    }
 
-    
     public Field getField (String name) {
         return fields.get(name);
     }
@@ -65,4 +68,17 @@ public class ClassComponent extends ClassDiagramComponent {
         methods.remove(name);
     }
     
+    public Constructor getConstuctor(String name) {
+        return constructors.get(name);
+    }    
+    
+    public void addConstructor(Constructor constructor) {
+        constructor.setDeclaringClass(this);
+        constructors.put(this.getName(), constructor);
+        addMember(constructor);
+    }
+    
+    public void removeConstructor(String name) {
+        constructors.remove(name);
+    }
 }

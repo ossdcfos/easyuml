@@ -9,11 +9,15 @@ import java.util.HashMap;
 public class EnumComponent extends ClassDiagramComponent {
     private HashMap<String, Field> fields;
     private HashMap<String, Method> methods;
+    private HashMap<String, Literal> literals;
+    private HashMap<String, Constructor> constructors;
     
     public EnumComponent() {
         this.setName("UntitledEnum");
         fields= new HashMap<String, Field>();
         methods= new HashMap<String, Method>();
+        constructors = new HashMap<String, Constructor>();
+        literals = new HashMap<String, Literal>();
     }
 
     public EnumComponent(String name) {
@@ -28,8 +32,10 @@ public class EnumComponent extends ClassDiagramComponent {
         return methods;
     }
 
+    public HashMap<String, Constructor> getConstructors() {
+        return constructors;
+    }
 
-    
     public Field getField (String name) {
         return fields.get(name);
     }
@@ -56,5 +62,33 @@ public class EnumComponent extends ClassDiagramComponent {
     
     public void removeMethod(String name) {
         methods.remove(name);
+    }
+    
+    public Constructor getConstuctor(String name) {
+        return constructors.get(name);
+    }    
+    
+    public void addConstructor(Constructor constructor) {
+        constructor.setDeclaringClass(this);
+        constructors.put(this.getName(), constructor);
+        addMember(constructor);
+    }
+    
+    public void removeConstructor(String name) {
+        constructors.remove(name);
+    }
+    
+    public Literal getLiteral(String name) {
+        return literals.get(name);
+    }    
+    
+    public void addLiteral(Literal literal) {
+        literal.setDeclaringClass(this);
+        literals.put(this.getName(), literal);
+        addMember(literal);
+    }
+    
+    public void removeLiteral(String name) {
+        literals.remove(name);
     }
 }

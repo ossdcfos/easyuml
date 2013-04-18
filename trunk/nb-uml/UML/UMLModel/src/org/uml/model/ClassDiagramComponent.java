@@ -8,7 +8,7 @@ import java.util.HashMap;
  */
 public class ClassDiagramComponent {
             private String name;     // class, interface or enum name              
-            private HashMap<String,Member> members; // index of all fields, methods and constructors            
+            protected HashMap<String,Member> members; // index of all fields, methods and constructors            
             protected ClassDiagram parentDiagram;            
             private int memberCounter = 0;
             
@@ -37,13 +37,9 @@ public class ClassDiagramComponent {
         }
         members.put(member.getName(), member);
         memberCounter++;
-        System.out.println("Members");
-        for (Member member1 : members.values()) {
-            System.out.println(member1.getName());
-        }
     }
     
-    protected void removeMember(String name) {
+    public void removeMember(String name) {
         members.remove(name);
     }
     
