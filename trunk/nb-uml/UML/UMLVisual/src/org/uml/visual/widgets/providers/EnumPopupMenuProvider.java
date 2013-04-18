@@ -16,6 +16,7 @@ import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.Constructor;
 import org.uml.model.Field;
+import org.uml.model.Literal;
 import org.uml.model.Method;
 import org.uml.model.Visibility;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
@@ -23,6 +24,7 @@ import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.ConstructorWidget;
 import org.uml.visual.widgets.EnumWidget;
 import org.uml.visual.widgets.FieldWidget;
+import org.uml.visual.widgets.LiteralWidget;
 import org.uml.visual.widgets.MethodWidget;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
@@ -64,7 +66,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             Constructor c = new Constructor(enumWidget.getName());
-            //enumComponent.addMethod(c);
+            enumWidget.getComponent().addConstructor(c);
             ConstructorWidget w = new ConstructorWidget(enumWidget.getClassDiagramScene(), c);
             enumWidget.addConstructorWidget(w);
             enumWidget.getScene().validate();
@@ -75,14 +77,16 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
-            Widget w = enumWidget.createLiteralWidget("LITERAL");
-            //enumComponent.add...
+            Literal l = new Literal("LITERAL");
+            LiteralWidget w = new LiteralWidget(enumWidget.getClassDiagramScene(), l);
+            enumWidget.getComponent().addLiteral(l);
             enumWidget.addLiteralWidget(w);
             enumWidget.getScene().validate();
             
-            ActionFactory.getInplaceEditorController (editorAction).openEditor(w.getChildren().get(0));
-            w.getScene().getView().addMouseListener(mouseListener);
+            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
+            MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+            enumWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
     
