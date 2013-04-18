@@ -20,16 +20,16 @@ import org.uml.model.ClassDiagramComponent;
  *
  * @author Jelena
  */
-public class ClassComponentNode extends AbstractNode {
+public class ClassDiagramComponentNode extends AbstractNode {
 
-    private ClassComponent classComponent;
+    private ClassDiagramComponent classComponent;
 
-    public ClassComponentNode(ClassComponent component) {
+    public ClassDiagramComponentNode(ClassDiagramComponent component) {
         this(component, new InstanceContent());
     }
 
-    private ClassComponentNode(ClassComponent component, InstanceContent content) {
-        super(FilterNode.Children.LEAF, new AbstractLookup(content));
+    private ClassDiagramComponentNode(ClassDiagramComponent component, InstanceContent content) {
+        super(new ClassDiagramComponentChildren(component), new AbstractLookup(content));
         content.add(this);
 
         this.classComponent = component;
