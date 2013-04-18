@@ -6,6 +6,7 @@ package org.uml.explorer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import org.openide.nodes.Children;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
@@ -51,9 +52,9 @@ public class ClassDiagramChildren  extends Children.Keys<Object> {
     
     @Override
     protected Node[] createNodes(Object object) {
-        if(object instanceof ClassComponent){                
-            ClassComponent classComponent = (ClassComponent) object;           
-            ClassComponentNode classComponentNode = new ClassComponentNode(classComponent); 
+        if(object instanceof ClassDiagramComponent){                
+            ClassDiagramComponent classComponent = (ClassDiagramComponent) object;           
+            ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(classComponent); 
             classComponentNode.setName("Class " + classComponent.getName()); 
             return new Node[] { classComponentNode }; 
         }else { 
@@ -66,8 +67,14 @@ public class ClassDiagramChildren  extends Children.Keys<Object> {
         super.addNotify();
         ArrayList<Object> keys = new ArrayList<Object>();
         if(classDiagram.getComponents()!=null){
-            keys.add(classDiagram.getComponents());
+            Iterator it = classDiagram.getComponents().entrySet().iterator();
+            while (it.hasNext()) {
+                java.util.Map.Entry pairs = (java.util.Map.Entry) it.next();
+                ClassDiagramComponent component = (ClassDiagramComponent) pairs.getValue();
+                keys.add(component);
+            }
         }
+        
         setKeys(keys); 
         
     }

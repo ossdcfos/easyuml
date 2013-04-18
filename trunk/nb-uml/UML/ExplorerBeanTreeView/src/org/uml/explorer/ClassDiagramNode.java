@@ -34,7 +34,7 @@ public class ClassDiagramNode  extends AbstractNode {
     }
 
     private ClassDiagramNode(ClassDiagram classDiagram, InstanceContent content) {
-        super(FilterNode.Children.LEAF, new AbstractLookup(content));
+        super(new ClassDiagramChildren(classDiagram), new AbstractLookup(content));
         content.add(this);
 
         this.classDiagram = classDiagram;

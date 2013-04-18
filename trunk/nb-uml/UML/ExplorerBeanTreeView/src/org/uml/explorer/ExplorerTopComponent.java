@@ -85,10 +85,10 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
         resultCD.addLookupListener(this);
         resultChanged(new LookupEvent(resultCD));
 
-        resultCc = Utilities.actionsGlobalContext().lookupResult(ClassComponent.class);
-        resultCc.addLookupListener(this);
-        resultChanged(new LookupEvent(resultCc));
-        
+//        resultCc = Utilities.actionsGlobalContext().lookupResult(ClassComponent.class);
+//        resultCc.addLookupListener(this);
+//        resultChanged(new LookupEvent(resultCc));
+//
 //        resultCW = Utilities.actionsGlobalContext().lookupResult(ClassWidget.class);
 //        resultCW.addLookupListener(this);
 //        resultChanged(new LookupEvent(resultCW));
@@ -117,7 +117,7 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
     }
     Result<ClassDiagram> resultCD;
     Result<ClassComponent> resultCc;
-    //Result<ClassWidget> resultCW;
+    Result<ClassWidget> resultCW;
     private boolean recursiveCall = false;
 
     @Override
@@ -138,10 +138,11 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
                     } catch (PropertyVetoException ex) {
                         Exceptions.printStackTrace(ex);
                     }
-                } else if (selectedItem instanceof ClassDiagramComponent) {
-                    ClassComponent selectedClassDiagramComponent = (ClassComponent) selectedItem;
-                    this.setName(selectedClassDiagramComponent.getName() + " -  Explorer");
-                    ClassComponentNode classComponentNode = new ClassComponentNode(selectedClassDiagramComponent);
+                }  else if (selectedItem instanceof ClassWidget) {
+                    System.out.println("Klas vidzet");
+                    ClassWidget selectedClassWidget = (ClassWidget) selectedItem;
+                    this.setName(selectedClassWidget.getName() + " -  Explorer");
+                    ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(selectedClassWidget.getComponent());
 
                     ((BeanTreeView) jScrollPane1).setRootVisible(true);
                     recursiveCall = true;
@@ -151,10 +152,7 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
                     } catch (PropertyVetoException ex) {
                         Exceptions.printStackTrace(ex);
                     }
-                }//else if (selectedItem instanceof ClassWidget) {
-                    
-               // } 
-else if (!recursiveCall) {
+                } else if (!recursiveCall) {
                     explorerManager.setRootContext(Node.EMPTY);
                     BeanTreeView btw = (BeanTreeView) jScrollPane1;
                     btw.setRootVisible(false);
