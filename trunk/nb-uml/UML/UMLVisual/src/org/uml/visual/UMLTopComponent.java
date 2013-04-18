@@ -9,9 +9,13 @@ import javax.swing.JScrollPane;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.uml.model.ClassDiagram;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
@@ -42,6 +46,8 @@ public final class UMLTopComponent extends TopComponent {
     private ClassDiagram umlClassDiagram;
     private ClassDiagramScene classDiagramScene;
     private JScrollPane shapePane;
+    InstanceContent content;
+    AbstractLookup aLookup;
 
     public UMLTopComponent() {
         initComponents();
@@ -56,6 +62,10 @@ public final class UMLTopComponent extends TopComponent {
         add(shapePane, BorderLayout.CENTER);
         add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
         associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
+        
+        content = new InstanceContent();
+        content.add(umlClassDiagram);
+        aLookup = new AbstractLookup(content);
     }
 
 //    public UMLTopComponent(ClassDiagram umlClassDiagram) {
@@ -110,4 +120,11 @@ public final class UMLTopComponent extends TopComponent {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
+
+    @Override
+    public Lookup getLookup() {
+        return new ProxyLookup(new Lookup[]{super.getLookup(),aLookup});
+    }
+    
+    
 }
