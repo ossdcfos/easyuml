@@ -100,7 +100,7 @@ public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
         labelWidget.setFont(scene.getDefaultFont().deriveFont(Font.ITALIC));
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(editorAction);
-        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
+        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
         
         return widget;
     }
