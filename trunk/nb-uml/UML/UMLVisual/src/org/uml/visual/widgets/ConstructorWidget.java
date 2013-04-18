@@ -4,10 +4,12 @@
  */
 package org.uml.visual.widgets;
 
+import org.uml.visual.widgets.providers.ConstructorPopupMenuProvider;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Constructor;
 import org.uml.model.Member;
 import org.uml.model.Method;
@@ -35,10 +37,10 @@ public class ConstructorWidget extends MemberWidgetBase{
         this.addChild(visibilityLabel);
 
         construktorNameWidget = new LabelWidget(getScene());
-        construktorNameWidget.setLabel(constructorComponent.getName());
+        construktorNameWidget.setLabel(constructorComponent.getDeclaringClass().getName() + "()");
         this.addChild(construktorNameWidget);
         //construktorNameWidget.getActions().addAction(nameEditorAction);
-        construktorNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
+        construktorNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConstructorPopupMenuProvider(this)));
 
     }
     
@@ -54,7 +56,7 @@ public class ConstructorWidget extends MemberWidgetBase{
 
     @Override
     public String getName() {
-        return construktorNameWidget.getLabel();
+        return constructorComponent.getName();
     }
 
     @Override
