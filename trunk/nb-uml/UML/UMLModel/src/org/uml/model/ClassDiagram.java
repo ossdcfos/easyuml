@@ -32,11 +32,6 @@ public class ClassDiagram {
 
         component.setParentDiagram(this);
         components.put(component.getName(), component);
-        
-        System.out.println("Komponente:");
-        for (ClassDiagramComponent classDiagramComponent : components.values()) {
-            System.out.println(classDiagramComponent.getName());
-        }
     }
     
     public void addRelation (RelationComponent relationComponent){
