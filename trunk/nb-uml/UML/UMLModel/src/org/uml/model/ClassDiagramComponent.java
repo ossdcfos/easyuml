@@ -59,4 +59,10 @@ public class ClassDiagramComponent {
         members.remove(oldName);
         addMember(member);
     }
+
+    public HashMap<String, Member> getMembers() {
+        return members;
+    }
+    
+    
 }
