@@ -16,11 +16,16 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
+import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.visual.widgets.ClassWidget;
 
 /**
  * Top component which displays something.
@@ -52,8 +57,9 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
         setName(Bundle.CTL_ExplorerTopComponent());
         setToolTipText(Bundle.HINT_ExplorerTopComponent());
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
-        explorerManager.setRootContext(new AbstractNode(new CategoryChildren()));
-        explorerManager.getRootContext().setDisplayName("UML class diagram");
+//        explorerManager.setRootContext(new AbstractNode(new CategoryChildren()));
+//        explorerManager.getRootContext().setDisplayName("UML class diagram");  
+        ((BeanTreeView) jScrollPane1).setRootVisible(false);
     }
 
     /**
@@ -75,7 +81,17 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
 
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        resultCD = Utilities.actionsGlobalContext().lookupResult(ClassDiagram.class);
+        resultCD.addLookupListener(this);
+        resultChanged(new LookupEvent(resultCD));
+
+        resultCc = Utilities.actionsGlobalContext().lookupResult(ClassComponent.class);
+        resultCc.addLookupListener(this);
+        resultChanged(new LookupEvent(resultCc));
+        
+//        resultCW = Utilities.actionsGlobalContext().lookupResult(ClassWidget.class);
+//        resultCW.addLookupListener(this);
+//        resultChanged(new LookupEvent(resultCW));
     }
 
     @Override
@@ -99,6 +115,10 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
+    Result<ClassDiagram> resultCD;
+    Result<ClassComponent> resultCc;
+    //Result<ClassWidget> resultCW;
+    private boolean recursiveCall = false;
 
     @Override
     public void resultChanged(LookupEvent ev) {
@@ -106,18 +126,42 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
         Collection<Object> coll = localResult.allInstances();
         if (!coll.isEmpty()) {
             for (Object selectedItem : coll) {
-                if (selectedItem instanceof ClassDiagramComponent) {    // if neural network is selected
-                    ClassDiagramComponent selectedComponent = (ClassDiagramComponent) selectedItem;
-                    this.setName(selectedComponent.getName() + " -  Explorer");
+                if (selectedItem instanceof ClassDiagram) {
+                    ClassDiagram selectedComponent = (ClassDiagram) selectedItem;
+                    //this.setName(selectedComponent.getName() + " -  Explorer");
                     ((BeanTreeView) jScrollPane1).setRootVisible(true);
-                    ClassDiagramComponentNode cNode = new ClassDiagramComponentNode(selectedComponent);
-
+                    ClassDiagramNode cNode = new ClassDiagramNode(selectedComponent);
+                    recursiveCall = true;
                     explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
                     try {
                         explorerManager.setExploredContextAndSelection(cNode, new Node[]{cNode});
                     } catch (PropertyVetoException ex) {
                         Exceptions.printStackTrace(ex);
                     }
+                } else if (selectedItem instanceof ClassDiagramComponent) {
+                    ClassComponent selectedClassDiagramComponent = (ClassComponent) selectedItem;
+                    this.setName(selectedClassDiagramComponent.getName() + " -  Explorer");
+                    ClassComponentNode classComponentNode = new ClassComponentNode(selectedClassDiagramComponent);
+
+                    ((BeanTreeView) jScrollPane1).setRootVisible(true);
+                    recursiveCall = true;
+                    explorerManager.setRootContext(classComponentNode); //this one calls resultChanged recursivly, since global lookup is changed
+                    try {
+                        explorerManager.setExploredContextAndSelection(classComponentNode, new Node[]{classComponentNode});
+                    } catch (PropertyVetoException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }//else if (selectedItem instanceof ClassWidget) {
+                    
+               // } 
+else if (!recursiveCall) {
+                    explorerManager.setRootContext(Node.EMPTY);
+                    BeanTreeView btw = (BeanTreeView) jScrollPane1;
+                    btw.setRootVisible(false);
+                    this.setName("Explorer");
+
+                } else {
+                    recursiveCall = false;
                 }
             }
 

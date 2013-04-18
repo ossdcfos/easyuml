@@ -17,7 +17,10 @@ import org.openide.nodes.Node.Cookie;
 import org.openide.nodes.NodeTransfer;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.PasteType;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
+import org.uml.model.ClassDiagram;
 
 
 /**
@@ -26,11 +29,19 @@ import org.openide.util.lookup.Lookups;
  */
 public class CategoryNode extends AbstractNode {
     
+    Category category;
     /** Creates a new instance of CategoryNode */
     public CategoryNode( Category category ) {
-        super( new ClassDiagramComponentChildren(category), Lookups.singleton(category) );
+        this( category, new InstanceContent() );
         setDisplayName(category.getName());
         //setIconBaseWithExtension("org/netbeans/myfirstexplorer/marilyn_category.gif");
+    }
+    
+    private CategoryNode(Category category, InstanceContent content) {
+        super(new CategoryChildren(category),new AbstractLookup(content));
+        content.add(this);
+        content.add(category);
+        this.category = category;
     }
     
 //    public PasteType getDropType(Transferable t, final int action, int index) {
