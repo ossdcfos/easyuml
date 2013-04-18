@@ -12,9 +12,14 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.netbeans.api.visual.widget.general.IconNodeWidget;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.uml.model.ClassComponent;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
+import org.uml.visual.widgets.providers.ClassSelectProvider;
 import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
@@ -38,10 +43,14 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
     //private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
+    private final Lookup lookup;
 
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
         super(scene);
         this.classComponent = classComponent;
+        lookup = Lookups.fixed(classComponent, this);
+        //lookup = Lookups.singleton(classComponent);
+        this.scene = scene;
         setChildConstraint(getImageWidget(), 1);
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
@@ -117,7 +126,7 @@ public String getClassName() {
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(nameEditorAction);
-        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
+        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
         //dodato polje u classElement
         fieldWidget.addChild(labelWidget);
 
@@ -139,7 +148,7 @@ public String getClassName() {
         labelWidget.setLabel(methodName);
         widget.addChild(labelWidget);
         labelWidget.getActions().addAction(nameEditorAction);
-        labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
+        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
 
         return widget;
     }
@@ -202,6 +211,14 @@ public String getClassName() {
             JOptionPane.showMessageDialog(this.getScene().getView(), "Greska, ime vec postoji.");
         }
     }
+
+    @Override
+    public Lookup getLookup() {
+        return lookup;
+    }
+
+    
+    
 }
 
     
