@@ -3,12 +3,15 @@ package org.uml.visual.widgets.providers;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.ClassComponent;
+import org.uml.model.Method;
 import org.uml.visual.widgets.MethodWidget;
 
 /**
@@ -17,7 +20,7 @@ import org.uml.visual.widgets.MethodWidget;
  */
 public class MethodPopupMenuProvider implements PopupMenuProvider{
     
-        private Widget methodWidget;
+        private MethodWidget methodWidget;
         private JPopupMenu menu;
         private JMenuItem deleteMethod;
         private JMenu visibilitySubmenu;
@@ -31,7 +34,7 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         private JCheckBoxMenuItem finalJCBMI;
         private JCheckBoxMenuItem synchronizedJCBMI;
 
-    public MethodPopupMenuProvider(Widget methodWidget) {
+    public MethodPopupMenuProvider(MethodWidget methodWidget) {
         this.methodWidget = methodWidget;
         menu= new JPopupMenu ("Class Menu");
         
@@ -58,7 +61,7 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            //((MethodWidget)methodWidget).getMember().getDeclaringClass()
+            methodWidget.getMember().getDeclaringClass().removeMember(methodWidget.getName());
             methodWidget.removeFromParent();
         }
     };

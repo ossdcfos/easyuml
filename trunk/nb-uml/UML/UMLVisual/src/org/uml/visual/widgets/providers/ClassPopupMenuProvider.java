@@ -116,7 +116,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             Constructor c = new Constructor(classWidget.getName());
-            //classWidget.getComponent().addMethod(operationWidget.getMember());
+            classWidget.getComponent().addConstructor(c);
             ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
             classWidget.addConstructorWidget(w);
             classWidget.getScene().validate();
