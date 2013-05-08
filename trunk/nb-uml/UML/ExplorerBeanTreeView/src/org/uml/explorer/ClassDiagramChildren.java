@@ -20,16 +20,6 @@ import org.uml.model.ClassDiagramComponent;
  */
 public class ClassDiagramChildren  extends Children.Keys<Object> {
     
-//    private Category category;
-//    
-//    private String[][] items = new String[][]{
-//        {"0", "Classes", "Klasa"},
-//        {"1", "Interfaces", "Interfejs"},
-//        {"2", "Enumerations", "Enumeracija"},
-//        {"3", "Interfaces", "Interfejs1"},
-//        {"4", "Enumerations", "Enumeracija1"},
-//        {"5", "Classes", "Klasa1"},
-//    };
     
     private ClassDiagram classDiagram;
     
@@ -37,25 +27,12 @@ public class ClassDiagramChildren  extends Children.Keys<Object> {
         this.classDiagram = classDiagram;
     }
     
-//    @Override
-//    protected java.util.List<Node> initCollection() {
-//        ArrayList childrenNodes = new ArrayList( items.length );
-//        for( int i=0; i<items.length; i++ ) {
-//            if( category.getName().equals( items[i][1] ) ) {
-//                ClassDiagram item = new ClassDiagram();
-//                //item.setName(items[i][2]);
-//                childrenNodes.add( new ClassDiagramNode( item ) );
-//            }
-//        }
-//        return childrenNodes;
-//    }
-    
     @Override
     protected Node[] createNodes(Object object) {
         if(object instanceof ClassDiagramComponent){                
-            ClassDiagramComponent classComponent = (ClassDiagramComponent) object;           
-            ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(classComponent); 
-            classComponentNode.setName("Class " + classComponent.getName()); 
+            ClassDiagramComponent classDiagramComponent = (ClassDiagramComponent) object;           
+            ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(classDiagramComponent); 
+            classComponentNode.setName(classDiagramComponent.getName());
             return new Node[] { classComponentNode }; 
         }else { 
             return new Node[] {  };
