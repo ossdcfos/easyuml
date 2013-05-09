@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets;
 
 import java.awt.BasicStroke;
+import java.util.Set;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.anchor.Anchor;
@@ -14,6 +11,9 @@ import org.netbeans.api.visual.anchor.AnchorShapeFactory;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.layout.LayoutFactory;
+import org.netbeans.api.visual.model.ObjectSceneEvent;
+import org.netbeans.api.visual.model.ObjectSceneListener;
+import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
@@ -24,9 +24,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
-import org.uml.model.RelationComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
@@ -57,8 +54,9 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
     private ClassDiagram umlClassDiagram;
+    
     InstanceContent content = new InstanceContent();
-    AbstractLookup lookup = new AbstractLookup(content);
+    AbstractLookup aLookup = new AbstractLookup(content);    
             
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
@@ -75,6 +73,53 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         getActions().addAction(ActionFactory.createZoomAction());
+        
+        
+        addObjectSceneListener(new ObjectSceneListener() {
+
+            @Override
+            public void objectAdded(ObjectSceneEvent event, Object addedObject) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void objectStateChanged(ObjectSceneEvent event, Object changedObject, ObjectState previousState, ObjectState newState) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void selectionChanged(ObjectSceneEvent event, Set<Object> previousSelection, Set<Object> newSelection) {
+                for (Object o : previousSelection) {
+                    content.remove(o);
+                }
+
+                for (Object o : newSelection) {
+                    content.add(o);
+                }
+            }
+
+            @Override
+            public void highlightingChanged(ObjectSceneEvent event, Set<Object> previousHighlighting, Set<Object> newHighlighting) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void hoverChanged(ObjectSceneEvent event, Object previousHoveredObject, Object newHoveredObject) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+            
+        });
+        
     }
 
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
@@ -92,6 +137,11 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public ClassDiagram getUmlClassDiagram() {
         return umlClassDiagram;
     }
+    
+    @Override
+    public Lookup getLookup() {
+        return aLookup;
+    }    
 
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent component) {
@@ -186,6 +236,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         actions.addAction (ActionFactory.createMoveControlPointAction (ActionFactory.createFreeMoveControlPointProvider (), ConnectionWidget.RoutingPolicy.UPDATE_END_POINTS_ONLY));
         //reconnectAction;
         connectionLayer.addChild(widget);
+    
         return widget;
     }
 
@@ -214,10 +265,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
      *
      * @param widget
      */
-    public void addWidget(IconNodeWidget widget) {
-        mainLayer.addChild(widget);
-        validate();
-    }
+//    public void addWidget(IconNodeWidget widget) {
+//        mainLayer.addChild(widget);
+//        validate();
+//    }
 
     public LayerWidget getConnectionLayer() {
         return connectionLayer;
@@ -227,17 +278,4 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return mainLayer;
     }
     
-    @Override
-    public Lookup getLookup() {
-//        if (selection == null) {
-//            return super.getLookup();
-//        }
-//        return new ProxyLookup(
-//                new Lookup[]{
-//                    super.getLookup(),
-//                    Lookups.fixed(getSelectedObjects())
-//                });  
-        return super.getLookup();
-        
-    }
 }

@@ -1,15 +1,14 @@
 package org.uml.visual.widgets;
 
-import com.sun.java.swing.plaf.motif.MotifBorders;
 import java.awt.Dimension;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.border.BorderFactory;
+import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Lookup;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.providers.ClassConnectProvider;
-import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
 
 /**
  *
@@ -29,6 +28,7 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
         this.scene = scene;
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
+        getActions().addAction(scene.createSelectAction());
         setMinimumSize(MINDIMENSION);
         //Delete dugme, za sada ne funkcionise kako bi trebalo
 //       InputMap inputMap = new InputMap ();
@@ -38,6 +38,17 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
 //       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
     }
 
+    @Override
+    public void notifyStateChanged(ObjectState previousState, ObjectState state) {
+        // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
+        super.notifyStateChanged(previousState, state);
+        if (state.isSelected()) {
+            setBorder(BorderFactory.createLineBorder(30));
+        }
+    }
+    
+    
+    
     // this method should be abstract...
     abstract public ClassDiagramComponent getComponent();
 
