@@ -7,6 +7,7 @@ package org.uml.visual;
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.netbeans.spi.palette.PaletteController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.Lookup;
@@ -45,9 +46,9 @@ public final class UMLTopComponent extends TopComponent {
 
     private ClassDiagram umlClassDiagram;
     private ClassDiagramScene classDiagramScene;
+    PaletteController palette;
     private JScrollPane shapePane;
-    InstanceContent content;
-    AbstractLookup aLookup;
+  
 
     public UMLTopComponent() {
         initComponents();
@@ -61,13 +62,27 @@ public final class UMLTopComponent extends TopComponent {
         shapePane.setViewportView(classDiagramScene.createView());
         add(shapePane, BorderLayout.CENTER);
         add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
-        associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
         
-        content = new InstanceContent();
-        content.add(umlClassDiagram);
-        aLookup = new AbstractLookup(content);
+        palette = PaletteSupport.createPalette();
+        
+   
+        
+     //   associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
+        
+
     }
 
+    @Override
+    public Lookup getLookup() {
+        return  new ProxyLookup(
+                      new Lookup[]{
+                        classDiagramScene.getLookup(),
+                        Lookups.singleton(umlClassDiagram),
+                        Lookups.singleton(palette)
+                });
+
+    }    
+    
 //    public UMLTopComponent(ClassDiagram umlClassDiagram) {
 //        this.umlClassDiagram = umlClassDiagram;
 //        initComponents();
@@ -121,10 +136,10 @@ public final class UMLTopComponent extends TopComponent {
         // TODO read your settings according to their version
     }
 
-    @Override
-    public Lookup getLookup() {
-        return new ProxyLookup(new Lookup[]{super.getLookup(),aLookup});
-    }
+//    @Override
+//    public Lookup getLookup() {
+//        return new ProxyLookup(new Lookup[]{super.getLookup(),aLookup});
+//    }
     
     
 }
