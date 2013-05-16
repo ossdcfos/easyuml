@@ -4,10 +4,13 @@
  */
 package org.uml.code;
 
+import java.util.HashMap;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.model.EnumComponent;
 import org.uml.model.Field;
+import org.uml.model.InterfaceComponent;
 
 
 
@@ -15,13 +18,18 @@ import org.uml.model.Field;
  *
  * @author zoran
  */
-public class ClassDiagramCodeGenerator {
+public class ClassDiagramCodeGenerator implements CodeGenerator {
     
     private static ClassDiagramCodeGenerator instance;
+    ClassDiagram classDiagram;
 
+    HashMap <Class, CodeGenerator> generators;
+    
     public ClassDiagramCodeGenerator() {
-    
-    
+        this.generators = new HashMap<Class, CodeGenerator>();
+        generators.put(ClassComponent.class, new ClassCodeGenerator());
+        generators.put(InterfaceComponent.class, new InterfaceCodeGenerator());
+        generators.put(EnumComponent.class, new EnumCodeGenerator());    
     }
     
     public static ClassDiagramCodeGenerator getInstance() {
@@ -31,27 +39,27 @@ public class ClassDiagramCodeGenerator {
         
         return instance;                
     }
+
+    public void setClassDiagram(ClassDiagram classDiagram) {
+        this.classDiagram = classDiagram;
+    }
     
     
-    public String generateCode(ClassDiagram classDiagram) {
+    
+    
+    @Override
+    public String generateCode() {
         StringBuilder sb = new StringBuilder();
         
         for(ClassDiagramComponent comp : classDiagram.getComponents().values() ) {
-        //    String code = generateCode(comp);
-            sb.append(sb);
+            CodeGenerator codeGen = generators.get(comp.getClass());
+            String code =codeGen.generateCode();
+            sb.append(code);
         }
         
         return sb.toString();
     }
     
-    private String generateCode(ClassComponent classComp) {
-        // get class template from somewhere ...
-        for(Field field : classComp.getFields().values()) {
-            
-        }
-        
-        return "";
-    }
     
     
 }
