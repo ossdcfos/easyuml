@@ -20,7 +20,6 @@ import org.uml.model.ClassDiagramComponent;
  */
 public class ClassDiagramChildren  extends Children.Keys<Object> {
     
-    
     private ClassDiagram classDiagram;
     
     public ClassDiagramChildren(ClassDiagram classDiagram) {
@@ -31,9 +30,9 @@ public class ClassDiagramChildren  extends Children.Keys<Object> {
     protected Node[] createNodes(Object object) {
         if(object instanceof ClassDiagramComponent){                
             ClassDiagramComponent classDiagramComponent = (ClassDiagramComponent) object;           
-            ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(classDiagramComponent); 
-            classComponentNode.setName(classDiagramComponent.getName());
-            return new Node[] { classComponentNode }; 
+            ClassDiagramComponentNode classDiagramComponentNode = new ClassDiagramComponentNode(classDiagramComponent); 
+            classDiagramComponentNode.setName(classDiagramComponent.getName());
+            return new Node[] { classDiagramComponentNode }; 
         }else { 
             return new Node[] {  };
         }

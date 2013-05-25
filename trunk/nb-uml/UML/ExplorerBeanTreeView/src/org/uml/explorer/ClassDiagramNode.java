@@ -4,17 +4,12 @@
  */
 package org.uml.explorer;
 
-import javax.swing.Action;
-import org.openide.actions.CopyAction;
-import org.openide.actions.CutAction;
-import org.openide.actions.DeleteAction;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
-import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
@@ -41,7 +36,7 @@ public class ClassDiagramNode  extends AbstractNode {
         //this.setDisplayName(classDiagram.getName());
         this.setDisplayName("UML Class Diagram");
     }
-
+    
 //    @Override
 //    public Image getIcon(int type) {
 //        return ImageUtilities.loadImage("org/neuroph/netbeans/files/dset/iconTs.png");
