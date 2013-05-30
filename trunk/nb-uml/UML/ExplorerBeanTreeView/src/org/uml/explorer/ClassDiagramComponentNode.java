@@ -15,6 +15,8 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.model.EnumComponent;
+import org.uml.model.InterfaceComponent;
 
 /**
  *
@@ -22,7 +24,7 @@ import org.uml.model.ClassDiagramComponent;
  */
 public class ClassDiagramComponentNode extends AbstractNode {
 
-    private ClassDiagramComponent classComponent;
+    private ClassDiagramComponent classDiagramComponent;
 
     public ClassDiagramComponentNode(ClassDiagramComponent component) {
         this(component, new InstanceContent());
@@ -32,7 +34,7 @@ public class ClassDiagramComponentNode extends AbstractNode {
         super(new ClassDiagramComponentChildren(component), new AbstractLookup(content));
         content.add(this);
 
-        this.classComponent = component;
+        this.classDiagramComponent = component;
         this.setDisplayName(component.getName());
     }
 
@@ -70,4 +72,34 @@ public class ClassDiagramComponentNode extends AbstractNode {
         sheet.put(set);
         return sheet;
     }
+    
+    @Override
+    public Image getIcon(int type) {
+        if (classDiagramComponent instanceof ClassComponent) {
+            return ImageUtilities.loadImage("org/uml/explorer/klasaIcon.png");
+        }
+        if (classDiagramComponent instanceof InterfaceComponent) {
+            return ImageUtilities.loadImage("org/uml/explorer/interfejsIcon.png");
+        }
+        if (classDiagramComponent instanceof EnumComponent) {
+            return ImageUtilities.loadImage("org/uml/explorer/enumIcon.png");
+        }
+        return null;
+    }
+
+    @Override
+    public Image getOpenedIcon(int type) {
+        if (classDiagramComponent instanceof ClassComponent) {
+            return ImageUtilities.loadImage("org/uml/explorer/klasaIcon.png");
+        }
+        if (classDiagramComponent instanceof InterfaceComponent) {
+            return ImageUtilities.loadImage("org/uml/explorer/interfejsIcon.png");
+        }
+        if (classDiagramComponent instanceof EnumComponent) {
+            return ImageUtilities.loadImage("org/uml/explorer/enumIcon.png");
+        }
+        return super.getIcon(type);
+    }
+    
+    
 }

@@ -4,12 +4,14 @@
  */
 package org.uml.explorer;
 
+import java.awt.Image;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
+import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
@@ -71,4 +73,16 @@ public class ClassDiagramNode  extends AbstractNode {
         sheet.put(set);
         return sheet;
     }
+
+    @Override
+    public Image getIcon(int type) {
+        return ImageUtilities.loadImage("org/uml/explorer/classDiagramIcon.gif");
+    }
+
+    @Override
+    public Image getOpenedIcon(int type) {
+        return ImageUtilities.loadImage("org/uml/explorer/classDiagramIcon.gif");
+    }
+    
+    
 }
