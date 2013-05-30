@@ -4,21 +4,23 @@
  */
 package org.uml.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
  * @author Uros
  */
-public class ClassDiagram {
+public class ClassDiagram implements Serializable{
 
+    private String name;
     private HashMap<String, ClassDiagramComponent> components; // classes, interfaces or enums
     private HashMap<String, RelationComponent> relations;
 
     int compCounter=1;
 
     public ClassDiagram() {
-
+        name = "UML Class Diagram";
         this.components=new HashMap<String, ClassDiagramComponent>();
         this.relations= new HashMap<String, RelationComponent>();
     }
@@ -69,4 +71,14 @@ public class ClassDiagram {
         components.remove(oldName);
         addComponent(comp);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
 }
