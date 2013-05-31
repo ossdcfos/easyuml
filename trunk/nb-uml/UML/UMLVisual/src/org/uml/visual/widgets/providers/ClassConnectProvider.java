@@ -21,7 +21,6 @@ import org.uml.model.ImplementsRelationComponent;
 import org.uml.model.IsRelationComponent;
 import org.uml.model.RelationComponent;
 import org.uml.model.UseRelationComponent;
-import org.uml.visual.dialogs.ChooseRelationDialog;
 import org.uml.visual.dialogs.ChooseRelationPanel;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ComponentWidgetBase;
