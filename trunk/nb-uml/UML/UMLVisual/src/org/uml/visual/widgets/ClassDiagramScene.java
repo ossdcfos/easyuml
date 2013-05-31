@@ -19,7 +19,6 @@ import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
@@ -215,11 +214,11 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
          LabelWidget cardinalitySource = new LabelWidget(this, useRelation.getCardinalitySource().toString());
          cardinalitySource.setOpaque (true);
          widget.addChild(cardinalitySource);
-         widget.setConstraint (cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, -1.5f);
+         widget.setConstraint (cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, -0.8f);
          LabelWidget cardinalityTarget = new LabelWidget(this, useRelation.getCardinalityTarget().toString());
          cardinalityTarget.setOpaque (true);
          widget.addChild(cardinalityTarget);
-         widget.setConstraint (cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 1.5f);
+         widget.setConstraint (cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 0.8f);
         }
         widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());

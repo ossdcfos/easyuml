@@ -1,10 +1,13 @@
 package org.uml.visual.widgets;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.TwoStateHoverProvider;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Lookup;
 import org.uml.model.ClassDiagramComponent;
@@ -20,7 +23,6 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
     //atribut name
 
 
-
     ClassDiagramScene scene;
 
     public ComponentWidgetBase(ClassDiagramScene scene) {
@@ -29,6 +31,7 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
         getActions().addAction(scene.createSelectAction());
+        getActions().addAction(ActionFactory.createHoverAction (new ChangeCursor ()));
         setMinimumSize(MINDIMENSION);
         //Delete dugme, za sada ne funkcionise kako bi trebalo
 //       InputMap inputMap = new InputMap ();
@@ -43,8 +46,14 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
         super.notifyStateChanged(previousState, state);
         if (state.isSelected()) {
-            setBorder(BorderFactory.createLineBorder(30));
+            setBorder(BorderFactory.createLineBorder(10));
         }
+        if(previousState.isSelected()) {
+          setBorder(BorderFactory.createLineBorder());
+        } 
+       
+          
+        
     }
     
     
@@ -57,4 +66,21 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
     public ClassDiagramScene getClassDiagramScene() {
         return scene;
     }
+    
+    
+    private class ChangeCursor implements TwoStateHoverProvider {
+
+        @Override
+        public void unsetHovering (Widget widget) {
+            widget.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+
+        @Override
+        public void setHovering (Widget widget) {
+            widget.setCursor(new Cursor(Cursor.HAND_CURSOR));
+       }
+
+    }
+    
+    
 }

@@ -12,10 +12,8 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 import org.uml.model.ClassComponent;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
@@ -96,7 +94,7 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
 
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
-        getActions().addAction(ActionFactory.createResizeAction());
+        //getActions().addAction(ActionFactory.createResizeAction());
         //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
     }
 

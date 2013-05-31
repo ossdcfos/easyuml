@@ -16,8 +16,12 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
+import org.openide.windows.WindowManager;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.model.RelationComponent;
+import org.uml.visual.dialogs.AddRelationDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.Nameable;
 import org.uml.visual.widgets.ComponentWidgetBase;
@@ -55,7 +59,24 @@ public class SceneAcceptProvider implements AcceptProvider {
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
         if (t.getTransferDataFlavors()[2].getRepresentationClass().getSimpleName().contains("RelationComponent")) {
-            return;
+            try {
+                AddRelationDialog dialog = new AddRelationDialog(null, true);
+                Class<? extends RelationComponent> droppedClass = (Class<?extends RelationComponent>) t.getTransferDataFlavors()[2].getRepresentationClass();
+                for (int i=0; i<dialog.getRelationComponents().getItemCount();i++) {
+                    if(droppedClass.newInstance().toString().equals(dialog.getRelationComponents().getItemAt(i))) {
+                        dialog.getRelationComponents().setSelectedItem(dialog.getRelationComponents().getItemAt(i));
+                    }
+                }
+                //dialog.setRelationSelectedItem( droppedClass.newInstance());
+                dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+                dialog.setTitle("Add relation");
+                dialog.setVisible(true);
+                return;
+            } catch (InstantiationException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
         Class<? extends ClassDiagramComponent> droppedClass = (Class<? extends ClassDiagramComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
         
@@ -91,6 +112,7 @@ public class SceneAcceptProvider implements AcceptProvider {
     public boolean canAccept(Class droppedClass) {
 
         return droppedClass.equals(ClassDiagramComponent.class)
-                || droppedClass.getSuperclass().equals(ClassDiagramComponent.class);
+                || droppedClass.getSuperclass().equals(ClassDiagramComponent.class)||
+                droppedClass.getSuperclass().equals(RelationComponent.class);
     }
 }
