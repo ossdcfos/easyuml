@@ -43,7 +43,7 @@ public class UMLProject implements Project {
     private final ProjectState state;
     private Lookup lkp;
 
-    public static final String Class_Diagrams_DIR = "Class Diagrams";
+    public static final String Class_Diagrams_DIR = "ClassDiagrams";
 
     UMLProject(FileObject dir, ProjectState state) {
         this.projectDir = dir;
@@ -148,7 +148,9 @@ public class UMLProject implements Project {
 
         @Override
         public Node findPath(Node root, Object target) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            // TODO: implement this!!!
+           // throw new UnsupportedOperationException("Not supported yet.");
+            return Node.EMPTY;
         }
 
         private final class ProjectNode extends FilterNode {
