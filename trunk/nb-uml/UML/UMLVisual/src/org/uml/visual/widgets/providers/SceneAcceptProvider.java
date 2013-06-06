@@ -23,7 +23,7 @@ import org.uml.model.ClassDiagramComponent;
 import org.uml.model.RelationComponent;
 import org.uml.visual.dialogs.AddRelationDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.Nameable;
+import org.uml.visual.widgets.NameableWidget;
 import org.uml.visual.widgets.ComponentWidgetBase;
 import org.uml.visual.widgets.actions.NameEditorAction;
 
@@ -86,7 +86,7 @@ public class SceneAcceptProvider implements AcceptProvider {
             
             classDiagramScene.validate();
             
-            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction((Nameable)w));
+            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction((NameableWidget)w));
             ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase)w).getNameLabel());
             classDiagramScene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
             

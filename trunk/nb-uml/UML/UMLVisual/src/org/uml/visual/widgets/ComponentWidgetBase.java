@@ -2,6 +2,7 @@ package org.uml.visual.widgets;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.TwoStateHoverProvider;
 import org.netbeans.api.visual.border.BorderFactory;
@@ -17,12 +18,12 @@ import org.uml.visual.widgets.providers.ClassConnectProvider;
  *
  * @author "NUGS"
  */
-abstract public class ComponentWidgetBase extends IconNodeWidget implements Nameable, Lookup.Provider {
+abstract public class ComponentWidgetBase extends IconNodeWidget implements NameableWidget, Lookup.Provider {
 
     private static final Dimension MINDIMENSION = new Dimension(100, 0);
     //atribut name
 
-
+    protected LabelWidget nameWidget;
     ClassDiagramScene scene;
 
     public ComponentWidgetBase(ClassDiagramScene scene) {
@@ -33,6 +34,11 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createHoverAction (new ChangeCursor ()));
         setMinimumSize(MINDIMENSION);
+        
+        nameWidget = new LabelWidget(scene);
+        nameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
+        nameWidget.setAlignment(LabelWidget.Alignment.CENTER);    
+        
         //Delete dugme, za sada ne funkcionise kako bi trebalo
 //       InputMap inputMap = new InputMap ();
 //       inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        
@@ -46,11 +52,14 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
         super.notifyStateChanged(previousState, state);
         if (state.isSelected()) {
-            setBorder(BorderFactory.createLineBorder(10));
+            //setBorder(BorderFactory.createLineBorder(10));
+        } else {
+            setBorder(BorderFactory.createLineBorder());
         }
+        
         if(previousState.isSelected()) {
           setBorder(BorderFactory.createLineBorder());
-        } 
+        }                          
        
           
         
