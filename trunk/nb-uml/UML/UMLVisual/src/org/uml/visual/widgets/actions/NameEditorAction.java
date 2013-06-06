@@ -7,7 +7,7 @@ package org.uml.visual.widgets.actions;
 import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.visual.widgets.Nameable;
+import org.uml.visual.widgets.NameableWidget;
 
 /**
  *
@@ -15,9 +15,9 @@ import org.uml.visual.widgets.Nameable;
  */
 public class NameEditorAction implements TextFieldInplaceEditor {
 
-    Nameable nameable;
+    NameableWidget nameable;
 
-    public NameEditorAction(Nameable umlWidget) {
+    public NameEditorAction(NameableWidget umlWidget) {
         this.nameable = umlWidget;
     }
     private String oldName;

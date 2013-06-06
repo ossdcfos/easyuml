@@ -22,7 +22,7 @@ import org.uml.visual.widgets.actions.NameEditorAction;
  *
  * @author "NUGS"
  */
-public class EnumWidget extends ComponentWidgetBase implements Nameable{
+public class EnumWidget extends ComponentWidgetBase implements NameableWidget{
 
     ClassDiagramScene scene;
     EnumComponent enumComponent;

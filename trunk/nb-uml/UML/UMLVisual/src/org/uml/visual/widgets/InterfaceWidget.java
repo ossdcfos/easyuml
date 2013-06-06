@@ -26,7 +26,7 @@ import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
  *
  * @author hrza
  */
-public class InterfaceWidget extends ComponentWidgetBase implements Nameable{
+public class InterfaceWidget extends ComponentWidgetBase implements NameableWidget{
 
     InterfaceComponent interfaceComponent;
     

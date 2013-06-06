@@ -73,27 +73,27 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         getActions().addAction(ActionFactory.createZoomAction());
         
-        
         addObjectSceneListener(new ObjectSceneListener() {
 
             @Override
             public void objectAdded(ObjectSceneEvent event, Object addedObject) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public void objectStateChanged(ObjectSceneEvent event, Object changedObject, ObjectState previousState, ObjectState newState) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public void selectionChanged(ObjectSceneEvent event, Set<Object> previousSelection, Set<Object> newSelection) {
-                for (Object o : previousSelection) {
+                for (Object o : previousSelection) {                   
+                    
                     content.remove(o);
                 }
 
@@ -104,17 +104,17 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
             @Override
             public void highlightingChanged(ObjectSceneEvent event, Set<Object> previousHighlighting, Set<Object> newHighlighting) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public void hoverChanged(ObjectSceneEvent event, Object previousHoveredObject, Object newHoveredObject) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
             
         });

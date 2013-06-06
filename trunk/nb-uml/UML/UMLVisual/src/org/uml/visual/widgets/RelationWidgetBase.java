@@ -12,7 +12,7 @@ import org.uml.model.RelationComponent;
  *
  * @author Uros
  */
-abstract public class RelationWidgetBase extends IconNodeWidget implements Nameable{
+abstract public class RelationWidgetBase extends IconNodeWidget implements NameableWidget{
 
     public RelationWidgetBase(ClassDiagramScene scene) {
         super(scene);

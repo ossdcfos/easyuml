@@ -26,7 +26,7 @@ import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
  *
  * @author NUGS
  */
-public class ClassWidget extends ComponentWidgetBase implements Nameable {
+public class ClassWidget extends ComponentWidgetBase implements NameableWidget {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
@@ -35,7 +35,7 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
             BorderFactory.createResizeBorder(4, Color.black, true);
     private static final Border DEFAULT_BORDER =
             BorderFactory.createLineBorder();
-    private LabelWidget classNameWidget;
+    
     private Widget fieldsWidget;
     private Widget methodsWidget;
     //private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
@@ -62,13 +62,12 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
 
         //ImageWidget classImage= new ImageWidget(scene);
         //classImage.setImage(this.classComponent.getImage());
-        classNameWidget = new LabelWidget(scene);
-        classNameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-        classNameWidget.setAlignment(LabelWidget.Alignment.CENTER);
-        classWidget.addChild(classNameWidget);
+        
+
+        classWidget.addChild(nameWidget);
         addChild(classWidget);
 
-        classNameWidget.getActions().addAction(nameEditorAction);
+        nameWidget.getActions().addAction(nameEditorAction);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
@@ -90,7 +89,7 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
         methodsWidget.addChild(operationName);
         addChild(methodsWidget);
 
-        this.classNameWidget.setLabel(classComponent.getName());
+        this.nameWidget.setLabel(classComponent.getName());
 
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
@@ -100,13 +99,13 @@ public class ClassWidget extends ComponentWidgetBase implements Nameable {
 
     @Override
     public String getName() {
-        return classNameWidget.getLabel();
+        return nameWidget.getLabel();
     }
 public String getClassName() {
-        return classNameWidget.getLabel();
+        return nameWidget.getLabel();
     }
     public void setClassName(String className) {
-        this.classNameWidget.setLabel(className);
+        this.nameWidget.setLabel(className);
     }
 
     public Widget createFieldWidget(String fieldName) {
@@ -173,7 +172,7 @@ public String getClassName() {
 
     @Override
     public String toString() {
-        return classNameWidget.getLabel();
+        return nameWidget.getLabel();
     }
 
 //     @Override
@@ -188,7 +187,7 @@ public String getClassName() {
 
     @Override
     public LabelWidget getNameLabel() {
-        return classNameWidget;
+        return nameWidget;
     }
 
     @Override
@@ -199,7 +198,7 @@ public String getClassName() {
 
         String oldName = classComponent.getName();
         if (!classComponent.getParentDiagram().nameExists(newName)) {
-            this.classNameWidget.setLabel(newName);
+            this.nameWidget.setLabel(newName);
             classComponent.setName(newName);
             classComponent.getParentDiagram().componentNameChanged(classComponent, oldName);
         }

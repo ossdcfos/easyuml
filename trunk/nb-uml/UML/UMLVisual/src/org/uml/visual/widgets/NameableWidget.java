@@ -8,7 +8,7 @@ package org.uml.visual.widgets;
  *
  * @author Jelena
  */
-public interface Nameable {
+public interface NameableWidget {
     public void setName(String newName);
     public String getName();
 }
