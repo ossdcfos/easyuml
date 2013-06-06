@@ -207,7 +207,7 @@ public class ClassDiagramSample1PanelVisual extends JPanel implements DocumentLi
 
         String projectName = (String) settings.getProperty("name");
         if (projectName == null) {
-            projectName = "ClassDiagramSample1";
+            projectName = "UMLDiagrams1";
         }
         this.projectNameTextField.setText(projectName);
         this.projectNameTextField.selectAll();
