@@ -24,8 +24,7 @@ public final class SaveCookieAction implements ActionListener {
         try {
             FileObject fo = cdg.getPrimaryFile();
             String putanja = fo.getPath();
-            System.out.println(putanja);
-            fileOut = new FileOutputStream("dijagram.cdg");
+            fileOut = new FileOutputStream(putanja);
             out = new ObjectOutputStream(fileOut);
             out.writeObject(cdg.getClassDiagram());
             out.close();
@@ -35,10 +34,6 @@ public final class SaveCookieAction implements ActionListener {
         } finally {
             try {
                 fileOut.close();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            try {
                 out.close();
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
