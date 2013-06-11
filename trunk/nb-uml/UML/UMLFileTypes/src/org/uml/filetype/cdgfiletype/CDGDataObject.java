@@ -5,6 +5,7 @@
 package org.uml.filetype.cdgfiletype;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.awt.ActionID;
@@ -12,16 +13,29 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
+import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.nodes.Children;
+import org.openide.nodes.CookieSet;
+import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
+import org.uml.model.ClassDiagram;
 
+
+ @MIMEResolver.Registration(
+   displayName="#CLASS_DIAGRAM_FILE",
+   resource="ClassDiagramResolver.xml"
+ )
 @Messages({
-    "LBL_CDG_LOADER=Files of CDG"
+    "LBL_CDG_LOADER=Files of CDG",
+    "CLASS_DIAGRAM_FILE=Class Diagram File"
 })
 @MIMEResolver.ExtensionRegistration(
     displayName = "#LBL_CDG_LOADER",
@@ -86,14 +100,72 @@ position = 300)
 })
 public class CDGDataObject extends MultiDataObject {
 
+    ClassDiagramOpenSupport openAction;
+    ClassDiagram classDiagram;
+    FileObject cdFileObject;
+    CookieSet cookies;
+    
     public CDGDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         registerEditor("text/x-cdg", true);
+        cdFileObject = pf;
+
+        classDiagram = readFile(pf);
+        
+        if (classDiagram == null) {
+            classDiagram = new ClassDiagram();
+        }
+
+        cookies = getCookieSet();
+        cookies.assign(ClassDiagram.class, classDiagram); // put it in lookup
+        openAction = new ClassDiagramOpenSupport(getPrimaryEntry());
+
+        cookies.add((Node.Cookie) openAction);
+        cookies.add(this);
     }
 
     @Override
+    protected Node createNodeDelegate() {
+        // can use DataNode here as well
+        DataNode node = new DataNode(this, Children.LEAF, getLookup());
+       // DataNode node = new DataNode(this, Children.LEAF, cookies.getLookup());
+        //  node.setShortDescription("Name is " + getLookup().lookup(NeuralNetwork.class).toString());
+        node.setDisplayName(cdFileObject.getName());
+
+        return node;
+    }
+
+    public ClassDiagram getClassDiagram() {
+        return classDiagram;
+    }
+    
+    @Override
     protected int associateLookup() {
         return 1;
+    }
+    
+    private ClassDiagram readFile(FileObject fileObject) {
+        ObjectInputStream stream = null;
+        try {
+            stream = new ObjectInputStream(fileObject.getInputStream());
+            try {
+                ClassDiagram nn = (ClassDiagram) stream.readObject();
+                stream.close();
+
+                return nn;
+            } catch (ClassNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+                stream.close();
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return null;
+    }
+    
+    @Override
+    public Lookup getLookup() {
+        return getCookieSet().getLookup();
     }
 
     @MultiViewElement.Registration(
