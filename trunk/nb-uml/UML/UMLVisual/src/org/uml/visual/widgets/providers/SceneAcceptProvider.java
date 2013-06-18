@@ -63,7 +63,7 @@ public class SceneAcceptProvider implements AcceptProvider {
                 AddRelationDialog dialog = new AddRelationDialog(null,classDiagramScene, true);
                 Class<? extends RelationComponent> droppedClass = (Class<?extends RelationComponent>) t.getTransferDataFlavors()[2].getRepresentationClass();
                 for (int i=0; i<dialog.getRelationComponents().getItemCount();i++) {
-                    if(droppedClass.newInstance().toString().equals(dialog.getRelationComponents().getItemAt(i))) {
+                    if(droppedClass.newInstance().getClass().getSimpleName().equals(dialog.getRelationComponents().getItemAt(i).getClass().getSimpleName())) {
                         dialog.getRelationComponents().setSelectedIndex(i);
                     }
                 }
