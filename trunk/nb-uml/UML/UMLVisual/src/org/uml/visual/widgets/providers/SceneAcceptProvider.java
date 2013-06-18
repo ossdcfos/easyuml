@@ -60,11 +60,11 @@ public class SceneAcceptProvider implements AcceptProvider {
     public void accept(Widget widget, Point point, Transferable t) {
         if (t.getTransferDataFlavors()[2].getRepresentationClass().getSimpleName().contains("RelationComponent")) {
             try {
-                AddRelationDialog dialog = new AddRelationDialog(null, true);
+                AddRelationDialog dialog = new AddRelationDialog(null,classDiagramScene, true);
                 Class<? extends RelationComponent> droppedClass = (Class<?extends RelationComponent>) t.getTransferDataFlavors()[2].getRepresentationClass();
                 for (int i=0; i<dialog.getRelationComponents().getItemCount();i++) {
                     if(droppedClass.newInstance().toString().equals(dialog.getRelationComponents().getItemAt(i))) {
-                        dialog.getRelationComponents().setSelectedItem(dialog.getRelationComponents().getItemAt(i));
+                        dialog.getRelationComponents().setSelectedIndex(i);
                     }
                 }
                 //dialog.setRelationSelectedItem( droppedClass.newInstance());
@@ -72,11 +72,9 @@ public class SceneAcceptProvider implements AcceptProvider {
                 dialog.setTitle("Add relation");
                 dialog.setVisible(true);
                 return;
-            } catch (InstantiationException ex) {
+            } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            } 
         }
         Class<? extends ClassDiagramComponent> droppedClass = (Class<? extends ClassDiagramComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
         

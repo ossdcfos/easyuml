@@ -102,16 +102,18 @@ public class ClassConnectProvider implements ConnectProvider{
                     }
                     if (panel.getRelationComponents().getSelectedItem() instanceof IsRelationComponent) {
                         panel.getCardinalityTargetComboBox().removeAllItems();
-                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.One2One);
-                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2One);
+                        //panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.One2One);
+                        //panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2One);
                         panel.getCardinalitySourceComboBox().setEnabled(false);
-                        panel.getCardinalityTargetComboBox().setEnabled(true);
+                        panel.getCardinalityTargetComboBox().setEnabled(false);
                     }
                     else if (panel.getRelationComponents().getSelectedItem() instanceof HasRelationComponent) {
                         panel.getNameTextField().setEnabled(true);
                         panel.getCardinalityTargetComboBox().removeAllItems();
                         panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.One2Many);
-                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2Many);                 
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2Many);
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.One2One);
+                        panel.getCardinalityTargetComboBox().addItem(CardinalityEnum.Zero2One);
                         panel.getCardinalitySourceComboBox().setEnabled(false);
                         panel.getCardinalityTargetComboBox().setEnabled(true); 
                     }
@@ -164,6 +166,11 @@ public class ClassConnectProvider implements ConnectProvider{
                 HasRelationComponent hasRelation = (HasRelationComponent) relation;
                 hasRelation.setCardinalitySource((CardinalityEnum)panel.getCardinalitySourceComboBox().getSelectedItem());
                 hasRelation.setCardinalityTarget((CardinalityEnum)panel.getCardinalityTargetComboBox().getSelectedItem());
+            }
+            if(relation instanceof UseRelationComponent) {
+                UseRelationComponent useRelation = (UseRelationComponent) relation;
+                useRelation.setCardinalitySource((CardinalityEnum)panel.getCardinalitySourceComboBox().getSelectedItem());
+                useRelation.setCardinalityTarget((CardinalityEnum)panel.getCardinalitySourceComboBox().getSelectedItem());
             }
          
                      relation.setSource(source.getComponent());
