@@ -19,7 +19,7 @@ public class PaletteItemChildren extends Index.ArrayChildren {
         {"Is", "Relations", "org/uml/visual/icons/is.gif", "org.uml.model.IsRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"},
         {"Has", "Relations", "org/uml/visual/icons/has.gif", "org.uml.model.HasRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"},
         {"Use", "Relations", "org/uml/visual/icons/use.gif", "org.uml.model.UseRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"},
-        {"Implements", "Relations", "org/uml/visual/icons/use.gif", "org.uml.model.ImplementsRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"}, 
+        {"Implements", "Relations", "org/uml/visual/icons/implements.gif", "org.uml.model.ImplementsRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"}, 
     //        {"Notes", "Other", "org/uml/visual/icons/notes.gif", "org.uml.model.UmlClassElement"}, 
     //        {"Method","Shapes","org/uml/visual/palette/methodPublic.gif","org.uml.model.Method"},
     //        {"Variable","Shapes","org/uml/visual/palette/variablePublic.gif","org.uml.model.Field"},
