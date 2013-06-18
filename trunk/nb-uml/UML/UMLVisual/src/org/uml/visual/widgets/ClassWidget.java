@@ -17,10 +17,8 @@ import org.openide.util.lookup.Lookups;
 import org.uml.model.ClassComponent;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
-import org.uml.visual.widgets.providers.ClassSelectProvider;
 import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
-import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
-import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
+
 
 /**
  *
