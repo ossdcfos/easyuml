@@ -61,9 +61,13 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         
         modifiersSubmenu= new JMenu("Modifiers");
         modifiersSubmenu.add(staticJCBMI= new JCheckBoxMenuItem("static"));
+        staticJCBMI.addActionListener(staticJCBMIListener);
         modifiersSubmenu.add(abstractJCBMI=new JCheckBoxMenuItem("abstract"));
+        abstractJCBMI.addActionListener(abstractJCBMIListener);
         modifiersSubmenu.add(finalJCBMI=new JCheckBoxMenuItem("final"));
+        finalJCBMI.addActionListener(finalJCBMIListener);
         modifiersSubmenu.add(synchronizedJCBMI=new JCheckBoxMenuItem("synchronized"));
+        synchronizedJCBMI.addActionListener(synchronizedJCBMIListener);
         menu.add(modifiersSubmenu);
         
         menu.addSeparator();
@@ -104,9 +108,68 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         }
     };
     
+    ActionListener staticJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Field field = (Field)fieldWidget.getMember();
+            if (field.isIsStatic()==false) {
+                field.setIsStatic(true);
+            }
+            else {
+                field.setIsStatic(false);
+            }
+        }
+    };
+    
+    ActionListener abstractJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Field field = (Field)fieldWidget.getMember();
+            if(field.isIsAbstract()==false) {
+                field.setIsAbstract(true);
+            }
+            else {
+                field.setIsAbstract(false);
+            }
+        }
+    };
+    
+    ActionListener finalJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Field field = (Field)fieldWidget.getMember();
+            if(field.isIsFinal()==false) {
+                field.setIsFinal(true);
+            }
+            else {
+                field.setIsFinal(false);
+            }
+        }
+        
+    };
+    
+    ActionListener synchronizedJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Field field = (Field)fieldWidget.getMember();
+            if(field.isIsSynchronised()==false) {
+                field.setIsSynchronised(true);
+            }
+            else {
+                field.setIsSynchronised(false);
+            }
+        }
+        
+    };
+    
+    
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;
     }
-    
-}
+
+    }
