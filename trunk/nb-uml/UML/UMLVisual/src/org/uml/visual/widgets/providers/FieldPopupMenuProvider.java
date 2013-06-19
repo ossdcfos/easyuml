@@ -7,10 +7,12 @@ package org.uml.visual.widgets.providers;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.Field;
@@ -28,10 +30,11 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
     private JMenuItem deleteField;
     private JMenu visibilitySubmenu;
     private JMenu modifiersSubmenu;
-    private JMenuItem privateItem;
-    private JMenuItem publicItem;
-    private JMenuItem protectedItem;
-    private JMenuItem packageItem;
+    private ButtonGroup visibilityGroup;
+    private JRadioButton privateItem;
+    private JRadioButton publicItem;
+    private JRadioButton protectedItem;
+    private JRadioButton packageItem;
     private JCheckBoxMenuItem staticJCBMI;
     private JCheckBoxMenuItem abstractJCBMI;
     private JCheckBoxMenuItem finalJCBMI;
@@ -41,14 +44,19 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         this.fieldWidget = fieldWidget;
         menu = new JPopupMenu("Class Menu");
         
+        visibilityGroup = new ButtonGroup();       
         visibilitySubmenu = new JMenu("Visibility");
-        visibilitySubmenu.add(publicItem = new JMenuItem("public"));
+        visibilitySubmenu.add(publicItem = new JRadioButton("public"));
         publicItem.addActionListener(publicItemListener);
-        visibilitySubmenu.add(privateItem =new JMenuItem("private"));
+        visibilitySubmenu.add(privateItem =new JRadioButton("private"));
         privateItem.addActionListener(privateItemListener);
-        visibilitySubmenu.add(protectedItem =new JMenuItem("protected"));
+        visibilitySubmenu.add(protectedItem =new JRadioButton("protected"));
         protectedItem.addActionListener(protectedItemListener);
-        visibilitySubmenu.add(packageItem =new JMenuItem("package"));
+        visibilitySubmenu.add(packageItem =new JRadioButton("package"));
+        visibilityGroup.add(publicItem);
+        visibilityGroup.add(privateItem);
+        visibilityGroup.add(protectedItem);
+        visibilityGroup.add(packageItem);
         menu.add(visibilitySubmenu);
         
         modifiersSubmenu= new JMenu("Modifiers");
@@ -68,6 +76,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             ((Field)fieldWidget.getMember()).setVisibility(Visibility.PUBLIC);
+                     
         }
     };
     
