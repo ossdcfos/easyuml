@@ -7,6 +7,7 @@ import java.util.HashMap;
  * @author zoran
  */
 public class ClassDiagramComponent {
+    
             private String name;     // class, interface or enum name              
             protected HashMap<String,Member> members; // index of all fields, methods and constructors            
             protected ClassDiagram parentDiagram;            
@@ -63,6 +64,7 @@ public class ClassDiagramComponent {
     public HashMap<String, Member> getMembers() {
         return members;
     }
-    
+
     
 }
+

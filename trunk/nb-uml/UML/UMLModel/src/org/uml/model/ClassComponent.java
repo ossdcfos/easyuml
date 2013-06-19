@@ -11,7 +11,7 @@ public class ClassComponent extends ClassDiagramComponent {
         private HashMap<String,Constructor> constructors;
         private HashMap<String,Field> fields;
         private HashMap<String,Method> methods;
-
+        private Visibility visibility;
  
     public ClassComponent() {
         this.setName("UntitledClass");
@@ -80,5 +80,13 @@ public class ClassComponent extends ClassDiagramComponent {
     
     public void removeConstructor(String name) {
         constructors.remove(name);
+    }
+
+    public Visibility getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
 }
