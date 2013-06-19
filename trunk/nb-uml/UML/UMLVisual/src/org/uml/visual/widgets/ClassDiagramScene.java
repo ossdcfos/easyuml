@@ -29,6 +29,7 @@ import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.HasRelationComponent;
 import org.uml.model.InterfaceComponent;
+import org.uml.model.PackageComponent;
 import org.uml.model.RelationComponent;
 import org.uml.model.UseRelationComponent;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
@@ -153,7 +154,11 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
           widget = new InterfaceWidget(this, (InterfaceComponent) component);
         } else if(component instanceof EnumComponent){
           widget= new EnumWidget(this, (EnumComponent) component);
-        } else {
+        }
+        else if (component instanceof PackageComponent) {
+          widget = new PackageWidget(this, (PackageComponent)component);
+        }
+        else {
             throw new RuntimeException("Unknown component!");
         }
         // add block for RelationComponent too!
