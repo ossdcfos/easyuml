@@ -46,6 +46,7 @@ public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, 
         
     }
 
+    @Override
     public void save() throws IOException {
         SaveCookieAction saveAction = new SaveCookieAction(this);
         saveAction.save(cdDataObject);

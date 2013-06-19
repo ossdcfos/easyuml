@@ -23,7 +23,6 @@ import org.openide.nodes.CookieSet;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 import org.uml.model.ClassDiagram;
@@ -105,12 +104,12 @@ public class CDGDataObject extends MultiDataObject {
     FileObject cdFileObject;
     CookieSet cookies;
     
-    public CDGDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
-        super(pf, loader);
+    public CDGDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException, IOException {
+        super(fo, loader);
         registerEditor("text/x-cdg", true);
-        cdFileObject = pf;
+        cdFileObject = fo;
 
-        classDiagram = readFile(pf);
+        classDiagram = readFile(fo);
         
         if (classDiagram == null) {
             classDiagram = new ClassDiagram();
