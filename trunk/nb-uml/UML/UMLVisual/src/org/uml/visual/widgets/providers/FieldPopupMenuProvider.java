@@ -147,8 +147,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
             else {
                 field.setIsFinal(false);
             }
-        }
-        
+        }       
     };
     
     ActionListener synchronizedJCBMIListener = new ActionListener() {
@@ -163,7 +162,6 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
                 field.setIsSynchronised(false);
             }
         }
-        
     };
     
     
