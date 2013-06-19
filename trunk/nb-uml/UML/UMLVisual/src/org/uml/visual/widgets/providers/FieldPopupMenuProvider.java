@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.Field;
+import org.uml.model.Visibility;
 import org.uml.visual.widgets.FieldWidget;
 
 /**
@@ -40,9 +42,12 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         menu = new JPopupMenu("Class Menu");
         
         visibilitySubmenu = new JMenu("Visibility");
-        visibilitySubmenu.add(privateItem = new JMenuItem("public"));
-        visibilitySubmenu.add(publicItem =new JMenuItem("private"));
+        visibilitySubmenu.add(publicItem = new JMenuItem("public"));
+        publicItem.addActionListener(publicItemListener);
+        visibilitySubmenu.add(privateItem =new JMenuItem("private"));
+        privateItem.addActionListener(privateItemListener);
         visibilitySubmenu.add(protectedItem =new JMenuItem("protected"));
+        protectedItem.addActionListener(protectedItemListener);
         visibilitySubmenu.add(packageItem =new JMenuItem("package"));
         menu.add(visibilitySubmenu);
         
@@ -58,6 +63,29 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         menu.add(deleteField);
     }
     
+    ActionListener publicItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ((Field)fieldWidget.getMember()).setVisibility(Visibility.PUBLIC);
+        }
+    };
+    
+    ActionListener privateItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ((Field)fieldWidget.getMember()).setVisibility(Visibility.PRIVATE);
+        }
+    };
+    
+    ActionListener protectedItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ((Field)fieldWidget.getMember()).setVisibility(Visibility.PROTECTED);
+        }
+    };
     
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
