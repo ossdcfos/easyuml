@@ -1,7 +1,6 @@
 package org.uml.visual.widgets;
 
 import java.awt.Color;
-import java.awt.Font;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
