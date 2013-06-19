@@ -9,8 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.Map;
+import javax.swing.ButtonGroup;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -40,12 +43,34 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addField;
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
+    private JMenu visibilitySubmenu;
+    private ButtonGroup visibilityGroup;
+    private JRadioButton privateItem;
+    private JRadioButton publicItem;
+    private JRadioButton protectedItem;
+    private JRadioButton packageItem;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
         this.classWidget = classWidget;
         menu = new JPopupMenu("Class Menu");
+        
+        
+        visibilityGroup = new ButtonGroup();       
+        visibilitySubmenu = new JMenu("Visibility");
+        visibilitySubmenu.add(publicItem = new JRadioButton("public"));
+        publicItem.addActionListener(publicItemListener);
+        visibilitySubmenu.add(privateItem =new JRadioButton("private"));
+        privateItem.addActionListener(privateItemListener);
+        visibilitySubmenu.add(protectedItem =new JRadioButton("protected"));
+        protectedItem.addActionListener(protectedItemListener);
+        visibilitySubmenu.add(packageItem =new JRadioButton("package"));
+        visibilityGroup.add(publicItem);
+        visibilityGroup.add(privateItem);
+        visibilityGroup.add(protectedItem);
+        visibilityGroup.add(packageItem);
+        menu.add(visibilitySubmenu);
 
         (addConstructor = new JMenuItem("Add Constructor")).addActionListener(addConstructorListener);
         menu.add(addConstructor);        
@@ -122,6 +147,32 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.getScene().validate();
         }
     };
+    
+    ActionListener publicItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            classWidget.getComponent().setVisibility(Visibility.PUBLIC);
+                     
+        }
+    };
+    
+    ActionListener privateItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            classWidget.getComponent().setVisibility(Visibility.PRIVATE);
+        }
+    };
+    
+    ActionListener protectedItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            classWidget.getComponent().setVisibility(Visibility.PROTECTED);
+        }
+    };
+    
 
     // TODO Dodati jos listenera za ClassWidgetMeni
     @Override
