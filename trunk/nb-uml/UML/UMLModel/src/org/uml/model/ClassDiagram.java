@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.model;
 
 import java.io.Serializable;
@@ -11,7 +7,7 @@ import java.util.HashMap;
  *
  * @author Uros
  */
-public class ClassDiagram implements Serializable{
+public class ClassDiagram implements Serializable {
 
     private String name;
     private HashMap<String, ClassDiagramComponent> components; // classes, interfaces or enums
