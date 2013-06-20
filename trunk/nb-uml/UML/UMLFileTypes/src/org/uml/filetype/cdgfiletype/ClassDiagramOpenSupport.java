@@ -12,6 +12,8 @@ import org.openide.loaders.MultiDataObject.Entry;
 import org.openide.loaders.OpenSupport;
 import org.openide.windows.CloneableTopComponent;
 import org.openide.windows.WindowManager;
+import org.uml.explorer.ExplorerTopComponent;
+import org.uml.filetype.ViewManager;
 import org.uml.model.ClassDiagram;
 
 /**
@@ -41,9 +43,8 @@ public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, 
         
         ClassDiagram cd = cdDataObject.getClassDiagram();
 
-        //ViewManager.getInstance().openNeuralNetworkWindow(cd);
+        ViewManager.getInstance().openUMLDiagramWindow(cd);
         WindowManager.getDefault().findTopComponent("ExplorerTopComponent").open();
-        
     }
 
     @Override

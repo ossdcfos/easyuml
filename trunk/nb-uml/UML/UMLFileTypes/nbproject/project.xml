@@ -88,6 +88,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.uml.explorer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.uml.model</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -103,8 +111,19 @@
                         <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.uml.visual</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.uml.filetype</package>
+                <package>org.uml.filetype.cdgfiletype</package>
+            </public-packages>
         </data>
     </configuration>
 </project>
