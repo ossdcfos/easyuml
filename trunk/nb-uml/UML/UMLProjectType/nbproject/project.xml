@@ -115,7 +115,12 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.uml.project</package>
+                <package>org.uml.project.panels</package>
+                <package>org.uml.projecttype.nodes</package>
+                <package>samples.classdiagrams.classdiagram1</package>
+            </public-packages>
         </data>
     </configuration>
 </project>
