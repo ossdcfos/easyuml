@@ -7,6 +7,7 @@ package org.uml.visual;
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.spi.palette.PaletteController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -18,6 +19,7 @@ import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.uml.model.ClassDiagram;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 
@@ -48,7 +50,6 @@ public final class UMLTopComponent extends TopComponent {
     private ClassDiagramScene classDiagramScene;
     PaletteController palette;
     private JScrollPane shapePane;
-  
 
     public UMLTopComponent() {
         initComponents();
@@ -62,27 +63,44 @@ public final class UMLTopComponent extends TopComponent {
         shapePane.setViewportView(classDiagramScene.createView());
         add(shapePane, BorderLayout.CENTER);
         add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
-        
-        palette = PaletteSupport.createPalette();
-        
-   
-        
-     //   associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
-        
 
+        palette = PaletteSupport.createPalette();
+
+
+
+        //   associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
+
+
+    }
+
+    public UMLTopComponent(ClassDiagram cd) {
+        initComponents();
+        setName(cd.getName());
+        setToolTipText(Bundle.HINT_UMLTopComponent());
+        classDiagramScene = new ClassDiagramScene(umlClassDiagram = new ClassDiagram());
+        shapePane = new JScrollPane();
+        shapePane.setViewportView(classDiagramScene.createView());
+        add(shapePane, BorderLayout.CENTER);
+        add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
+
+        palette = PaletteSupport.createPalette();
+        for (ClassDiagramComponent comp : cd.getComponents().values()) {
+            classDiagramScene.addNode(comp);
+        }
+        classDiagramScene.validate();
     }
 
     @Override
     public Lookup getLookup() {
-        return  new ProxyLookup(
-                      new Lookup[]{
-                        classDiagramScene.getLookup(),
-                        Lookups.singleton(umlClassDiagram),
-                        Lookups.singleton(palette)
+        return new ProxyLookup(
+                new Lookup[]{
+                    classDiagramScene.getLookup(),
+                    Lookups.singleton(umlClassDiagram),
+                    Lookups.singleton(palette)
                 });
 
-    }    
-    
+    }
+
 //    public UMLTopComponent(ClassDiagram umlClassDiagram) {
 //        this.umlClassDiagram = umlClassDiagram;
 //        initComponents();
@@ -96,7 +114,6 @@ public final class UMLTopComponent extends TopComponent {
 //       
 //        associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
 //    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -121,7 +138,7 @@ public final class UMLTopComponent extends TopComponent {
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        //ViewManager.getInstance().onNetworkClose(umlClassDiagram);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -135,11 +152,8 @@ public final class UMLTopComponent extends TopComponent {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
-
 //    @Override
 //    public Lookup getLookup() {
 //        return new ProxyLookup(new Lookup[]{super.getLookup(),aLookup});
 //    }
-    
-    
 }
