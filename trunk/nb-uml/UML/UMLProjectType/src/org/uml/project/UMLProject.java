@@ -83,6 +83,16 @@ public class UMLProject implements Project {
         return lkp;
     }
 
+    public void addNotify() {
+        refresh();
+    }
+
+    private void refresh() {
+        for (FileObject projectFolder : getProjectDirectory().getChildren()) {
+            projectFolder.refresh();
+        }
+    }
+
     private final class Info implements ProjectInformation {
 
         @StaticResource()
