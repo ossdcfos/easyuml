@@ -12,6 +12,7 @@ public class ClassComponent extends ClassDiagramComponent {
         private HashMap<String,Field> fields;
         private HashMap<String,Method> methods;
         private Visibility visibility;
+        private boolean isAbstract;
  
     public ClassComponent() {
         this.setName("UntitledClass");
@@ -88,5 +89,13 @@ public class ClassComponent extends ClassDiagramComponent {
 
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
+    }
+
+    public boolean isIsAbstract() {
+        return isAbstract;
+    }
+
+    public void setIsAbstract(boolean isAbstract) {
+        this.isAbstract = isAbstract;
     }
 }

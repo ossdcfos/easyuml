@@ -16,6 +16,7 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.PackageComponent;
 import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.providers.PackagePopupMenuProvider;
 
 /**
  *
@@ -50,7 +51,10 @@ public class PackageWidget extends ComponentWidgetBase implements NameableWidget
         
         nameWidget.getActions().addAction(nameEditorAction);
         
+        
         this.nameWidget.setLabel(packageComponent.getName());
+        
+        getActions().addAction(ActionFactory.createPopupMenuAction(new PackagePopupMenuProvider(this)));
         
     }
     
