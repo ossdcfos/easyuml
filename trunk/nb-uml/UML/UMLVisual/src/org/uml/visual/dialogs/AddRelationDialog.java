@@ -315,6 +315,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
         }
         if(jcbRelations.getSelectedItem() instanceof IsRelationComponent) {
             comboBoxCardinalityTarget.removeAllItems();
+            textFieldName.setEnabled(false);
             //comboBoxCardinalityTarget.addItem(CardinalityEnum.One2One);
             //comboBoxCardinalityTarget.addItem(CardinalityEnum.Zero2One);
             comboBoxCardinalitySource.removeAllItems();

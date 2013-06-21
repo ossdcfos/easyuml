@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.Map;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -18,6 +19,7 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.Constructor;
 import org.uml.model.Field;
@@ -49,6 +51,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JRadioButton publicItem;
     private JRadioButton protectedItem;
     private JRadioButton packageItem;
+    private JCheckBoxMenuItem abstractJCBMI;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
@@ -79,6 +82,10 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         menu.add(addField);
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
+        
+        menu.add(abstractJCBMI=new JCheckBoxMenuItem("abstract"));
+        abstractJCBMI.addActionListener(abstractJCBMIListener);
+        
         menu.addSeparator();
         (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
         menu.add(deleteClass);        
@@ -170,6 +177,20 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             classWidget.getComponent().setVisibility(Visibility.PROTECTED);
+        }
+    };
+    
+        ActionListener abstractJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ClassComponent classComponent = (ClassComponent)classWidget.getComponent();
+            if(classComponent.isIsAbstract()==false) {
+                classComponent.setIsAbstract(true);
+            }
+            else {
+                classComponent.setIsAbstract(false);
+            }
         }
     };
     
