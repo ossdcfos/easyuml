@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
@@ -58,8 +54,21 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     public ClassPopupMenuProvider(ClassWidget classWidget) {
         this.classWidget = classWidget;
         menu = new JPopupMenu("Class Menu");
+                
+        (addConstructor = new JMenuItem("Add Constructor")).addActionListener(addConstructorListener);
+        menu.add(addConstructor);        
         
+        (addField = new JMenuItem("Add Field")).addActionListener(addAtributeListener);
+        menu.add(addField);
+        (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
+        menu.add(addMethod);
+               
+        menu.addSeparator();
+        (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
+        menu.add(deleteClass);        
         
+        menu.addSeparator();
+                      
         visibilityGroup = new ButtonGroup();       
         visibilitySubmenu = new JMenu("Visibility");
         visibilitySubmenu.add(publicItem = new JRadioButton("public"));
@@ -73,24 +82,12 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         visibilityGroup.add(privateItem);
         visibilityGroup.add(protectedItem);
         visibilityGroup.add(packageItem);
-        menu.add(visibilitySubmenu);
-
-        (addConstructor = new JMenuItem("Add Constructor")).addActionListener(addConstructorListener);
-        menu.add(addConstructor);        
-        
-        (addField = new JMenuItem("Add Field")).addActionListener(addAtributeListener);
-        menu.add(addField);
-        (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
-        menu.add(addMethod);
+        menu.add(visibilitySubmenu);     
         
         menu.add(abstractJCBMI=new JCheckBoxMenuItem("abstract"));
-        abstractJCBMI.addActionListener(abstractJCBMIListener);
-        
-        menu.addSeparator();
-        (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
-        menu.add(deleteClass);        
-        
+        abstractJCBMI.addActionListener(abstractJCBMIListener);              
     }
+    
     /**
      * Remove Widget Listener
      *
