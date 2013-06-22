@@ -138,10 +138,10 @@ public class ClassUseRelationPanel extends javax.swing.JPanel {
         comboBoxCardinalitySource.addItem(CardinalityEnum.One2Many);
         comboBoxCardinalitySource.addItem(CardinalityEnum.Zero2Many);
         
-//        comboBoxCardinalityTarget.addItem(CardinalityEnum.Zero2One);
-//        comboBoxCardinalityTarget.addItem(CardinalityEnum.One2One);
-//        comboBoxCardinalityTarget.addItem(CardinalityEnum.One2Many);
-//        comboBoxCardinalityTarget.addItem(CardinalityEnum.Zero2Many);
+        comboBoxCardinalityTarget.addItem(CardinalityEnum.Zero2One);
+        comboBoxCardinalityTarget.addItem(CardinalityEnum.One2One);
+        comboBoxCardinalityTarget.addItem(CardinalityEnum.One2Many);
+        comboBoxCardinalityTarget.addItem(CardinalityEnum.Zero2Many);
     }
     
     public JComboBox getComboBoxCardinalitySource () {
@@ -155,7 +155,7 @@ public class ClassUseRelationPanel extends javax.swing.JPanel {
     public JComboBox getComboBoxTarget() {
         return comboBoxTarget;
     }
-    public String getName () {
+    public String getRelationName () {
         return textFieldName.getText();
     }
 }
