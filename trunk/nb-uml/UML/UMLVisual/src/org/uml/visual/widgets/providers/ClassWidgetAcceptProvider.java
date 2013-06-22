@@ -72,7 +72,7 @@ public class ClassWidgetAcceptProvider implements AcceptProvider{
                 dd = new DialogDescriptor (panel,msg);
                 if (DialogDisplayer.getDefault().notify(dd)==NotifyDescriptor.OK_OPTION) {
                       UseRelationComponent r = (UseRelationComponent) relation;
-                      r.setName(panel.getName());
+                      r.setName(panel.getRelationName());
                       r.setCardinalitySource((CardinalityEnum)panel.getComboBoxCardinalitySource().getSelectedItem());
                       r.setCardinalityTarget((CardinalityEnum)panel.getComboBoxCardinalityTarget().getSelectedItem());
                 ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();    
