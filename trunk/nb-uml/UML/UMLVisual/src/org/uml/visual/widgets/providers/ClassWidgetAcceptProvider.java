@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import javax.swing.JPanel;
 import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Widget;
@@ -16,22 +11,16 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 import org.uml.model.CardinalityEnum;
-import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagramComponent;
 import org.uml.model.HasRelationComponent;
 import org.uml.model.ImplementsRelationComponent;
-import org.uml.model.IsRelationComponent;
 import org.uml.model.RelationComponent;
 import org.uml.model.UseRelationComponent;
-import org.uml.visual.dialogs.ChooseRelationPanel;
 import org.uml.visual.dialogs.ClassHasRelationPanel;
 import org.uml.visual.dialogs.ClassImplementsRelationPanel;
 import org.uml.visual.dialogs.ClassIsRelationPanel;
 import org.uml.visual.dialogs.ClassUseRelationPanel;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.ComponentWidgetBase;
-import org.uml.visual.widgets.EnumWidget;
-import org.uml.visual.widgets.RelationWidgetBase;
 
 /**
  *
@@ -100,9 +89,7 @@ public class ClassWidgetAcceptProvider implements AcceptProvider{
                 }
                 }
 
-        } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalAccessException ex) {
+        } catch (InstantiationException | IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
