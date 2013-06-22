@@ -1,18 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.dialogs;
 
 import java.util.List;
-import javax.smartcardio.Card;
 import javax.swing.JComboBox;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.CardinalityEnum;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.ComponentWidgetBase;
 import org.uml.visual.widgets.EnumWidget;
-import org.uml.visual.widgets.InterfaceWidget;
 
 /**
  *
