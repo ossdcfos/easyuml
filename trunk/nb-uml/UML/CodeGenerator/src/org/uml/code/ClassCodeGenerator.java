@@ -24,7 +24,22 @@ public class ClassCodeGenerator implements CodeGenerator {
    
     @Override
     public String generateCode() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        String code="";
+        String isAbstract="";
+        if(classComponent.isIsAbstract()) {
+        isAbstract="abstract";
+        }
+        String header = "public " + isAbstract + " class " + classComponent.getName() + " { ";
+        ConstructorCodeGenerator ccg = new ConstructorCodeGenerator(classComponent.getConstructors());
+        String constructors = ccg.generateCode();
+        FieldCodeGenerator fcg = new FieldCodeGenerator(classComponent.getFields());
+        String fields = fcg.generateCode();
+        MethodCodeGenerator mcg = new MethodCodeGenerator(classComponent.getMethods());
+        String methods = mcg.generateCode();
+        String end="\n }";
+        //classComponent.get
+        return code;
+         
+    } 
     
 }

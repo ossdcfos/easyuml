@@ -4,14 +4,17 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassComponent;
 import org.uml.model.Method;
+import org.uml.model.Visibility;
 import org.uml.visual.widgets.MethodWidget;
 
 /**
@@ -25,10 +28,11 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         private JMenuItem deleteMethod;
         private JMenu visibilitySubmenu;
         private JMenu modifiersSubmenu;
-        private JMenuItem privateItem;
-        private JMenuItem publicItem;
-        private JMenuItem protectedItem;
-        private JMenuItem packageItem;
+        private ButtonGroup visibilityGroup;
+        private JRadioButton privateItem;
+        private JRadioButton publicItem;
+        private JRadioButton protectedItem;
+        private JRadioButton packageItem;
         private JCheckBoxMenuItem staticJCBMI;
         private JCheckBoxMenuItem abstractJCBMI;
         private JCheckBoxMenuItem finalJCBMI;
@@ -38,11 +42,15 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         this.methodWidget = methodWidget;
         menu= new JPopupMenu ("Class Menu");
         
+        visibilityGroup = new ButtonGroup();
         visibilitySubmenu = new JMenu("Visibility");
-        visibilitySubmenu.add(privateItem = new JMenuItem("public"));
-        visibilitySubmenu.add(publicItem =new JMenuItem("private"));
-        visibilitySubmenu.add(protectedItem =new JMenuItem("protected"));
-        visibilitySubmenu.add(packageItem =new JMenuItem("package"));
+        visibilitySubmenu.add(publicItem = new JRadioButton("public"));
+        publicItem.addActionListener(publicItemListener);
+        visibilitySubmenu.add(privateItem =new JRadioButton("private"));
+        privateItem.addActionListener(privateItemListener);
+        visibilitySubmenu.add(protectedItem =new JRadioButton("protected"));
+        protectedItem.addActionListener(protectedItemListener);
+        visibilitySubmenu.add(packageItem =new JRadioButton("package"));
         menu.add(visibilitySubmenu);
         
         modifiersSubmenu= new JMenu("Modifiers");
@@ -57,6 +65,32 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         (deleteMethod= new JMenuItem ("Delete Method")).addActionListener(removeWidgetListener);
         menu.add(deleteMethod);
     }
+    
+        ActionListener publicItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ((Method)methodWidget.getMember()).setVisibility(Visibility.PUBLIC);
+                     
+        }
+    };
+        
+          ActionListener privateItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ((Method)methodWidget.getMember()).setVisibility(Visibility.PRIVATE);
+        }
+    };
+    
+    ActionListener protectedItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ((Method)methodWidget.getMember()).setVisibility(Visibility.PROTECTED);
+        }
+    };
+        
         ActionListener removeWidgetListener = new ActionListener() {
 
         @Override
