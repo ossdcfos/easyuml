@@ -8,6 +8,7 @@ import java.util.HashMap;
  */
 public class Method extends Member {
     
+    private Visibility visibility;
     private String returnType;
     private HashMap <String,MethodArgument> arguments;
 
@@ -31,6 +32,14 @@ public class Method extends Member {
 
     public void setArguments(HashMap<String, MethodArgument> arguments) {
         this.arguments = arguments;
+    }
+
+    public Visibility getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
     
     
