@@ -79,8 +79,10 @@ public class MethodWidget extends MemberWidgetBase {
         methodComponent.setName(attributes.substring(0, attributes.indexOf("(")));
         
         String [] keyWords= attributes.split(":");
+        if(keyWords.length>1) {
         String type = keyWords[keyWords.length-1];
         methodComponent.setReturnType(type);
+        }
         
         String parameters = attributes.substring(attributes.indexOf("(")+1, attributes.indexOf(")"));
         String [] params = parameters.split(",");
