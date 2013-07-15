@@ -33,6 +33,7 @@ public class MethodCodeGenerator implements CodeGenerator{
                 MethodArgument argument = entry1.getValue();
                 arguments+= argument.getType() + " " + argument.getName()+ ", ";
             }
+            arguments = arguments.substring(0,arguments.length()-2);
             methodsString+= method.getVisibility() + " " + method.getReturnType() + " " + method.getName()+ "(" + arguments + ") {} \n";
         }
         return methodsString;
