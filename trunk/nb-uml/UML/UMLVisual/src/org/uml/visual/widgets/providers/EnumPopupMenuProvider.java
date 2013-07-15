@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -18,6 +19,7 @@ import org.uml.model.Constructor;
 import org.uml.model.Field;
 import org.uml.model.Literal;
 import org.uml.model.Method;
+import org.uml.model.MethodArgument;
 import org.uml.model.Visibility;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.ClassWidget;
@@ -116,7 +118,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            Method m = new Method("untitledMethod", null, null);
+            Method m = new Method("untitledMethod", null, new HashMap<String,MethodArgument>());
             enumWidget.getComponent().addMethod(m);
             MethodWidget w = new MethodWidget(enumWidget.getClassDiagramScene(), m);
             enumWidget.addMethodWidget(w);

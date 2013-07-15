@@ -16,7 +16,14 @@ public class Method extends Member {
         super(name);
         this.returnType = returnType;
         this.arguments = arguments;
+        visibility = Visibility.PUBLIC;
     }
+
+    public Method(String name) {
+        super(name);
+        arguments = new HashMap<String, MethodArgument>();
+    }
+    
 
     public String getReturnType() {
         return returnType;

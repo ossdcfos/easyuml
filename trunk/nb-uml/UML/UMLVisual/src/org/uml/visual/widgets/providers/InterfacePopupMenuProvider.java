@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -15,6 +16,7 @@ import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.Method;
+import org.uml.model.MethodArgument;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.InterfaceWidget;
 import org.uml.visual.widgets.MethodWidget;
@@ -49,7 +51,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             
-            Method m = new Method("untitledMethod", null, null);
+            Method m = new Method("untitledMethod", null, new HashMap<String,MethodArgument>());
             interfaceWidget.getComponent().addMethod(m);
             MethodWidget w = new MethodWidget(interfaceWidget.getClassDiagramScene(), m);
             interfaceWidget.addMethodWidget(w);

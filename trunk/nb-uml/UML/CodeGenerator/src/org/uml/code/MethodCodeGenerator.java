@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Method;
+import org.uml.model.MethodArgument;
 /**
  *
  * @author Uros
@@ -27,8 +28,12 @@ public class MethodCodeGenerator implements CodeGenerator{
         String methodsString="";
         for (Map.Entry<String, Method> entry : methods.entrySet()) {
             Method method = entry.getValue(); 
-            
-            methodsString+= method.getVisibility() + " " + method.getReturnType() + " " + method.getName();
+            String arguments = "";
+            for (Map.Entry<String, MethodArgument> entry1 : method.getArguments().entrySet()) {
+                MethodArgument argument = entry1.getValue();
+                arguments+= argument.getType() + " " + argument.getName()+ ", ";
+            }
+            methodsString+= method.getVisibility() + " " + method.getReturnType() + " " + method.getName()+ "(" + arguments + ") {} \n";
         }
         return methodsString;
     }
