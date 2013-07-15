@@ -75,6 +75,7 @@ abstract public class ComponentWidgetBase extends IconNodeWidget implements Name
     public ClassDiagramScene getClassDiagramScene() {
         return scene;
     }
+
     
     
     private class ChangeCursor implements TwoStateHoverProvider {

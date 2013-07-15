@@ -96,5 +96,10 @@ public class PackageWidget extends ComponentWidgetBase implements NameableWidget
     public String getName() {
        return nameWidget.getLabel();
     }
+
+    @Override
+    public void setAttributes(String attributes) {
+       
+    }
     
 }

@@ -1,6 +1,9 @@
 package org.uml.visual.widgets;
 
 import java.awt.Color;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import javax.sound.sampled.FloatControl;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -14,10 +17,10 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.uml.model.ClassComponent;
+import org.uml.model.Visibility;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
-
 
 /**
  *
@@ -27,12 +30,10 @@ public class ClassWidget extends ComponentWidgetBase implements NameableWidget {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
-
     private static final Border RESIZE_BORDER =
             BorderFactory.createResizeBorder(4, Color.black, true);
     private static final Border DEFAULT_BORDER =
             BorderFactory.createLineBorder();
-    
     private Widget fieldsWidget;
     private Widget methodsWidget;
     //private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
@@ -59,7 +60,7 @@ public class ClassWidget extends ComponentWidgetBase implements NameableWidget {
 
         //ImageWidget classImage= new ImageWidget(scene);
         //classImage.setImage(this.classComponent.getImage());
-        
+
 
         classWidget.addChild(nameWidget);
         addChild(classWidget);
@@ -98,9 +99,11 @@ public class ClassWidget extends ComponentWidgetBase implements NameableWidget {
     public String getName() {
         return nameWidget.getLabel();
     }
-public String getClassName() {
+
+    public String getClassName() {
         return nameWidget.getLabel();
     }
+
     public void setClassName(String className) {
         this.nameWidget.setLabel(className);
     }
@@ -158,7 +161,7 @@ public String getClassName() {
     public void addMethodWidget(MethodWidget operationWidget) {
         methodsWidget.addChild(operationWidget);
     }
-    
+
     public void addConstructorWidget(ConstructorWidget operationWidget) {
         methodsWidget.addChild(operationWidget);
     }
@@ -198,8 +201,7 @@ public String getClassName() {
             this.nameWidget.setLabel(newName);
             classComponent.setName(newName);
             classComponent.getParentDiagram().componentNameChanged(classComponent, oldName);
-        }
-        else {
+        } else {
             //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
             //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
             JOptionPane.showMessageDialog(this.getScene().getView(), "Greska, ime vec postoji.");
@@ -211,9 +213,23 @@ public String getClassName() {
         return lookup;
     }
 
-    
-    
+    @Override
+    public void setAttributes(String attributes) {
+        String [] keyWords = attributes.split(" ");
+        for (String keyWord: keyWords) {
+            if (keyWord.equals("public")) {
+                classComponent.setVisibility(Visibility.PUBLIC);
+            }
+            if (keyWord.equals("protected")) {
+                classComponent.setVisibility(Visibility.PUBLIC);
+            }
+            if (keyWord.equals("private")) {
+                classComponent.setVisibility(Visibility.PRIVATE);
+            }
+            if(keyWord.equals("abstract")) {
+                classComponent.setIsAbstract(true);
+            }
+        }
+    }
+
 }
-
-    
-

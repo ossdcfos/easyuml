@@ -3,8 +3,7 @@
  * and open the template in the editor.
  */
 package org.uml.code;
-
-import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.model.Method;
 
@@ -31,6 +30,11 @@ class InterfaceCodeGenerator implements CodeGenerator {
           //methodCodeGenerator.generateCode();  
         }
         return "";
+    }
+
+    @Override
+    public void setClassDiagramComponent(ClassDiagramComponent component) {
+        interfaceComponent=(InterfaceComponent) component;
     }
     
 }

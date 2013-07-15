@@ -6,17 +6,27 @@ package org.uml.model;
  */
 public enum Visibility {
 
-    PRIVATE("private"),
-    PROTECTED("protected"),
-    PUBLIC("public");
-    private String stringLabel;
+    PRIVATE {
+        @Override
+        public String toString(){
+            return "private";
+        }
+    
+    },
+    PROTECTED{
+        @Override
+        public String toString(){
+            return "protected";
+        }
+    
+    },
+    PUBLIC{
+        @Override
+        public String toString(){
+            return "public";
+        }
+    
+    };
 
-    private Visibility(String stringLabel) {
-        this.stringLabel = stringLabel;
-    }
 
-    @Override
-    public String toString() {
-        return stringLabel;
-    }
 }

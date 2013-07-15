@@ -6,6 +6,7 @@ package org.uml.code;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Constructor;
 
 /**
@@ -35,6 +36,11 @@ public class ConstructorCodeGenerator implements CodeGenerator{
         
         return code;
         
+        
+    }
+
+    @Override
+    public void setClassDiagramComponent(ClassDiagramComponent component) {
         
     }
     

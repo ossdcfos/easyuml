@@ -1,5 +1,6 @@
 package org.uml.model;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
 /**
@@ -13,12 +14,14 @@ public class ClassComponent extends ClassDiagramComponent {
         private HashMap<String,Method> methods;
         private Visibility visibility;
         private boolean isAbstract;
+        private Type type;
  
     public ClassComponent() {
         this.setName("UntitledClass");
         fields= new HashMap<String, Field>();
         methods= new HashMap<String, Method>();
         constructors = new HashMap<String, Constructor>();
+        isAbstract=false;
     }
 
     public ClassComponent(String name) {
@@ -97,5 +100,13 @@ public class ClassComponent extends ClassDiagramComponent {
 
     public void setIsAbstract(boolean isAbstract) {
         this.isAbstract = isAbstract;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 }

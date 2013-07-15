@@ -63,4 +63,9 @@ public class ConstructorWidget extends MemberWidgetBase{
     public Member getMember() {
         return constructorComponent;
     }
+
+    @Override
+    public void setAttributes(String attributes) {
+        
+    }
 }
