@@ -2,6 +2,7 @@ package org.uml.model;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  *
@@ -50,7 +51,11 @@ public class ClassComponent extends ClassDiagramComponent {
     
     public void addField (Field field) {
         field.setDeclaringClass(this);
-        fields.put(field.getName(), field);
+        Random r = new Random();
+        int Low = 0;
+        int High = 100;
+        int R = r.nextInt(High-Low) + Low;
+        fields.put(Integer.toString(R), field);
         addMember(field);
     } 
     
@@ -64,7 +69,11 @@ public class ClassComponent extends ClassDiagramComponent {
     
     public void addMethod(Method method) {
         method.setDeclaringClass(this);
-        methods.put(method.getName(), method);
+        Random r = new Random();
+        int Low = 0;
+        int High = 100;
+        int R = r.nextInt(High-Low) + Low;
+        methods.put(Integer.toString(R), method);
         addMember(method);
     }
     
