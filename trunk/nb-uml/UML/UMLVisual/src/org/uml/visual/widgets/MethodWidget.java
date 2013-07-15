@@ -4,12 +4,14 @@
  */
 package org.uml.visual.widgets;
 
+import java.util.Random;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.uml.model.Member;
 import org.uml.model.Method;
+import org.uml.model.MethodArgument;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
 
@@ -38,6 +40,7 @@ public class MethodWidget extends MemberWidgetBase {
         methodNameWidget.getActions().addAction(nameEditorAction);
         methodNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
 
+        
     }
 
     @Override
@@ -72,6 +75,24 @@ public class MethodWidget extends MemberWidgetBase {
 
     @Override
     public void setAttributes(String attributes) {
+        
+        methodComponent.setName(attributes.substring(0, attributes.indexOf("(")));
+        
+        String [] keyWords= attributes.split(":");
+        String type = keyWords[keyWords.length-1];
+        methodComponent.setReturnType(type);
+        
+        String parameters = attributes.substring(attributes.indexOf("(")+1, attributes.indexOf(")"));
+        String [] params = parameters.split(",");
+        Random r = new Random(); 
+        int Low = 0;
+        int High = 100;
+        for (String param : params) {
+        String[] typeAndName = param.split(" ");
+        int R = r.nextInt(High-Low) + Low;
+            methodComponent.getArguments().put(Integer.toString(R), new MethodArgument(typeAndName[0], typeAndName[1]));
+        }
+        
         
     }
 }

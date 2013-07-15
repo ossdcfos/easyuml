@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -20,6 +21,7 @@ import org.uml.model.ClassDiagram;
 import org.uml.model.Constructor;
 import org.uml.model.Field;
 import org.uml.model.Method;
+import org.uml.model.MethodArgument;
 import org.uml.model.RelationComponent;
 import org.uml.model.Visibility;
 import org.uml.visual.widgets.ClassWidget;
@@ -129,7 +131,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Method m = new Method("untitledMethod", null, null);
+            Method m = new Method("untitledMethod", null, new HashMap<String,MethodArgument>());
             classWidget.getComponent().addMethod(m);
             MethodWidget w = new MethodWidget(classWidget.getClassDiagramScene(), m);
             classWidget.addMethodWidget(w);
