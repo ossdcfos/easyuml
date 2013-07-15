@@ -8,6 +8,7 @@ package org.uml.code;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Field;
 
 /**
@@ -28,7 +29,7 @@ public class FieldCodeGenerator implements CodeGenerator{
         String fieldsString="";
         
         for (Map.Entry<String, Field> en : fields.entrySet() ) {
-            String name = en.getKey();
+
             Field field = en.getValue();
             String isStatic="";
             String isFinal="";
@@ -42,12 +43,17 @@ public class FieldCodeGenerator implements CodeGenerator{
             if(field.isIsFinal()) {
                 isFinal=" final ";
             }
-            fieldsString += field.getVisibility() + isStatic + isAbstract + isFinal +  name+"; /n"; 
+            fieldsString += field.getVisibility().toString()+" " + isStatic + isAbstract + isFinal + field.getType().toString() + " "+ field.getName()+"; \n"; 
         }
         
         return fieldsString;
         
 }   
+
+    @Override
+    public void setClassDiagramComponent(ClassDiagramComponent component) {
+        
+    }
             
         
     }

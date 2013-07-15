@@ -25,6 +25,7 @@ import org.uml.model.ClassComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.dialogs.AddRelationDialog;
+import org.uml.visual.dialogs.GenerateCodeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.EnumWidget;
@@ -42,6 +43,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem createInterfaceItem;
     private JMenuItem createEnumItem;
     private JMenuItem createRelationshipItem;
+    private JMenuItem generateCode;
     private ClassDiagramScene scene;
     private Point popupPoint;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
@@ -115,6 +117,19 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             }
         });
         
+        generateCode = new JMenuItem("Generate code");
+        generateCode.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GenerateCodeDialog dialog = new GenerateCodeDialog(null, true, scene.getUmlClassDiagram());
+                dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+                dialog.setTitle("Generate code");
+                dialog.setVisible(true);
+            }
+        });
+        
+        sceneMenu.add(generateCode);
         sceneMenu.add(createClassItem);
         sceneMenu.add(createInterfaceItem);
         sceneMenu.add(createEnumItem);

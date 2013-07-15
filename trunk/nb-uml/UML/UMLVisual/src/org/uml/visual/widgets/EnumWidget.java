@@ -202,6 +202,11 @@ public class EnumWidget extends ComponentWidgetBase implements NameableWidget{
     // else
     //    ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
     }
+
+    @Override
+    public void setAttributes(String attributes) {
+        
+    }
     
     
 }

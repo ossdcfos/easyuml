@@ -38,8 +38,19 @@ public class ClassCodeGenerator implements CodeGenerator {
         String methods = mcg.generateCode();
         String end="\n }";
         //classComponent.get
+        
+        code+=header+"\n";
+        code+=constructors+"\n";
+        code+=fields+"\n";
+        code+=methods+"\n";
+        code+=end;
         return code;
          
     } 
+
+    @Override
+    public void setClassDiagramComponent(ClassDiagramComponent component) {
+        classComponent=(ClassComponent)component;
+    }
     
 }

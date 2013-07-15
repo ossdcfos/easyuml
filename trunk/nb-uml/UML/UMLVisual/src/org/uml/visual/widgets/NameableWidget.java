@@ -11,4 +11,5 @@ package org.uml.visual.widgets;
 public interface NameableWidget {
     public void setName(String newName);
     public String getName();
+    public void setAttributes(String attributes);
 }

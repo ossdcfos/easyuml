@@ -140,4 +140,9 @@ public class InterfaceWidget extends ComponentWidgetBase implements NameableWidg
     // else
     //    ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
     }
+
+    @Override
+    public void setAttributes(String attributes) {
+        
+    }
 }

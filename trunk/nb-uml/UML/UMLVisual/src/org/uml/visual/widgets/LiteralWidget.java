@@ -8,11 +8,9 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.uml.model.Field;
 import org.uml.model.Literal;
 import org.uml.model.Member;
 import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 import org.uml.visual.widgets.providers.LiteralPopupProvider;
 
 /**
@@ -72,4 +70,10 @@ public class LiteralWidget extends MemberWidgetBase{
     public Member getMember() {
         return literalComponent;
     }
+
+    @Override
+    public void setAttributes(String attributes) {
+        
+    }
+    
 }

@@ -53,11 +53,17 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
         
         for(ClassDiagramComponent comp : classDiagram.getComponents().values() ) {
             CodeGenerator codeGen = generators.get(comp.getClass());
+            codeGen.setClassDiagramComponent(comp);
             String code =codeGen.generateCode();
             sb.append(code);
         }
         
         return sb.toString();
+    }
+
+    @Override
+    public void setClassDiagramComponent(ClassDiagramComponent component) {
+        
     }
     
     

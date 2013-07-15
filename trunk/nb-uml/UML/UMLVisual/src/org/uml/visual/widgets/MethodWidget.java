@@ -4,40 +4,26 @@
  */
 package org.uml.visual.widgets;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Image;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
-import org.netbeans.api.visual.border.Border;
-import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Scene;
-import org.netbeans.api.visual.widget.SeparatorWidget;
-import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Utilities;
-import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Member;
 import org.uml.model.Method;
-import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
-import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
 
 /**
  *
  * @author Jelena
  */
-public class MethodWidget extends MemberWidgetBase{
+public class MethodWidget extends MemberWidgetBase {
 
     Method methodComponent;
     private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     LabelWidget visibilityLabel;
     LabelWidget methodNameWidget;
-    
+
     public MethodWidget(ClassDiagramScene scene, Method method) {
         super(scene);
         this.methodComponent = method;
@@ -53,7 +39,7 @@ public class MethodWidget extends MemberWidgetBase{
         methodNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
 
     }
-    
+
     @Override
     public LabelWidget getNameLabel() {
         return methodNameWidget;
@@ -69,8 +55,7 @@ public class MethodWidget extends MemberWidgetBase{
             methodNameWidget.setLabel(newName);
             methodComponent.setName(newName);
             methodComponent.getDeclaringClass().componentNameChanged(methodComponent, oldName);
-        }
-        else {
+        } else {
             //poruka
         }
     }
@@ -85,9 +70,8 @@ public class MethodWidget extends MemberWidgetBase{
         return methodComponent;
     }
 
-    
-
-    
-    
-    
+    @Override
+    public void setAttributes(String attributes) {
+        
+    }
 }
