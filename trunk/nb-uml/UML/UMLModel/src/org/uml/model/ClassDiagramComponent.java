@@ -1,12 +1,13 @@
 package org.uml.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
  * @author zoran
  */
-public class ClassDiagramComponent {
+public class ClassDiagramComponent implements Serializable {
     
             private String name;     // class, interface or enum name              
             protected HashMap<String,Member> members; // index of all fields, methods and constructors            

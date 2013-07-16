@@ -1,10 +1,12 @@
 package org.uml.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author "NUGS"
  */
-public class RelationComponent {
+public class RelationComponent implements Serializable {
     
     ClassDiagramComponent source;
     ClassDiagramComponent target;
