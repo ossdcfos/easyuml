@@ -10,6 +10,8 @@ import org.netbeans.api.visual.anchor.AnchorShape;
 import org.netbeans.api.visual.anchor.AnchorShapeFactory;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.graph.GraphScene;
+import org.netbeans.api.visual.graph.layout.GraphLayout;
+import org.netbeans.api.visual.graph.layout.GraphLayoutFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.model.ObjectSceneEvent;
 import org.netbeans.api.visual.model.ObjectSceneListener;
@@ -39,14 +41,10 @@ import org.uml.visual.widgets.providers.SceneAcceptProvider;
 
 /**
  *
- * Shapes-Objects-Objekti Class Abstract Class Interface Enum
- * Connections-Relationships-Veze Inheritance Associattion (Use. Has)
- *
- * Other-Drugi alati Comment
- *
+ * https://blogs.oracle.com/geertjan/entry/how_to_serialize_visual_library
+ * layout, serijalizacija, save as image
  * @author NUGS
- */                                             /* ClassDiagramComponent, ClassDiagramRelation*/
-// ClassDiagramComponent  - Class, Interface, 
+ */                             
 
 public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, RelationComponent> {
 
@@ -73,6 +71,21 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         getActions().addAction(ActionFactory.createZoomAction());
+        
+        // dodaj widget ali ne i com[onentu ponovo kao u addNode...
+ 
+        for(ClassDiagramComponent comp : umlClassDiagram.getComponents().values()) {
+            addNode(comp);
+        }
+        
+        for(RelationComponent rel : umlClassDiagram.getRelations().values() ) {
+            addEdge(rel);
+        }        
+        
+        GraphLayoutFactory.createOrthogonalGraphLayout(this, true);
+        
+
+        
         
         addObjectSceneListener(new ObjectSceneListener() {
 
@@ -147,7 +160,12 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     protected Widget attachNodeWidget(ClassDiagramComponent component) {
         
         ComponentWidgetBase widget = null;
-        umlClassDiagram.addComponent(component);
+        
+        if (!umlClassDiagram.getComponents().containsValue(component)) { // need to check, if loading existing diagram...
+            umlClassDiagram.addComponent(component);
+        }
+
+        
         if (component instanceof ClassComponent) {
           widget = new ClassWidget(this, (ClassComponent) component);          
         } else if(component instanceof InterfaceComponent) {
@@ -161,22 +179,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         else {
             throw new RuntimeException("Unknown component!");
         }
-        // add block for RelationComponent too!
-        
-        
-        //WARNING Ovo prebaciti u ComponentWidgetBase akcije zajednicke za sve komponnete dijagrama
-
-//        widget.getActions().addAction(ActionFactory.createMoveAction());
-//        //single-click, the event is not consumed:
-//        widget.getActions().addAction(createSelectAction());
-//
-//        //mouse-dragged, the event is consumed while mouse is dragged:
-//        widget.getActions().addAction(ActionFactory.createMoveAction());
-//
-//        //mouse-over, the event is consumed while the mouse is over the widget:
-//        widget.getActions().addAction(createObjectHoverAction());
-        
-        
+                     
         mainLayer.addChild(widget);
         
         return widget;
@@ -187,7 +190,11 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     protected Widget attachEdgeWidget(RelationComponent e) {
         LabelWidget name = new LabelWidget (this, e.getName());
         name.setOpaque (true);
-        umlClassDiagram.addRelation(e);
+        
+        if (!umlClassDiagram.getRelations().containsValue(e)) { // need to check, if loading existing diagram...
+            umlClassDiagram.addRelation(e);
+        }
+        
         ConnectionWidget widget = new ConnectionWidget(this);
         if(e.getClass().getSimpleName().equals("ImplementsRelationComponent")) {
         final float dash1[] = {10.0f};
