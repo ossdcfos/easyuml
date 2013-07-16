@@ -1,21 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual;
 
 import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.spi.palette.PaletteController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.uml.model.ClassDiagram;
@@ -56,38 +49,32 @@ public final class UMLTopComponent extends TopComponent {
         setName(Bundle.CTL_UMLTopComponent());
         setToolTipText(Bundle.HINT_UMLTopComponent());
         classDiagramScene = new ClassDiagramScene(umlClassDiagram = new ClassDiagram());     // Fresh scene with fresh diagram
-//        umlClassDiagram= new umlClassDiagram();
-//       
-//        viewPane.setViewportView(view);
         shapePane = new JScrollPane();
         shapePane.setViewportView(classDiagramScene.createView());
         add(shapePane, BorderLayout.CENTER);
         add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
-
         palette = PaletteSupport.createPalette();
-
-
-
-        //   associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
-
-
     }
 
     public UMLTopComponent(ClassDiagram cd) {
+        umlClassDiagram = cd;
         initComponents();
         setName(cd.getName());
         setToolTipText(Bundle.HINT_UMLTopComponent());
-        classDiagramScene = new ClassDiagramScene(umlClassDiagram = new ClassDiagram());
+        classDiagramScene = new ClassDiagramScene(cd);
         shapePane = new JScrollPane();
         shapePane.setViewportView(classDiagramScene.createView());
         add(shapePane, BorderLayout.CENTER);
         add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
 
         palette = PaletteSupport.createPalette();
-        for (ClassDiagramComponent comp : cd.getComponents().values()) {
-            classDiagramScene.addNode(comp);
-        }
-        classDiagramScene.validate();
+
+        // napuni scenu komponentama
+//        for (ClassDiagramComponent comp : cd.getComponents().values()) {
+//            classDiagramScene.addNode(comp);
+//        }
+//        classDiagramScene.validate();
+        
     }
 
     @Override
