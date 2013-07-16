@@ -25,11 +25,11 @@ public class ClassCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         String code="";
-        String isAbstract="";
+        String abstractModifierStr="";
         if(classComponent.isIsAbstract()) {
-        isAbstract="abstract";
+        abstractModifierStr="abstract";
         }
-        String header = "public " + isAbstract + " class " + classComponent.getName() + " { ";
+        String header = "public " + abstractModifierStr + " class " + classComponent.getName() + " { ";
         ConstructorCodeGenerator ccg = new ConstructorCodeGenerator(classComponent.getConstructors());
         String constructors = ccg.generateCode();
         FieldCodeGenerator fcg = new FieldCodeGenerator(classComponent.getFields());
