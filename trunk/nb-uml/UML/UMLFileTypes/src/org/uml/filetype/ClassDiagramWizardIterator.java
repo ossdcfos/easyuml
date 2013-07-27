@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.filetype;
 
 import java.awt.Component;
@@ -62,29 +58,30 @@ public final class ClassDiagramWizardIterator implements WizardDescriptor.Instan
     public Set<?> instantiate() throws IOException {
         boolean cancelled = getWizard().getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
-            UMLProject project = (UMLProject)getWizard().getProperty("project");
+            UMLProject project = (UMLProject) getWizard().getProperty("project");
 //            if (project != null) {
 //                CurrentProject.getInstance().setCurrentProject(project);
 //            }
-         
+
             ClassDiagramProjectFilesFactory fileFactory = ClassDiagramProjectFilesFactory.getDefault();
-                              
-            String classDiagramName = (String) getWizard().getProperty("class diagram name");
-            
-                    ClassDiagram cd = new ClassDiagram();
-                     cd.setName(classDiagramName);
-                     fileFactory.createClassDiagramFile(cd);
-           
-            
-        String createdFilePath = fileFactory.getCreatedFilePath();
-        
-        FileObject fao = FileUtil.toFileObject(new File(createdFilePath));
-        DataObject dao = DataObject.find(fao);
-        return dao != null ? Collections.singleton(dao) : Collections.EMPTY_SET;            
-            
+            fileFactory.setProject(project);
+
+            String classDiagramName = (String) getWizard().getProperty("classDiagramName");
+
+            ClassDiagram classDiagram = new ClassDiagram();
+            classDiagram.setName(classDiagramName);
+            fileFactory.createClassDiagramFile(classDiagram);
+
+
+            String createdFilePath = fileFactory.getCreatedFilePath();
+
+            FileObject fao = FileUtil.toFileObject(new File(createdFilePath));
+            DataObject dao = DataObject.find(fao);
+            return dao != null ? Collections.singleton(dao) : Collections.EMPTY_SET;
+
         }
-        
-      return Collections.EMPTY_SET;
+
+        return Collections.EMPTY_SET;
     }
 
     @Override
@@ -167,6 +164,4 @@ public final class ClassDiagramWizardIterator implements WizardDescriptor.Instan
     public WizardDescriptor getWizard() {
         return wizard;
     }
-    
-    
 }

@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.filetype;
 
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
-import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 
 public class ClassDiagramWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor> {
@@ -65,7 +60,7 @@ public class ClassDiagramWizardPanel1 implements WizardDescriptor.Panel<WizardDe
     
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        wiz.putProperty("class diagram name", ((ClassDiagramVisualPanel1) getComponent()).getClassDiagramNameField().getText().trim());
+        wiz.putProperty("classDiagramName", ((ClassDiagramVisualPanel1) getComponent()).getClassDiagramNameField().getText().trim());
     }
     
     

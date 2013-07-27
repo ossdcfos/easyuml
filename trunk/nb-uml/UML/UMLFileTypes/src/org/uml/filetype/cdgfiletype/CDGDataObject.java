@@ -1,16 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.filetype.cdgfiletype;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import org.netbeans.core.spi.multiview.MultiViewElement;
-import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
+import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataNode;
@@ -24,7 +19,6 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
-import org.openide.windows.TopComponent;
 import org.uml.model.ClassDiagram;
 
 
@@ -101,15 +95,16 @@ public class CDGDataObject extends MultiDataObject {
 
     ClassDiagramOpenSupport openAction;
     ClassDiagram classDiagram;
-    FileObject cdFileObject;
+    FileObject fileObject;
+    SaveCookie saveCookie;
     CookieSet cookies;
     
     public CDGDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(fo, loader);
-        registerEditor("text/x-cdg", true);
-        cdFileObject = fo;
+//        registerEditor("text/x-cdg", true); // verovatno baca ex jer je dole iskomentarisana registracija editora
+        fileObject = fo;
 
-        classDiagram = readFile(fo);
+        classDiagram = readFromFile(fo);
         
         if (classDiagram == null) {
             classDiagram = new ClassDiagram();
@@ -121,6 +116,8 @@ public class CDGDataObject extends MultiDataObject {
 
         cookies.add((Node.Cookie) openAction);
         cookies.add(this);
+        
+        loadData();
     }
 
     @Override
@@ -129,7 +126,7 @@ public class CDGDataObject extends MultiDataObject {
         DataNode node = new DataNode(this, Children.LEAF, getLookup());
        // DataNode node = new DataNode(this, Children.LEAF, cookies.getLookup());
         //  node.setShortDescription("Name is " + getLookup().lookup(NeuralNetwork.class).toString());
-        node.setDisplayName(cdFileObject.getName());
+        node.setDisplayName(fileObject.getName());
 
         return node;
     }
@@ -143,15 +140,23 @@ public class CDGDataObject extends MultiDataObject {
         return 1;
     }
     
-    private ClassDiagram readFile(FileObject fileObject) {
+    public void loadData() {
+        this.classDiagram = readFromFile(fileObject);
+        cookies.assign(ClassDiagram.class, this.classDiagram); // add neural network to lookup
+        
+        saveCookie= new SaveCookieImpl(this); 
+        cookies.add(saveCookie); // this should be added only on change
+    }     
+    
+    private ClassDiagram readFromFile(FileObject fileObject) {
         ObjectInputStream stream = null;
         try {
             stream = new ObjectInputStream(fileObject.getInputStream());
             try {
-                ClassDiagram nn = (ClassDiagram) stream.readObject();
+                ClassDiagram classDiagram = (ClassDiagram) stream.readObject();
                 stream.close();
 
-                return nn;
+                return classDiagram;
             } catch (ClassNotFoundException ex) {
                 Exceptions.printStackTrace(ex);
                 stream.close();
@@ -167,15 +172,15 @@ public class CDGDataObject extends MultiDataObject {
         return getCookieSet().getLookup();
     }
 
-    @MultiViewElement.Registration(
-        displayName = "#LBL_CDG_EDITOR",
-    iconBase = "org/uml/filetype/cdgfiletype/classdiagramicon.gif",
-    mimeType = "text/x-cdg",
-    persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
-    preferredID = "CDG",
-    position = 1000)
-    @Messages("LBL_CDG_EDITOR=Source")
-    public static MultiViewEditorElement createEditor(Lookup lkp) {
-        return new MultiViewEditorElement(lkp);
-    }
+//    @MultiViewElement.Registration(
+//        displayName = "#LBL_CDG_EDITOR",
+//    iconBase = "org/uml/filetype/cdgfiletype/classdiagramicon.gif",
+//    mimeType = "text/x-cdg",
+//    persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+//    preferredID = "CDG",
+//    position = 1000)
+//    @Messages("LBL_CDG_EDITOR=Source")
+//    public static MultiViewEditorElement createEditor(Lookup lkp) {
+//        return new MultiViewEditorElement(lkp);
+//    }
 }
