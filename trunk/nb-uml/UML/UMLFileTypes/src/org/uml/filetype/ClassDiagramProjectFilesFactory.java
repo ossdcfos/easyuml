@@ -1,15 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.filetype;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.JOptionPane;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
-import org.openide.util.Utilities;
 import org.uml.model.ClassDiagram;
 import org.uml.project.UMLProject;
 
@@ -38,8 +32,8 @@ public class ClassDiagramProjectFilesFactory {
     
     public void createClassDiagramFile(ClassDiagram cd) {
         try {
-            Lookup genlokup = Utilities.actionsGlobalContext();
-            currentProject = genlokup.lookup(UMLProject.class);
+//            Lookup genlokup = Utilities.actionsGlobalContext();
+//            currentProject = genlokup.lookup(UMLProject.class);
             //currentProject = CurrentProject.getInstance().getCurrentProject();                     
             String path = currentProject.getProjectDirectory().getPath();
             path += "/" + UMLProject.Class_Diagrams_DIR + "/";
@@ -57,11 +51,15 @@ public class ClassDiagramProjectFilesFactory {
             }
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
-            JOptionPane.showMessageDialog(null, "Please select project");
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
     
     public String getCreatedFilePath() {
         return createdFilePath;
     }    
+
+    void setProject(UMLProject project) {
+        currentProject = project;
+    }
 }

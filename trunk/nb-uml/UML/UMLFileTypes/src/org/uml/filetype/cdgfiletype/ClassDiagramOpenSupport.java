@@ -1,32 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.filetype.cdgfiletype;
 
-import java.io.IOException;
 import org.openide.cookies.CloseCookie;
 import org.openide.cookies.OpenCookie;
-import org.openide.cookies.SaveCookie;
-import org.openide.loaders.MultiDataObject.Entry;
 import org.openide.loaders.OpenSupport;
 import org.openide.windows.CloneableTopComponent;
-import org.openide.windows.WindowManager;
-import org.uml.explorer.ExplorerTopComponent;
-import org.uml.filetype.ViewManager;
+import org.openide.windows.TopComponent;
 import org.uml.model.ClassDiagram;
+import org.uml.visual.UMLTopComponent;
 
 /**
  *
  * @author Jelena
  */
-public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, CloseCookie, SaveCookie {
+public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, CloseCookie {
 
-    CDGDataObject cdDataObject;
+    CDGDataObject classDiagramDataObject;
+    TopComponent topComponent;
     
     ClassDiagramOpenSupport(CDGDataObject.Entry entry) {
         super(entry);
-        cdDataObject = (CDGDataObject) entry.getDataObject();
+        classDiagramDataObject = (CDGDataObject) entry.getDataObject();
     }
     
     @Override
@@ -40,16 +33,21 @@ public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, 
 
     @Override
     public void open() {
-        
-        ClassDiagram cd = cdDataObject.getClassDiagram();
+        if  (topComponent !=null) {
+            if (topComponent.isOpened()) {
+                topComponent.requestActive();
+            } else {            
+                topComponent.open();
+                topComponent.requestActive();
+             }
+        } else {
+               ClassDiagram cdiag = classDiagramDataObject.getLookup().lookup(ClassDiagram.class);
 
-        ViewManager.getInstance().openUMLDiagramWindow(cd);
-        WindowManager.getDefault().findTopComponent("ExplorerTopComponent").open();
+               topComponent = new UMLTopComponent(cdiag);
+               topComponent.open(); 
+               topComponent.requestActive();                            
+        }  
     }
 
-    @Override
-    public void save() throws IOException {
-        SaveCookieAction saveAction = new SaveCookieAction(this);
-        saveAction.save(cdDataObject);
-    }
+
 }
