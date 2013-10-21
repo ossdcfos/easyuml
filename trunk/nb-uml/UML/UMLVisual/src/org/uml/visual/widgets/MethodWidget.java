@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets;
 
 import java.util.Random;
@@ -40,7 +36,7 @@ public class MethodWidget extends MemberWidgetBase {
         methodNameWidget.getActions().addAction(nameEditorAction);
         methodNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
 
-        
+
     }
 
     @Override
@@ -75,26 +71,38 @@ public class MethodWidget extends MemberWidgetBase {
 
     @Override
     public void setAttributes(String attributes) {
-        
-        methodComponent.setName(attributes.substring(0, attributes.indexOf("(")));
-        
-        String [] keyWords= attributes.split(":");
-        if(keyWords.length>1) {
-        String type = keyWords[keyWords.length-1];
-        methodComponent.setReturnType(type);
+        // parse method signature and set method name return value and input parameters
+        int openBracketIdx = attributes.indexOf("(");
+        if (openBracketIdx != -1) {
+            methodComponent.setName(attributes.substring(0, openBracketIdx));
+        } else {
+            methodComponent.setName(attributes + "()");
         }
-        
-        String parameters = attributes.substring(attributes.indexOf("(")+1, attributes.indexOf(")"));
-        String [] params = parameters.split(",");
-        Random r = new Random(); 
-        int Low = 0;
-        int High = 100;
-        for (String param : params) {
-        String[] typeAndName = param.split(" ");
-        int R = r.nextInt(High-Low) + Low;
-            methodComponent.getArguments().put(Integer.toString(R), new MethodArgument(typeAndName[0], typeAndName[1]));
+
+
+        // set return type
+        String[] keyWords = attributes.split(":");
+        if (keyWords.length > 1) { // this confition is not good
+            String type = keyWords[keyWords.length - 1];
+            methodComponent.setReturnType(type);
         }
-        
-        
+
+        if (openBracketIdx != -1) {
+            // set input parameters
+            String parameters = attributes.substring(attributes.indexOf("(") + 1, attributes.indexOf(")"));
+            if (parameters.length() > 0) {
+                String[] params = parameters.split(",");
+                Random r = new Random();
+                int Low = 0;
+                int High = 100;
+                for (String param : params) {
+                    String[] typeAndName = param.split(" ");
+                    int R = r.nextInt(High - Low) + Low;
+                    methodComponent.getArguments().put(Integer.toString(R), new MethodArgument(typeAndName[0], typeAndName[1]));
+                }
+            }
+        }
+
+
     }
 }

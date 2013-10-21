@@ -23,12 +23,8 @@ public class EditFieldNameAction implements SelectProvider{
     }
 
     @Override
-    public void select(Widget widget, Point point, boolean bln) {
-        
+    public void select(Widget widget, Point point, boolean bln) {        
         WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-        ActionFactory.getInplaceEditorController (editorAction).openEditor(widget);
-        
-        
-        
+        ActionFactory.getInplaceEditorController (editorAction).openEditor(widget);                        
     }
 }
