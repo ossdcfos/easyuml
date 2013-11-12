@@ -37,7 +37,7 @@ public class NameEditorAction implements TextFieldInplaceEditor {
     public void setText(Widget widget, String string) {
 
         nameable.setName(string);
-        nameable.setAttributes(string);
+        //nameable.setAttributes(string);
 
 
             //TODO podesavam ime konkretnog elementa, ali ga zove i field editor i method editor, kako da resim to?
