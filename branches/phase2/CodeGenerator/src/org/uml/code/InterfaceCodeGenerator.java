@@ -26,10 +26,21 @@ class InterfaceCodeGenerator implements CodeGenerator {
 
     @Override
     public String generateCode() {
-        for(Method method : interfaceComponent.getMethods().values()) {
-          //methodCodeGenerator.generateCode();  
-        }
-        return "";
+//        for(Method method : interfaceComponent.getMethods().values()) {
+//          //methodCodeGenerator.generateCode();  
+//        }
+//        return "";
+        String code = "";
+        String header = "public " + "interface " + interfaceComponent.getName() + " { ";
+        MethodCodeGenerator mcg = new MethodCodeGenerator(interfaceComponent.getMethods());
+        String methods = mcg.generateCode();
+        String end="\n }";
+        
+        code+=header+"\n";
+        code+=methods+"\n";
+        code+=end;
+        return code;
+        
     }
 
     @Override
