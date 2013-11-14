@@ -8,6 +8,7 @@ package org.uml.model;
 public class Member { 
     private String name;
     private int modifier;
+    private String modifiers;//ubaceni modifikatori kao string, moguca je kasnija promena na enum
     private ClassDiagramComponent declaringClass;
 
     public Member(String name) {
@@ -38,6 +39,15 @@ public class Member {
     public void setDeclaringClass(ClassDiagramComponent declaringClass) {
         this.declaringClass = declaringClass;
     }
+    
+    public String getModifiers() {
+        return modifiers;
+    }
+
+    public void setModifiers(String modifiers) {
+        this.modifiers = modifiers;
+    }
+    
     
     
     

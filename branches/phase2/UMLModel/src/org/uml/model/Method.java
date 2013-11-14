@@ -17,7 +17,7 @@ public class Method extends Member {
         this.returnType = returnType;
         this.arguments = arguments;
         visibility = Visibility.PUBLIC;
-        this.returnType="void";
+        //this.returnType="void";
     }
 
     public Method(String name) {
@@ -49,6 +49,7 @@ public class Method extends Member {
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
+    
     
     
 }
