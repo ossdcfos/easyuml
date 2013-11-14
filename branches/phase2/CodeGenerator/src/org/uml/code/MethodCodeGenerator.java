@@ -29,14 +29,17 @@ public class MethodCodeGenerator implements CodeGenerator{
         for (Map.Entry<String, Method> entry : methods.entrySet()) {
             Method method = entry.getValue(); 
             String arguments = "";
-            for (Map.Entry<String, MethodArgument> entry1 : method.getArguments().entrySet()) {
-                MethodArgument argument = entry1.getValue();
-                arguments+= argument.getType() + " " + argument.getName()+ ", ";
+            if(method.getArguments()!=null){
+                for (Map.Entry<String, MethodArgument> entry1 : method.getArguments().entrySet()) {
+                    MethodArgument argument = entry1.getValue();
+                    arguments+= argument.getType() + " " + argument.getName()+ ", ";
+                }
             }
             if(!arguments.equals("")){
                 arguments = arguments.substring(0,arguments.length()-2);
-                methodsString+= method.getVisibility() + " " + method.getReturnType() + " " + method.getName()+ "(" + arguments + ") {} \n";
             }
+                methodsString+= method.getVisibility() + "" + method.getModifiers() + "" + method.getReturnType() + " " + method.getName()+ "(" + arguments + ") {} \n";
+            
         }
         return methodsString;
     }
