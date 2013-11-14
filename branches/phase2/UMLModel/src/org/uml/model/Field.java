@@ -12,12 +12,12 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
         // sta ako je niz? da li treba koristiti Type?
         private Type type;
         // these two should go to Member class, and provide nice API 
-        private Visibility visibility;  
+        private Visibility visibility;
         private boolean isStatic;
         private boolean isFinal;
         private boolean isAbstract;
         private boolean isSynchronised;
-
+        
         // provide constructor which takes  declaringClass param
     public Field(String name, Type type, Visibility visibility) {
         super(name);

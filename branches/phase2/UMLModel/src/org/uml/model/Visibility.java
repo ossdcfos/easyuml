@@ -26,6 +26,12 @@ public enum Visibility {
             return "public";
         }
     
+    },
+    PACKAGE{
+        @Override
+        public String toString() {
+            return "";
+        }
     };
 
 
