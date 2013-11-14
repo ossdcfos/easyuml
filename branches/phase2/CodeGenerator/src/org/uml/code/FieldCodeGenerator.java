@@ -43,7 +43,7 @@ public class FieldCodeGenerator implements CodeGenerator{
             if(field.isIsFinal()) {
                 isFinal=" final ";
             }
-            fieldsString += field.getVisibility().toString()+" " + isStatic + isAbstract + isFinal + field.getType().toString() + " "+ field.getName()+"; \n"; 
+            fieldsString += field.getVisibility().toString()+ " " + field.getModifiers() + " " + " "+ field.getName()+"; \n"; //+ isStatic + isAbstract + isFinal + field.getType().toString() -> izbaceno jer se nigde u programu ne setuje
         }
         
         return fieldsString;
