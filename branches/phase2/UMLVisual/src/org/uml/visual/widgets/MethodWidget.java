@@ -8,6 +8,7 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.uml.model.Member;
 import org.uml.model.Method;
 import org.uml.model.MethodArgument;
+import org.uml.visual.parser.ParserZaWidget;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
 
@@ -21,6 +22,7 @@ public class MethodWidget extends MemberWidgetBase {
     private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     LabelWidget visibilityLabel;
     LabelWidget methodNameWidget;
+    
 
     public MethodWidget(ClassDiagramScene scene, Method method) {
         super(scene);
@@ -35,7 +37,7 @@ public class MethodWidget extends MemberWidgetBase {
         this.addChild(methodNameWidget);
         methodNameWidget.getActions().addAction(nameEditorAction);
         methodNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
-
+        
 
     }
 
@@ -71,7 +73,7 @@ public class MethodWidget extends MemberWidgetBase {
 
     @Override
     public void setAttributes(String attributes) {
-        // parse method signature and set method name return value and input parameters
+        /*// parse method signature and set method name return value and input parameters
         int openBracketIdx = attributes.indexOf("(");
         if (openBracketIdx != -1) {
             methodComponent.setName(attributes.substring(0, openBracketIdx));
@@ -102,7 +104,43 @@ public class MethodWidget extends MemberWidgetBase {
                 }
             }
         }
-
+         */
+        ParserZaWidget p = new ParserZaWidget(attributes);
+        p.preskociWhitespace();
+        methodComponent.setVisibility(p.vratiVisibility());
+        p.preskociWhitespace();
+        String modifiers = "";
+        boolean imaModifier = true;
+	while(imaModifier) {
+		String mod = p.vratiModifier();
+		if(mod.equals("")){
+			imaModifier = false;
+			modifiers += mod;
+			break;
+		}
+		modifiers += mod + " ";
+		p.preskociWhitespace();
+	}
+        methodComponent.setModifiers(modifiers);
+        p.preskociWhitespace();
+        methodComponent.setReturnType(p.vratiReturnType());
+        p.preskociWhitespace();
+        methodComponent.setName(p.vratiName());
+        p.preskociWhitespace();
+        String argumenti = p.vratiArgumente();
+	if(argumenti.equals("")) {
+		methodComponent.setArguments(null);
+	}else{
+            argumenti = p.urediArgumente(argumenti);
+            String[] args = argumenti.split(", ");
+               for(String arg : args) {
+                  Random r = new Random();
+                  int Low = 0;
+                  int High = 100;
+                  int R = r.nextInt(High - Low) + Low;
+                  methodComponent.getArguments().put(Integer.toString(R), new MethodArgument(arg.substring(0,arg.indexOf(" ")), arg.substring(arg.indexOf(" ") + 1)));
+               }
+        }
 
     }
 }
