@@ -115,10 +115,17 @@ public class FieldWidget  extends MemberWidgetBase{
 	}
         fieldComponent.setModifiers(modifiers);
         p.preskociWhitespace();
-        p.vratiArgumentType();//ne znam kako da konvertujem string u Type?
+        String typeStr =  p.vratiArgumentType();//ne znam kako da konvertujem string u Type?
+        Type type = convertToType(typeStr);
+        Type.class.toString()
+        fieldComponent.setType(type);
         p.preskociWhitespace();
         fieldComponent.setName(p.vratiName());
         
+    }
+
+    private Type convertToType(String typeStr) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
