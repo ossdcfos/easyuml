@@ -71,7 +71,7 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
         return type;
     }
 
-    public void setType(Class<? extends Object> type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
