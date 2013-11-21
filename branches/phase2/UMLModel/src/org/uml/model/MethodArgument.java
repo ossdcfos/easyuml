@@ -1,8 +1,11 @@
 package org.uml.model;
 
 /**
- *
+ * Implementation of argument which is used by method or constructor.
  * @author Uros
+ * @see Member
+ * @see Constructor
+ * @see Method
  */
 public class MethodArgument {
     
@@ -30,6 +33,10 @@ public class MethodArgument {
         this.name = name;
     }
 
+    /**
+     * Returns string representing that MethodArgument.
+     * @return string in format: "MethodArgument{" + "type=" + type + ", name=" + name + '}'
+     */
     @Override
     public String toString() {
         return "MethodArgument{" + "type=" + type + ", name=" + name + '}';
