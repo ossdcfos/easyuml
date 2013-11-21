@@ -4,12 +4,16 @@ import java.io.BufferedReader;
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import org.uml.model.Field;
+import org.uml.model.Method;
+import org.uml.model.MethodArgument;
 import org.uml.model.Visibility;
 
-public class ParserZaWidget {
+public class WidgetParser {
 
 	Pattern whitespaces = Pattern.compile("\\s*");
 	Pattern visibility = Pattern.compile("public|private|protected|package");
@@ -20,24 +24,19 @@ public class ParserZaWidget {
 	Pattern arrayCheck = Pattern.compile("(\\[\\s*\\])?");
 	Pattern name = Pattern.compile("\\w+");
 	Pattern argumentBlock = Pattern.compile("\\(.*\\)");
-	String stringToParse = null;
+	String  stringToParse = null;
 	int[] niz = new int[3];
-
-    public ParserZaWidget(String stringToParse) {
-        this.stringToParse = stringToParse;
-    }
-	
+        Method m;
+        Field f;
         
-        
-        
-	public void preskociWhitespace() {
+	public void skipWhitespaces() {
 		Matcher m = whitespaces.matcher(stringToParse);
 		if(m.lookingAt()) {
 			stringToParse = stringToParse.substring(m.end());
 		}
 	}
 	
-	public String preskociWhitespaceArgs(String text) {
+	public String skipArgumentWhitespaces(String text) {
 		Matcher m = whitespaces.matcher(text);
 		if(m.lookingAt()) {
 			text = text.substring(m.end());
@@ -45,13 +44,15 @@ public class ParserZaWidget {
 		return text;
 	}
 	
-	public Visibility vratiVisibility() {
+	public Visibility getVisibility() {
 		String vis = "";
+                skipWhitespaces();
 		Matcher m = visibility.matcher(stringToParse);
 		if(m.lookingAt()) {
 			vis = stringToParse.substring(m.start(),m.end());
 			stringToParse = stringToParse.substring(m.end());
 		}
+                skipWhitespaces();
                 if(vis.equals("private")) {
                     return Visibility.PRIVATE;
                 }
@@ -67,35 +68,40 @@ public class ParserZaWidget {
                 return null;
 	}
 	
-	public String vratiModifier() {
+	public String getModifier() {
 		String result = "";
+                skipWhitespaces();
 		Matcher m = methodModifiers.matcher(stringToParse);
 		if(m.lookingAt()) {
 			result = stringToParse.substring(m.start(),m.end()) + " ";
 			stringToParse = stringToParse.substring(m.end());
 		}
+                skipWhitespaces();
 		return result;
 	}
 	
-	public String vratiName() {
+	public String getName() {
 		String result = "";
+                skipWhitespaces();
 		Matcher m = name.matcher(stringToParse);
 		if(m.lookingAt()) {
 			result = stringToParse.substring(m.start(),m.end());
 			stringToParse = stringToParse.substring(m.end());
 		}
+                skipWhitespaces();
 		return result;
 	}
 	
 	
 	
-	public String vratiReturnType() {
+	public String getReturnType() {
 		String result = "";
+                skipWhitespaces();
 		Matcher m = returnValueType.matcher(stringToParse);
 		if(m.lookingAt()) {
 			result = stringToParse.substring(m.start(),m.end());
 			stringToParse = stringToParse.substring(m.end());
-			preskociWhitespace();
+			skipWhitespaces();
 			m = arrayCheck.matcher(stringToParse);
 			if(m.lookingAt()) {
 				result = result.concat(stringToParse.substring(m.start(), m.end())) + " ";
@@ -106,32 +112,32 @@ public class ParserZaWidget {
 		}else {
                     result = "void ";
                 }               
-		
+		skipWhitespaces();
 		return result;
 	}
         
-        public String vratiArgumentType() {
+        public String getArgumentType() {
             String result = "";
-		Matcher m = argumentType.matcher(stringToParse);
+            Matcher m = argumentType.matcher(stringToParse);
+            if(m.lookingAt()) {
+		result = stringToParse.substring(m.start(),m.end());
+		stringToParse = stringToParse.substring(m.end());
+		skipWhitespaces();
+		m = arrayCheck.matcher(stringToParse);
 		if(m.lookingAt()) {
-			result = stringToParse.substring(m.start(),m.end());
-			stringToParse = stringToParse.substring(m.end());
-			preskociWhitespace();
-			m = arrayCheck.matcher(stringToParse);
-			if(m.lookingAt()) {
-				result = result.concat(stringToParse.substring(m.start(), m.end())) + " ";
-				stringToParse = stringToParse.substring(m.end());
-			}else {
-				result = result.concat(" ");
-			}
+                    result = result.concat(stringToParse.substring(m.start(), m.end())) + " ";
+                    stringToParse = stringToParse.substring(m.end());
 		}else {
-                    result = "Object ";
-                }               
-		
-		return result;
+                    result = result.concat(" ");
+		}
+            }else {
+                result = "Object ";
+            }               
+            skipWhitespaces();
+            return result;
         }
 	
-	public String vratiArgumente() {
+	public String getArguments() {
 		String result = "";
 		Matcher m = argumentBlock.matcher(stringToParse);
 		if(m.lookingAt()) {
@@ -143,34 +149,34 @@ public class ParserZaWidget {
 		return result;
 	}
 	
-	public String urediArgumente(String argumenti) {
+	public String formatArguments(String arguments) {
 		String result = "";
-		if(argumenti.equals("")) {
+		if(arguments.equals("")) {
 			return result;
 		}
-		String[] args = argumenti.split(",");
+		String[] args = arguments.split(",");
 		for (int i = 0; i<args.length - 1; i++) {
-			result = result.concat(parsirajArgument(args[i])) + ", ";
+			result = result.concat(parseArgument(args[i])) + ", ";
 		}
-		result = result.concat(parsirajArgument(args[args.length - 1]));
+		result = result.concat(parseArgument(args[args.length - 1]));
 		return result;
 	}
 	
-	public String parsirajArgument(String argument) {
+	public String parseArgument(String argument) {
 		String result = "";
 		if(argument.equals("")) {
 			return result;
 		}
-		argument = preskociWhitespaceArgs(argument);
+		argument = skipArgumentWhitespaces(argument);
 		Matcher m = argumentType.matcher(argument);
 		if(m.lookingAt()) {
 			result = argument.substring(m.start(), m.end()) + " ";
 			argument = argument.substring(m.end());
-			argument = preskociWhitespaceArgs(argument);
+			argument = skipArgumentWhitespaces(argument);
 		}else {
 			result = "Object ";
 		}
-		argument = preskociWhitespaceArgs(argument);
+		argument = skipArgumentWhitespaces(argument);
 		m = name.matcher(argument);
 		if(m.lookingAt()) {
 			result = result.concat(argument.substring(m.start(), m.end()));
@@ -179,70 +185,57 @@ public class ParserZaWidget {
 		}
 		return result;
 	}
-	
-	public String isparsiraj() {
-		String result = "";
-		preskociWhitespace();
-		result = result.concat(vratiVisibility().toString());
-		preskociWhitespace();
-		boolean imaModifier = true;
-		while(imaModifier) {
-			String mod = vratiModifier();
-			if(mod.equals("")){
-				imaModifier = false;
-				result = result.concat(mod);
-				break;
-			}
-			result = result.concat(mod);
-			preskociWhitespace();
-		}
-		result = result.concat(vratiReturnType());
-		preskociWhitespace();
-		result = result.concat(vratiName());
-		preskociWhitespace();
-		String argumenti = vratiArgumente();
-		if(argumenti.equals("()")) {
-			result = result.concat("()");
-		}else {
-			result = result.concat(urediArgumente(argumenti));
-		}
-		
-		
-		
-		
-		return result;
-	}
         
-	
-   public static void main(String[] args){
-    	ParserZaWidget rth = new ParserZaWidget("");
-    	
-    	Pattern p1 = Pattern.compile("\\s*(public|private|protected)\\s*\\w+\\s*");
-    	Matcher m  = p1.matcher(" public void");
-    	System.out.println(m.matches());
-    	System.out.println("a".substring(1) + "+");
-        System.out.println(("a".split(" "))[0]);
-        while (true) {
-        	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        		
-           
-			try {
-				
-  			
-				
-				 System.out.println("Unesi tekst");
-				 rth.stringToParse =br.readLine();
-                                 
-				System.out.println("Parsirano " + rth.isparsiraj());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-           
-            
-            
-
-            
-       }
-    }
+        public void fillFieldComponents(Field f, String fieldWidgetText) {
+            stringToParse = fieldWidgetText;
+            f.setVisibility(getVisibility());
+            String modifiers = "";
+            boolean imaModifier = true;
+            while(imaModifier) {
+		String mod = getModifier();
+		if(mod.equals("")){
+                    imaModifier = false;
+                    modifiers += mod;
+                    break;
+		}
+		modifiers += mod + " ";
+            }
+            f.setModifiers(modifiers);
+            getArgumentType();//ne znam kako da konvertujem string u Type?
+            f.setName(getName());
+        }
+        
+        
+        public void fillMethodComponents(Method m, String methodWidgetText) {
+            stringToParse = methodWidgetText;
+            m.setVisibility(getVisibility());
+            String modifiers = "";
+            boolean imaModifier = true;
+            while(imaModifier) {
+		String mod = getModifier();
+		if(mod.equals("")){
+                    imaModifier = false;
+                    modifiers += mod;
+                    break;
+		}
+		modifiers += mod + " ";
+            }
+            m.setModifiers(modifiers);
+            m.setReturnType(getReturnType());
+            m.setName(getName());
+            String argumenti = getArguments();
+            if(argumenti.equals("")) {
+		m.setArguments(null);
+            }else{
+                argumenti = formatArguments(argumenti);
+                String[] args = argumenti.split(", ");
+                for(String arg : args) {
+                    Random r = new Random();
+                    int Low = 0;
+                    int High = 100;
+                    int R = r.nextInt(High - Low) + Low;
+                    m.getArguments().put(Integer.toString(R), new MethodArgument(arg.substring(0,arg.indexOf(" ")), arg.substring(arg.indexOf(" ") + 1)));
+                }
+            }
+        }
 }
