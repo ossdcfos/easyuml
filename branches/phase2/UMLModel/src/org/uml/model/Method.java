@@ -3,8 +3,12 @@ package org.uml.model;
 import java.util.HashMap;
 
 /**
- *
+ * Implementation of Method, one of 4 possible Members.
  * @author Uros
+ * @see Member
+ * @see Field
+ * @see Literal
+ * @see Constructor
  */
 public class Method extends Member {
     
@@ -49,7 +53,5 @@ public class Method extends Member {
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
-    
-    
-    
+ 
 }

@@ -5,8 +5,12 @@ import java.lang.reflect.Type;
 
 
 /**
- *
+ * Implementation of Field, one of 4 possible Members.
  * @author Uros
+ * @see Member
+ * @see Literal
+ * @see Method
+ * @see Constructor
  */
 public class Field extends Member /* treba da nasledjuje member a u membberu da bude visibility*/{
         // sta ako je niz? da li treba koristiti Type?
@@ -74,8 +78,5 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
     public void setType(Type type) {
         this.type = type;
     }
-
-
-        
-        
+      
 }

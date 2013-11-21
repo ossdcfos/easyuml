@@ -3,17 +3,29 @@ package org.uml.model;
 import java.io.Serializable;
 
 /**
- *
+ * Implementation of relation components that can be added to the class diagram
  * @author "NUGS"
+ * @see ClassDiagram
+ * @see ClassDiagramComponent
  */
 public class RelationComponent implements Serializable {
     
     ClassDiagramComponent source;
     ClassDiagramComponent target;
     private String name;
+    
+    /**
+     * Default constructor without parameters.
+     */
     public RelationComponent() {
     }       
     
+    /**
+     * Constructor with parameters.
+     * @param source
+     * @param target
+     * @param name 
+     */
     public RelationComponent( ClassDiagramComponent source, ClassDiagramComponent target, String name) {
         this.source=source;
         this.target=target;
