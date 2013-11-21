@@ -38,7 +38,7 @@ public class MethodCodeGenerator implements CodeGenerator{
             if(!arguments.equals("")){
                 arguments = arguments.substring(0,arguments.length()-2);
             }
-                methodsString+= method.getVisibility() + "" + method.getModifiers() + "" + method.getReturnType() + " " + method.getName()+ "(" + arguments + ") {} \n";
+                methodsString+= method.getVisibility() + " " + method.getModifiers() + " " + method.getReturnType() + " " + method.getName()+ "(" + arguments + ") {} \n";
             
         }
         return methodsString;
