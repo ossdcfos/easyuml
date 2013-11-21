@@ -12,7 +12,7 @@ import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.uml.model.Field;
 import org.uml.model.Member;
-import org.uml.visual.parser.ParserZaWidget;
+import org.uml.visual.parser.WidgetParser;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
 
@@ -26,6 +26,7 @@ public class FieldWidget  extends MemberWidgetBase{
     private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     LabelWidget visibilityLabel;
     LabelWidget fieldNameWidget;
+    WidgetParser wp;
     
     public FieldWidget(ClassDiagramScene scene, Field field) {
         super(scene);
@@ -40,7 +41,7 @@ public class FieldWidget  extends MemberWidgetBase{
         this.addChild(fieldNameWidget);
         fieldNameWidget.getActions().addAction(nameEditorAction);
         fieldNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(this)));
-
+        wp = new WidgetParser();
     }
     
     @Override
@@ -97,30 +98,7 @@ public class FieldWidget  extends MemberWidgetBase{
             
         }
         */
-        ParserZaWidget p = new ParserZaWidget(attributes);
-        p.preskociWhitespace();
-        fieldComponent.setVisibility(p.vratiVisibility());
-        p.preskociWhitespace();
-        String modifiers = "";
-        boolean imaModifier = true;
-	while(imaModifier) {
-		String mod = p.vratiModifier();
-		if(mod.equals("")){
-			imaModifier = false;
-			modifiers += mod;
-			break;
-		}
-		modifiers += mod + " ";
-		p.preskociWhitespace();
-	}
-        fieldComponent.setModifiers(modifiers);
-        p.preskociWhitespace();
-        String typeStr =  p.vratiArgumentType();//ne znam kako da konvertujem string u Type?
-        Type type = convertToType(typeStr);
-        Type.class.toString()
-        fieldComponent.setType(type);
-        p.preskociWhitespace();
-        fieldComponent.setName(p.vratiName());
+        wp.fillFieldComponents(fieldComponent, attributes);
         
     }
 
