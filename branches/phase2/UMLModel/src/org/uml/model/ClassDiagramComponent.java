@@ -83,7 +83,7 @@ public class ClassDiagramComponent implements Serializable {
      * @param member that will be renamed
      * @param oldName old name of that component
      */
-    public void componentNameChanged(Member member, String oldName) {
+    public void notifyMemberNameChanged(Member member, String oldName) {
         members.remove(oldName);
         addMember(member);
     }
