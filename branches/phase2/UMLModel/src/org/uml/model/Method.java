@@ -12,7 +12,6 @@ import java.util.HashMap;
  */
 public class Method extends Member {
     
-    private Visibility visibility;
     private String returnType;
     private HashMap <String,MethodArgument> arguments;
 

@@ -16,6 +16,7 @@ public class ClassDiagramComponent implements Serializable {
     protected HashMap<String,Member> members; // index of all fields, methods and constructors
     protected ClassDiagram parentDiagram;            
     private int memberCounter = 0;
+    protected Visibility visibility;
             
     /**
      * Default constructor. Initializes only memebers (fields, methods and constructors)

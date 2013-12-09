@@ -1,7 +1,7 @@
 package org.uml.model;
 
 /**
- *
+ * Enumeration which implements all posible types of access modifiers - private, protected, public and package.
  * @author Uros
  */
 public enum Visibility {

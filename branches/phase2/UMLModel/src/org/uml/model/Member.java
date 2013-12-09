@@ -15,6 +15,7 @@ public class Member {
     private int modifier;
     private String modifiers; //modifiers are implemented as Strings, it is possible to later be changed to enum
     private ClassDiagramComponent declaringClass;
+    protected Visibility visibility;
 
     /**
      * Default constructor.
@@ -55,8 +56,5 @@ public class Member {
     public void setModifiers(String modifiers) {
         this.modifiers = modifiers;
     }
-    
-    
-    
-    
+
 }
