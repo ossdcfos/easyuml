@@ -58,7 +58,7 @@ public class FieldWidget  extends MemberWidgetBase{
         if (!fieldComponent.getDeclaringClass().nameExists(newName)) {
             fieldNameWidget.setLabel(newName);
             fieldComponent.setName(newName);
-            fieldComponent.getDeclaringClass().componentNameChanged(fieldComponent, oldName);
+            fieldComponent.getDeclaringClass().notifyMemberNameChanged(fieldComponent, oldName);
         }
         else {
             //poruka
