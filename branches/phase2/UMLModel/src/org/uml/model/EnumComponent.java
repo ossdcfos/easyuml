@@ -3,11 +3,12 @@ package org.uml.model;
 import java.util.HashMap;
 
 /**
- * Implementation of EnumComponent, one of three posible types of ClassDiagramComponents.
+ * Implementation of EnumComponent, one of four posible types of ClassDiagramComponents.
  * @author zoran
  * @see ClassDiagramComponents
  * @see ClassComponent
  * @see RelationComponent
+ * @see PackageComponent
  */
 public class EnumComponent extends ClassDiagramComponent {
     private HashMap<String, Field> fields;

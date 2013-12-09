@@ -3,11 +3,12 @@ package org.uml.model;
 import java.util.HashMap;
 
 /**
- * Implementation of InterfaceComponent, one of three posible types of ClassDiagramComponents.
+ * Implementation of InterfaceComponent, one of four posible types of ClassDiagramComponents.
  * @author zoran
  * @see ClassDiagramComponent
  * @see ClassComponent
  * @see EnumComponent
+ * @see PackageComponent
  */
 public class InterfaceComponent  extends ClassDiagramComponent {
     private HashMap<String, Method> methods;

@@ -32,8 +32,12 @@ public class ClassDiagram implements Serializable {
      * with it's name concatenated with current component counter number.
      * @param component to be added to collection
      */
-    
-    
+
+    /**
+     * Adds new ClassDiagramComponent into collection of existing components.If component with that name already exists in this collection, new one will be added
+ with it's name concatenated with current component counter number.
+     * @param component to be added to collection
+     */
     public void addComponent(ClassDiagramComponent component) {
         if (nameExists(component.getName())) {
             component.setName(component.getName() + compCounter);

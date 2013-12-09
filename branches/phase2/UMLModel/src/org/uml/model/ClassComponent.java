@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Implementation of ClassComponent, one of three posible types of ClassDiagramComponents.
+ * Implementation of ClassComponent, one of four posible types of ClassDiagramComponents.
  * @author Uros
  * @see ClassDiagramComponent
  * @see EnumComponent
  * @see InterfaceComponent
+ * @see PackageComponent
  */
 public class ClassComponent extends ClassDiagramComponent {
     
     private HashMap<String,Constructor> constructors;
     private HashMap<String,Field> fields;
     private HashMap<String,Method> methods;
-    private Visibility visibility;
     private boolean isAbstract;
     private Type type;
 
