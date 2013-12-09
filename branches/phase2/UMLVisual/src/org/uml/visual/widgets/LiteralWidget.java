@@ -54,7 +54,7 @@ public class LiteralWidget extends MemberWidgetBase{
         if (!literalComponent.getDeclaringClass().nameExists(newName)) {
             literalNameWidget.setLabel(newName);
             literalComponent.setName(newName);
-            literalComponent.getDeclaringClass().componentNameChanged(literalComponent, oldName);
+            literalComponent.getDeclaringClass().notifyMemberNameChanged(literalComponent, oldName);
         }
         else {
             //poruka

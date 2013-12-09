@@ -55,7 +55,7 @@ public class MethodWidget extends MemberWidgetBase {
         if (!methodComponent.getDeclaringClass().nameExists(newName)) {
             methodNameWidget.setLabel(newName);
             methodComponent.setName(newName);
-            methodComponent.getDeclaringClass().componentNameChanged(methodComponent, oldName);
+            methodComponent.getDeclaringClass().notifyMemberNameChanged(methodComponent, oldName);
         } else {
             //poruka
         }
