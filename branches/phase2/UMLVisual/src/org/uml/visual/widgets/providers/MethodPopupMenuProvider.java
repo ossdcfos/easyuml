@@ -51,6 +51,10 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         visibilitySubmenu.add(protectedItem =new JRadioButton("protected"));
         protectedItem.addActionListener(protectedItemListener);
         visibilitySubmenu.add(packageItem =new JRadioButton("package"));
+        visibilityGroup.add(publicItem);
+        visibilityGroup.add(privateItem);
+        visibilityGroup.add(protectedItem);
+        visibilityGroup.add(packageItem);
         menu.add(visibilitySubmenu);
         
         modifiersSubmenu= new JMenu("Modifiers");

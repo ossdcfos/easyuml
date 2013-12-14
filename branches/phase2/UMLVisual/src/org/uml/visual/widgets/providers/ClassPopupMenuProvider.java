@@ -126,6 +126,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
             MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
             classWidget.getScene().getView().addMouseListener(mouseListener);
+            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
         }
     };
     ActionListener addMethodListener = new ActionListener() {
@@ -141,6 +142,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
             MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
             classWidget.getScene().getView().addMouseListener(mouseListener);
+            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
         }
     };
     ActionListener addConstructorListener = new ActionListener() {
@@ -151,6 +153,8 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
             classWidget.addConstructorWidget(w);
             classWidget.getScene().validate();
+            
+            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
         }
     };
     

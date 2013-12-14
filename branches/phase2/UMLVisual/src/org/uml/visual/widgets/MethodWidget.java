@@ -1,13 +1,11 @@
 package org.uml.visual.widgets;
 
-import java.util.Random;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.uml.model.Member;
 import org.uml.model.Method;
-import org.uml.model.MethodArgument;
 import org.uml.visual.parser.WidgetParser;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MethodPopupMenuProvider;

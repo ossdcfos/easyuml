@@ -10,7 +10,6 @@ import org.netbeans.api.visual.anchor.AnchorShape;
 import org.netbeans.api.visual.anchor.AnchorShapeFactory;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.graph.GraphScene;
-import org.netbeans.api.visual.graph.layout.GraphLayout;
 import org.netbeans.api.visual.graph.layout.GraphLayoutFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.model.ObjectSceneEvent;
@@ -52,7 +51,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
     private ClassDiagram umlClassDiagram;
-    
     InstanceContent content = new InstanceContent();
     AbstractLookup aLookup = new AbstractLookup(content);    
             
@@ -123,7 +121,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
             @Override
             public void hoverChanged(ObjectSceneEvent event, Object previousHoveredObject, Object newHoveredObject) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
@@ -179,7 +177,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         else {
             throw new RuntimeException("Unknown component!");
         }
-                     
+        
         mainLayer.addChild(widget);
         
         return widget;

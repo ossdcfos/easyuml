@@ -1,11 +1,6 @@
 package org.uml.visual.parser;
-
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.IOException;
-import java.io.InputStreamReader;
+ 
 import java.util.Random;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import org.uml.model.Field;
@@ -16,6 +11,7 @@ import org.uml.model.Visibility;
 public class WidgetParser {
 
 	Pattern whitespaces = Pattern.compile("\\s*");
+        Pattern allMethodModifiers = Pattern.compile("public|private|protected|package|static|final|abstract|synchronized"); 
 	Pattern visibility = Pattern.compile("public|private|protected|package");
 	Pattern methodModifiers = Pattern.compile("static|final|abstract|synchronized");
         Pattern fieldModifiers = Pattern.compile("static|final|synchronized");
@@ -29,13 +25,22 @@ public class WidgetParser {
         Method m;
         Field f;
         
+        /**
+         * Edits stringToParse field. 
+         * Removes white spaces from the start of the stringToParse field.
+         */
 	public void skipWhitespaces() {
 		Matcher m = whitespaces.matcher(stringToParse);
 		if(m.lookingAt()) {
 			stringToParse = stringToParse.substring(m.end());
 		}
 	}
-	
+	/**
+         * Edits one method argument and returns argument's type or name.
+         * Removes white spaces from the start of the text argument.
+         * @param text represents method argument's type and name or just name 
+         * @return method argument's type or name
+         */
 	public String skipArgumentWhitespaces(String text) {
 		Matcher m = whitespaces.matcher(text);
 		if(m.lookingAt()) {
@@ -44,6 +49,62 @@ public class WidgetParser {
 		return text;
 	}
 	
+        public String[] getAllMethodModifiers() {
+            String[] result = new String[5];
+            boolean hasMoreModifiers = true;
+            while(hasMoreModifiers) {
+                skipWhitespaces();
+                Matcher m = allMethodModifiers.matcher(stringToParse);
+                if(m.lookingAt()) {
+                    for(int i = 0; i<5; i++) {
+                        if(result[i] == null){
+                            result[i] = stringToParse.substring(m.start(), m.end());
+                            break;
+                        }
+                    }
+                    stringToParse = stringToParse.substring(m.end());
+                }else {
+                    hasMoreModifiers = false;
+                }
+            }
+            return result;
+        }
+        
+        public void setMethodModifiers() {
+            String[] allModifiers = getAllMethodModifiers();
+            String modifiers = "";
+            for(int i = 0; i<allModifiers.length;i++) {
+                if(allModifiers[i] != null){
+                    Matcher m = visibility.matcher(allModifiers[i]);
+                    if(m.lookingAt()) {
+                        setVisibility(allModifiers[i]);
+                    }else {
+                        
+                        modifiers = modifiers.concat(allModifiers[i]) + " ";
+                    }
+                }
+                
+            }
+            m.setModifiers(modifiers);
+        }
+        public void setVisibility(String visibility) {
+            if(visibility.equals("private")) {
+                m.setVisibility(Visibility.PRIVATE);
+            }
+            if(visibility.equals("public")) {
+                m.setVisibility(Visibility.PUBLIC);
+            }
+            if(visibility.equals("protected")) {
+                m.setVisibility(Visibility.PROTECTED);
+            }
+            if(visibility.equals("")) {
+                m.setVisibility(Visibility.PACKAGE);
+            }
+        }
+        /**
+         * Parses stringToParse string to extract visibility. 
+         * @return visibility 
+         */
 	public Visibility getVisibility() {
 		String vis = "";
                 skipWhitespaces();
@@ -68,6 +129,10 @@ public class WidgetParser {
                 return null;
 	}
 	
+        /**
+         * Parses stringToParse string to extract modifiers.
+         * @return modifiers separated by " "
+         */
 	public String getModifier() {
 		String result = "";
                 skipWhitespaces();
@@ -80,6 +145,10 @@ public class WidgetParser {
 		return result;
 	}
 	
+        /**
+         * Parses stringToParse string to extract name.
+         * @return name
+         */
 	public String getName() {
 		String result = "";
                 skipWhitespaces();
@@ -91,9 +160,10 @@ public class WidgetParser {
                 skipWhitespaces();
 		return result;
 	}
-	
-	
-	
+	/**
+         * Parses stringToParse to extract return type of a method.
+         * @return return type of a method
+         */
 	public String getReturnType() {
 		String result = "";
                 skipWhitespaces();
@@ -116,6 +186,10 @@ public class WidgetParser {
 		return result;
 	}
         
+        /**
+         * Parses stringToParse to extract type of a field
+         * @return type of a field
+         */
         public String getArgumentType() {
             String result = "";
             Matcher m = argumentType.matcher(stringToParse);
@@ -137,6 +211,10 @@ public class WidgetParser {
             return result;
         }
 	
+        /**
+         * Parses stringToParse to extract method arguments
+         * @return string between parentheses
+         */
 	public String getArguments() {
 		String result = "";
 		Matcher m = argumentBlock.matcher(stringToParse);
@@ -149,6 +227,11 @@ public class WidgetParser {
 		return result;
 	}
 	
+        /**
+         * Parses the result of the getArguments() method to extract all arguments
+         * @param arguments represents all method arguments
+         * @return arranged method arguments
+         */
 	public String formatArguments(String arguments) {
 		String result = "";
 		if(arguments.equals("")) {
@@ -162,6 +245,12 @@ public class WidgetParser {
 		return result;
 	}
 	
+        /**
+         * Parses unordered argument to extract argument name and/or type.
+         * If argument type is not found, sets it to Object
+         * @param argument represents one method argument
+         * @return arranged method argument
+         */
 	public String parseArgument(String argument) {
 		String result = "";
 		if(argument.equals("")) {
@@ -186,6 +275,11 @@ public class WidgetParser {
 		return result;
 	}
         
+        /**
+         * Sets attributes of the Field object by parsing the fieldWidgetText.
+         * @param f represents Field object passed from FieldWidget
+         * @param fieldWidgetText represents string typed in the class diagram
+         */
         public void fillFieldComponents(Field f, String fieldWidgetText) {
             stringToParse = fieldWidgetText;
             f.setVisibility(getVisibility());
@@ -205,22 +299,28 @@ public class WidgetParser {
             f.setName(getName());
         }
         
-        
+        /**
+         * Sets attributes of the Method object by parsing the methodWidgetText.
+         * @param m represents Method object passed from MethodWidget
+         * @param methodWidgetText represents string typed in the class diagram
+         */
         public void fillMethodComponents(Method m, String methodWidgetText) {
             stringToParse = methodWidgetText;
-            m.setVisibility(getVisibility());
-            String modifiers = "";
-            boolean imaModifier = true;
-            while(imaModifier) {
-		String mod = getModifier();
-		if(mod.equals("")){
-                    imaModifier = false;
-                    modifiers += mod;
-                    break;
-		}
-		modifiers += mod + " ";
-            }
-            m.setModifiers(modifiers);
+            this.m = m;
+//            m.setVisibility(getVisibility());
+//            String modifiers = "";
+//            boolean imaModifier = true;
+//            while(imaModifier) {
+//		String mod = getModifier();
+//		if(mod.equals("")){
+//                    imaModifier = false;
+//                    modifiers += mod;
+//                    break;
+//		}
+//		modifiers += mod + " ";
+//            }
+//            m.setModifiers(modifiers);
+            setMethodModifiers();
             m.setReturnType(getReturnType());
             m.setName(getName());
             String argumenti = getArguments();

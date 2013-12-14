@@ -17,12 +17,12 @@ public class ClassHoverProvider implements TwoStateHoverProvider{
 
     @Override
     public void unsetHovering(Widget widget) {
-        
+        widget.setBackground(Color.WHITE);
     }
 
     @Override
     public void setHovering(Widget widget) {
-        widget.setBackground(Color.WHITE);
+        widget.setBackground(Color.GRAY);
     }
 
 
