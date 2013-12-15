@@ -36,7 +36,6 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
     private JRadioButton protectedItem;
     private JRadioButton packageItem;
     private JCheckBoxMenuItem staticJCBMI;
-    private JCheckBoxMenuItem abstractJCBMI;
     private JCheckBoxMenuItem finalJCBMI;
     private JCheckBoxMenuItem synchronizedJCBMI;
     
@@ -53,6 +52,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         visibilitySubmenu.add(protectedItem =new JRadioButton("protected"));
         protectedItem.addActionListener(protectedItemListener);
         visibilitySubmenu.add(packageItem =new JRadioButton("package"));
+        packageItem.addActionListener(packageItemListener);
         visibilityGroup.add(publicItem);
         visibilityGroup.add(privateItem);
         visibilityGroup.add(protectedItem);
@@ -62,8 +62,6 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         modifiersSubmenu= new JMenu("Modifiers");
         modifiersSubmenu.add(staticJCBMI= new JCheckBoxMenuItem("static"));
         staticJCBMI.addActionListener(staticJCBMIListener);
-        modifiersSubmenu.add(abstractJCBMI=new JCheckBoxMenuItem("abstract"));
-        abstractJCBMI.addActionListener(abstractJCBMIListener);
         modifiersSubmenu.add(finalJCBMI=new JCheckBoxMenuItem("final"));
         finalJCBMI.addActionListener(finalJCBMIListener);
         modifiersSubmenu.add(synchronizedJCBMI=new JCheckBoxMenuItem("synchronized"));
@@ -80,7 +78,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             ((Field)fieldWidget.getMember()).setVisibility(Visibility.PUBLIC);
-                     
+            fieldWidget.refreshLabel();
         }
     };
     
@@ -89,6 +87,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             ((Field)fieldWidget.getMember()).setVisibility(Visibility.PRIVATE);
+            fieldWidget.refreshLabel();
         }
     };
     
@@ -97,6 +96,16 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             ((Field)fieldWidget.getMember()).setVisibility(Visibility.PROTECTED);
+            fieldWidget.refreshLabel();
+        }
+    };
+    
+    ActionListener packageItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ((Field)fieldWidget.getMember()).setVisibility(Visibility.PACKAGE);
+            fieldWidget.refreshLabel();
         }
     };
     
@@ -106,6 +115,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
            fieldWidget.getMember().getDeclaringClass().removeMember(fieldWidget.getName());
            fieldWidget.removeFromParent();
         }
+        
     };
     
     ActionListener staticJCBMIListener = new ActionListener() {
@@ -113,26 +123,17 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             Field field = (Field)fieldWidget.getMember();
-            if (field.isIsStatic()==false) {
-                field.setIsStatic(true);
+            if(staticJCBMI.getState()) {
+                if(!field.isIsStatic()) {
+                    field.setIsStatic(true);
+                }
             }
             else {
-                field.setIsStatic(false);
+                if(field.isIsStatic()) {
+                    field.setIsStatic(false);
+                }
             }
-        }
-    };
-    
-    ActionListener abstractJCBMIListener = new ActionListener() {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Field field = (Field)fieldWidget.getMember();
-            if(field.isIsAbstract()==false) {
-                field.setIsAbstract(true);
-            }
-            else {
-                field.setIsAbstract(false);
-            }
+            fieldWidget.getFieldNameWidget().setLabel(((Field) fieldWidget.getMember()).getSignatureForLabel());
         }
     };
     
@@ -141,12 +142,17 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             Field field = (Field)fieldWidget.getMember();
-            if(field.isIsFinal()==false) {
-                field.setIsFinal(true);
+            if(finalJCBMI.getState()) {
+                if(!field.isIsFinal()) {
+                    field.setIsFinal(true);
+                }
             }
             else {
-                field.setIsFinal(false);
+                if(field.isIsFinal()) {
+                    field.setIsFinal(false);
+                }
             }
+            fieldWidget.getFieldNameWidget().setLabel(((Field) fieldWidget.getMember()).getSignatureForLabel());
         }       
     };
     
@@ -155,12 +161,17 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             Field field = (Field)fieldWidget.getMember();
-            if(field.isIsSynchronised()==false) {
-                field.setIsSynchronised(true);
+            if(synchronizedJCBMI.getState()) {
+                if(!field.isIsSynchronized()) {
+                    field.setIsSynchronized(true);
+                }
             }
             else {
-                field.setIsSynchronised(false);
+                if(field.isIsSynchronized()) {
+                    field.setIsSynchronized(false);
+                }
             }
+            fieldWidget.getFieldNameWidget().setLabel(((Field) fieldWidget.getMember()).getSignatureForLabel());
         }
     };
     

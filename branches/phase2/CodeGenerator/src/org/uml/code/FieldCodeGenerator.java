@@ -31,21 +31,8 @@ public class FieldCodeGenerator implements CodeGenerator{
         for (Map.Entry<String, Field> en : fields.entrySet() ) {
 
             Field field = en.getValue();
-            String isStatic="";
-            String isFinal="";
-            String isAbstract="";
-            if(field.isIsStatic()) {
-                isStatic=" static ";
-            }
-            if(field.isIsAbstract()) {
-                isAbstract=" abstract ";
-            }
-            if(field.isIsFinal()) {
-                isFinal=" final ";
-            }
-            fieldsString += field.getVisibility().toString()+ " " + field.getModifiers() + " " + " "+ field.getName()+"; \n"; //+ isStatic + isAbstract + isFinal + field.getType().toString() -> izbaceno jer se nigde u programu ne setuje
+            fieldsString += field.getSignature();
         }
-        
         return fieldsString;
         
 }   

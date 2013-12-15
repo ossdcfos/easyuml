@@ -80,6 +80,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         visibilitySubmenu.add(protectedItem =new JRadioButton("protected"));
         protectedItem.addActionListener(protectedItemListener);
         visibilitySubmenu.add(packageItem =new JRadioButton("package"));
+        packageItem.addActionListener(packageItemListener);
         visibilityGroup.add(publicItem);
         visibilityGroup.add(privateItem);
         visibilityGroup.add(protectedItem);
@@ -180,6 +181,14 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             classWidget.getComponent().setVisibility(Visibility.PROTECTED);
+        }
+    };
+    
+    ActionListener packageItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            classWidget.getComponent().setVisibility(Visibility.PACKAGE);
         }
     };
     
