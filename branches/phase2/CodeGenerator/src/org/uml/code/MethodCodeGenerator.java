@@ -28,18 +28,7 @@ public class MethodCodeGenerator implements CodeGenerator{
         String methodsString="";
         for (Map.Entry<String, Method> entry : methods.entrySet()) {
             Method method = entry.getValue(); 
-            String arguments = "";
-            if(method.getArguments()!=null){
-                for (Map.Entry<String, MethodArgument> entry1 : method.getArguments().entrySet()) {
-                    MethodArgument argument = entry1.getValue();
-                    arguments+= argument.getType() + " " + argument.getName()+ ", ";
-                }
-            }
-            if(!arguments.equals("")){
-                arguments = arguments.substring(0,arguments.length()-2);
-            }
-                methodsString+= method.getVisibility() + " " + method.getModifiers() + " " + method.getReturnType() + " " + method.getName()+ "(" + arguments + ") {} \n";
-            
+            methodsString += method.getSignature();
         }
         return methodsString;
     }

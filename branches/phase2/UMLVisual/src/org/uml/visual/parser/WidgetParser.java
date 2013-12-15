@@ -1,9 +1,12 @@
 package org.uml.visual.parser;
  
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import org.uml.model.Field;
+import org.uml.model.Member;
 import org.uml.model.Method;
 import org.uml.model.MethodArgument;
 import org.uml.model.Visibility;
@@ -12,6 +15,7 @@ public class WidgetParser {
 
 	Pattern whitespaces = Pattern.compile("\\s*");
         Pattern allMethodModifiers = Pattern.compile("public|private|protected|package|static|final|abstract|synchronized"); 
+        Pattern allFieldModifiers = Pattern.compile("public|private|protected|package|static|final|synchronized");
 	Pattern visibility = Pattern.compile("public|private|protected|package");
 	Pattern methodModifiers = Pattern.compile("static|final|abstract|synchronized");
         Pattern fieldModifiers = Pattern.compile("static|final|synchronized");
@@ -48,15 +52,34 @@ public class WidgetParser {
 		}
 		return text;
 	}
-	
+        
+        private int convertStringToModifier(String modifier) {
+            if("final".equals(modifier)) {
+                return Modifier.FINAL;
+            }
+            if("static".equals(modifier)) {
+                return Modifier.STATIC;
+            }
+            if("abstract".equals(modifier)) {
+                return Modifier.ABSTRACT;
+            }
+            if("synchronized".equals(modifier)) {
+                return Modifier.SYNCHRONIZED;
+            }
+            return -1;
+        }
+	/**
+         * Parses stringToParse to extract all method modifiers from it.
+         * @return string array that represents found modifiers
+         */
         public String[] getAllMethodModifiers() {
-            String[] result = new String[5];
+            String[] result = new String[4];
             boolean hasMoreModifiers = true;
             while(hasMoreModifiers) {
                 skipWhitespaces();
                 Matcher m = allMethodModifiers.matcher(stringToParse);
                 if(m.lookingAt()) {
-                    for(int i = 0; i<5; i++) {
+                    for(int i = 0; i<4; i++) {
                         if(result[i] == null){
                             result[i] = stringToParse.substring(m.start(), m.end());
                             break;
@@ -69,25 +92,69 @@ public class WidgetParser {
             }
             return result;
         }
-        
-        public void setMethodModifiers() {
-            String[] allModifiers = getAllMethodModifiers();
-            String modifiers = "";
+        /**
+         * Parses stringToParse to extract all Field modifiers from it.
+         * @return string array that represents found modifiers
+         */
+        public String[] getAllFieldModifiers() {
+            String[] result = new String[3];
+            boolean hasMoreModifiers = true;
+            while(hasMoreModifiers) {
+                skipWhitespaces();
+                Matcher m = allFieldModifiers.matcher(stringToParse);
+                if(m.lookingAt()) {
+                    for(int i = 0; i<3; i++) {
+                        if(result[i] == null){
+                            result[i] = stringToParse.substring(m.start(), m.end());
+                            break;
+                        }
+                    }
+                    stringToParse = stringToParse.substring(m.end());
+                }else {
+                    hasMoreModifiers = false;
+                }
+            }
+            return result;
+        }
+        /**
+         * Sets m object's  visibility and modifiers fields 
+         * @param allModifiers represents all modifiers to put into object m
+         */
+        public void setMethodModifiers(String[] allModifiers) {
+            m.resetModifiers();
             for(int i = 0; i<allModifiers.length;i++) {
                 if(allModifiers[i] != null){
                     Matcher m = visibility.matcher(allModifiers[i]);
                     if(m.lookingAt()) {
-                        setVisibility(allModifiers[i]);
+                        setVisibility(this.m, allModifiers[i]);
                     }else {
-                        
-                        modifiers = modifiers.concat(allModifiers[i]) + " ";
+                        this.m.addModifier(convertStringToModifier(allModifiers[i]));
                     }
                 }
-                
             }
-            m.setModifiers(modifiers);
         }
-        public void setVisibility(String visibility) {
+        /**
+         * Sets f object's  visibility and modifiers fields 
+         * @param allModifiers represents all modifiers to put into object f
+         */
+        public void setFieldModifiers(String[] allModifiers) {
+            f.resetModifiers();
+            for(int i = 0; i<allModifiers.length;i++) {
+                if(allModifiers[i] != null){
+                    Matcher m = visibility.matcher(allModifiers[i]);
+                    if(m.lookingAt()) {
+                        setVisibility(this.f, allModifiers[i]);
+                    }else {
+                        f.setModifier(allModifiers[i]);
+                    }
+                }
+            }
+        }
+        /**
+         * Sets object m's visibility field based on the input parameter.
+         * @param visibility represents value to put into object m's visibility field.
+         */
+        public void setVisibility(Member m, String visibility) {
             if(visibility.equals("private")) {
                 m.setVisibility(Visibility.PRIVATE);
             }
@@ -282,21 +349,23 @@ public class WidgetParser {
          */
         public void fillFieldComponents(Field f, String fieldWidgetText) {
             stringToParse = fieldWidgetText;
-            f.setVisibility(getVisibility());
-            String modifiers = "";
-            boolean imaModifier = true;
-            while(imaModifier) {
-		String mod = getModifier();
-		if(mod.equals("")){
-                    imaModifier = false;
-                    modifiers += mod;
-                    break;
-		}
-		modifiers += mod + " ";
-            }
-            f.setModifiers(modifiers);
-            getArgumentType();//ne znam kako da konvertujem string u Type?
+            this.f = f;
+            setFieldModifiers(getAllFieldModifiers());
+            f.setType(getArgumentType());
             f.setName(getName());
+//            String modifiers = "";
+//            boolean imaModifier = true;
+//            while(imaModifier) {
+//		String mod = getModifier();
+//		if(mod.equals("")){
+//                    imaModifier = false;
+//                    modifiers += mod;
+//                    break;
+//		}
+//		modifiers += mod + " ";
+//            }
+//            f.setModifiers(modifiers);
+            
         }
         
         /**
@@ -320,15 +389,18 @@ public class WidgetParser {
 //		modifiers += mod + " ";
 //            }
 //            m.setModifiers(modifiers);
-            setMethodModifiers();
+            setMethodModifiers(getAllMethodModifiers());
             m.setReturnType(getReturnType());
             m.setName(getName());
             String argumenti = getArguments();
             if(argumenti.equals("")) {
-		m.setArguments(null);
+		
             }else{
                 argumenti = formatArguments(argumenti);
                 String[] args = argumenti.split(", ");
+                if(m.getArguments() != null) {
+                    m.getArguments().clear();
+                }
                 for(String arg : args) {
                     Random r = new Random();
                     int Low = 0;

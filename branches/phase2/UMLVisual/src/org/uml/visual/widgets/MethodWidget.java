@@ -68,7 +68,11 @@ public class MethodWidget extends MemberWidgetBase {
     public Member getMember() {
         return methodComponent;
     }
-
+    
+    public LabelWidget getMethodNameWidget() {
+        return methodNameWidget;
+    }
+    
     @Override
     public void setAttributes(String attributes) {
         /*// parse method signature and set method name return value and input parameters
@@ -104,6 +108,21 @@ public class MethodWidget extends MemberWidgetBase {
         }
          */
           wp.fillMethodComponents(methodComponent, attributes);
+          methodNameWidget.setLabel(methodComponent.getSignatureForLabel());
+          refreshLabel();
 
+    }
+
+    public void refreshLabel() {
+        switch(methodComponent.getVisibility()) {
+            case PUBLIC : visibilityLabel.setLabel("+");
+                break;
+            case PRIVATE : visibilityLabel.setLabel("-");
+                break;
+            case PROTECTED : visibilityLabel.setLabel("#");
+                break;
+            case PACKAGE : visibilityLabel.setLabel("~");
+                break;
+        }
     }
 }

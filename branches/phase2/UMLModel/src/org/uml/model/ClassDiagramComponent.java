@@ -19,7 +19,7 @@ public class ClassDiagramComponent implements Serializable {
     protected Visibility visibility;
             
     /**
-     * Default constructor. Initializes only memebers (fields, methods and constructors)
+     * Default constructor. Initializes only members (fields, methods and constructors)
      */
     public ClassDiagramComponent() {
         members = new HashMap<String, Member>(); 

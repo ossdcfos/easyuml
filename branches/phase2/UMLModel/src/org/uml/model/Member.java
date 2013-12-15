@@ -1,5 +1,7 @@
 package org.uml.model;
 
+import java.lang.reflect.Modifier;
+
 /**
  * Implementation of the members which can be fields, methods, constructors and literals.
  * This should also be a member as in reflection api.
@@ -13,7 +15,9 @@ package org.uml.model;
 public class Member { 
     private String name;
     private int modifier;
-    private String modifiers; //modifiers are implemented as Strings, it is possible to later be changed to enum
+    
+    
+    //private String modifiers; //modifiers are implemented as Strings, it is possible to later be changed to enum
     private ClassDiagramComponent declaringClass;
     protected Visibility visibility;
 
@@ -49,12 +53,12 @@ public class Member {
         this.declaringClass = declaringClass;
     }
     
-    public String getModifiers() {
-        return modifiers;
+    public Visibility getVisibility() {
+        return visibility;
     }
 
-    public void setModifiers(String modifiers) {
-        this.modifiers = modifiers;
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
-
+    
 }

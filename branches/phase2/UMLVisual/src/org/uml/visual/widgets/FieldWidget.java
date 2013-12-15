@@ -12,6 +12,10 @@ import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.uml.model.Field;
 import org.uml.model.Member;
+import static org.uml.model.Visibility.PACKAGE;
+import static org.uml.model.Visibility.PRIVATE;
+import static org.uml.model.Visibility.PROTECTED;
+import static org.uml.model.Visibility.PUBLIC;
 import org.uml.visual.parser.WidgetParser;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
@@ -33,7 +37,7 @@ public class FieldWidget  extends MemberWidgetBase{
         this.fieldComponent = field;
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
         visibilityLabel = new LabelWidget(getScene());
-        visibilityLabel.setLabel("+");
+        visibilityLabel.setLabel("-");
         this.addChild(visibilityLabel);
 
         fieldNameWidget = new LabelWidget(getScene());
@@ -74,6 +78,11 @@ public class FieldWidget  extends MemberWidgetBase{
     public Member getMember() {
         return fieldComponent;
     }
+    
+    public LabelWidget getFieldNameWidget() {
+        return fieldNameWidget;
+    }
+    
 
     @Override
     public void setAttributes(String attributes) {
@@ -99,12 +108,23 @@ public class FieldWidget  extends MemberWidgetBase{
         }
         */
         wp.fillFieldComponents(fieldComponent, attributes);
+        fieldNameWidget.setLabel(fieldComponent.getSignatureForLabel());
+        refreshLabel();
         
     }
-
-    private Type convertToType(String typeStr) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    
+    public void refreshLabel() {
+        switch(fieldComponent.getVisibility()) {
+            case PUBLIC : visibilityLabel.setLabel("+");
+                break;
+            case PRIVATE : visibilityLabel.setLabel("-");
+                break;
+            case PROTECTED : visibilityLabel.setLabel("#");
+                break;
+            case PACKAGE : visibilityLabel.setLabel("~");
+                break;
+        }
     }
-
     
 }

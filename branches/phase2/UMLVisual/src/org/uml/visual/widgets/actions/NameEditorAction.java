@@ -35,7 +35,7 @@ public class NameEditorAction implements TextFieldInplaceEditor {
 
     @Override
     public void setText(Widget widget, String string) {
-
+    
         nameable.setName(string);
         nameable.setAttributes(string);
 

@@ -3,6 +3,7 @@ package org.uml.visual.widgets.providers;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -51,6 +52,7 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         visibilitySubmenu.add(protectedItem =new JRadioButton("protected"));
         protectedItem.addActionListener(protectedItemListener);
         visibilitySubmenu.add(packageItem =new JRadioButton("package"));
+        packageItem.addActionListener(packageItemListener);
         visibilityGroup.add(publicItem);
         visibilityGroup.add(privateItem);
         visibilityGroup.add(protectedItem);
@@ -59,9 +61,13 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         
         modifiersSubmenu= new JMenu("Modifiers");
         modifiersSubmenu.add(staticJCBMI= new JCheckBoxMenuItem("static"));
+        staticJCBMI.addActionListener(staticJCBMIListener);
         modifiersSubmenu.add(abstractJCBMI=new JCheckBoxMenuItem("abstract"));
+        abstractJCBMI.addActionListener(abstractJCBMIListener);
         modifiersSubmenu.add(finalJCBMI=new JCheckBoxMenuItem("final"));
+        finalJCBMI.addActionListener(finalJCBMIListener);
         modifiersSubmenu.add(synchronizedJCBMI=new JCheckBoxMenuItem("synchronized"));
+        synchronizedJCBMI.addActionListener(synchronizedJCBMIListener);
         menu.add(modifiersSubmenu);
         
         menu.addSeparator();
@@ -75,7 +81,7 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             ((Method)methodWidget.getMember()).setVisibility(Visibility.PUBLIC);
-                     
+            methodWidget.refreshLabel();
         }
     };
         
@@ -84,17 +90,95 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
             ((Method)methodWidget.getMember()).setVisibility(Visibility.PRIVATE);
+            methodWidget.refreshLabel();
         }
     };
     
-    ActionListener protectedItemListener = new ActionListener() {
+        ActionListener protectedItemListener = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             ((Method)methodWidget.getMember()).setVisibility(Visibility.PROTECTED);
+            methodWidget.refreshLabel();
         }
     };
-        
+    
+        ActionListener packageItemListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ((Method)methodWidget.getMember()).setVisibility(Visibility.PACKAGE);
+            methodWidget.refreshLabel();
+        }
+    };
+        ActionListener staticJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Method m = (Method)methodWidget.getMember();
+            if(staticJCBMI.getState()){
+                if(!m.hasConcreteModifier("static")) {
+                    m.addModifier(Modifier.STATIC);
+                }
+            }else {
+                if(m.hasConcreteModifier("static")) {
+                    m.deleteModifier(Modifier.STATIC);
+                }
+            }
+            methodWidget.getMethodNameWidget().setLabel(((Method) methodWidget.getMember()).getSignatureForLabel());
+        }
+    };
+        ActionListener abstractJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Method m = (Method)methodWidget.getMember();
+            if(abstractJCBMI.getState()){
+                if(!m.hasConcreteModifier("abstract")) {
+                    m.addModifier(Modifier.ABSTRACT);
+                }
+            }else {
+                if(m.hasConcreteModifier("abstract")) {
+                    m.deleteModifier(Modifier.ABSTRACT);
+                }
+            }
+            methodWidget.getMethodNameWidget().setLabel(((Method) methodWidget.getMember()).getSignatureForLabel());
+        }
+    };
+        ActionListener finalJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Method m = (Method)methodWidget.getMember();
+            if(finalJCBMI.getState()){
+                if(!m.hasConcreteModifier("final")) {
+                    m.addModifier(Modifier.FINAL);
+                }
+            }else {
+                if(m.hasConcreteModifier("final")) {
+                    m.deleteModifier(Modifier.FINAL);
+                }
+            }
+            methodWidget.getMethodNameWidget().setLabel(((Method) methodWidget.getMember()).getSignatureForLabel());
+        }
+    };
+        ActionListener synchronizedJCBMIListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Method m = (Method)methodWidget.getMember();
+            if(synchronizedJCBMI.getState()){
+                if(!m.hasConcreteModifier("synchronized")) {
+                    m.addModifier(Modifier.SYNCHRONIZED);
+                }
+            }else {
+                if(m.hasConcreteModifier("synchronized")) {
+                    m.deleteModifier(Modifier.SYNCHRONIZED);
+                }
+            }
+            methodWidget.getMethodNameWidget().setLabel(((Method) methodWidget.getMember()).getSignatureForLabel());
+        }
+    };
         ActionListener removeWidgetListener = new ActionListener() {
 
         @Override
