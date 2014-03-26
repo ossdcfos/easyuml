@@ -14,20 +14,20 @@ import org.uml.model.ClassDiagramComponent;
 public class ClassCodeGenerator implements CodeGenerator {
 
     ClassComponent classComponent;
-    
-    public ClassCodeGenerator( ) {
+
+    public ClassCodeGenerator() {
     }
 
     public void setClassComponent(ClassComponent classComponent) {
         this.classComponent = classComponent;
     }
-   
+
     @Override
     public String generateCode() {
-        String code="";
-        String abstractModifierStr="";
-        if(classComponent.isIsAbstract()) {
-        abstractModifierStr="abstract";
+        String code = "";
+        String abstractModifierStr = "";
+        if (classComponent.isIsAbstract()) {
+            abstractModifierStr = "abstract";
         }
         String header = "public " + abstractModifierStr + " class " + classComponent.getName() + " { ";
         ConstructorCodeGenerator ccg = new ConstructorCodeGenerator(classComponent.getConstructors());
@@ -36,21 +36,19 @@ public class ClassCodeGenerator implements CodeGenerator {
         String fields = fcg.generateCode();
         MethodCodeGenerator mcg = new MethodCodeGenerator(classComponent.getMethods());
         String methods = mcg.generateCode();
-        String end="\n }";
+        String end = "\n }";
         //classComponent.get
-        
-        code+=header+"\n";
-        code+=constructors+"\n";
-        code+=fields+"\n";
-        code+=methods+"\n";
-        code+=end;
+
+        code += header + "\n";
+        code += constructors + "\n";
+        code += fields + "\n";
+        code += methods + "\n";
+        code += end;
         return code;
-         
-    } 
+    }
 
     @Override
     public void setClassDiagramComponent(ClassDiagramComponent component) {
-        classComponent=(ClassComponent)component;
+        classComponent = (ClassComponent) component;
     }
-    
 }

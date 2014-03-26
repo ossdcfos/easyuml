@@ -6,10 +6,13 @@ package org.uml.code;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.netbeans.api.project.Project;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
+import org.uml.model.ClassDiagram;
 
 @ActionID(
     category = "Source",
@@ -23,12 +26,12 @@ public final class GenerateCodeAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-      //  UtilitiesActionsGlobalContext.
-        
+      ClassDiagram classDiagram =  Utilities.actionsGlobalContext().lookup(ClassDiagram.class);
+      Project project = Utilities.actionsGlobalContext().lookup(Project.class);
    //     String code = ClassDiagramCodeGenerator.getInstance().generateCode();
-        CodeTopComponent ctc = new CodeTopComponent();
-        ctc.open();
-        ctc.requestActive();        
+  //      CodeTopComponent ctc = new CodeTopComponent();
+ //       ctc.open();
+   //     ctc.requestActive();        
   //      ctc.setCode(code);
     }
 }

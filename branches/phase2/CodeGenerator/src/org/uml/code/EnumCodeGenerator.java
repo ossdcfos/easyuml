@@ -14,7 +14,7 @@ import org.uml.model.EnumComponent;
 class EnumCodeGenerator implements CodeGenerator {
 
     EnumComponent enumComponent;
-    
+
     public EnumCodeGenerator() {
     }
 
@@ -25,7 +25,6 @@ class EnumCodeGenerator implements CodeGenerator {
 
     @Override
     public void setClassDiagramComponent(ClassDiagramComponent component) {
-       enumComponent = (EnumComponent) component;
+        enumComponent = (EnumComponent) component;
     }
-    
 }
