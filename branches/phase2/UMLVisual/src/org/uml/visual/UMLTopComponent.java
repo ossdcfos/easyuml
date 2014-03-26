@@ -1,18 +1,24 @@
 package org.uml.visual;
 
 import java.awt.BorderLayout;
+import java.util.Collection;
 import javax.swing.JScrollPane;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.spi.palette.PaletteController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
+import org.openide.util.Lookup.Result;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 
@@ -20,24 +26,24 @@ import org.uml.visual.widgets.ClassDiagramScene;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd = "-//org.uml.visual//UML//EN",
-autostore = false)
+        dtd = "-//org.uml.visual//UML//EN",
+        autostore = false)
 @TopComponent.Description(
-    preferredID = "UMLTopComponent",
-//iconBase="SET/PATH/TO/ICON/HERE", 
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+        preferredID = "UMLTopComponent",
+        //iconBase="SET/PATH/TO/ICON/HERE", 
+        persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "editor", openAtStartup = true)
 @ActionID(category = "Window", id = "org.uml.visual.UMLTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
-    displayName = "#CTL_UMLAction",
-preferredID = "UMLTopComponent")
+        displayName = "#CTL_UMLAction",
+        preferredID = "UMLTopComponent")
 @Messages({
     "CTL_UMLAction=UML",
     "CTL_UMLTopComponent=UML Window",
     "HINT_UMLTopComponent=This is a UML window"
 })
-public final class UMLTopComponent extends TopComponent {
+public final class UMLTopComponent extends TopComponent implements LookupListener {
 
     private ClassDiagram umlClassDiagram;
     private ClassDiagramScene classDiagramScene;
@@ -74,17 +80,18 @@ public final class UMLTopComponent extends TopComponent {
 //            classDiagramScene.addNode(comp);
 //        }
 //        classDiagramScene.validate();
-        
+
     }
 
     @Override
     public Lookup getLookup() {
         return new ProxyLookup(
                 new Lookup[]{
-                    classDiagramScene.getLookup(),
-                    Lookups.singleton(umlClassDiagram),
-                    Lookups.singleton(palette)
-                });
+            classDiagramScene.getLookup(),
+            Lookups.singleton(umlClassDiagram),
+            Lookups.singleton(selectedProject),
+            Lookups.singleton(palette)
+        });
 
     }
 
@@ -117,10 +124,12 @@ public final class UMLTopComponent extends TopComponent {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane viewPane;
     // End of variables declaration//GEN-END:variables
+    Lookup.Result<Project> resultPrj;
 
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        resultPrj = Utilities.actionsGlobalContext().lookupResult(Project.class);
+        resultPrj.addLookupListener(this);
     }
 
     @Override
@@ -143,4 +152,19 @@ public final class UMLTopComponent extends TopComponent {
 //    public Lookup getLookup() {
 //        return new ProxyLookup(new Lookup[]{super.getLookup(),aLookup});
 //    }
+    Project selectedProject;
+
+    @Override
+    public void resultChanged(LookupEvent le) {
+        Lookup.Result localResult = (Result)le.getSource();
+        Collection<Object> coll = localResult.allInstances();
+        if (!coll.isEmpty()){
+            for (Object selectedItem : coll){
+                if (selectedItem instanceof Project) selectedProject = (Project) selectedItem;
+            }
+        }
+        
+         FileObject folder = selectedProject.getProjectDirectory();
+         String path = folder.getPath();
+    }
 }
