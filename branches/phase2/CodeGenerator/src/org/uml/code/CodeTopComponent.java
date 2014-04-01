@@ -14,18 +14,18 @@ import org.openide.util.NbBundle.Messages;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd = "-//org.uml.code//Code//EN",
-autostore = false)
+        dtd = "-//org.uml.code//Code//EN",
+        autostore = false)
 @TopComponent.Description(
-    preferredID = "CodeTopComponent",
-//iconBase="SET/PATH/TO/ICON/HERE", 
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+        preferredID = "CodeTopComponent",
+        //iconBase="SET/PATH/TO/ICON/HERE", 
+        persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "org.uml.code.CodeTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
-    displayName = "#CTL_CodeAction",
-preferredID = "CodeTopComponent")
+        displayName = "#CTL_CodeAction",
+        preferredID = "CodeTopComponent")
 @Messages({
     "CTL_CodeAction=Code",
     "CTL_CodeTopComponent=Code Window",
@@ -72,16 +72,16 @@ public final class CodeTopComponent extends TopComponent {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
+
     @Override
     public void componentOpened() {
         // TODO add custom code on component opening
     }
-    
+
     public void setCode(String code) {
         jTextArea1.setText(code);
     }
@@ -98,8 +98,6 @@ public final class CodeTopComponent extends TopComponent {
         // TODO store your settings
     }
 
-    
-    
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version

@@ -28,6 +28,16 @@ public final class GenerateCodeAction implements ActionListener {
         
       ClassDiagram classDiagram =  Utilities.actionsGlobalContext().lookup(ClassDiagram.class);
       Project project = Utilities.actionsGlobalContext().lookup(Project.class);
+      
+      FileWriter.project = project;      
+      ClassDiagramCodeGenerator.getInstance().generateCode();
+      
+
+      
+      
+//      FileWriter.writeFiles();
+      
+      
    //     String code = ClassDiagramCodeGenerator.getInstance().generateCode();
   //      CodeTopComponent ctc = new CodeTopComponent();
  //       ctc.open();

@@ -13,38 +13,31 @@ import org.uml.model.Constructor;
  *
  * @author Uros
  */
-public class ConstructorCodeGenerator implements CodeGenerator{
+public class ConstructorCodeGenerator implements CodeGenerator {
 
-    
-    HashMap<String,Constructor> constructors;
+    HashMap<String, Constructor> constructors;
 
     public ConstructorCodeGenerator(HashMap<String, Constructor> constructors) {
         this.constructors = constructors;
     }
-    
-    
+
     @Override
     public String generateCode() {
-        String code="";
+        String code = "";
         for (Map.Entry<String, Constructor> entry : constructors.entrySet()) {
-            
+
             String string = entry.getKey();
             Constructor constructor = entry.getValue();
-            code += "public " + constructor.getName() + "("+constructor.getArguments()+")"+" {/n"+"";
-            
+            code += "public " + constructor.getName() + "(" + constructor.getArguments() + ")" + " {/n" + "";
+
         }
-        
+
         return code;
-        
-        
+
+
     }
 
     @Override
     public void setClassDiagramComponent(ClassDiagramComponent component) {
-        
     }
-    
-    
-    
-    
 }
