@@ -26,7 +26,7 @@ import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
  *
  * @author NUGS
  */
-public class ClassWidget extends ComponentWidgetBase implements NameableWidget {
+ public class ClassWidget extends ComponentWidgetBase implements NameableWidget {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;

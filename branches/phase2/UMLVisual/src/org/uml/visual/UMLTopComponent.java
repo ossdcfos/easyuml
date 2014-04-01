@@ -43,7 +43,7 @@ import org.uml.visual.widgets.ClassDiagramScene;
     "CTL_UMLTopComponent=UML Window",
     "HINT_UMLTopComponent=This is a UML window"
 })
-public final class UMLTopComponent extends TopComponent implements LookupListener {
+public final class UMLTopComponent extends TopComponent /**implements LookupListener**/ {
 
     private ClassDiagram umlClassDiagram;
     private ClassDiagramScene classDiagramScene;
@@ -89,7 +89,7 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
                 new Lookup[]{
             classDiagramScene.getLookup(),
             Lookups.singleton(umlClassDiagram),
-            Lookups.singleton(selectedProject),
+//            Lookups.singleton(selectedProject),
             Lookups.singleton(palette)
         });
 
@@ -129,7 +129,7 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
     @Override
     public void componentOpened() {
         resultPrj = Utilities.actionsGlobalContext().lookupResult(Project.class);
-        resultPrj.addLookupListener(this);
+//        resultPrj.addLookupListener(this);
     }
 
     @Override
@@ -152,19 +152,19 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
 //    public Lookup getLookup() {
 //        return new ProxyLookup(new Lookup[]{super.getLookup(),aLookup});
 //    }
-    Project selectedProject;
-
-    @Override
-    public void resultChanged(LookupEvent le) {
-        Lookup.Result localResult = (Result)le.getSource();
-        Collection<Object> coll = localResult.allInstances();
-        if (!coll.isEmpty()){
-            for (Object selectedItem : coll){
-                if (selectedItem instanceof Project) selectedProject = (Project) selectedItem;
-            }
-        }
-        
-         FileObject folder = selectedProject.getProjectDirectory();
-         String path = folder.getPath();
-    }
+//    Project selectedProject;
+//
+//    @Override
+//    public void resultChanged(LookupEvent le) {
+//        Lookup.Result localResult = (Result)le.getSource();
+//        Collection<Object> coll = localResult.allInstances();
+//        if (!coll.isEmpty()){
+//            for (Object selectedItem : coll){
+//                if (selectedItem instanceof Project) selectedProject = (Project) selectedItem;
+//            }
+//        }
+//        
+//         FileObject folder = selectedProject.getProjectDirectory();
+//         String path = folder.getPath();
+//    }
 }

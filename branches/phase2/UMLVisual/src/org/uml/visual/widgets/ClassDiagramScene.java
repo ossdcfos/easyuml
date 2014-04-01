@@ -287,4 +287,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return mainLayer;
     }
     
+    public void attach(ClassDiagramComponent cd) {
+        attachNodeWidget(cd);
+    }
+    
 }

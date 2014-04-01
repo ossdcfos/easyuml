@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.ClassComponent;
+import org.uml.model.Constructor;
 import org.uml.visual.widgets.ConstructorWidget;
 
 /**
@@ -56,6 +58,9 @@ public class ConstructorPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             constructorWidget.getMember().getDeclaringClass().removeMember(constructorWidget.getName());
+            if(constructorWidget.getMember().getDeclaringClass() instanceof ClassComponent) {
+               ((ClassComponent) constructorWidget.getMember().getDeclaringClass()).removeConstructor((Constructor) constructorWidget.getMember());
+           }
             constructorWidget.removeFromParent();
         }
     };

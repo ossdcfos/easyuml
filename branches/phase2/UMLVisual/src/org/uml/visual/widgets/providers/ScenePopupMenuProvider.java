@@ -4,32 +4,33 @@
  */
 package org.uml.visual.widgets.providers;
 
-import java.awt.AWTException;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Exceptions;
 import org.openide.windows.WindowManager;
 import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagram;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.dialogs.AddRelationDialog;
@@ -39,6 +40,8 @@ import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.EnumWidget;
 import org.uml.visual.widgets.InterfaceWidget;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
+import org.uml.xmlDeserialization.ClassDiagramDeserializer;
+import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 
 /**
  *
@@ -53,13 +56,11 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem createRelationshipItem;
     private JMenuItem generateCode;
     private JMenuItem exportAsImage;
-    
     private ClassDiagramScene scene;
     private Point popupPoint;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-    
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
-    
+
     public ScenePopupMenuProvider(ClassDiagramScene scene) {
         this.scene = scene;
         sceneMenu = new JPopupMenu("Diagram menu!");
@@ -80,21 +81,21 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             public void actionPerformed(ActionEvent e) {
                 // add neww class component and widget to scene
                 // here we should just add new class component to model, and the scene should be updated elsewhere
-                ClassWidget widget = (ClassWidget)scene.addNode(new ClassComponent());
+                ClassWidget widget = (ClassWidget) scene.addNode(new ClassComponent());
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
-                
+
                 // open editor for class name
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
-                
+
             }
         });
         createInterfaceItem = new JMenuItem("Add Interface");
         createInterfaceItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                InterfaceWidget widget = (InterfaceWidget)scene.addNode(new InterfaceComponent());
+                InterfaceWidget widget = (InterfaceWidget) scene.addNode(new InterfaceComponent());
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
 
@@ -106,43 +107,98 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createEnumItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EnumWidget widget = (EnumWidget)scene.addNode(new EnumComponent());
+                EnumWidget widget = (EnumWidget) scene.addNode(new EnumComponent());
                 widget.setPreferredLocation(popupPoint);
-                scene.validate();               
-                
+                scene.validate();
+
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(mouseListener);
             }
         });
-        
-        createRelationshipItem= new JMenuItem("Add Relationship");
-        createRelationshipItem.addActionListener(new ActionListener() {
 
+        createRelationshipItem = new JMenuItem("Add Relationship");
+        createRelationshipItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddRelationDialog dialog = new AddRelationDialog(null,scene,true);
+                AddRelationDialog dialog = new AddRelationDialog(null, scene, true);
                 dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
                 dialog.setTitle("Add relation");
                 dialog.setVisible(true);
             }
         });
-        
+
         generateCode = new JMenuItem("Generate code");
         generateCode.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 GenerateCodeDialog dialog = new GenerateCodeDialog(null, true, scene.getUmlClassDiagram());
                 dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
                 dialog.setTitle("Generate code");
                 dialog.setVisible(true);
+
+                //proba serijalizacije, za brisanje
+//                ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
+//                
+//                serializer.setClassDiagramScene(scene);
+//                Document document = DocumentHelper.createDocument();
+//                Element root = document.addElement("ClassDiagram");
+//                serializer.serialize(root);
+//
+//
+//
+//                try {
+//
+//                    OutputFormat format = OutputFormat.createPrettyPrint();
+//                    XMLWriter writer = new XMLWriter(
+//                            new FileWriter("out.xml"), format);
+//                    writer.write(document);
+//
+//                    writer.close();
+//                    System.out.println("Ispisano u fajl");
+//                }catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+                //proba deserijalizacije, za brisanje
+//                try {
+//                    ClassDiagram cd = new ClassDiagram();
+//                    SAXReader reader = new SAXReader();
+//                    Document document = reader.read(new File("out.xml"));
+//                    System.out.println("Fajl ucitan");
+//
+//                    Element root = document.getRootElement();
+//                    ClassDiagramDeserializer cdd = new ClassDiagramDeserializer(cd);
+//                    cdd.deserialize(root);
+//
+//                    System.out.println("Deserialized");
+//
+//                    ClassDiagramXmlSerializer serializer2 = ClassDiagramXmlSerializer.getInstance();
+//                    ClassDiagramScene scene = new ClassDiagramScene(cd);
+//                    serializer2.setClassDiagramScene(scene);
+//                    Document document2 = DocumentHelper.createDocument();
+//                    Element root2 = document2.addElement("ClassDiagram");
+//                    serializer2.serialize(root2);
+//
+//                    OutputFormat format = OutputFormat.createPrettyPrint();
+//                    XMLWriter writer = new XMLWriter(
+//                            new FileWriter("out2.xml"), format);
+//                    writer.write(document2);
+//
+//                    writer.close();
+//                    System.out.println("Ispisano u fajl");
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+
+
+
+
             }
         });
-        
-        
-        exportAsImage = new JMenuItem("Export As Image");
-        exportAsImage.addActionListener(new ActionListener() {
 
+        exportAsImage = new JMenuItem("Export As Image");
+
+        exportAsImage.addActionListener(
+                new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 BufferedImage img = new BufferedImage(
@@ -159,7 +215,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                     File f = chooser.getSelectedFile();
                     if (!f.getName().toLowerCase().endsWith(".png")) {
                         f = new File(f.getParentFile(), f.getName() + ".png");
-                    
+
                         try {
                             ImageIO.write(img, "png", f);
                         } catch (IOException ex) {
@@ -169,15 +225,19 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 }
 
             }
-        });        
-        
+        });
+
 
         sceneMenu.add(createClassItem);
+
         sceneMenu.add(createInterfaceItem);
+
         sceneMenu.add(createEnumItem);
+
         sceneMenu.add(createRelationshipItem);
-        
-        sceneMenu.add(generateCode);        
-        sceneMenu.add(exportAsImage);   
+
+        sceneMenu.add(generateCode);
+
+        sceneMenu.add(exportAsImage);
     }
 }
