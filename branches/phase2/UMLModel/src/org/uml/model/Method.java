@@ -43,6 +43,10 @@ public class Method extends Member {
     public HashMap<String, MethodArgument> getArguments() {
         return arguments;
     }
+    
+    public void setArguments(HashMap<String, MethodArgument> arguments) {
+        this.arguments = arguments;
+    }
 
     public void addModifier(int modifier) {
         boolean isModifierAllreadyAdded = false;

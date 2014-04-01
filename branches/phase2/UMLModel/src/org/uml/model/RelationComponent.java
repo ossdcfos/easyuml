@@ -56,7 +56,9 @@ public class RelationComponent implements Serializable {
         this.name = name;
     }
     
-    
+    public String getXmlRepresentation() {
+        return "Subclass should override this method";
+    }
     
     
     
