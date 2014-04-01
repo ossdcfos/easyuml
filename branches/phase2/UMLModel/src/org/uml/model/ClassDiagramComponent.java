@@ -2,7 +2,6 @@ package org.uml.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
-
 /**
  * Implementation of components that can be added to class diagram - classes, interfaces or enums. Relations are not
  * implemented in this but in class RelationComponent
@@ -46,7 +45,7 @@ public class ClassDiagramComponent implements Serializable {
      * @param member
      * @see ClassDiagram#addComponent(org.uml.model.ClassDiagramComponent) 
      */
-    protected void addMember(Member member) {
+    public void addMember(Member member) {
         if(nameExists(member.getName())){
             member.setName(member.getName() + memberCounter);
         }
@@ -93,6 +92,5 @@ public class ClassDiagramComponent implements Serializable {
         return members;
     }
 
-    
 }
 

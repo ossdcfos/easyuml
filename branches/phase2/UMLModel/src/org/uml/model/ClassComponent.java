@@ -28,6 +28,7 @@ public class ClassComponent extends ClassDiagramComponent {
         fields= new HashMap<String, Field>();
         methods= new HashMap<String, Method>();
         constructors = new HashMap<String, Constructor>();
+        setVisibility(Visibility.PUBLIC);
         isAbstract=false;
     }
 
@@ -65,12 +66,12 @@ public class ClassComponent extends ClassDiagramComponent {
         int Low = 0;
         int High = 100;
         int R = r.nextInt(High-Low) + Low;
-        fields.put(Integer.toString(R), field);
+        fields.put(field.getName(), field);
         addMember(field);
     } 
     
-    public void removeField (String name) {
-        fields.remove(name);
+    public void removeField (Field field) {
+        fields.values().remove(field);
     }
     
      public Method getMethod(String name) {
@@ -93,10 +94,10 @@ public class ClassComponent extends ClassDiagramComponent {
     
     /**
      * Removes method from ClassComponent's collection of methods.
-     * @param name of the method which will be removed.
+     * @param method of the method which will be removed.
      */
-    public void removeMethod(String name) {
-        methods.remove(name);
+    public void removeMethod(Method method) {
+        methods.values().remove(method);
     }
 
     public Constructor getConstuctor(String name) {
@@ -115,10 +116,10 @@ public class ClassComponent extends ClassDiagramComponent {
     
     /**
      * Removes Constructor from a ClassComponent's collection of constructors.
-     * @param name of consutrctor which will be removed.
+     * @param constructor of constructor which will be removed.
      */
-    public void removeConstructor(String name) {
-        constructors.remove(name);
+    public void removeConstructor(Constructor constructor) {
+        methods.values().remove(constructor);
     }
 
     public Visibility getVisibility() {
@@ -144,4 +145,5 @@ public class ClassComponent extends ClassDiagramComponent {
     public void setType(Type type) {
         this.type = type;
     }
+    
 }

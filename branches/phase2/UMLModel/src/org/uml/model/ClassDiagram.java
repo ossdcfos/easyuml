@@ -16,7 +16,6 @@ public class ClassDiagram implements Serializable {
     private String name;
     private HashMap<String, ClassDiagramComponent> components; // contains classes, interfaces or enums
     private HashMap<String, RelationComponent> relations;
-
     //compoments counter:
     int compCounter=1;
 

@@ -34,5 +34,13 @@ public enum Visibility {
         }
     };
 
+    
+    public static Visibility stringToVisibility(String value) {
+        if("public".equalsIgnoreCase(value)) return PUBLIC;
+        if("private".equalsIgnoreCase(value)) return PRIVATE;
+        if("proteced".equalsIgnoreCase(value)) return PROTECTED;
+        if("package".equalsIgnoreCase(value)) return PACKAGE;
+        return null;
+    }
 
 }
