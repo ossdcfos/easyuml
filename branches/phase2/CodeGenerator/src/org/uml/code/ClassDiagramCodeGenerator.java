@@ -9,7 +9,6 @@ import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
-import org.uml.model.Field;
 import org.uml.model.InterfaceComponent;
 
 /**
@@ -52,7 +51,65 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
             FileWriter.writeFiles(code, comp.getName());
             sb.append(code);
         }
+//        ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
+//        serializer.setClassDiagram(classDiagram);
+//        Document document = DocumentHelper.createDocument();
+//        Element root = document.addElement("ClassDiagram");
+//        serializer.serialize(root);
+//        
+//        try {
+//            
+//            OutputFormat format = OutputFormat.createPrettyPrint();
+//            XMLWriter writer = new XMLWriter(
+//                new FileWriter( "out.xml"), format 
+//            );
+//            writer.write( document );
+//            
+//            writer.close(); 
+//            System.out.println("Ispisano u fajl");
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        ClassDiagram cd = new ClassDiagram();
+//            SAXReader reader = new SAXReader();
+//             Document document2;
+//        try {
+//            document2 = reader.read(new File("out.xml"));
+//            System.out.println("Fajl ucitan");
+//            
+//            Element root2 = document2.getRootElement();
+//            ClassDiagramDeserializer cdd = new ClassDiagramDeserializer(cd);
+//            cdd.deserialize(root);
+//            System.out.println("Deserialized");
+//        } catch (DocumentException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//        
+//        ClassDiagramXmlSerializer serializer2 = ClassDiagramXmlSerializer.getInstance();
+//            serializer2.setClassDiagram(cd);
+//            Document document3 = DocumentHelper.createDocument();
+//            Element root2 = document3.addElement("ClassDiagram");
+//            serializer2.serialize(root2);
+//            
+//            OutputFormat format = OutputFormat.createPrettyPrint();
+//            XMLWriter writer;
+//        try { 
+//            writer = new XMLWriter(
+//                    new FileWriter( "out2.xml"), format
+//            );
+//            writer.write( document3 );
+//            writer.close(); 
+//            System.out.println("Ispisano u fajl");
+//        } catch (IOException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+            
+            
+            
+            
         
+        
+            
         return sb.toString();
     }
 
