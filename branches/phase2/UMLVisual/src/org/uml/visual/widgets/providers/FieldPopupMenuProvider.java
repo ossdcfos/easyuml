@@ -15,6 +15,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.ClassComponent;
 import org.uml.model.Field;
 import org.uml.model.Visibility;
 import org.uml.visual.widgets.FieldWidget;
@@ -88,6 +89,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         public void actionPerformed(ActionEvent e) {
             ((Field)fieldWidget.getMember()).setVisibility(Visibility.PRIVATE);
             fieldWidget.refreshLabel();
+            
         }
     };
     
@@ -113,6 +115,10 @@ public class FieldPopupMenuProvider implements PopupMenuProvider{
         @Override
         public void actionPerformed(ActionEvent e) {
            fieldWidget.getMember().getDeclaringClass().removeMember(fieldWidget.getName());
+           if(fieldWidget.getMember().getDeclaringClass() instanceof ClassComponent) {
+               ((ClassComponent) fieldWidget.getMember().getDeclaringClass()).removeField((Field) fieldWidget.getMember());
+           }
+           
            fieldWidget.removeFromParent();
         }
         

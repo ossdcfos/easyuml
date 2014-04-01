@@ -14,6 +14,7 @@ import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassComponent;
+import org.uml.model.Field;
 import org.uml.model.Method;
 import org.uml.model.Visibility;
 import org.uml.visual.widgets.MethodWidget;
@@ -183,8 +184,11 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            methodWidget.getMember().getDeclaringClass().removeMember(methodWidget.getName());
-            methodWidget.removeFromParent();
+           methodWidget.getMember().getDeclaringClass().removeMember(methodWidget.getName());
+           if(methodWidget.getMember().getDeclaringClass() instanceof ClassComponent) {
+               ((ClassComponent) methodWidget.getMember().getDeclaringClass()).removeMethod((Method) methodWidget.getMember());
+           }
+           methodWidget.removeFromParent();
         }
     };
                 
