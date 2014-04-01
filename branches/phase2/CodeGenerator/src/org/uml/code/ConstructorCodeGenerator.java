@@ -28,8 +28,8 @@ public class ConstructorCodeGenerator implements CodeGenerator {
 
             String string = entry.getKey();
             Constructor constructor = entry.getValue();
-            code += "public " + constructor.getName() + "(" + constructor.getArguments() + ")" + " {/n" + "";
-
+            code += "public " + constructor.getName() + "("+constructor.getArguments()+")"+" {\n"+"";
+            
         }
 
         return code;
