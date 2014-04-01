@@ -49,9 +49,10 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
             CodeGenerator codeGen = generators.get(comp.getClass());
             codeGen.setClassDiagramComponent(comp);
             String code = codeGen.generateCode();
+            FileWriter.writeFiles(code, comp.getName());
             sb.append(code);
         }
-
+        
         return sb.toString();
     }
 
