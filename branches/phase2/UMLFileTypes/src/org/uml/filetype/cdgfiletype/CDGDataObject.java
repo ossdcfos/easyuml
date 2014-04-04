@@ -1,7 +1,13 @@
 package org.uml.filetype.cdgfiletype;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -20,6 +26,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.uml.model.ClassDiagram;
+import org.uml.xmlDeserialization.ClassDiagramDeserializer;
 
 
  @MIMEResolver.Registration(
@@ -149,22 +156,31 @@ public class CDGDataObject extends MultiDataObject {
     }     
     
     private ClassDiagram readFromFile(FileObject fileObject) {
-        ObjectInputStream stream = null;
+        ClassDiagram classDiagram = new ClassDiagram();
         try {
-            stream = new ObjectInputStream(fileObject.getInputStream());
-            try {
-                ClassDiagram classDiagram = (ClassDiagram) stream.readObject();
-                stream.close();
-
-                return classDiagram;
-            } catch (ClassNotFoundException ex) {
-                Exceptions.printStackTrace(ex);
-                stream.close();
-            }
-        } catch (IOException ex) {
+             SAXReader reader = new SAXReader();
+             FileObject file = getPrimaryFile();
+             System.out.println(file.asLines().get(0));
+             if(file.asLines().get(0).startsWith("<?xml")) {
+                String putanja = file.getPath();
+                
+                
+                Document document = reader.read(putanja);
+                System.out.println("Fajl ucitan");
+            
+                Element root = document.getRootElement();
+                ClassDiagramDeserializer cdd = new ClassDiagramDeserializer(classDiagram);
+                cdd.deserialize(root);
+                
+                System.out.println("Deserialized");
+             }
+        }catch (IOException ex) {
             System.err.println(ex.getMessage());
+        } catch (DocumentException ex) {
+            Exceptions.printStackTrace(ex);
+            
         }
-        return null;
+        return classDiagram;
     }
     
     @Override

@@ -59,9 +59,11 @@ public class SaveCookieImpl implements SaveCookie {
             FileObject fo = cdg.getPrimaryFile();
             String putanja = fo.getPath();
             fileOut = new FileOutputStream(putanja);
+            
             ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
             serializer.setClassDiagram(Utilities.actionsGlobalContext().lookup(ClassDiagram.class));
             Document document = DocumentHelper.createDocument();
+           // document.setXMLEncoding("UTF-8");
             Element root = document.addElement("ClassDiagram");
             serializer.serialize(root);
             OutputFormat format = OutputFormat.createPrettyPrint();
