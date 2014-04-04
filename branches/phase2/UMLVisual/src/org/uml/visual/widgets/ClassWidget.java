@@ -52,19 +52,21 @@ import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
         setBorder(BorderFactory.createLineBorder());
         setOpaque(true);
         setCheckClipping(true);
-
+        
 
         Widget classWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         classWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         classWidget.setBorder(BORDER_4);
 
+        
+        
         //ImageWidget classImage= new ImageWidget(scene);
         //classImage.setImage(this.classComponent.getImage());
 
 
         classWidget.addChild(nameWidget);
         addChild(classWidget);
-
+        
         nameWidget.getActions().addAction(nameEditorAction);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
@@ -89,6 +91,8 @@ import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
 
         this.nameWidget.setLabel(classComponent.getName());
 
+        
+        
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
         //getActions().addAction(ActionFactory.createResizeAction());

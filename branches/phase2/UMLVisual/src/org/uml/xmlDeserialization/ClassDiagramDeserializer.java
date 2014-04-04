@@ -4,6 +4,7 @@
  */
 package org.uml.xmlDeserialization;
 
+import java.awt.Point;
 import java.util.Iterator;
 import org.dom4j.Element;
 import org.uml.model.ClassComponent;
@@ -30,16 +31,19 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
     @Override
     public void deserialize(Element node) {
         classDiagram.setName(node.attributeValue("name"));
-        Iterator componentsIterator = node.element("ClassDiagramComponents").elementIterator("ClassDiagramComponent");
+        Iterator componentsIterator = node.element("ClassDiagramComponents").elementIterator("Class");
         while (componentsIterator != null && componentsIterator.hasNext()) {
             Element componentNode = (Element) componentsIterator.next();
-            if (componentNode.getName().equals("class")) {
+            
                 ClassComponent component = new ClassComponent();
                 ClassDeserializer cd = new ClassDeserializer(component);
                 cd.deserialize(componentNode);
                 classDiagram.addComponent(component);
                 component.setParentDiagram(classDiagram);
-            }
+                int xPos = (int) Double.parseDouble(componentNode.attributeValue("xPosition"));
+                int yPos = (int) Double.parseDouble(componentNode.attributeValue("yPosition"));
+                component.setPosition(new Point(xPos, yPos));
+            
         }
     }
     

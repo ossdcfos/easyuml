@@ -73,7 +73,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         // dodaj widget ali ne i com[onentu ponovo kao u addNode...
  
         for(ClassDiagramComponent comp : umlClassDiagram.getComponents().values()) {
-            addNode(comp);
+            Widget w = addNode(comp);
+            
+            w.setPreferredLocation(w.convertLocalToScene(comp.getPosition()));
+            
         }
         
         for(RelationComponent rel : umlClassDiagram.getRelations().values() ) {
@@ -180,6 +183,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         
         mainLayer.addChild(widget);
         
+        widget.getComponent().setPosition(widget.getLocation());
         return widget;
     }
 
@@ -287,8 +291,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return mainLayer;
     }
     
-    public void attach(ClassDiagramComponent cd) {
-        attachNodeWidget(cd);
+    public Widget attach(ClassDiagramComponent cd) {
+        return attachNodeWidget(cd);
     }
     
 }

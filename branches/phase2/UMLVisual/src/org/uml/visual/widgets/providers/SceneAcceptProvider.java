@@ -79,10 +79,12 @@ public class SceneAcceptProvider implements AcceptProvider {
         Class<? extends ClassDiagramComponent> droppedClass = (Class<? extends ClassDiagramComponent>) t.getTransferDataFlavors()[2].getRepresentationClass(); // Jako ruzno! Osmisliti kako da izvlacimo iz DataFlavor-a bez gadjanja indeksa!
         
         try {
-            Widget w=classDiagramScene.addNode(droppedClass.newInstance());
+            ClassDiagramComponent component = droppedClass.newInstance();
+            Widget w=classDiagramScene.addNode(component);
             w.setPreferredLocation(widget.convertLocalToScene(point));
             
             classDiagramScene.validate();
+            component.setPosition(w.getLocation());
             
             WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction((NameableWidget)w));
             ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase)w).getNameLabel());
