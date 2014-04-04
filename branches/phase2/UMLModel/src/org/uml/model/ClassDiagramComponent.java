@@ -1,5 +1,6 @@
 package org.uml.model;
 
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.HashMap;
 /**
@@ -16,7 +17,7 @@ public class ClassDiagramComponent implements Serializable {
     protected ClassDiagram parentDiagram;            
     private int memberCounter = 0;
     protected Visibility visibility;
-            
+    private Point position; // this should be removed in future
     /**
      * Default constructor. Initializes only members (fields, methods and constructors)
      */
@@ -69,6 +70,7 @@ public class ClassDiagramComponent implements Serializable {
         this.parentDiagram = parentDiagram;
     }
     
+    
     /**
      * Checks if member of ClassDiagramComponent already exists in collection of components.
      * @param name
@@ -90,6 +92,14 @@ public class ClassDiagramComponent implements Serializable {
 
     public HashMap<String, Member> getMembers() {
         return members;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
     }
 
 }
