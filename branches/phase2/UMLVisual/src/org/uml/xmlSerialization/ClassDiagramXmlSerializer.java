@@ -84,11 +84,14 @@ public class ClassDiagramXmlSerializer implements XmlSerializer{
         
         if (classDiagram.getName() != null)
         {
-            node.addAttribute("name", "sdsdsds" /*classDiagram.getName()*/);
+            node.addAttribute("name", classDiagram.getName());
         }
         Element classDiagramComponents = node.addElement("ClassDiagramComponents");
         for (ClassDiagramComponent component : classDiagram.getComponents().values()) {
             Element componentNode = classDiagramComponents.addElement("Class");
+            componentNode.addAttribute("xPosition", String.valueOf(component.getPosition().getX()));
+            System.out.println(component.getPosition().getX() + " pozicija x");
+            componentNode.addAttribute("yPosition", String.valueOf(component.getPosition().getY()));
             ClassDiagramComponentSerializer serializer = componentSerializers.get(component.getClass());
             serializer.addClassDiagramComponent(component);
             serializer.serialize(componentNode);

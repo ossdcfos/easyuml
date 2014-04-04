@@ -5,6 +5,7 @@ import java.util.Collection;
 import javax.swing.JScrollPane;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.spi.palette.PaletteController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -19,6 +20,7 @@ import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.uml.model.ClassDiagram;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 
@@ -76,10 +78,12 @@ public final class UMLTopComponent extends TopComponent /**implements LookupList
         palette = PaletteSupport.createPalette();
 
         // napuni scenu komponentama
+        //ovo se nalazi u konstruktoru scene, tako da treba da se ukloni odavde
 //        for (ClassDiagramComponent comp : cd.getComponents().values()) {
-//            classDiagramScene.addNode(comp);
+//            Widget w = classDiagramScene.attach(comp);
+//            w.setPreferredLocation();
 //        }
-//        classDiagramScene.validate();
+        classDiagramScene.validate();
 
     }
 
