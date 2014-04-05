@@ -14,27 +14,46 @@ import org.openide.filesystems.FileObject;
  * @version 1.0
  */
 public class FileWriter {
-    
-    static Project project;
 
-    public static void writeFiles(String code, String name) {
-        FileObject folder = project.getProjectDirectory();
+    private static FileWriter instance;
+    private Project project;
+
+    private FileWriter() {
+        project = null;
+    }
+
+    public static FileWriter getInstance(){
+        if (instance == null){
+            instance = new FileWriter();
+        }
+        return instance;
+    }
+    public void writeFiles(String code, String name) {
+        FileObject folder = getProject().getProjectDirectory();
         String path = folder.getPath();
-        System.err.println("Putanja je: "+path);
+        System.err.println("Putanja je: " + path);
 
         Writer writer = null;
-        try{
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path+"/"+name+".java")));
-            System.err.println(path+"/"+name+".java");
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + "/" + name + ".java")));
+            System.err.println(path + "/" + name + ".java");
             writer.write(code);
         } catch (Exception ex) {
             System.err.println("Error while writing files.");
         } finally {
             try {
                 writer.close();
-            } catch (Exception e){
-                System.err.println ("Error while closing BufferedWriter.");
+            } catch (Exception e) {
+                System.err.println("Error while closing BufferedWriter.");
             }
         }
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }
