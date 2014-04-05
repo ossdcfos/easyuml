@@ -4,7 +4,16 @@
  */
 package org.uml.visual.dialogs;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Vector;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.api.project.Project;
 import org.uml.code.ClassDiagramCodeGenerator;
+import org.uml.code.FileWriter;
 import org.uml.model.ClassDiagram;
 
 /**
@@ -12,21 +21,24 @@ import org.uml.model.ClassDiagram;
  * @author Uros
  */
 public class GenerateCodeDialog extends javax.swing.JDialog {
+    private ClassDiagram classDiagram;
+    HashMap<Project, String> projects;
 
     /**
      * Creates new form GenerateCodeDialog
      */
-
     public GenerateCodeDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
+
     public GenerateCodeDialog(java.awt.Frame parent, boolean modal, ClassDiagram classDiagram) {
         super(parent, modal);
         initComponents();
-        generateCode(classDiagram);
+        buildComboBoxModel();
+        this.classDiagram = classDiagram;
+//        generateCode(classDiagram);
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -39,6 +51,10 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaGeneratedCode = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
+        jLabelRequest = new javax.swing.JLabel();
+        jComboBoxProjects = new javax.swing.JComboBox();
+        jBGenerateCode = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -46,25 +62,72 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
         textAreaGeneratedCode.setRows(5);
         jScrollPane1.setViewportView(textAreaGeneratedCode);
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelRequest, org.openide.util.NbBundle.getMessage(GenerateCodeDialog.class, "GenerateCodeDialog.jLabelRequest.text")); // NOI18N
+
+        jComboBoxProjects.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        org.openide.awt.Mnemonics.setLocalizedText(jBGenerateCode, org.openide.util.NbBundle.getMessage(GenerateCodeDialog.class, "GenerateCodeDialog.jBGenerateCode.text")); // NOI18N
+        jBGenerateCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGenerateCodeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelRequest)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jComboBoxProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62)
+                        .addComponent(jBGenerateCode)))
+                .addContainerGap(245, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelRequest)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxProjects, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBGenerateCode))
+                .addContainerGap(121, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jBGenerateCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGenerateCodeActionPerformed
+        generateCode(classDiagram);
+    }//GEN-LAST:event_jBGenerateCodeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -108,14 +171,45 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBGenerateCode;
+    private javax.swing.JComboBox jComboBoxProjects;
+    private javax.swing.JLabel jLabelRequest;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea textAreaGeneratedCode;
     // End of variables declaration//GEN-END:variables
 
     private void generateCode(ClassDiagram classDiagram) {
         ClassDiagramCodeGenerator.getInstance().setClassDiagram(classDiagram);
-       
+        for (Map.Entry<Project, String> entry : projects.entrySet()) {
+            Project project = entry.getKey();
+            String string = entry.getValue();
+            String testMapa = string;
+            String testCombo = (String) jComboBoxProjects.getSelectedItem();
+            if (string.equals(jComboBoxProjects.getSelectedItem())){
+                FileWriter.getInstance().setProject(project);
+            }
+        }
         textAreaGeneratedCode.setText(ClassDiagramCodeGenerator.getInstance().generateCode());
-        
+
+    }
+
+    public void buildComboBoxModel() {
+        projects = new HashMap<>();
+        Project[] proj = OpenProjects.getDefault().getOpenProjects();
+        jComboBoxProjects.removeAllItems();
+
+        for (Project p : proj) {
+            String path = parseProjectPath(p);
+            projects.put(p, path);
+            jComboBoxProjects.addItem(path);
+        }
+    }
+
+    public String parseProjectPath(Project project) {
+        String[] list = project.getProjectDirectory().getPath().split("/");
+        String projectName = list[list.length - 1];
+        System.out.println(projectName);
+        return projectName;
     }
 }
