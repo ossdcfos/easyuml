@@ -16,7 +16,7 @@ import org.uml.visual.widgets.providers.ClassConnectProvider;
  *
  * @author Jelena
  */
-public abstract class MemberWidgetBase extends IconNodeWidget implements NameableWidget{
+public abstract class MemberWidgetBase extends LabelWidget /*IconNodeWidget*/ implements NameableWidget{
 
     
     public MemberWidgetBase(ClassDiagramScene scene) {

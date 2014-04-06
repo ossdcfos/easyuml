@@ -45,7 +45,7 @@ public class InterfaceWidget extends ComponentWidgetBase implements NameableWidg
     public InterfaceWidget(ClassDiagramScene scene, InterfaceComponent interfaceComponent) {
         super(scene);
         this.interfaceComponent = interfaceComponent;
-        setChildConstraint(getImageWidget(), 1);
+ //       setChildConstraint(this, 1); // getImageWidget()
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(org.netbeans.api.visual.border.BorderFactory.createLineBorder());
         setOpaque(true);

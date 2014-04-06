@@ -47,7 +47,7 @@ import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
         lookup = Lookups.fixed(classComponent, this);
         //lookup = Lookups.singleton(classComponent);
         this.scene = scene;
-        setChildConstraint(getImageWidget(), 1);
+//        setChildConstraint(this, 1); // getImageWidget()
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
         setOpaque(true);

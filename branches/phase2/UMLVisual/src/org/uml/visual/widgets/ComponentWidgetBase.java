@@ -7,6 +7,7 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.TwoStateHoverProvider;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.model.ObjectState;
+import org.netbeans.api.visual.widget.ImageWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
@@ -18,7 +19,7 @@ import org.uml.visual.widgets.providers.ClassConnectProvider;
  *
  * @author "NUGS"
  */
-abstract public class ComponentWidgetBase extends IconNodeWidget implements NameableWidget, Lookup.Provider {
+abstract public class ComponentWidgetBase extends ImageWidget implements NameableWidget, Lookup.Provider {
 
     private static final Dimension MINDIMENSION = new Dimension(100, 0);
     //atribut name
