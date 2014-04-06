@@ -1,6 +1,7 @@
 package org.uml.code;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -31,11 +32,14 @@ public class FileWriter {
     public void writeFiles(String code, String name) {
         FileObject folder = getProject().getProjectDirectory();
         String path = folder.getPath();
-        System.err.println("Putanja je: " + path);
+//        System.err.println("Putanja je: " + path);
 
         Writer writer = null;
+        File folderPath = new File(path + "/src/");
+        createDirectory(folderPath);
+        
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + "/" + name + ".java")));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + "/src/" + name + ".java")));
             System.err.println(path + "/" + name + ".java");
             writer.write(code);
         } catch (Exception ex) {
@@ -49,6 +53,13 @@ public class FileWriter {
         }
     }
 
+    public void createDirectory (File file){
+        if (!file.exists()) {
+            file.mkdir();
+        }
+    }
+    
+    
     public Project getProject() {
         return project;
     }
