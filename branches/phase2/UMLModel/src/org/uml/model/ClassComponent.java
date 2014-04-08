@@ -30,6 +30,7 @@ public class ClassComponent extends ClassDiagramComponent {
         constructors = new HashMap<String, Constructor>();
         setVisibility(Visibility.PUBLIC);
         isAbstract=false;
+        pack = null;
     }
 
     /**

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 /**
  * Implementation of Constructor, one of 4 possible Members.
+ *
  * @author zoran
  * @see Member
  * @see Literal
@@ -13,23 +14,25 @@ import java.util.HashMap;
 public class Constructor extends Member {
 
     private String returnType;
-    private HashMap <String,MethodArgument> arguments;
+    private HashMap<String, MethodArgument> arguments;
 
     /**
      * Constructor with parameter name which calls super constructor.
-     * @param name 
+     *
+     * @param name
      */
     public Constructor(String name) {
         super(name);
     }
-    
+
     /**
      * Constructor with more parameters, also calls super constructor
+     *
      * @param name of Constructor
      * @param returnType
      * @param arguments collection of arguments
      */
-    public Constructor(String name, String returnType, HashMap<String,MethodArgument> arguments) {
+    public Constructor(String name, String returnType, HashMap<String, MethodArgument> arguments) {
         super(name);
         this.returnType = returnType;
         this.arguments = arguments;
@@ -44,11 +47,10 @@ public class Constructor extends Member {
     }
 
     public HashMap<String, MethodArgument> getArguments() {
-        return arguments;
+            return arguments;
     }
 
     public void setArguments(HashMap<String, MethodArgument> arguments) {
         this.arguments = arguments;
     }
-    
 }
