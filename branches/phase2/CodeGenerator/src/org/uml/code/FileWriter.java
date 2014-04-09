@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.List;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 
@@ -23,24 +25,43 @@ public class FileWriter {
         project = null;
     }
 
-    public static FileWriter getInstance(){
-        if (instance == null){
+    public static FileWriter getInstance() {
+        if (instance == null) {
             instance = new FileWriter();
         }
         return instance;
     }
-    public void writeFiles(String code, String name) {
+
+    public void writeFiles(String code, String name, String pack) {
         FileObject folder = getProject().getProjectDirectory();
         String path = folder.getPath();
-//        System.err.println("Putanja je: " + path);
 
         Writer writer = null;
         File folderPath = new File(path + "/src/");
         createDirectory(folderPath);
-        
+
+        String longestPath = path + "/src/";
+
+        if (pack.contains(".")) {
+
+            String[] folders = pack.split("\\.");
+            for (String s : folders) {
+
+                String newPath = longestPath + s;
+                File f = new File(newPath);
+                createDirectory(f);
+                longestPath += s + "/";
+            }
+        } else {
+            if (!pack.equals("")) {
+                longestPath += pack;
+                File f = new File(longestPath);
+                createDirectory(f);
+                longestPath += "/";
+            }
+        }
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + "/src/" + name + ".java")));
-            System.err.println(path + "/" + name + ".java");
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(longestPath + name + ".java")));
             writer.write(code);
         } catch (Exception ex) {
             System.err.println("Error while writing files.");
@@ -53,13 +74,12 @@ public class FileWriter {
         }
     }
 
-    public void createDirectory (File file){
+    public void createDirectory(File file) {
         if (!file.exists()) {
             file.mkdir();
         }
     }
-    
-    
+
     public Project getProject() {
         return project;
     }

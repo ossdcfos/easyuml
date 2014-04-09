@@ -48,8 +48,10 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
             CodeGenerator codeGen = generators.get(comp.getClass());
             codeGen.setClassDiagramComponent(comp);
             String code = codeGen.generateCode();
-            FileWriter.getInstance().writeFiles(code, comp.getName());
+            FileWriter.getInstance().writeFiles(code, comp.getName(), comp.getPack());
+            
             sb.append(code);
+            sb.append("\n");
         }
 //        ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
 //        serializer.setClassDiagram(classDiagram);
