@@ -21,8 +21,10 @@ public class ClassCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         String code = "";
-        String pack = classComponent.getPack();       
-        code+="package "+pack+"; \n";
+        String pack = classComponent.getPack();
+        if (pack != null) {
+            code += "package " + pack + "; \n";
+        }
         String abstractModifierStr = "";
         if (classComponent.isIsAbstract()) {
             abstractModifierStr = "abstract";

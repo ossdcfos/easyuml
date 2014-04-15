@@ -42,22 +42,24 @@ public class FileWriter {
 
         String longestPath = path + "/src/";
 
-        if (pack.contains(".")) {
+        if (pack != null) {
+            if (pack.contains(".")) {
 
-            String[] folders = pack.split("\\.");
-            for (String s : folders) {
+                String[] folders = pack.split("\\.");
+                for (String s : folders) {
 
-                String newPath = longestPath + s;
-                File f = new File(newPath);
-                createDirectory(f);
-                longestPath += s + "/";
-            }
-        } else {
-            if (!pack.equals("")) {
-                longestPath += pack;
-                File f = new File(longestPath);
-                createDirectory(f);
-                longestPath += "/";
+                    String newPath = longestPath + s;
+                    File f = new File(newPath);
+                    createDirectory(f);
+                    longestPath += s + "/";
+                }
+            } else {
+                if (!pack.equals("")) {
+                    longestPath += pack;
+                    File f = new File(longestPath);
+                    createDirectory(f);
+                    longestPath += "/";
+                }
             }
         }
         try {
