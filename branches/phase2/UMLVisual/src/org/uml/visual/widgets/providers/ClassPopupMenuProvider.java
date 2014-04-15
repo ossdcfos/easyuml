@@ -68,7 +68,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
 
-        (addPackage = new JMenuItem("Add package")).addActionListener(addPackageListener);
+        (addPackage = new JMenuItem("Set Package")).addActionListener(addPackageListener);
         menu.add(addPackage);
 
         menu.addSeparator();
