@@ -2,6 +2,7 @@ package org.uml.code;
 
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.model.PackageComponent;
 
 /**
  *
@@ -21,8 +22,9 @@ public class ClassCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         String code = "";
-        String pack = classComponent.getPack();
-        if (pack != null) {
+        PackageComponent pc= classComponent.getPack();
+        if (pc != null && !pc.getName().equals("")) {
+            String pack = pc.getName();
             code += "package " + pack + "; \n";
         }
         String abstractModifierStr = "";
