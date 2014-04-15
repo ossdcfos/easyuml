@@ -10,6 +10,7 @@ import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
+import org.uml.model.PackageComponent;
 
 /**
  *
@@ -48,7 +49,14 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
             CodeGenerator codeGen = generators.get(comp.getClass());
             codeGen.setClassDiagramComponent(comp);
             String code = codeGen.generateCode();
-            FileWriter.getInstance().writeFiles(code, comp.getName(), comp.getPack());
+            PackageComponent pc = comp.getPack();
+            String packName;
+            if (pc == null) {
+                packName = null;
+            } else {
+                packName = pc.getName();
+            }
+            FileWriter.getInstance().writeFiles(code, comp.getName(), packName);
 
             sb.append(code);
             sb.append("\n");
