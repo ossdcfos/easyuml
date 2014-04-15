@@ -1,6 +1,7 @@
 package org.uml.visual.dialogs;
 
 import org.uml.model.ClassComponent;
+import org.uml.model.PackageComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 
@@ -19,7 +20,7 @@ public class PackageDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.comp = comp;
-        txtPackageName.setText(comp.getPack());
+        txtPackageName.setText("");
     }
 
     public PackageDialog(java.awt.Frame parent, ClassDiagramScene scene, boolean modal) {
@@ -99,7 +100,7 @@ public class PackageDialog extends javax.swing.JDialog {
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         String pack = txtPackageName.getText().trim();
-        comp.setPack(pack);
+        comp.setPack(new PackageComponent(pack));
         this.dispose();
     }//GEN-LAST:event_btnOkActionPerformed
 
