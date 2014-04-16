@@ -22,7 +22,7 @@ public class ClassCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         String code = "";
-        PackageComponent pc= classComponent.getPack();
+        PackageComponent pc= classComponent.getParentPackage();
         if (pc != null && !pc.getName().equals("")) {
             String pack = pc.getName();
             code += "package " + pack + "; \n";
