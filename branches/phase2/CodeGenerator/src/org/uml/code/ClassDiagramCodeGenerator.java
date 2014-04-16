@@ -49,7 +49,7 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
             CodeGenerator codeGen = generators.get(comp.getClass());
             codeGen.setClassDiagramComponent(comp);
             String code = codeGen.generateCode();
-            PackageComponent pc = comp.getPack();
+            PackageComponent pc = comp.getParentPackage();
             String packName;
             if (pc == null) {
                 packName = null;
