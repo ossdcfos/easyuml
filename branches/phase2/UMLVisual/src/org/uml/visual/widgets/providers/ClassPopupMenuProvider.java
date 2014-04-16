@@ -167,7 +167,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
 //            String pack = "";
-            PackageDialog pd = new PackageDialog(null, true, classWidget.getComponent());
+            PackageDialog pd = new PackageDialog(null, true, classWidget.getComponent(), classWidget.getClassDiagramScene().getUmlClassDiagram());
             pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
             pd.setTitle("Package");
             pd.setVisible(true);
