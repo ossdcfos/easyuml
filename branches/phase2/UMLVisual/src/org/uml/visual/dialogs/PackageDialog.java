@@ -1,6 +1,9 @@
 package org.uml.visual.dialogs;
 
+import java.util.Map;
 import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagram;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.PackageComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
@@ -15,12 +18,14 @@ public class PackageDialog extends javax.swing.JDialog {
      * Creates new form AddClassDialog
      */
     private ClassComponent comp;
+    private ClassDiagram classDiagram;
 
-    public PackageDialog(java.awt.Frame parent, boolean modal, ClassComponent comp) {
+    public PackageDialog(java.awt.Frame parent, boolean modal, ClassComponent comp, ClassDiagram cd) {
         super(parent, modal);
         initComponents();
         this.comp = comp;
         txtPackageName.setText("");
+        this.classDiagram = cd;
     }
 
     public PackageDialog(java.awt.Frame parent, ClassDiagramScene scene, boolean modal) {
@@ -100,7 +105,38 @@ public class PackageDialog extends javax.swing.JDialog {
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         String pack = txtPackageName.getText().trim();
-        comp.setPack(new PackageComponent(pack));
+        if (classDiagram.getPackages().containsKey(pack)){
+            PackageComponent packageComp = classDiagram.getPackages().get(pack);
+            comp.setParentPackage(packageComp);
+        } else {
+            PackageComponent packageComp = new PackageComponent(pack);
+            comp.setParentPackage(packageComp);
+        }
+
+        
+        System.out.println("-------------------------------------------------------------------");
+        
+        
+//        for (ClassDiagramComponent cdc : classDiagram.getComponents()){
+//            System.out.println("Name: "+cdc.getName()+"\t Package: "+ cdc.getParentPackage().getName());
+//        }
+        for (Map.Entry<String, ClassDiagramComponent> entry : classDiagram.getComponents().entrySet()) {
+            String name = entry.getKey();
+            ClassDiagramComponent cdc = entry.getValue();
+            System.out.println("Name: "+cdc.getName()+"\t Package: "+ cdc.getParentPackage().getName());
+        }
+//        System.out.println("////////////////////////////////////////////////////////////");
+//        System.out.println("Now for packages");
+//        for (Map.Entry<String, PackageComponent> entry : classDiagram.getPackages().entrySet()) {
+//            String name = entry.getKey();
+//            PackageComponent packageComponent = entry.getValue();
+//            String components = "";
+//            
+//            
+//            System.out.println("Name: "+name+" \t Components: " );
+//        }
+
+//        comp.setParentPackage(new PackageComponent(pack));
         this.dispose();
     }//GEN-LAST:event_btnOkActionPerformed
 
