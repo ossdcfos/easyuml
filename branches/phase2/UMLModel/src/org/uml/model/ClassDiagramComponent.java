@@ -21,7 +21,7 @@ public class ClassDiagramComponent implements Serializable {
     private int memberCounter = 0;
     protected Visibility visibility;
     private Point position; // this should be removed in future
-    protected PackageComponent pack;
+    protected PackageComponent parentPackage;
 
     /**
      * Default constructor. Initializes only members (fields, methods and
@@ -115,11 +115,12 @@ public class ClassDiagramComponent implements Serializable {
         this.position = position;
     }
 
-    public PackageComponent getPack() {
-        return pack;
+    public PackageComponent getParentPackage() {
+        return parentPackage;
     }
 
-    public void setPack(PackageComponent pack) {
-        this.pack = pack;
+    public void setParentPackage(PackageComponent parentPackage) {
+        this.parentPackage = parentPackage;
+     //   parentPackage.addMember(this);
     }
 }
