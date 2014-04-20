@@ -37,18 +37,6 @@ public class MethodSerializer implements XmlSerializer{
             int[] modifiers = method.getModifiers();
             if (modifiers != null) {
                 for (int i = 0; i < modifiers.length; i++) {
-//                    if (modifiers[i] == Modifier.STATIC) {
-//                        modType = "isStatic";
-//                    }
-//                    if (modifiers[i] == Modifier.FINAL) {
-//                        modType = "isFinal";
-//                    }
-//                    if (modifiers[i] == Modifier.ABSTRACT) {
-//                        
-//                    }
-//                    if (modifiers[i] == Modifier.SYNCHRONIZED) {
-//                        
-//                    }
                     if (modifiers[i] > 0 ) {
                         String modType = null;
                         switch(modifiers[i]) {
@@ -60,6 +48,7 @@ public class MethodSerializer implements XmlSerializer{
                                 break;
                             case Modifier.ABSTRACT :
                                 modType = "isAbstract";
+                                break;
                             case Modifier.SYNCHRONIZED :
                                 modType = "isSynchronized";
                                 break;

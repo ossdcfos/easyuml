@@ -5,6 +5,7 @@
 package org.uml.xmlSerialization;
 
 import org.dom4j.Element;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.IsRelationComponent;
 import org.uml.model.RelationComponent;
 
@@ -16,6 +17,10 @@ public class IsRelationSerializer implements RelationSerializer{
  
     private IsRelationComponent isRelationComponent;
     
+    /**
+     * Sets the isRelationComponent object that is going to be serialized.
+     * @param component represents isRelationComponent object to be serialized.
+     */
     @Override
     public void addRelationComponent(RelationComponent relation) {
         try{
@@ -26,9 +31,25 @@ public class IsRelationSerializer implements RelationSerializer{
         }
     }
     
+    /**
+     * Serializes isRelationComponent object to XML by translating its fields into parameter node's attributes and subelements.
+     * @param node represents the node that will contain serialized isRelationComponent object.
+     */
     @Override
     public void serialize(Element node) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (isRelationComponent.getName() != null) node.addAttribute("name", isRelationComponent.getName());
+        ClassDiagramComponent sourceComponent = (ClassDiagramComponent) isRelationComponent.getSource();
+        ClassDiagramComponent targetComponent = (ClassDiagramComponent) isRelationComponent.getTarget();
+        if (sourceComponent != null) { 
+            node.addAttribute("source", sourceComponent.getName());
+        }else {
+            node.addAttribute("source", "");
+        }
+        if (targetComponent != null) {
+            node.addAttribute("target", targetComponent.getName());
+        }else {
+            node.addAttribute("target", "");
+        }
     }
     
 }

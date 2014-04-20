@@ -16,6 +16,10 @@ public class ClassSerializer implements ClassDiagramComponentSerializer{
 
     private ClassComponent classComponent;
     
+    /**
+     * Sets the ClassComponent object that is going to be serialized.
+     * @param component represents ClassComponent object to be serialized.
+     */
     @Override
     public void addClassDiagramComponent(ClassDiagramComponent component) {
         try{
@@ -26,12 +30,16 @@ public class ClassSerializer implements ClassDiagramComponentSerializer{
         }
     }
 
+    /**
+     * Serializes classComponent to XML by translating its fields into parameter node's attributes and subelements.
+     * @param node represents the node that will contains serialized classComponent object.
+     */
     @Override
     public void serialize(Element node) {
-        
+        if (classComponent.getParentPackage() != null) node.addAttribute("package", classComponent.getParentPackage().getName());
+        if (classComponent.isIsAbstract()) node.addAttribute("isAbstract", Boolean.toString(true));
         if (classComponent.getName() != null) node.addAttribute("name", classComponent.getName());
         if (classComponent.getVisibility() != null) node.addAttribute("visibility", classComponent.getVisibility().toString());
-        if (classComponent.getParentDiagram() != null) node.addAttribute("parentDiagram", classComponent.getParentDiagram().toString());
         Element constructors = node.addElement("Constructors");
         XmlSerializer serializer = new ConstructorSerializer(classComponent.getConstructors());
         serializer.serialize(constructors);

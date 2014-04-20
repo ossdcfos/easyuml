@@ -16,6 +16,10 @@ public class InterfaceSerializer implements ClassDiagramComponentSerializer{
 
     private InterfaceComponent interfaceComponent;
     
+    /**
+     * Sets the interfaceComponent object that is going to be serialized.
+     * @param component represents interfaceComponent object to be serialized.
+     */
     @Override
     public void addClassDiagramComponent(ClassDiagramComponent component) {
         try{
@@ -26,9 +30,18 @@ public class InterfaceSerializer implements ClassDiagramComponentSerializer{
         }
     }
 
+    /**
+     * Serializes interfaceComponent object to XML by translating its fields into parameter node's attributes and subelements.
+     * @param node represents the node that will contain serialized interfaceComponent object.
+     */
     @Override
     public void serialize(Element node) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (interfaceComponent.getParentPackage() != null) node.addAttribute("package", interfaceComponent.getParentPackage().getName());
+        if (interfaceComponent.getName() != null) node.addAttribute("name", interfaceComponent.getName());
+        if (interfaceComponent.getVisibility() != null) node.addAttribute("visibility", interfaceComponent.getVisibility().toString());
+        Element methods = node.addElement("Methods");
+        XmlSerializer serializer = new MethodSerializer(interfaceComponent.getMethods());
+        serializer.serialize(methods);
     }
     
 }

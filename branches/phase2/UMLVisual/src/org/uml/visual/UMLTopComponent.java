@@ -171,4 +171,8 @@ public final class UMLTopComponent extends TopComponent /**implements LookupList
 //         FileObject folder = selectedProject.getProjectDirectory();
 //         String path = folder.getPath();
 //    }
+    
+    public ClassDiagramScene getScene() {
+        return classDiagramScene;
+    }
 }

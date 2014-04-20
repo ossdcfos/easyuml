@@ -1,7 +1,6 @@
 package org.uml.visual.parser;
  
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -19,8 +18,8 @@ public class WidgetParser {
 	Pattern visibility = Pattern.compile("public|private|protected|package");
 	Pattern methodModifiers = Pattern.compile("static|final|abstract|synchronized");
         Pattern fieldModifiers = Pattern.compile("static|final|synchronized");
-	Pattern returnValueType = Pattern.compile("(void|int|float|double|boolean)|([A-Z]\\w+)");
-	Pattern argumentType = Pattern.compile("(int|float|double|boolean)|([A-Z]\\w+)");
+	Pattern returnValueType = Pattern.compile("(null|void|int|float|double|boolean)|([A-Z]\\w+\\s*(<\\s*\\w+(\\s*,\\s*\\w+\\s*)*\\s*>\\s*)*)");
+	Pattern argumentType = Pattern.compile("(null|int|float|double|boolean)|([A-Z]\\w+\\s*(<\\s*([A-Z]\\w+)(\\s*,\\s*([A-Z]\\w+)\\s*)*\\s*>\\s*)*)");
 	Pattern arrayCheck = Pattern.compile("(\\[\\s*\\])?");
 	Pattern name = Pattern.compile("\\w+");
 	Pattern argumentBlock = Pattern.compile("\\(.*\\)");
@@ -157,16 +156,17 @@ public class WidgetParser {
         public void setVisibility(Member m, String visibility) {
             if(visibility.equals("private")) {
                 m.setVisibility(Visibility.PRIVATE);
+                return;
             }
             if(visibility.equals("public")) {
                 m.setVisibility(Visibility.PUBLIC);
+                return;
             }
             if(visibility.equals("protected")) {
                 m.setVisibility(Visibility.PROTECTED);
+                return;
             }
-            if(visibility.equals("")) {
-                m.setVisibility(Visibility.PACKAGE);
-            }
+            m.setVisibility(Visibility.PACKAGE);
         }
         /**
          * Parses stringToParse string to extract visibility. 
@@ -239,13 +239,17 @@ public class WidgetParser {
 			result = stringToParse.substring(m.start(),m.end());
 			stringToParse = stringToParse.substring(m.end());
 			skipWhitespaces();
-			m = arrayCheck.matcher(stringToParse);
-			if(m.lookingAt()) {
+                        if (!result.equals("null")) {
+                            m = arrayCheck.matcher(stringToParse);
+                            if(m.lookingAt()) {
 				result = result.concat(stringToParse.substring(m.start(), m.end())) + " ";
 				stringToParse = stringToParse.substring(m.end());
-			}else {
+                            }else {
 				result = result.concat(" ");
-			}
+                            }
+                        }else {
+                            result = "void ";
+                        }
 		}else {
                     result = "void ";
                 }               
@@ -264,13 +268,17 @@ public class WidgetParser {
 		result = stringToParse.substring(m.start(),m.end());
 		stringToParse = stringToParse.substring(m.end());
 		skipWhitespaces();
-		m = arrayCheck.matcher(stringToParse);
-		if(m.lookingAt()) {
-                    result = result.concat(stringToParse.substring(m.start(), m.end())) + " ";
-                    stringToParse = stringToParse.substring(m.end());
-		}else {
-                    result = result.concat(" ");
-		}
+                if (!result.equals("null")) {
+                    m = arrayCheck.matcher(stringToParse);
+                    if(m.lookingAt()) {
+                        result = result.concat(stringToParse.substring(m.start(), m.end())) + " ";
+                        stringToParse = stringToParse.substring(m.end());
+                    }else {
+                        result = result.concat(" ");
+                    }
+                }else {
+                    result = "Object ";
+                }
             }else {
                 result = "Object ";
             }               
@@ -353,19 +361,6 @@ public class WidgetParser {
             setFieldModifiers(getAllFieldModifiers());
             f.setType(getArgumentType());
             f.setName(getName());
-//            String modifiers = "";
-//            boolean imaModifier = true;
-//            while(imaModifier) {
-//		String mod = getModifier();
-//		if(mod.equals("")){
-//                    imaModifier = false;
-//                    modifiers += mod;
-//                    break;
-//		}
-//		modifiers += mod + " ";
-//            }
-//            f.setModifiers(modifiers);
-            
         }
         
         /**
@@ -376,19 +371,6 @@ public class WidgetParser {
         public void fillMethodComponents(Method m, String methodWidgetText) {
             stringToParse = methodWidgetText;
             this.m = m;
-//            m.setVisibility(getVisibility());
-//            String modifiers = "";
-//            boolean imaModifier = true;
-//            while(imaModifier) {
-//		String mod = getModifier();
-//		if(mod.equals("")){
-//                    imaModifier = false;
-//                    modifiers += mod;
-//                    break;
-//		}
-//		modifiers += mod + " ";
-//            }
-//            m.setModifiers(modifiers);
             setMethodModifiers(getAllMethodModifiers());
             m.setReturnType(getReturnType());
             m.setName(getName());

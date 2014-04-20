@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarFile;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.widget.Widget;
@@ -40,6 +41,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
     public AddRelationDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        fillCollectionsComboBox();
     }
 
     public AddRelationDialog(java.awt.Frame parent,ClassDiagramScene classDiagramScene,boolean modal) {
@@ -47,6 +49,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
         initComponents();
         this.classDiagramScene = classDiagramScene;
         fillCombos(true);
+        fillCollectionsComboBox();
     }
     
     
@@ -112,6 +115,8 @@ public class AddRelationDialog extends javax.swing.JDialog {
         comboBoxCardinalitySource = new javax.swing.JComboBox();
         labelCardinalityTarget = new javax.swing.JLabel();
         labelCardinalitySource = new javax.swing.JLabel();
+        labelCardinalityTarget1 = new javax.swing.JLabel();
+        comboBoxCollectionType = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -161,6 +166,8 @@ public class AddRelationDialog extends javax.swing.JDialog {
 
         org.openide.awt.Mnemonics.setLocalizedText(labelCardinalitySource, org.openide.util.NbBundle.getMessage(AddRelationDialog.class, "AddRelationDialog.labelCardinalitySource.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(labelCardinalityTarget1, org.openide.util.NbBundle.getMessage(AddRelationDialog.class, "AddRelationDialog.labelCardinalityTarget1.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,7 +177,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(labelCardinalitySource, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                    .addComponent(labelCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, 124, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -178,7 +185,8 @@ public class AddRelationDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jbtnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jbtnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelCardinalityTarget1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -188,7 +196,8 @@ public class AddRelationDialog extends javax.swing.JDialog {
                             .addComponent(comboBoxCardinalitySource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jcbClassesSource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jcbRelations, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(textFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(textFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboBoxCollectionType, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addComponent(jcbClassesTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jbtnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33))
@@ -220,6 +229,10 @@ public class AddRelationDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelCardinalityTarget)
                     .addComponent(comboBoxCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelCardinalityTarget1)
+                    .addComponent(comboBoxCollectionType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbtnOk)
@@ -254,6 +267,13 @@ public class AddRelationDialog extends javax.swing.JDialog {
             HasRelationComponent hasRelation = (HasRelationComponent) relation;
             hasRelation.setCardinalitySource((CardinalityEnum)comboBoxCardinalitySource.getSelectedItem());
             hasRelation.setCardinalityTarget((CardinalityEnum)comboBoxCardinalityTarget.getSelectedItem());
+            if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
+                String collectionType = comboBoxCollectionType.getSelectedItem().toString();
+                if (collectionType == null && collectionType.equals("")) {
+                    collectionType = "List";
+                }
+                hasRelation.setCollectionType(collectionType);
+            }
         }
         if(relation instanceof UseRelationComponent) {
             UseRelationComponent useRelation = (UseRelationComponent) relation;
@@ -301,7 +321,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
             comboBoxCardinalitySource.removeAllItems();
             comboBoxCardinalitySource.setEnabled(false);
             comboBoxCardinalityTarget.setEnabled(true);
-            
+            comboBoxCollectionType.setEnabled(true);
             List<Widget> widgets=classDiagramScene.getMainLayer().getChildren();
             jcbClassesSource.removeAllItems();
             jcbClassesTarget.removeAllItems();
@@ -312,6 +332,8 @@ public class AddRelationDialog extends javax.swing.JDialog {
                     jcbClassesTarget.addItem(widget);                                  
             }
    
+        }else {
+            comboBoxCollectionType.setEnabled(false);
         }
         if(jcbRelations.getSelectedItem() instanceof IsRelationComponent) {
             comboBoxCardinalityTarget.removeAllItems();
@@ -420,6 +442,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboBoxCardinalitySource;
     private javax.swing.JComboBox comboBoxCardinalityTarget;
+    private javax.swing.JComboBox comboBoxCollectionType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -431,6 +454,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox jcbRelations;
     private javax.swing.JLabel labelCardinalitySource;
     private javax.swing.JLabel labelCardinalityTarget;
+    private javax.swing.JLabel labelCardinalityTarget1;
     private javax.swing.JTextField textFieldName;
     // End of variables declaration//GEN-END:variables
 
@@ -441,5 +465,13 @@ public class AddRelationDialog extends javax.swing.JDialog {
     }
     public JComboBox getRelationComponents () {
         return jcbRelations;
+    }
+    
+    private void fillCollectionsComboBox() {
+        String[] collectionTypes = new String[]{"List", "ArrayList", "LinkedList"};
+        comboBoxCollectionType.removeAllItems();
+        comboBoxCollectionType.setModel(new DefaultComboBoxModel(collectionTypes));
+        comboBoxCollectionType.setSelectedIndex(0);
+        comboBoxCollectionType.setEditable(true);
     }
 }

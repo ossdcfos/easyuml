@@ -1,10 +1,17 @@
 package org.uml.visual.widgets;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.ResizeControlPointResolver;
+import org.netbeans.api.visual.action.ResizeProvider;
 import org.netbeans.api.visual.action.TwoStateHoverProvider;
+import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.ImageWidget;
@@ -22,6 +29,9 @@ import org.uml.visual.widgets.providers.ClassConnectProvider;
 abstract public class ComponentWidgetBase extends ImageWidget implements NameableWidget, Lookup.Provider {
 
     private static final Dimension MINDIMENSION = new Dimension(100, 0);
+    private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(5, Color.red, true);
+    private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder(0);
+    
     //atribut name
 
     protected LabelWidget nameWidget;
@@ -30,10 +40,13 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
     public ComponentWidgetBase(ClassDiagramScene scene) {
         super(scene);
         this.scene = scene;
+        setBorder(DEFAULT_BORDER);
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+        getActions().addAction(ActionFactory.createResizeAction());
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createHoverAction (new ChangeCursor ()));
+        
         setMinimumSize(MINDIMENSION);
         
         nameWidget = new LabelWidget(scene);
@@ -53,16 +66,22 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
         super.notifyStateChanged(previousState, state);
         if (state.isSelected()) {
-            //setBorder(BorderFactory.createLineBorder(10));
+            //setBorder(SELECTED_BORDER);
+            setBorder (SELECTED_BORDER);
+            
         } else {
-            setBorder(BorderFactory.createLineBorder());
+            if (state.isHovered()) {
+                
+            }else {
+                setBorder(DEFAULT_BORDER);
+            }
+            
         }
         
         if(previousState.isSelected()) {
-          setBorder(BorderFactory.createLineBorder());
+            setBorder(DEFAULT_BORDER);
         }                          
-       
-          
+        
         
     }
     
@@ -91,6 +110,17 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
             widget.setCursor(new Cursor(Cursor.HAND_CURSOR));
        }
 
+    }
+    
+    private static class MyResizeControlPointResolver implements ResizeControlPointResolver {
+
+        public ResizeProvider.ControlPoint resolveControlPoint (Widget widget, Point point) {
+            Rectangle bounds = widget.getBounds ();
+            Insets insets = widget.getBorder ().getInsets ();
+            if (new Rectangle (bounds.x + bounds.width - insets.right, bounds.y + bounds.height - insets.bottom, insets.right, insets.bottom).contains (point))
+                return ResizeProvider.ControlPoint.BOTTOM_RIGHT;
+            return null;
+        }
     }
     
     
