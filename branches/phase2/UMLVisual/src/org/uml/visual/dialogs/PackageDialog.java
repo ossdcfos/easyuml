@@ -123,7 +123,10 @@ public class PackageDialog extends javax.swing.JDialog {
         for (Map.Entry<String, ClassDiagramComponent> entry : classDiagram.getComponents().entrySet()) {
             String name = entry.getKey();
             ClassDiagramComponent cdc = entry.getValue();
-            System.out.println("Name: "+cdc.getName()+"\t Package: "+ cdc.getParentPackage().getName());
+            if (cdc.getParentPackage() != null) {
+                System.out.println("Name: "+cdc.getName()+"\t Package: "+ cdc.getParentPackage().getName());
+            }
+            
         }
 //        System.out.println("////////////////////////////////////////////////////////////");
 //        System.out.println("Now for packages");
