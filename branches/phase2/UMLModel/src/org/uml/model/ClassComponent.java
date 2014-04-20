@@ -67,7 +67,7 @@ public class ClassComponent extends ClassDiagramComponent {
         int Low = 0;
         int High = 100;
         int R = r.nextInt(High-Low) + Low;
-        fields.put(field.getName(), field);
+        fields.put(Integer.toString(R), field);
         addMember(field);
     } 
     

@@ -134,7 +134,7 @@ public class Method extends Member {
     
     public String getSignature() {
         String result = "";
-        if(visibility != null && !visibility.PACKAGE.equals(visibility)) {
+        if(visibility != null && !Visibility.PACKAGE.equals(visibility)) {
             result = result.concat(getVisibility().toString() + " ");
         }
         for(int i = 0; i < 4 ; i++) {

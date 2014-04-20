@@ -1,6 +1,7 @@
 package org.uml.model;
 
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Implementation of EnumComponent, one of four posible types of ClassDiagramComponents.
@@ -46,6 +47,10 @@ public class EnumComponent extends ClassDiagramComponent {
     public HashMap<String, Constructor> getConstructors() {
         return constructors;
     }
+    
+    public HashMap<String, Literal> getLiterals() {
+        return literals;
+    }
 
     public Field getField (String name) {
         return fields.get(name);
@@ -57,7 +62,11 @@ public class EnumComponent extends ClassDiagramComponent {
      */
     public void addField (Field field) {
         field.setDeclaringClass(this);
-        fields.put(field.getName(), field);
+        Random r = new Random();
+        int Low = 0;
+        int High = 100;
+        int R = r.nextInt(High-Low) + Low;
+        fields.put(Integer.toString(R), field);
         addMember(field);
     } 
     
@@ -79,7 +88,11 @@ public class EnumComponent extends ClassDiagramComponent {
      */    
     public void addMethod(Method method) {
         method.setDeclaringClass(this);
-        methods.put(method.getName(), method);
+        Random r = new Random();
+        int Low = 0;
+        int High = 100;
+        int R = r.nextInt(High-Low) + Low;
+        methods.put(Integer.toString(R), method);
         addMember(method);
     }
 
@@ -101,7 +114,11 @@ public class EnumComponent extends ClassDiagramComponent {
      */
     public void addConstructor(Constructor constructor) {
         constructor.setDeclaringClass(this);
-        constructors.put(this.getName(), constructor);
+        Random r = new Random();
+        int Low = 0;
+        int High = 100;
+        int R = r.nextInt(High-Low) + Low;
+        constructors.put(Integer.toString(R), constructor);
         addMember(constructor);
     }
     
@@ -123,7 +140,11 @@ public class EnumComponent extends ClassDiagramComponent {
      */
     public void addLiteral(Literal literal) {
         literal.setDeclaringClass(this);
-        literals.put(this.getName(), literal);
+        Random r = new Random();
+        int Low = 0;
+        int High = 100;
+        int R = r.nextInt(High-Low) + Low;
+        literals.put(Integer.toString(R), literal);
         addMember(literal);
     }
     

@@ -52,4 +52,20 @@ public enum CardinalityEnum {
             return "0..*";
         }
     };
+    
+    public static CardinalityEnum parseString(String cardinalityEnum) {
+        if (cardinalityEnum.equalsIgnoreCase("1..1")) {
+            return CardinalityEnum.One2One;
+        }
+        if (cardinalityEnum.equalsIgnoreCase("0..1")) {
+            return CardinalityEnum.Zero2One;
+        }
+        if (cardinalityEnum.equalsIgnoreCase("1..*")) {
+            return CardinalityEnum.One2Many;
+        }
+        if (cardinalityEnum.equalsIgnoreCase("0..*")) {
+            return CardinalityEnum.Zero2Many;
+        }
+        return CardinalityEnum.Zero2One;
+    }
 }

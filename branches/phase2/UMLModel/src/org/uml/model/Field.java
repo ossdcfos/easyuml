@@ -101,7 +101,7 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
 
     public String getSignature() {
         String result = "";
-        if(visibility != null && !visibility.equals(visibility.PACKAGE)) {
+        if(visibility != null && !visibility.equals(Visibility.PACKAGE)) {
             result = result.concat(getVisibility().toString() + " ");
         }
         if(isStatic) {
