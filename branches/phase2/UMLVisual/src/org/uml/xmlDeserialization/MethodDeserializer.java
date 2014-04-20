@@ -37,12 +37,14 @@ public class MethodDeserializer implements XmlDeserializer{
         String type = node.attributeValue("returnType");
         String isStatic = node.attributeValue("isStatic");
         String isFinal = node.attributeValue("isFinal");
+        String isAbstract = node.attributeValue("isAbstract");
         String isSynchronized = node.attributeValue("isSynchronized");
         if (name != null) method.setName(name);
         if (visibility != null) method.setVisibility(Visibility.stringToVisibility(visibility));
         if (type != null) method.setReturnType(type);
         if (isStatic != null) method.addModifier(Modifier.STATIC);
         if (isFinal != null) method.addModifier(Modifier.FINAL);
+        if (isAbstract != null) method.addModifier(Modifier.ABSTRACT);
         if (isSynchronized != null) method.addModifier(Modifier.SYNCHRONIZED);
         HashMap<String, MethodArgument> arguments = new HashMap<String, MethodArgument>();
         Iterator argumentIterator = node.elementIterator("Argument");

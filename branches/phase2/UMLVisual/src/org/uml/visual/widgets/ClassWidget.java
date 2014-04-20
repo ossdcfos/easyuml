@@ -1,6 +1,8 @@
 package org.uml.visual.widgets;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.MouseListener;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import javax.sound.sampled.FloatControl;
@@ -17,10 +19,14 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.uml.model.ClassComponent;
+import org.uml.model.Constructor;
+import org.uml.model.Field;
+import org.uml.model.Method;
 import org.uml.model.Visibility;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
+import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
  *
@@ -30,10 +36,10 @@ import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
-    private static final Border RESIZE_BORDER =
-            BorderFactory.createResizeBorder(4, Color.black, true);
-    private static final Border DEFAULT_BORDER =
-            BorderFactory.createLineBorder();
+//    private static final Border RESIZE_BORDER =
+//            BorderFactory.createResizeBorder(4, Color.black, true);
+//    private static final Border DEFAULT_BORDER =
+//            BorderFactory.createLineBorder();
     private Widget fieldsWidget;
     private Widget methodsWidget;
     //private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
@@ -57,7 +63,12 @@ import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
         Widget classWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         classWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         classWidget.setBorder(BORDER_4);
-
+        if (classComponent.isIsAbstract()) {
+            LabelWidget abstractLabel = new LabelWidget(classWidget.getScene(), "<<abstract>>");
+            abstractLabel.setFont(classWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
+            abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
+            classWidget.addChild(abstractLabel);
+        }
         
         
         //ImageWidget classImage= new ImageWidget(scene);
@@ -95,8 +106,27 @@ import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
         
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
-        //getActions().addAction(ActionFactory.createResizeAction());
+       
+  //      getActions().addAction(ActionFactory.createMoveAction());
         //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
+        
+        //filling this widget when loading existing diagram
+        for (Constructor c : classComponent.getConstructors().values()) {
+            ConstructorWidget w = new ConstructorWidget(scene, c);
+            this.addConstructorWidget(w);
+        }
+        
+        for (Field fieldComp : classComponent.getFields().values()) {
+            
+            FieldWidget w = new FieldWidget(this.getClassDiagramScene(), fieldComp);
+            this.addFieldWidget(w);
+        }
+        
+        for (Method methodComp : classComponent.getMethods().values()) {
+            MethodWidget mw = new MethodWidget(this.getClassDiagramScene(), methodComp);
+            this.addMethodWidget(mw);
+        }
+        this.getScene().validate();
     }
 
     @Override

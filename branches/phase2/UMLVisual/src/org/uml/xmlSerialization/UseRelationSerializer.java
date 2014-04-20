@@ -5,6 +5,8 @@
 package org.uml.xmlSerialization;
 
 import org.dom4j.Element;
+import org.uml.model.CardinalityEnum;
+import org.uml.model.ClassDiagramComponent;
 import org.uml.model.RelationComponent;
 import org.uml.model.UseRelationComponent;
 
@@ -26,9 +28,29 @@ public class UseRelationSerializer implements RelationSerializer{
         }
     }
 
+    /**
+     * Serializes useRelationComponent object to XML by translating its fields into parameter node's attributes and subelements.
+     * @param node represents the node that will contain serialized useRelationComponent object.
+     */
     @Override
     public void serialize(Element node) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (useRelationComponent.getName() != null) node.addAttribute("name", useRelationComponent.getName());
+        ClassDiagramComponent sourceComponent = (ClassDiagramComponent) useRelationComponent.getSource();
+        ClassDiagramComponent targetComponent = (ClassDiagramComponent) useRelationComponent.getTarget();
+        if (sourceComponent != null) { 
+            node.addAttribute("source", sourceComponent.getName());
+        }else {
+            node.addAttribute("source", "");
+        }
+        if (targetComponent != null) {
+            node.addAttribute("target", targetComponent.getName());
+        }else {
+            node.addAttribute("target", "");
+        }
+        CardinalityEnum sourceCardinality = useRelationComponent.getCardinalitySource();
+        CardinalityEnum targetCardinality = useRelationComponent.getCardinalityTarget();
+        if (sourceCardinality != null) node.addAttribute("sourceCardinality", sourceCardinality.toString());
+        if (targetCardinality != null) node.addAttribute("targetCardinality", targetCardinality.toString());
     }
     
 }

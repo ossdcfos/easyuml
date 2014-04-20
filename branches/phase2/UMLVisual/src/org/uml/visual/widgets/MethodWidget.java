@@ -31,12 +31,12 @@ public class MethodWidget extends MemberWidgetBase {
         this.addChild(visibilityLabel);
 
         methodNameWidget = new LabelWidget(getScene());
-        methodNameWidget.setLabel(methodComponent.getName());
+        methodNameWidget.setLabel(methodComponent.getSignatureForLabel());
         this.addChild(methodNameWidget);
         methodNameWidget.getActions().addAction(nameEditorAction);
         methodNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
         wp = new WidgetParser();
-
+        refreshLabel();
     }
 
     @Override
@@ -72,6 +72,12 @@ public class MethodWidget extends MemberWidgetBase {
     public LabelWidget getMethodNameWidget() {
         return methodNameWidget;
     }
+
+    public Method getMethodComponent() {
+        return methodComponent;
+    }
+    
+    
     
     @Override
     public void setAttributes(String attributes) {

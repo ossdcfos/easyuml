@@ -165,7 +165,15 @@ public class ClassConnectProvider implements ConnectProvider{
             if (relation instanceof HasRelationComponent) {
                 HasRelationComponent hasRelation = (HasRelationComponent) relation;
                 hasRelation.setCardinalitySource((CardinalityEnum)panel.getCardinalitySourceComboBox().getSelectedItem());
-                hasRelation.setCardinalityTarget((CardinalityEnum)panel.getCardinalityTargetComboBox().getSelectedItem());
+                CardinalityEnum ce = (CardinalityEnum)panel.getCardinalityTargetComboBox().getSelectedItem();
+                hasRelation.setCardinalityTarget(ce);
+                if (ce.equals(CardinalityEnum.One2Many) || ce.equals(CardinalityEnum.Zero2Many)) {
+                    String collectionType = panel.getCollectionType();
+                    if (collectionType == null || collectionType.equals("")) {
+                        collectionType = "List";
+                    }
+                    hasRelation.setCollectionType(collectionType);
+                }
             }
             if(relation instanceof UseRelationComponent) {
                 UseRelationComponent useRelation = (UseRelationComponent) relation;

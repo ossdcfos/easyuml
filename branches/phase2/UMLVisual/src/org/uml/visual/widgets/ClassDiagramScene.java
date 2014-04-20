@@ -2,6 +2,7 @@ package org.uml.visual.widgets;
 
 import java.awt.BasicStroke;
 import java.util.Set;
+import javax.swing.Action;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.anchor.Anchor;
@@ -42,9 +43,9 @@ import org.uml.visual.widgets.providers.SceneAcceptProvider;
  *
  * https://blogs.oracle.com/geertjan/entry/how_to_serialize_visual_library
  * layout, serijalizacija, save as image
+ *
  * @author NUGS
- */                             
-
+ */
 public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, RelationComponent> {
 
     private LayerWidget mainLayer;
@@ -52,8 +53,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     private LayerWidget interractionLayer;
     private ClassDiagram umlClassDiagram;
     InstanceContent content = new InstanceContent();
-    AbstractLookup aLookup = new AbstractLookup(content);    
-            
+    AbstractLookup aLookup = new AbstractLookup(content);
+
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
 
         this.umlClassDiagram = umlClassDiagram;
@@ -69,27 +70,26 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         getActions().addAction(ActionFactory.createZoomAction());
-        
+
         // dodaj widget ali ne i com[onentu ponovo kao u addNode...
- 
-        for(ClassDiagramComponent comp : umlClassDiagram.getComponents().values()) {
+
+        for (ClassDiagramComponent comp : umlClassDiagram.getComponents().values()) {
             Widget w = addNode(comp);
-            
-            w.setPreferredLocation(w.convertLocalToScene(comp.getPosition()));
-            
+            w.setPreferredLocation(convertLocalToScene(comp.getPosition()));
         }
-        
-        for(RelationComponent rel : umlClassDiagram.getRelations().values() ) {
-            addEdge(rel);
-        }        
-        
+
+        for (RelationComponent rel : umlClassDiagram.getRelations().values()) {
+            ConnectionWidget w = (ConnectionWidget) addEdge(rel);
+            this.setEdgeSource(rel, rel.getSource());
+            this.setEdgeTarget(rel, rel.getTarget());
+        }
+
         GraphLayoutFactory.createOrthogonalGraphLayout(this, true);
-        
 
-        
-        
+
+
+
         addObjectSceneListener(new ObjectSceneListener() {
-
             @Override
             public void objectAdded(ObjectSceneEvent event, Object addedObject) {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -107,8 +107,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
             @Override
             public void selectionChanged(ObjectSceneEvent event, Set<Object> previousSelection, Set<Object> newSelection) {
-                for (Object o : previousSelection) {                   
-                    
+                for (Object o : previousSelection) {
+
                     content.remove(o);
                 }
 
@@ -131,9 +131,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
             public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
                 // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-            
         });
-        
+
     }
 
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
@@ -151,105 +150,99 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public ClassDiagram getUmlClassDiagram() {
         return umlClassDiagram;
     }
-    
+
     @Override
     public Lookup getLookup() {
         return aLookup;
-    }    
+    }
 
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent component) {
-        
+
         ComponentWidgetBase widget = null;
-        
+
         if (!umlClassDiagram.getComponents().containsValue(component)) { // need to check, if loading existing diagram...
             umlClassDiagram.addComponent(component);
         }
 
-        
+
         if (component instanceof ClassComponent) {
-          widget = new ClassWidget(this, (ClassComponent) component);          
-        } else if(component instanceof InterfaceComponent) {
-          widget = new InterfaceWidget(this, (InterfaceComponent) component);
-        } else if(component instanceof EnumComponent){
-          widget= new EnumWidget(this, (EnumComponent) component);
-        }
-        else if (component instanceof PackageComponent) {
-          widget = new PackageWidget(this, (PackageComponent)component);
-        }
-        else {
+            widget = new ClassWidget(this, (ClassComponent) component);
+        } else if (component instanceof InterfaceComponent) {
+            widget = new InterfaceWidget(this, (InterfaceComponent) component);
+        } else if (component instanceof EnumComponent) {
+            widget = new EnumWidget(this, (EnumComponent) component);
+        } else if (component instanceof PackageComponent) {
+            widget = new PackageWidget(this, (PackageComponent) component);
+        } else {
             throw new RuntimeException("Unknown component!");
         }
-        
+
         mainLayer.addChild(widget);
-        
-        widget.getComponent().setPosition(widget.getLocation());
+
+
         return widget;
     }
 
-    
     @Override
     protected Widget attachEdgeWidget(RelationComponent e) {
-        LabelWidget name = new LabelWidget (this, e.getName());
-        name.setOpaque (true);
-        
+        LabelWidget name = new LabelWidget(this, e.getName());
+        name.setOpaque(true);
+
         if (!umlClassDiagram.getRelations().containsValue(e)) { // need to check, if loading existing diagram...
             umlClassDiagram.addRelation(e);
         }
-        
+
         ConnectionWidget widget = new ConnectionWidget(this);
-        if(e.getClass().getSimpleName().equals("ImplementsRelationComponent")) {
-        final float dash1[] = {10.0f};
-        final BasicStroke dashed =
-        new BasicStroke(1.0f,
-                        BasicStroke.CAP_BUTT,
-                        BasicStroke.JOIN_MITER,
-                        10.0f, dash1, 0.0f);
-         widget.setStroke(dashed);
-         widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
-         name.setLabel("<<implements>>");
+        if (e.getClass().getSimpleName().equals("ImplementsRelationComponent")) {
+            final float dash1[] = {10.0f};
+            final BasicStroke dashed =
+                    new BasicStroke(1.0f,
+                    BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER,
+                    10.0f, dash1, 0.0f);
+            widget.setStroke(dashed);
+            widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
+            name.setLabel("<<implements>>");
+        } else if (e.getClass().getSimpleName().equals("IsRelationComponent")) {
+            widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);
+            e.setName("is");
+        } else if (e.getClass().getSimpleName().equals("HasRelationComponent")) {
+            widget.setSourceAnchorShape(AnchorShapeFactory.createImageAnchorShape(ImageUtilities.loadImage("org/uml/visual/icons/rhombus.gif")));
+            widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
+            HasRelationComponent hasRelation = (HasRelationComponent) e;
+            LabelWidget cardinalityTarget = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
+            cardinalityTarget.setOpaque(true);
+            widget.addChild(cardinalityTarget);
+            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 2f);
+        } else {
+            widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
+            UseRelationComponent useRelation = (UseRelationComponent) e;
+            LabelWidget cardinalitySource = new LabelWidget(this, useRelation.getCardinalitySource().toString());
+            cardinalitySource.setOpaque(true);
+            widget.addChild(cardinalitySource);
+            widget.setConstraint(cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, -0.8f);
+            LabelWidget cardinalityTarget = new LabelWidget(this, useRelation.getCardinalityTarget().toString());
+            cardinalityTarget.setOpaque(true);
+            widget.addChild(cardinalityTarget);
+            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 0.8f);
         }
-        else if (e.getClass().getSimpleName().equals("IsRelationComponent")) {
-         widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);
-         e.setName("is");
-        }
-        else if (e.getClass().getSimpleName().equals("HasRelationComponent")) {
-         widget.setSourceAnchorShape(AnchorShapeFactory.createImageAnchorShape(ImageUtilities.loadImage("org/uml/visual/icons/rhombus.gif")));
-         widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
-         HasRelationComponent hasRelation = (HasRelationComponent) e;
-         LabelWidget cardinalityTarget = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
-         cardinalityTarget.setOpaque (true);
-         widget.addChild(cardinalityTarget);
-         widget.setConstraint (cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 2f);
-        }
-        else {
-         widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
-         UseRelationComponent useRelation = (UseRelationComponent) e;
-         LabelWidget cardinalitySource = new LabelWidget(this, useRelation.getCardinalitySource().toString());
-         cardinalitySource.setOpaque (true);
-         widget.addChild(cardinalitySource);
-         widget.setConstraint (cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, -0.8f);
-         LabelWidget cardinalityTarget = new LabelWidget(this, useRelation.getCardinalityTarget().toString());
-         cardinalityTarget.setOpaque (true);
-         widget.addChild(cardinalityTarget);
-         widget.setConstraint (cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.BOTTOM_RIGHT, 0.8f);
-        }
-        widget.setEndPointShape (PointShape.SQUARE_FILLED_BIG);
+        widget.setEndPointShape(PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());
-        widget.setPaintControlPoints (true);
-        widget.setControlPointShape (PointShape.SQUARE_FILLED_BIG);
-        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConnectionPopupMenuProvider(widget,umlClassDiagram,e,name)));
-        name.getActions().addAction(ActionFactory.createInplaceEditorAction(new RelationLabelTextFieldEditorAction(e,umlClassDiagram)));
+        widget.setPaintControlPoints(true);
+        widget.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
+        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConnectionPopupMenuProvider(widget, umlClassDiagram, e, name)));
+        name.getActions().addAction(ActionFactory.createInplaceEditorAction(new RelationLabelTextFieldEditorAction(e, umlClassDiagram)));
         widget.addChild(name);
-        widget.setConstraint (name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);
-        WidgetAction.Chain actions= widget.getActions();
+        widget.setConstraint(name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);
+        WidgetAction.Chain actions = widget.getActions();
         actions.addAction(createObjectHoverAction());
         actions.addAction(createSelectAction());
         actions.addAction(ActionFactory.createAddRemoveControlPointAction());
-        actions.addAction (ActionFactory.createMoveControlPointAction (ActionFactory.createFreeMoveControlPointProvider (), ConnectionWidget.RoutingPolicy.UPDATE_END_POINTS_ONLY));
+        actions.addAction(ActionFactory.createMoveControlPointAction(ActionFactory.createFreeMoveControlPointProvider(), ConnectionWidget.RoutingPolicy.UPDATE_END_POINTS_ONLY));
         //reconnectAction;
         connectionLayer.addChild(widget);
-    
+
         return widget;
     }
 
@@ -282,7 +275,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 //        mainLayer.addChild(widget);
 //        validate();
 //    }
-
     public LayerWidget getConnectionLayer() {
         return connectionLayer;
     }
@@ -290,9 +282,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public LayerWidget getMainLayer() {
         return mainLayer;
     }
-    
+
     public Widget attach(ClassDiagramComponent cd) {
         return attachNodeWidget(cd);
     }
-    
 }

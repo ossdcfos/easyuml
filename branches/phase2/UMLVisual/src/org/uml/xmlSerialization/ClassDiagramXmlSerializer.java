@@ -28,15 +28,14 @@ import org.uml.visual.widgets.ClassWidget;
  *
  * @author Stefan
  */
-public class ClassDiagramXmlSerializer implements XmlSerializer{
-    
+public class ClassDiagramXmlSerializer implements XmlSerializer {
+
     private static ClassDiagramXmlSerializer instance;
     private ClassDiagram classDiagram;
     private ClassDiagramScene classDiagramScene;
     private HashMap<Class, ClassDiagramComponentSerializer> componentSerializers;
     private HashMap<Class, RelationSerializer> relationSerializers;
-    
-    
+
     private ClassDiagramXmlSerializer() {
         componentSerializers = new HashMap<>();
         relationSerializers = new HashMap<>();
@@ -48,57 +47,92 @@ public class ClassDiagramXmlSerializer implements XmlSerializer{
         relationSerializers.put(HasRelationComponent.class, new HasRelationSerializer());
         relationSerializers.put(ImplementsRelationComponent.class, new ImplementsRelationSerializer());
     }
-    
+
     public static ClassDiagramXmlSerializer getInstance() {
         if (instance == null) {
             instance = new ClassDiagramXmlSerializer();
         }
         return instance;
     }
-    
+
     public void setClassDiagramScene(ClassDiagramScene scene) {
         classDiagramScene = scene;
     }
-    
+
     public void setClassDiagram(ClassDiagram diagram) {
         this.classDiagram = diagram;
     }
-
+    
+    /**
+     * Serializes classDiagram object to xml tree.
+     * @param node in which to put classDiagram object.
+     */
     @Override
     public void serialize(Element node) {
-//        LayerWidget mainLayer = classDiagramScene.getMainLayer();
-//        List<Widget> widgets = mainLayer.getChildren();
-//        if (classDiagramScene.getUmlClassDiagram().getName() != null) node.addAttribute("name", classDiagramScene.getUmlClassDiagram().getName());
-//        Element classDiagramComponents = node.addElement("ClassDiagramComponents");
-//        for (int i = 0; i < widgets.size(); i++) {
-//            if (widgets.get(i) instanceof ClassWidget) {
-//                ClassWidget widget = (ClassWidget) widgets.get(i);
-//                Element componentNode = classDiagramComponents.addElement("Class");
-//                componentNode.addAttribute("xCoord", widget.getLocation().getX() + "");
-//                componentNode.addAttribute("yCoord", widget.getLocation().getY() + "");
-//                ClassDiagramComponentSerializer serializer = componentSerializers.get(widget.getComponent().getClass());
-//                serializer.addClassDiagramComponent(widget.getComponent());
-//                serializer.serialize(componentNode);
-//            }
-//        }
-        
-        if (classDiagram.getName() != null)
-        {
+        if (classDiagram.getName() != null) {
             node.addAttribute("name", classDiagram.getName());
         }
         Element classDiagramComponents = node.addElement("ClassDiagramComponents");
         for (ClassDiagramComponent component : classDiagram.getComponents().values()) {
-            Element componentNode = classDiagramComponents.addElement("Class");
-            componentNode.addAttribute("xPosition", String.valueOf(component.getPosition().getX()));
-            System.out.println(component.getPosition().getX() + " pozicija x");
-            componentNode.addAttribute("yPosition", String.valueOf(component.getPosition().getY()));
-            ClassDiagramComponentSerializer serializer = componentSerializers.get(component.getClass());
-            serializer.addClassDiagramComponent(component);
-            serializer.serialize(componentNode);
+            if (component instanceof ClassComponent) {
+                Element componentNode = classDiagramComponents.addElement("Class");
+                Widget w = classDiagramScene.findWidget(component);
+                componentNode.addAttribute("xPosition", String.valueOf(w.getPreferredLocation().getX()));
+                componentNode.addAttribute("yPosition", String.valueOf(w.getPreferredLocation().getY()));
+                ClassDiagramComponentSerializer serializer = componentSerializers.get(component.getClass());
+                serializer.addClassDiagramComponent(component);
+                serializer.serialize(componentNode);
+
+            }
+            if (component instanceof InterfaceComponent) {
+                Element componentNode = classDiagramComponents.addElement("Interface");
+                Widget w = classDiagramScene.findWidget(component);
+                componentNode.addAttribute("xPosition", String.valueOf(w.getPreferredLocation().getX()));
+                componentNode.addAttribute("yPosition", String.valueOf(w.getPreferredLocation().getY()));                
+                ClassDiagramComponentSerializer serializer = componentSerializers.get(component.getClass());
+                serializer.addClassDiagramComponent(component);
+                serializer.serialize(componentNode);
+            }
+            if (component instanceof EnumComponent) {
+                Element componentNode = classDiagramComponents.addElement("Enum");
+                Widget w = classDiagramScene.findWidget(component);
+                componentNode.addAttribute("xPosition", String.valueOf(w.getPreferredLocation().getX()));
+                componentNode.addAttribute("yPosition", String.valueOf(w.getPreferredLocation().getY()));
+                ClassDiagramComponentSerializer serializer = componentSerializers.get(component.getClass());
+                serializer.addClassDiagramComponent(component);
+                serializer.serialize(componentNode);
+            }
         }
-        
+        Element classDiagramRelations = node.addElement("ClassDiagramRelations");
+        for (RelationComponent component : classDiagram.getRelations().values()) {
+            if (component instanceof UseRelationComponent) {
+                Element componentNode = classDiagramRelations.addElement("UseRelation");
+                
+                RelationSerializer serializer = relationSerializers.get(component.getClass());
+                serializer.addRelationComponent(component);
+                serializer.serialize(componentNode);
+            }
+            if (component instanceof HasRelationComponent) {
+                Element componentNode = classDiagramRelations.addElement("HasRelation");
+                
+                RelationSerializer serializer = relationSerializers.get(component.getClass());
+                serializer.addRelationComponent(component);
+                serializer.serialize(componentNode);
+            }
+            if (component instanceof IsRelationComponent) {
+                Element componentNode = classDiagramRelations.addElement("IsRelation");
+                
+                RelationSerializer serializer = relationSerializers.get(component.getClass());
+                serializer.addRelationComponent(component);
+                serializer.serialize(componentNode);
+            }
+            if (component instanceof ImplementsRelationComponent) {
+                Element componentNode = classDiagramRelations.addElement("ImplementsRelation");
+                
+                RelationSerializer serializer = relationSerializers.get(component.getClass());
+                serializer.addRelationComponent(component);
+                serializer.serialize(componentNode);
+            }
+        }
     }
-
-
-    
 }

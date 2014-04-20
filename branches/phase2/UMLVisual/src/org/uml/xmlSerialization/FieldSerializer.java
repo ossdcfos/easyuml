@@ -31,7 +31,7 @@ public class FieldSerializer implements XmlSerializer{
         for (Field field : fields.values()) {
            Element fieldNode = node.addElement("Field");
            if (field.getName() != null) fieldNode.addAttribute("name", field.getName());
-           if (field.getVisibility()!= null) fieldNode.addAttribute("visibility", field.getVisibility().toString());
+           if (field.getVisibility() != null) fieldNode.addAttribute("visibility", field.getVisibility().toString());
            if (field.getType() != null) fieldNode.addAttribute("type", field.getType());
            if (field.isIsStatic()) fieldNode.addAttribute("isStatic", Boolean.toString(field.isIsStatic()));
            if (field.isIsFinal()) fieldNode.addAttribute("isFinal", Boolean.toString(field.isIsFinal()));

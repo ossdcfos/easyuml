@@ -39,11 +39,11 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         private JCheckBoxMenuItem abstractJCBMI;
         private JCheckBoxMenuItem finalJCBMI;
         private JCheckBoxMenuItem synchronizedJCBMI;
-
+        
     public MethodPopupMenuProvider(MethodWidget methodWidget) {
         this.methodWidget = methodWidget;
         menu= new JPopupMenu ("Class Menu");
-        
+                
         visibilityGroup = new ButtonGroup();
         visibilitySubmenu = new JMenu("Visibility");
         visibilitySubmenu.add(publicItem = new JRadioButton("public"));
@@ -75,6 +75,9 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
         
         (deleteMethod= new JMenuItem ("Delete Method")).addActionListener(removeWidgetListener);
         menu.add(deleteMethod);
+        
+        setSelectedButtons();
+        
     }
     
         ActionListener publicItemListener = new ActionListener() {
@@ -197,5 +200,40 @@ public class MethodPopupMenuProvider implements PopupMenuProvider{
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;
     }
+
+    private void setSelectedButtons() {
+        Method method = methodWidget.getMethodComponent();
+        publicItem.setSelected(false);
+        privateItem.setSelected(false);
+        packageItem.setSelected(false);
+        protectedItem.setSelected(false);
+        staticJCBMI.setSelected(false);
+        finalJCBMI.setSelected(false);
+        abstractJCBMI.setSelected(false);
+        synchronizedJCBMI.setSelected(false);
+        switch (method.getVisibility()) {
+            case PUBLIC : publicItem.setSelected(true); break;
+            case PRIVATE : privateItem.setSelected(true); break;
+            case PACKAGE : packageItem.setSelected(true); break;
+            case PROTECTED : protectedItem.setSelected(true); break;
+        }
+        if (method.hasConcreteModifier("static")) {
+            staticJCBMI.setSelected(true);
+        }
+        
+        if (method.hasConcreteModifier("final")) {
+            finalJCBMI.setSelected(true);
+        }
+        
+        if (method.hasConcreteModifier("abstract")) {
+            abstractJCBMI.setSelected(true);
+        }
+        
+        if (method.hasConcreteModifier("synchronized")) {
+            synchronizedJCBMI.setSelected(true);
+        }
+        
+    }
+
         
 }

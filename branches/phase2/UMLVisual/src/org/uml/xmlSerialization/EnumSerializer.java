@@ -15,6 +15,11 @@ import org.uml.model.EnumComponent;
 public class EnumSerializer implements ClassDiagramComponentSerializer{
 
     private EnumComponent enumComponent;
+    
+    /**
+     * Sets the enumComponent object that is going to be serialized.
+     * @param component represents enumComponent object to be serialized.
+     */
     @Override
     public void addClassDiagramComponent(ClassDiagramComponent component) {
         try{
@@ -25,9 +30,31 @@ public class EnumSerializer implements ClassDiagramComponentSerializer{
         }
     }
 
+    /**
+     * Serializes - object to XML by translating its fields into parameter node's attributes and subelements.
+     * @param node represents the node that will contain serialized - object.
+     */
     @Override
     public void serialize(Element node) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (enumComponent.getParentPackage() != null) node.addAttribute("package", enumComponent.getParentPackage().getName());
+        if (enumComponent.getName() != null) node.addAttribute("name", enumComponent.getName());
+        if (enumComponent.getVisibility() != null) node.addAttribute("visibility", enumComponent.getVisibility().toString());
+        
+        Element literals = node.addElement("Literals");
+        XmlSerializer serializer = new LiteralSerializer(enumComponent.getLiterals());
+        serializer.serialize(literals);
+        
+        Element constructors = node.addElement("Constructors");
+        serializer = new ConstructorSerializer(enumComponent.getConstructors());
+        serializer.serialize(constructors);
+        
+        Element fields = node.addElement("Fields");
+        serializer = new FieldSerializer(enumComponent.getFields());
+        serializer.serialize(fields);
+        
+        Element methods = node.addElement("Methods");
+        serializer = new MethodSerializer(enumComponent.getMethods());
+        serializer.serialize(methods);
     }
     
 }

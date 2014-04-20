@@ -10,8 +10,10 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.model.Constructor;
 import org.uml.model.EnumComponent;
 import org.uml.model.Field;
+import org.uml.model.Literal;
 import org.uml.model.Method;
 import org.uml.visual.widgets.providers.EnumPopupMenuProvider;
 import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
@@ -93,6 +95,29 @@ public class EnumWidget extends ComponentWidgetBase implements NameableWidget{
         this.enumNameWidget.setLabel(enumComponent.getName());
         
         getActions().addAction(ActionFactory.createPopupMenuAction(new EnumPopupMenuProvider(this)));
+        
+        for (Literal l : enumComponent.getLiterals().values()) {
+            LiteralWidget w = new LiteralWidget(scene, l);
+            this.addLiteralWidget(w);
+        }
+        
+        for (Constructor c : enumComponent.getConstructors().values()) {
+            ConstructorWidget w = new ConstructorWidget(scene, c);
+            this.addConstructorWidget(w);
+        }
+        
+        for (Field fieldComp : enumComponent.getFields().values()) {
+            
+            FieldWidget w = new FieldWidget(this.getClassDiagramScene(), fieldComp);
+            this.addFieldWidget(w);
+        }
+        
+        for (Method methodComp : enumComponent.getMethods().values()) {
+            MethodWidget mw = new MethodWidget(this.getClassDiagramScene(), methodComp);
+            this.addMethodWidget(mw);
+        }
+        
+        scene.validate();
     }
 
     public ClassDiagramScene getClassDiagramScene() {

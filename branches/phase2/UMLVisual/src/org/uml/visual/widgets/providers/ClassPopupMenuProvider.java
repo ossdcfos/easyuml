@@ -1,5 +1,6 @@
 package org.uml.visual.widgets.providers;
 
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,7 @@ import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
+import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.windows.WindowManager;
 import org.uml.model.ClassComponent;
@@ -25,6 +27,10 @@ import org.uml.model.Method;
 import org.uml.model.MethodArgument;
 import org.uml.model.RelationComponent;
 import org.uml.model.Visibility;
+import static org.uml.model.Visibility.PACKAGE;
+import static org.uml.model.Visibility.PRIVATE;
+import static org.uml.model.Visibility.PROTECTED;
+import static org.uml.model.Visibility.PUBLIC;
 import org.uml.visual.dialogs.PackageDialog;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.ConstructorWidget;
@@ -95,6 +101,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
 
         menu.add(abstractJCBMI = new JCheckBoxMenuItem("abstract"));
         abstractJCBMI.addActionListener(abstractJCBMIListener);
+        setSelectedButtons();
     }
     /**
      * Remove Widget Listener
@@ -210,12 +217,22 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener abstractJCBMIListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            Widget classNameWidget = classWidget.getChildren().get(0);
             ClassComponent classComponent = (ClassComponent) classWidget.getComponent();
             if (classComponent.isIsAbstract() == false) {
                 classComponent.setIsAbstract(true);
+
+                LabelWidget abstractLabel = new LabelWidget(classWidget.getScene(), "<<abstract>>");
+                abstractLabel.setFont(classWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
+                abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
+
+                classNameWidget.addChild(0, abstractLabel);
+
             } else {
                 classComponent.setIsAbstract(false);
+                classNameWidget.removeChild(classNameWidget.getChildren().get(0));
             }
+
         }
     };
 
@@ -223,5 +240,31 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;
+    }
+
+    private void setSelectedButtons() {
+        ClassComponent classComponent = classWidget.getComponent();
+        publicItem.setSelected(false);
+        privateItem.setSelected(false);
+        packageItem.setSelected(false);
+        protectedItem.setSelected(false);
+        abstractJCBMI.setSelected(false);
+        switch (classComponent.getVisibility()) {
+            case PUBLIC:
+                publicItem.setSelected(true);
+                break;
+            case PRIVATE:
+                privateItem.setSelected(true);
+                break;
+            case PACKAGE:
+                packageItem.setSelected(true);
+                break;
+            case PROTECTED:
+                protectedItem.setSelected(true);
+                break;
+        }
+        if (classComponent.isIsAbstract()) {
+            abstractJCBMI.setSelected(true);
+        }
     }
 }
