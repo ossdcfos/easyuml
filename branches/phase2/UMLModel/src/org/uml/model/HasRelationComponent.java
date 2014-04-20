@@ -12,7 +12,7 @@ public class HasRelationComponent extends RelationComponent{
 
     private CardinalityEnum cardinalitySource;
     private CardinalityEnum cardinalityTarget;
-    
+    private String collectionType;
     /**
      * Returns name of relation
      * @return "Has"
@@ -37,5 +37,14 @@ public class HasRelationComponent extends RelationComponent{
     public void setCardinalityTarget(CardinalityEnum cardinalityTarget) {
         this.cardinalityTarget = cardinalityTarget;
     }
+
+    public String getCollectionType() {
+        return collectionType;
+    }
+
+    public void setCollectionType(String collectionType) {
+        this.collectionType = collectionType;
+    }
+    
     
 }

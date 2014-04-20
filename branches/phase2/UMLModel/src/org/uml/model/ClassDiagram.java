@@ -20,6 +20,7 @@ public class ClassDiagram implements Serializable {
     //compoments counter:
     int compCounter = 1;
     private HashMap<String, PackageComponent> packages;
+    int relationsCounter = 0;
 
     public ClassDiagram() {
         name = "UML Class Diagram";
@@ -60,7 +61,12 @@ public class ClassDiagram implements Serializable {
      * relations
      */
     public void addRelation(RelationComponent relationComponent) {
-        relations.put(relationComponent.getName(), relationComponent);
+        if (relations.containsKey(relationComponent.getName())) {
+            relations.put(relationComponent.getName() + relationsCounter, relationComponent);
+            relationsCounter++;
+        }else {
+            relations.put(relationComponent.getName(), relationComponent);
+        }
         System.out.println(relations.toString());
     }
 
