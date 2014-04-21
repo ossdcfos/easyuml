@@ -18,7 +18,7 @@ import org.uml.visual.widgets.PackageWidget;
  *
  * @author Uros
  */
-public class PackagePopupMenuProvider implements PopupMenuProvider{
+public class PackagePopupMenuProvider implements PopupMenuProvider {
 
     private JPopupMenu menu;
     private JMenuItem deletePackage;
@@ -26,37 +26,33 @@ public class PackagePopupMenuProvider implements PopupMenuProvider{
 
     public PackagePopupMenuProvider(PackageWidget packageWidget) {
         this.packageWidget = packageWidget;
-        
+
         menu = new JPopupMenu("Package Menu");
-        
+
         (deletePackage = new JMenuItem("Delete Package")).addActionListener(removeWidgetListener);
         menu.add(deletePackage);
     }
-    
-        ActionListener removeWidgetListener = new ActionListener() {
-        
+    ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-           packageWidget.getComponent().getParentDiagram().removeComponent(packageWidget.getName());
-           ClassDiagram classDiagram = packageWidget.getComponent().getParentDiagram();
-           
-           /*for(Map.Entry<String,RelationComponent> entry : classDiagram.getRelations().entrySet()) {
-                RelationComponent relation = entry.getValue();
-                if (relation.getSource().getName().equals(classWidget.getClassName())||relation.getTarget().getName().equals(classWidget.getClassName())) {
-                   classDiagram.removeRelation(relation.getName());
-                   classWidget.getClassDiagramScene().removeEdge(relation);
-               }
-           }*/
-           
-           packageWidget.removeFromParent();
-           
+            packageWidget.getComponent().getParentDiagram().removeComponent(packageWidget.getName());
+            ClassDiagram classDiagram = packageWidget.getComponent().getParentDiagram();
+
+            /*for(Map.Entry<String,RelationComponent> entry : classDiagram.getRelations().entrySet()) {
+             RelationComponent relation = entry.getValue();
+             if (relation.getSource().getName().equals(classWidget.getClassName())||relation.getTarget().getName().equals(classWidget.getClassName())) {
+             classDiagram.removeRelation(relation.getName());
+             classWidget.getClassDiagramScene().removeEdge(relation);
+             }
+             }*/
+
+            packageWidget.removeFromParent();
+
         }
     };
-    
-    
+
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;
     }
-    
 }

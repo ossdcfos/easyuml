@@ -6,7 +6,6 @@ import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.PackageComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ClassWidget;
 
 /**
  *
@@ -17,15 +16,18 @@ public class PackageDialog extends javax.swing.JDialog {
     /**
      * Creates new form AddClassDialog
      */
-    private ClassComponent comp;
+    private ClassDiagramComponent comp;
     private ClassDiagram classDiagram;
 
-    public PackageDialog(java.awt.Frame parent, boolean modal, ClassComponent comp, ClassDiagram cd) {
+    public PackageDialog(java.awt.Frame parent, boolean modal, ClassDiagramComponent comp, ClassDiagram cd) {
         super(parent, modal);
         initComponents();
         this.comp = comp;
         txtPackageName.setText("");
         this.classDiagram = cd;
+        if (comp.getParentPackage() != null) {
+            txtPackageName.setText(comp.getParentPackage().getName());
+        }
     }
 
     public PackageDialog(java.awt.Frame parent, ClassDiagramScene scene, boolean modal) {
@@ -104,19 +106,43 @@ public class PackageDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        String pack = txtPackageName.getText().trim();
-        if (classDiagram.getPackages().containsKey(pack)){
-            PackageComponent packageComp = classDiagram.getPackages().get(pack);
-            comp.setParentPackage(packageComp);
-        } else {
-            PackageComponent packageComp = new PackageComponent(pack);
-            comp.setParentPackage(packageComp);
+        System.out.println("INSTANCA COMPA JE TIPA: "+comp.getClass().getName());
+        //first to remove info from package that it contains component
+        PackageComponent p = comp.getParentPackage();
+        if (p != null && p.getComponents().containsKey(comp.getName())) {
+            p.removeComponent(comp);
+        }
+        //now to see if that package is empty (in that case, we have to remove it from ClassDiagram instance)
+        if (p != null && p.getComponents().isEmpty()) {
+            classDiagram.removePackage(p);
+            p = null;
         }
 
-        
+        //now we set information about package on Component's instance
+        String pack = txtPackageName.getText().trim();
+        if (classDiagram.getPackages().containsKey(pack)) {
+            PackageComponent packageComp = classDiagram.getPackages().get(pack);
+            comp.setParentPackage(packageComp);
+            packageComp.addComponent(comp);
+        } else {
+            PackageComponent packComp = new PackageComponent(pack);
+            classDiagram.addPackage(packComp);
+            comp.setParentPackage(packComp);
+            System.out.println("COMP NAME: " + comp.getName());
+            packComp.addComponent(comp);
+        }
+
+        System.out.println("Test to see all packages on classDiagram");
+
+        for (Map.Entry<String, PackageComponent> entry : classDiagram.getPackages().entrySet()) {
+            String name = entry.getKey();
+            PackageComponent value = entry.getValue();
+            value.printAllComponentsOnStdOut();
+        }
+
         System.out.println("-------------------------------------------------------------------");
-        
-        
+
+
 //        for (ClassDiagramComponent cdc : classDiagram.getComponents()){
 //            System.out.println("Name: "+cdc.getName()+"\t Package: "+ cdc.getParentPackage().getName());
 //        }
@@ -124,9 +150,9 @@ public class PackageDialog extends javax.swing.JDialog {
             String name = entry.getKey();
             ClassDiagramComponent cdc = entry.getValue();
             if (cdc.getParentPackage() != null) {
-                System.out.println("Name: "+cdc.getName()+"\t Package: "+ cdc.getParentPackage().getName());
+                System.out.println("Name: " + cdc.getName() + "\t Package: " + cdc.getParentPackage().getName());
             }
-            
+
         }
 //        System.out.println("////////////////////////////////////////////////////////////");
 //        System.out.println("Now for packages");

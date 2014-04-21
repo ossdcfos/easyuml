@@ -49,18 +49,12 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        textAreaGeneratedCode = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         jLabelRequest = new javax.swing.JLabel();
         jComboBoxProjects = new javax.swing.JComboBox();
         jBGenerateCode = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        textAreaGeneratedCode.setColumns(20);
-        textAreaGeneratedCode.setRows(5);
-        jScrollPane1.setViewportView(textAreaGeneratedCode);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabelRequest, org.openide.util.NbBundle.getMessage(GenerateCodeDialog.class, "GenerateCodeDialog.jLabelRequest.text")); // NOI18N
 
@@ -83,9 +77,9 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
                     .addComponent(jLabelRequest)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jComboBoxProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(62, 62, 62)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jBGenerateCode)))
-                .addContainerGap(245, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -96,30 +90,24 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxProjects, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBGenerateCode))
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -175,8 +163,6 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox jComboBoxProjects;
     private javax.swing.JLabel jLabelRequest;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea textAreaGeneratedCode;
     // End of variables declaration//GEN-END:variables
 
     private void generateCode(ClassDiagram classDiagram) {
@@ -190,8 +176,8 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
                 FileWriter.getInstance().setProject(project);
             }
         }
-        textAreaGeneratedCode.setText(ClassDiagramCodeGenerator.getInstance().generateCode());
-
+        String generatedCode = ClassDiagramCodeGenerator.getInstance().generateCode();
+        this.dispose();
     }
 
     public void buildComboBoxModel() {
