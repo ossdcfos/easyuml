@@ -125,12 +125,12 @@ public class FieldPopupMenuProvider implements PopupMenuProvider {
         public void actionPerformed(ActionEvent e) {
             Field field = (Field) fieldWidget.getMember();
             if (staticJCBMI.getState()) {
-                if (!field.isIsStatic()) {
-                    field.setIsStatic(true);
+                if (!field.isStatic()) {
+                    field.setStatic(true);
                 }
             } else {
-                if (field.isIsStatic()) {
-                    field.setIsStatic(false);
+                if (field.isStatic()) {
+                    field.setStatic(false);
                 }
             }
             fieldWidget.getFieldNameWidget().setLabel(((Field) fieldWidget.getMember()).getSignatureForLabel());
@@ -141,12 +141,12 @@ public class FieldPopupMenuProvider implements PopupMenuProvider {
         public void actionPerformed(ActionEvent e) {
             Field field = (Field) fieldWidget.getMember();
             if (finalJCBMI.getState()) {
-                if (!field.isIsFinal()) {
-                    field.setIsFinal(true);
+                if (!field.isFinal()) {
+                    field.setFinal(true);
                 }
             } else {
-                if (field.isIsFinal()) {
-                    field.setIsFinal(false);
+                if (field.isFinal()) {
+                    field.setFinal(false);
                 }
             }
             fieldWidget.getFieldNameWidget().setLabel(((Field) fieldWidget.getMember()).getSignatureForLabel());
@@ -157,12 +157,12 @@ public class FieldPopupMenuProvider implements PopupMenuProvider {
         public void actionPerformed(ActionEvent e) {
             Field field = (Field) fieldWidget.getMember();
             if (synchronizedJCBMI.getState()) {
-                if (!field.isIsSynchronized()) {
-                    field.setIsSynchronized(true);
+                if (!field.isSynchronized()) {
+                    field.setSynchronized(true);
                 }
             } else {
-                if (field.isIsSynchronized()) {
-                    field.setIsSynchronized(false);
+                if (field.isSynchronized()) {
+                    field.setSynchronized(false);
                 }
             }
             fieldWidget.getFieldNameWidget().setLabel(((Field) fieldWidget.getMember()).getSignatureForLabel());
@@ -198,13 +198,13 @@ public class FieldPopupMenuProvider implements PopupMenuProvider {
                     protectedItem.setSelected(true);
                     break;
             }
-            if (field.isIsStatic()) {
+            if (field.isStatic()) {
                 staticJCBMI.setSelected(true);
             }
-            if (field.isIsSynchronized()) {
+            if (field.isSynchronized()) {
                 finalJCBMI.setSelected(true);
             }
-            if (field.isIsSynchronized()) {
+            if (field.isSynchronized()) {
                 synchronizedJCBMI.setSelected(true);
             }
 

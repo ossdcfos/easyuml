@@ -29,7 +29,7 @@ import org.uml.visual.widgets.providers.ClassConnectProvider;
 abstract public class ComponentWidgetBase extends ImageWidget implements NameableWidget, Lookup.Provider {
 
     private static final Dimension MINDIMENSION = new Dimension(100, 0);
-    private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(5, Color.red, true);
+    private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(4, Color.black, true);
     private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder(0);
     
     //atribut name
@@ -46,7 +46,7 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createHoverAction (new ChangeCursor ()));
-        
+
         setMinimumSize(MINDIMENSION);
         
         nameWidget = new LabelWidget(scene);
@@ -86,12 +86,11 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
     }
     
     
-    
-    // this method should be abstract...
     abstract public ClassDiagramComponent getComponent();
 
     abstract public LabelWidget getNameLabel();
     
+    // allready has getScene in widget ..
     public ClassDiagramScene getClassDiagramScene() {
         return scene;
     }
