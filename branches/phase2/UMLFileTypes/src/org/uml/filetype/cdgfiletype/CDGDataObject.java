@@ -124,6 +124,9 @@ public class CDGDataObject extends MultiDataObject {
         cookies.add((Node.Cookie) openAction);
         cookies.add(this);
         
+    //    saveCookie= new SaveCookieImpl(this); 
+    //    cookies.add(saveCookie);         
+        
         loadData();
     }
 
@@ -131,8 +134,6 @@ public class CDGDataObject extends MultiDataObject {
     protected Node createNodeDelegate() {
         // can use DataNode here as well
         DataNode node = new DataNode(this, Children.LEAF, getLookup());
-       // DataNode node = new DataNode(this, Children.LEAF, cookies.getLookup());
-        //  node.setShortDescription("Name is " + getLookup().lookup(NeuralNetwork.class).toString());
         node.setDisplayName(fileObject.getName());
 
         return node;
