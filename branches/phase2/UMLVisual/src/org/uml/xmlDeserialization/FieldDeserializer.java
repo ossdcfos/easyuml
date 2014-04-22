@@ -35,9 +35,9 @@ public class FieldDeserializer implements XmlDeserializer{
         if (name != null) field.setName(name);
         if (visibility != null) field.setVisibility(Visibility.stringToVisibility(visibility));
         if (type != null) field.setType(type);
-        if (isStatic != null) field.setIsStatic(Boolean.parseBoolean(isStatic));
-        if (isFinal != null) field.setIsFinal(Boolean.parseBoolean(isFinal));
-        if (isSynchronized != null) field.setIsSynchronized(Boolean.parseBoolean(isSynchronized));
+        if (isStatic != null) field.setStatic(Boolean.parseBoolean(isStatic));
+        if (isFinal != null) field.setFinal(Boolean.parseBoolean(isFinal));
+        if (isSynchronized != null) field.setSynchronized(Boolean.parseBoolean(isSynchronized));
     }
     
 }
