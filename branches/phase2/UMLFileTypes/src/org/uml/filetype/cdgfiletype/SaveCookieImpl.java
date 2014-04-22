@@ -16,6 +16,7 @@ import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
+import org.uml.classDiagramManager.ClassDiagramManager;
 import org.uml.model.ClassDiagram;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 
@@ -61,7 +62,9 @@ public class SaveCookieImpl implements SaveCookie {
             fileOut = new FileOutputStream(putanja);
             
             ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
-            serializer.setClassDiagram(Utilities.actionsGlobalContext().lookup(ClassDiagram.class));
+            ClassDiagram diagram = Utilities.actionsGlobalContext().lookup(ClassDiagram.class);
+            serializer.setClassDiagram(diagram);
+            serializer.setClassDiagramScene(ClassDiagramManager.getDefault().getSceneForDiagram(diagram));
             Document document = DocumentHelper.createDocument();
            // document.setXMLEncoding("UTF-8");
             Element root = document.addElement("ClassDiagram");

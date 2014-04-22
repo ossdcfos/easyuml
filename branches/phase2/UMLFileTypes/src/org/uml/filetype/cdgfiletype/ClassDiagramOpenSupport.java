@@ -5,8 +5,10 @@ import org.openide.cookies.OpenCookie;
 import org.openide.loaders.OpenSupport;
 import org.openide.windows.CloneableTopComponent;
 import org.openide.windows.TopComponent;
+import org.uml.classDiagramManager.ClassDiagramManager;
 import org.uml.model.ClassDiagram;
 import org.uml.visual.UMLTopComponent;
+import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
  *
@@ -47,6 +49,8 @@ public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, 
                topComponent.open(); 
                topComponent.requestActive();                            
         }  
+        ClassDiagramScene scene = ((UMLTopComponent)topComponent).getScene();
+        ClassDiagramManager.getDefault().addScene(scene);
     }
 
 
