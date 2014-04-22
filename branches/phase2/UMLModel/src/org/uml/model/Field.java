@@ -27,27 +27,27 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
         this.visibility = visibility;
     }
     
-    public boolean isIsStatic() {
+    public boolean isStatic() {
         return isStatic;
     }
 
-    public void setIsStatic(boolean isStatic) {
+    public void setStatic(boolean isStatic) {
         this.isStatic = isStatic;
     }
 
-    public boolean isIsFinal() {
+    public boolean isFinal() {
         return isFinal;
     }
 
-    public void setIsFinal(boolean isFinal) {
+    public void setFinal(boolean isFinal) {
         this.isFinal = isFinal;
     }
 
-    public boolean isIsSynchronized() {
+    public boolean isSynchronized() {
         return isSynchronized;
     }
 
-    public void setIsSynchronized(boolean isSynchronized) {
+    public void setSynchronized(boolean isSynchronized) {
         this.isSynchronized = isSynchronized;
     }
      
@@ -67,9 +67,9 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
     }
     
     public void resetModifiers() {
-        setIsFinal(false);
-        setIsStatic(false);
-        setIsSynchronized(false);
+        setFinal(false);
+        setStatic(false);
+        setSynchronized(false);
     }
     
 
