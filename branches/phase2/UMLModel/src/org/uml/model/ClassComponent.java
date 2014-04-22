@@ -18,7 +18,7 @@ public class ClassComponent extends ClassDiagramComponent {
     private HashMap<String,Field> fields;
     private HashMap<String,Method> methods;
     private boolean isAbstract;
-    private Type type;
+    // private Type type; // we dont know why this is here...
 
     /**
      * Default constructor.
@@ -139,12 +139,12 @@ public class ClassComponent extends ClassDiagramComponent {
         this.isAbstract = isAbstract;
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
+//    public Type getType() {
+//        return type;
+//    }
+//
+//    public void setType(Type type) {
+//        this.type = type;
+//    }
     
 }

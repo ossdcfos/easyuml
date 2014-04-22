@@ -16,7 +16,7 @@ public class Method extends Member {
     
     private String returnType;
     private HashMap <String,MethodArgument> arguments;
-    private int[] modifiers = new int[4];
+    private int[] modifiers = new int[4]; // koji je cetvrti odifier? - abstract
 
     public Method(String name, String returnType, HashMap<String,MethodArgument> arguments) {
         super(name);
