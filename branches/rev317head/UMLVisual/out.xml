@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="UML Class Diagram">
+  <ClassDiagramComponents>
+    <Class xCoord="307.0" yCoord="241.0" name="UntitledClass" visibility="private" parentDiagram="org.uml.model.ClassDiagram@6f937cc7">
+      <Constructors/>
+      <Fields>
+        <Field name="untitledField" visibility="private" type="Object "/>
+      </Fields>
+      <Methods>
+        <Method name="untitledMethod" visibility="public" returnType="void "/>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+</ClassDiagram>
