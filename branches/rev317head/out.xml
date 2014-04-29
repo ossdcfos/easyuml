@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="UML Class Diagram">
+  <ClassDiagramComponents>
+    <Class xCoord="131.0" yCoord="137.0" name="UntitledClass" visibility="public" parentDiagram="org.uml.model.ClassDiagram@ea3f6f8">
+      <Constructors/>
+      <Fields>
+        <Field name="untitledField" visibility="public" type="Object " isStatic="true" isFinal="true" isSynchronized="true"/>
+      </Fields>
+      <Methods>
+        <Method name="untitledMethod" visibility="protected" isStatic="true" isSynchronized="true" isFinal="true" returnType="void ">
+          <Argument type="Object" name="v"/>
+          <Argument type="Object" name="b"/>
+          <Argument type="Object" name="a"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+</ClassDiagram>
