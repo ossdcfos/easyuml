@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.uml.dom4j</code-name-base>
+            <suite-component/>
+            <module-dependencies/>
+            <public-packages>
+                <package>org.dom4j</package>
+                <package>org.dom4j.bean</package>
+                <package>org.dom4j.datatype</package>
+                <package>org.dom4j.dom</package>
+                <package>org.dom4j.dtd</package>
+                <package>org.dom4j.io</package>
+                <package>org.dom4j.jaxb</package>
+                <package>org.dom4j.rule</package>
+                <package>org.dom4j.rule.pattern</package>
+                <package>org.dom4j.swing</package>
+                <package>org.dom4j.tree</package>
+                <package>org.dom4j.util</package>
+                <package>org.dom4j.xpath</package>
+                <package>org.dom4j.xpp</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/dom4j-1.6.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/dom4j-1.6.1.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>
