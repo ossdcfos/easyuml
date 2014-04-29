@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.uml.projecttype
+OpenIDE-Module-Localizing-Bundle: org/uml/projecttype/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
