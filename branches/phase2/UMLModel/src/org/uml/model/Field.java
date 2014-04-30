@@ -92,10 +92,8 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
         if(isSynchronized) {
             result = result.concat("synchronized ");
         }
-        //potrebno je implementirati Type za filed
-        //result = result.concat(type + " ");
         result = result.concat(type + " ");
-        result = result.concat(getName() + "\n");
+        result = result.concat(getName());
         return result;
     }
 
