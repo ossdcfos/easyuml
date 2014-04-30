@@ -19,7 +19,7 @@ public class WidgetParser {
 	Pattern methodModifiers = Pattern.compile("static|final|abstract|synchronized");
         Pattern fieldModifiers = Pattern.compile("static|final|synchronized");
 	Pattern returnValueType = Pattern.compile("(null|void|int|float|double|boolean)|([A-Z]\\w+\\s*(<\\s*\\w+(\\s*,\\s*\\w+\\s*)*\\s*>\\s*)*)");
-	Pattern argumentType = Pattern.compile("(null|int|float|double|boolean)|([A-Z]\\w+\\s*(<\\s*([A-Z]\\w+)(\\s*,\\s*([A-Z]\\w+)\\s*)*\\s*>\\s*)*)");
+	Pattern argumentType = Pattern.compile("(null|int|float|double|boolean)|([A-Z]w+)|([A-Z]\\w+\\s*(<\\s*([A-Z]\\w+)(\\s*,\\s*([A-Z]\\w+)\\s*)*\\s*>\\s*)*)");
 	Pattern arrayCheck = Pattern.compile("(\\[\\s*\\])?");
 	Pattern name = Pattern.compile("\\w+");
 	Pattern argumentBlock = Pattern.compile("\\(.*\\)");
@@ -225,7 +225,7 @@ public class WidgetParser {
 			stringToParse = stringToParse.substring(m.end());
 		}
                 skipWhitespaces();
-		return result;
+		return result.trim();
 	}
 	/**
          * Parses stringToParse to extract return type of a method.
@@ -242,19 +242,19 @@ public class WidgetParser {
                         if (!result.equals("null")) {
                             m = arrayCheck.matcher(stringToParse);
                             if(m.lookingAt()) {
-				result = result.concat(stringToParse.substring(m.start(), m.end())) + " ";
+				result = result.concat(stringToParse.substring(m.start(), m.end())) + "";
 				stringToParse = stringToParse.substring(m.end());
                             }else {
-				result = result.concat(" ");
+				result = "void";
                             }
                         }else {
-                            result = "void ";
+                            result = "void";
                         }
 		}else {
-                    result = "void ";
+                    result = "void";
                 }               
 		skipWhitespaces();
-		return result;
+		return result.trim();
 	}
         
         /**
@@ -271,19 +271,19 @@ public class WidgetParser {
                 if (!result.equals("null")) {
                     m = arrayCheck.matcher(stringToParse);
                     if(m.lookingAt()) {
-                        result = result.concat(stringToParse.substring(m.start(), m.end())) + " ";
+                        result = result.concat(stringToParse.substring(m.start(), m.end()));
                         stringToParse = stringToParse.substring(m.end());
                     }else {
-                        result = result.concat(" ");
+                        result = "Object";
                     }
                 }else {
-                    result = "Object ";
+                    result = "Object";
                 }
             }else {
-                result = "Object ";
+                result = "Object";
             }               
             skipWhitespaces();
-            return result;
+            return result.trim();
         }
 	
         /**
@@ -361,6 +361,7 @@ public class WidgetParser {
             setFieldModifiers(getAllFieldModifiers());
             f.setType(getArgumentType());
             f.setName(getName());
+            //f.getDeclaringClass().notifyMemberNameChanged(f, f.getName());
         }
         
         /**
@@ -374,6 +375,7 @@ public class WidgetParser {
             setMethodModifiers(getAllMethodModifiers());
             m.setReturnType(getReturnType());
             m.setName(getName());
+            //m.getDeclaringClass().notifyMemberNameChanged(m, m.getName());
             String argumenti = getArguments();
             if(argumenti.equals("")) {
 		

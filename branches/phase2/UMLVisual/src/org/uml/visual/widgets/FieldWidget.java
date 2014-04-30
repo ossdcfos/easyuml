@@ -58,6 +58,7 @@ public class FieldWidget extends MemberWidgetBase {
             return;
         }
         String oldName = fieldComponent.getName();
+        
         if (!fieldComponent.getDeclaringClass().nameExists(newName)) {
             fieldNameWidget.setLabel(newName);
             fieldComponent.setName(newName);
@@ -84,38 +85,24 @@ public class FieldWidget extends MemberWidgetBase {
     public Field getFieldComponent() {
         return fieldComponent;
     }
-    
-    
 
     @Override
     public void setAttributes(String attributes) {
-        /*String [] keyWords = attributes.split(" ");
-         fieldComponent.setName(keyWords[keyWords.length-1]);
-         for (String keyWord : keyWords) {
-         if(keyWord.equals("int")) {
-         fieldComponent.setType(Integer.TYPE);
-         }
-         if(keyWord.equals("double")){
-         fieldComponent.setType(double.class);
-         }
-         if(keyWord.equals("boolean")) {
-         fieldComponent.setType(boolean.class);
-         }
-         if(keyWord.equals("String")) {
-         fieldComponent.setType(String.class);
-         }
-         if(keyWord.equals("long")) {
-         fieldComponent.setType(long.class);
-         }
-            
-         }
-         */
-        
-        
+        String oldName = fieldComponent.getName();
         wp.fillFieldComponents(fieldComponent, attributes);
-        
+        String newName = fieldComponent.getName();
+        if (newName.equals(oldName)) {
+        } else {
+            if (!fieldComponent.getDeclaringClass().nameExists(newName)) {
+                fieldComponent.getDeclaringClass().notifyMemberNameChanged(fieldComponent, oldName);
+            } else {
+                throw new RuntimeException("Error: name already exists.");
+            }
+        }
+
+
         fieldNameWidget.setLabel(fieldComponent.getSignatureForLabel());
-        
+
         refreshLabel();
 
     }
