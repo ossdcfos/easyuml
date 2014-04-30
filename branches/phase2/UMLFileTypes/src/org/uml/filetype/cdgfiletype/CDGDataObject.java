@@ -115,6 +115,7 @@ public class CDGDataObject extends MultiDataObject {
         
         if (classDiagram == null) {
             classDiagram = new ClassDiagram();
+            classDiagram.setName(fo.getName());
         }
 
         cookies = getCookieSet();
@@ -162,6 +163,7 @@ public class CDGDataObject extends MultiDataObject {
              SAXReader reader = new SAXReader();
              FileObject file = getPrimaryFile();
              System.out.println(file.asLines().get(0));
+             classDiagram.setName(file.getName());
              if(file.asLines().get(0).startsWith("<?xml")) {
                 String putanja = file.getPath();
                 
