@@ -62,13 +62,13 @@ public class ClassComponent extends ClassDiagramComponent {
      * @param field that will be added to collection.
      */
     public void addField (Field field) {
+        addMember(field);
         field.setDeclaringClass(this);
         Random r = new Random();
         int Low = 0;
         int High = 100;
         int R = r.nextInt(High-Low) + Low;
         fields.put(Integer.toString(R), field);
-        addMember(field);
     } 
     
     public void removeField (Field field) {
@@ -84,13 +84,13 @@ public class ClassComponent extends ClassDiagramComponent {
      * @param method that will be added to collection.
      */
     public void addMethod(Method method) {
+        addMember(method);
         method.setDeclaringClass(this);
         Random r = new Random();
         int Low = 0;
         int High = 100;
         int R = r.nextInt(High-Low) + Low;
         methods.put(Integer.toString(R), method);
-        addMember(method);
     }
     
     /**
@@ -110,9 +110,9 @@ public class ClassComponent extends ClassDiagramComponent {
      * @param constructor which will be added to collection.
      */
     public void addConstructor(Constructor constructor) {
+        addMember(constructor);
         constructor.setDeclaringClass(this);
         constructors.put(this.getName(), constructor);
-        addMember(constructor);
     }
     
     /**

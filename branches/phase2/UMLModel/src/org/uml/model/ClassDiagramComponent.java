@@ -57,7 +57,8 @@ public class ClassDiagramComponent implements Serializable {
      */
     public void addMember(Member member) {
         if (nameExists(member.getName())) {
-            member.setName(member.getName() + memberCounter);
+//            member.setName(member.getName() + memberCounter);
+            throw new RuntimeException("You must use different name of a member!");
         }
         memberCounter++;
         members.put(member.getName(), member);
@@ -99,8 +100,8 @@ public class ClassDiagramComponent implements Serializable {
      * @param oldName old name of that component
      */
     public void notifyMemberNameChanged(Member member, String oldName) {
-        members.remove(oldName);
         addMember(member);
+        members.remove(oldName);
     }
 
     public HashMap<String, Member> getMembers() {

@@ -61,13 +61,13 @@ public class EnumComponent extends ClassDiagramComponent {
      * @param field that will be added to collection
      */
     public void addField (Field field) {
+        addMember(field);
         field.setDeclaringClass(this);
         Random r = new Random();
         int Low = 0;
         int High = 100;
         int R = r.nextInt(High-Low) + Low;
         fields.put(Integer.toString(R), field);
-        addMember(field);
     } 
     
     /**
@@ -87,13 +87,13 @@ public class EnumComponent extends ClassDiagramComponent {
      * @param method that will be added to collection
      */    
     public void addMethod(Method method) {
+        addMember(method);
         method.setDeclaringClass(this);
         Random r = new Random();
         int Low = 0;
         int High = 100;
         int R = r.nextInt(High-Low) + Low;
         methods.put(Integer.toString(R), method);
-        addMember(method);
     }
 
      /**
@@ -113,13 +113,13 @@ public class EnumComponent extends ClassDiagramComponent {
      * @param constructor that will be added to collection
      */
     public void addConstructor(Constructor constructor) {
+        addMember(constructor);
         constructor.setDeclaringClass(this);
         Random r = new Random();
         int Low = 0;
         int High = 100;
         int R = r.nextInt(High-Low) + Low;
         constructors.put(Integer.toString(R), constructor);
-        addMember(constructor);
     }
     
      /**
@@ -139,13 +139,13 @@ public class EnumComponent extends ClassDiagramComponent {
      * @param literal that will be added to collection
      */
     public void addLiteral(Literal literal) {
+        addMember(literal);
         literal.setDeclaringClass(this);
         Random r = new Random();
         int Low = 0;
         int High = 100;
         int R = r.nextInt(High-Low) + Low;
         literals.put(Integer.toString(R), literal);
-        addMember(literal);
     }
     
      /**
