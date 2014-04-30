@@ -36,7 +36,7 @@ public class SaveCookieImpl implements SaveCookie {
     public void save() throws IOException {
 
         Confirmation msg = new NotifyDescriptor.Confirmation("Do you want to save \""
-                + "file", NotifyDescriptor.OK_CANCEL_OPTION,
+                + context.getPrimaryFile().getName() + "\"", NotifyDescriptor.OK_CANCEL_OPTION,
                 NotifyDescriptor.QUESTION_MESSAGE);
 
         Object result = DialogDisplayer.getDefault().notify(msg);
@@ -63,6 +63,7 @@ public class SaveCookieImpl implements SaveCookie {
             
             ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
             ClassDiagram diagram = Utilities.actionsGlobalContext().lookup(ClassDiagram.class);
+            diagram.setName(fo.getName());
             serializer.setClassDiagram(diagram);
             serializer.setClassDiagramScene(ClassDiagramManager.getDefault().getSceneForDiagram(diagram));
             Document document = DocumentHelper.createDocument();
