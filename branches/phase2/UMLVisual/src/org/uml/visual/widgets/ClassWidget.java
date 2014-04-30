@@ -3,6 +3,7 @@ package org.uml.visual.widgets;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import javax.sound.sampled.FloatControl;
@@ -106,7 +107,7 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
         
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
-       
+        
   //      getActions().addAction(ActionFactory.createMoveAction());
         //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
         
@@ -239,6 +240,12 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
             //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
             //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
             JOptionPane.showMessageDialog(this.getScene().getView(), "Greska, ime vec postoji.");
+        }
+        
+        for (Widget w : methodsWidget.getChildren()) {
+            if (w instanceof ConstructorWidget) {
+                ((ConstructorWidget) w).propertyChange(new PropertyChangeEvent(nameWidget, "name", oldName, newName));
+            }
         }
     }
 

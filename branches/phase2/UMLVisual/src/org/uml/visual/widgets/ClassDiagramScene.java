@@ -39,6 +39,7 @@ import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
 import org.uml.visual.widgets.providers.ConnectionPopupMenuProvider;
 import org.uml.visual.widgets.providers.ScenePopupMenuProvider;
 import org.uml.visual.widgets.providers.SceneAcceptProvider;
+import org.uml.visual.widgets.providers.SceneSelectProvider;
 
 /**
  *
@@ -67,6 +68,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         addChild(interractionLayer);
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
+        getActions().addAction(ActionFactory.createSelectAction(new SceneSelectProvider(this), false));
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
@@ -87,8 +89,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
         GraphLayoutFactory.createOrthogonalGraphLayout(this, true);
 
-
-
+        
 
         addObjectSceneListener(new ObjectSceneListener() {
             @Override
@@ -103,24 +104,32 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
             @Override
             public void objectStateChanged(ObjectSceneEvent event, Object changedObject, ObjectState previousState, ObjectState newState) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                System.out.println("Changed object: " + changedObject);
             }
 
             @Override
             public void selectionChanged(ObjectSceneEvent event, Set<Object> previousSelection, Set<Object> newSelection) {
                 for (Object o : previousSelection) {
-
+                    if (o instanceof ComponentWidgetBase) {
+                        ComponentWidgetBase comp = (ComponentWidgetBase) o;
+                        comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(false));
+                    }
                     content.remove(o);
                 }
 
                 for (Object o : newSelection) {
+                    if (o instanceof ComponentWidgetBase) {
+                        ComponentWidgetBase comp = (ComponentWidgetBase) o;
+                        comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(true));
+                    }
                     content.add(o);
+                    //setSelectedObjects(newSelection);
                 }
             }
 
             @Override
             public void highlightingChanged(ObjectSceneEvent event, Set<Object> previousHighlighting, Set<Object> newHighlighting) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
@@ -130,12 +139,24 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
             @Override
             public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                if (previousFocusedObject instanceof ComponentWidgetBase && newFocusedObject instanceof ClassDiagramScene) {
+                    ComponentWidgetBase comp = (ComponentWidgetBase) previousFocusedObject;
+                    comp.notifyStateChanged(comp.getState(), comp.getState().deriveWidgetFocused(false));
+                }
             }
-        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED);
+        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED, ObjectSceneEventType.OBJECT_STATE_CHANGED, ObjectSceneEventType.OBJECT_HIGHLIGHTING_CHANGED);
 
     }
 
+    @Override
+    protected void notifyStateChanged(ObjectState previousState, ObjectState state) {
+        super.notifyStateChanged(previousState, state); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Prev: " + previousState);
+        System.out.println("Next" + state);
+    }
+
+    
+    
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
 //    private Image getImageFromTransferable(Transferable transferable) {
 //        Object o = null;

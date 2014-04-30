@@ -68,7 +68,7 @@ public class MethodWidget extends MemberWidgetBase {
     public Member getMember() {
         return methodComponent;
     }
-    
+
     public LabelWidget getMethodNameWidget() {
         return methodNameWidget;
     }
@@ -76,58 +76,39 @@ public class MethodWidget extends MemberWidgetBase {
     public Method getMethodComponent() {
         return methodComponent;
     }
-    
-    
-    
+
     @Override
     public void setAttributes(String attributes) {
-        /*// parse method signature and set method name return value and input parameters
-        int openBracketIdx = attributes.indexOf("(");
-        if (openBracketIdx != -1) {
-            methodComponent.setName(attributes.substring(0, openBracketIdx));
+        String oldName = methodComponent.getName();
+        wp.fillMethodComponents(methodComponent, attributes);
+        String newName = methodComponent.getName();
+        if (newName.equals(oldName)) {
+            
         } else {
-            methodComponent.setName(attributes + "()");
-        }
-
-
-        // set return type
-        String[] keyWords = attributes.split(":");
-        if (keyWords.length > 1) { // this confition is not good
-            String type = keyWords[keyWords.length - 1];
-            methodComponent.setReturnType(type);
-        }
-
-        if (openBracketIdx != -1) {
-            // set input parameters
-            String parameters = attributes.substring(attributes.indexOf("(") + 1, attributes.indexOf(")"));
-            if (parameters.length() > 0) {
-                String[] params = parameters.split(",");
-                Random r = new Random();
-                int Low = 0;
-                int High = 100;
-                for (String param : params) {
-                    String[] typeAndName = param.split(" ");
-                    int R = r.nextInt(High - Low) + Low;
-                    methodComponent.getArguments().put(Integer.toString(R), new MethodArgument(typeAndName[0], typeAndName[1]));
-                }
+            if (!methodComponent.getDeclaringClass().nameExists(newName)) {
+                methodComponent.getDeclaringClass().notifyMemberNameChanged(methodComponent, oldName);
+            } else {
+                throw new RuntimeException("Error: name already exists.");
             }
         }
-         */
-          wp.fillMethodComponents(methodComponent, attributes);
-          methodNameWidget.setLabel(methodComponent.getSignatureForLabel());
-          refreshLabel();
+        methodNameWidget.setLabel(methodComponent.getSignatureForLabel());
+        refreshLabel();
 
     }
 
     public void refreshLabel() {
-        switch(methodComponent.getVisibility()) {
-            case PUBLIC : visibilityLabel.setLabel("+");
+        switch (methodComponent.getVisibility()) {
+            case PUBLIC:
+                visibilityLabel.setLabel("+");
                 break;
-            case PRIVATE : visibilityLabel.setLabel("-");
+            case PRIVATE:
+                visibilityLabel.setLabel("-");
                 break;
-            case PROTECTED : visibilityLabel.setLabel("#");
+            case PROTECTED:
+                visibilityLabel.setLabel("#");
                 break;
-            case PACKAGE : visibilityLabel.setLabel("~");
+            case PACKAGE:
+                visibilityLabel.setLabel("~");
                 break;
         }
     }

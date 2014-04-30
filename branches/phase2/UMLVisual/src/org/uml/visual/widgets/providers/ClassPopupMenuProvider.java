@@ -54,10 +54,10 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addPackage;
     private JMenu visibilitySubmenu;
     private ButtonGroup visibilityGroup;
-    private JRadioButton privateItem;
-    private JRadioButton publicItem;
-    private JRadioButton protectedItem;
-    private JRadioButton packageItem;
+    private JCheckBoxMenuItem privateItem;
+    private JCheckBoxMenuItem publicItem;
+    private JCheckBoxMenuItem protectedItem;
+    private JCheckBoxMenuItem packageItem;
     private JCheckBoxMenuItem abstractJCBMI;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
@@ -85,13 +85,13 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
 
         visibilityGroup = new ButtonGroup();
         visibilitySubmenu = new JMenu("Visibility");
-        visibilitySubmenu.add(publicItem = new JRadioButton("public"));
+        visibilitySubmenu.add(publicItem = new JCheckBoxMenuItem("public"));
         publicItem.addActionListener(publicItemListener);
-        visibilitySubmenu.add(privateItem = new JRadioButton("private"));
+        visibilitySubmenu.add(privateItem = new JCheckBoxMenuItem("private"));
         privateItem.addActionListener(privateItemListener);
-        visibilitySubmenu.add(protectedItem = new JRadioButton("protected"));
+        visibilitySubmenu.add(protectedItem = new JCheckBoxMenuItem("protected"));
         protectedItem.addActionListener(protectedItemListener);
-        visibilitySubmenu.add(packageItem = new JRadioButton("package"));
+        visibilitySubmenu.add(packageItem = new JCheckBoxMenuItem("package"));
         packageItem.addActionListener(packageItemListener);
         visibilityGroup.add(publicItem);
         visibilityGroup.add(privateItem);

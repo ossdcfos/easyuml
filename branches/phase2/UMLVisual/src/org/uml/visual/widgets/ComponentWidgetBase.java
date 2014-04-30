@@ -21,6 +21,8 @@ import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Lookup;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.providers.ClassConnectProvider;
+import org.uml.visual.widgets.providers.ClassSelectProvider;
+import org.uml.visual.widgets.providers.ComponentSelectProvider;
 
 /**
  *
@@ -29,7 +31,7 @@ import org.uml.visual.widgets.providers.ClassConnectProvider;
 abstract public class ComponentWidgetBase extends ImageWidget implements NameableWidget, Lookup.Provider {
 
     private static final Dimension MINDIMENSION = new Dimension(100, 0);
-    private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(4, Color.black, true);
+    private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(4, Color.black, false);
     private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder(0);
     
     //atribut name
@@ -42,9 +44,10 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         this.scene = scene;
         setBorder(DEFAULT_BORDER);
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
+        getActions().addAction(ActionFactory.createSelectAction(new ComponentSelectProvider()));
         getActions().addAction(ActionFactory.createResizeAction());
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
-        getActions().addAction(scene.createSelectAction());
+        //getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createHoverAction (new ChangeCursor ()));
 
         setMinimumSize(MINDIMENSION);
@@ -65,23 +68,13 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
     public void notifyStateChanged(ObjectState previousState, ObjectState state) {
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
         super.notifyStateChanged(previousState, state);
-        if (state.isSelected()) {
-            //setBorder(SELECTED_BORDER);
-            setBorder (SELECTED_BORDER);
-            
+        if (state.isWidgetAimed()) {
+            if (state.isSelected() && !previousState.isSelected()){
+            setBorder(SELECTED_BORDER);
         } else {
-            if (state.isHovered()) {
-                
-            }else {
-                setBorder(DEFAULT_BORDER);
-            }
-            
-        }
-        
-        if(previousState.isSelected()) {
             setBorder(DEFAULT_BORDER);
-        }                          
-        
+        }
+        }
         
     }
     
