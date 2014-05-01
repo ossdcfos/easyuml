@@ -3,6 +3,7 @@ package org.uml.model;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 
 /**
  * Implementation of components that can be added to class diagram - classes,
@@ -55,10 +56,11 @@ public class ClassDiagramComponent implements Serializable {
      * @param member
      * @see ClassDiagram#addComponent(org.uml.model.ClassDiagramComponent)
      */
-    public void addMember(Member member) {
+    public void addMember(Member member){
         if (nameExists(member.getName())) {
 //            member.setName(member.getName() + memberCounter);
-            throw new RuntimeException("You must use different name of a member!");
+            //JOptionPane.showMessageDialog(null, "You have entered name that already exists, please enter new one.");
+            throw new RuntimeException("Error while entering member name: name already exists.");
         }
         memberCounter++;
         members.put(member.getName(), member);
@@ -99,7 +101,7 @@ public class ClassDiagramComponent implements Serializable {
      * @param member that will be renamed
      * @param oldName old name of that component
      */
-    public void notifyMemberNameChanged(Member member, String oldName) {
+    public void notifyMemberNameChanged(Member member, String oldName){
         addMember(member);
         members.remove(oldName);
     }

@@ -61,7 +61,7 @@ public class ClassComponent extends ClassDiagramComponent {
      * Adds field to ClassComponent's collection of fields.
      * @param field that will be added to collection.
      */
-    public void addField (Field field) {
+    public void addField (Field field){
         addMember(field);
         field.setDeclaringClass(this);
         Random r = new Random();
@@ -83,7 +83,7 @@ public class ClassComponent extends ClassDiagramComponent {
      * Adds method to ClassComponent's collection of methods.
      * @param method that will be added to collection.
      */
-    public void addMethod(Method method) {
+    public void addMethod(Method method){
         addMember(method);
         method.setDeclaringClass(this);
         Random r = new Random();
@@ -109,7 +109,7 @@ public class ClassComponent extends ClassDiagramComponent {
      * Adds Constructor to ClassComponent's collection of constructors.
      * @param constructor which will be added to collection.
      */
-    public void addConstructor(Constructor constructor) {
+    public void addConstructor(Constructor constructor){
         addMember(constructor);
         constructor.setDeclaringClass(this);
         constructors.put(this.getName(), constructor);
