@@ -5,10 +5,7 @@
 package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
-import java.util.List;
-import java.util.Set;
 import org.netbeans.api.visual.action.SelectProvider;
-import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ComponentWidgetBase;
@@ -42,6 +39,7 @@ public class SceneSelectProvider implements SelectProvider{
         if (widget instanceof ClassDiagramScene) {
             for (Widget w : scene.getMainLayer().getChildren()) {
                 ComponentWidgetBase comp = (ComponentWidgetBase) w;
+                scene.getContent().remove(comp.getComponent());
                 comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(false).deriveWidgetAimed(true));
             }
             scene.validate();

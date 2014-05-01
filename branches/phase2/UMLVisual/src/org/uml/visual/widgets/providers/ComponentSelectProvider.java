@@ -7,6 +7,7 @@ package org.uml.visual.widgets.providers;
 import java.awt.Point;
 import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ComponentWidgetBase;
 
 /**
@@ -32,6 +33,7 @@ public class ComponentSelectProvider implements SelectProvider{
             if (comp.getState().isSelected()) {
                 comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(false));
             }else {
+                ((ClassDiagramScene) comp.getScene()).getContent().add(comp.getComponent());
                 comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(true));
             }
         }

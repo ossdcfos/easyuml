@@ -7,6 +7,7 @@ package org.uml.visual.dialogs;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import org.uml.model.HasRelationComponent;
 import org.uml.model.RelationComponent;
 
 /**
@@ -118,7 +119,14 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void comboBoxRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRelationshipActionPerformed
-
+        RelationComponent relation = (RelationComponent) comboBoxRelationship.getSelectedItem();
+        if (!(relation instanceof HasRelationComponent)) {
+            textFieldName.setEnabled(false);
+            comboBoxCollectionType.setEnabled(false);
+        }else {
+            textFieldName.setEnabled(true);
+            comboBoxCollectionType.setEnabled(true);
+        }
     }//GEN-LAST:event_comboBoxRelationshipActionPerformed
     public String getNameFieldValue () {
         return textFieldName.getText();

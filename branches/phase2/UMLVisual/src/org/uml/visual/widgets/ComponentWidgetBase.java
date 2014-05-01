@@ -30,7 +30,7 @@ import org.uml.visual.widgets.providers.ComponentSelectProvider;
  */
 abstract public class ComponentWidgetBase extends ImageWidget implements NameableWidget, Lookup.Provider {
 
-    private static final Dimension MINDIMENSION = new Dimension(100, 0);
+    private static final Dimension MINDIMENSION = new Dimension(120, 120);
     private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(4, Color.black, false);
     private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder(0);
     
@@ -44,9 +44,10 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         this.scene = scene;
         setBorder(DEFAULT_BORDER);
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
-        getActions().addAction(ActionFactory.createSelectAction(new ComponentSelectProvider()));
+        
         getActions().addAction(ActionFactory.createResizeAction());
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
+        getActions().addAction(ActionFactory.createSelectAction(new ComponentSelectProvider()));
         //getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createHoverAction (new ChangeCursor ()));
 

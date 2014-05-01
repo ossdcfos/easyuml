@@ -4,6 +4,7 @@
  */
 package org.uml.visual.widgets.actions;
 
+import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
@@ -36,8 +37,13 @@ public class NameEditorAction implements TextFieldInplaceEditor {
     @Override
     public void setText(Widget widget, String string) {
     
-        nameable.setName(string);
-        nameable.setAttributes(string);
+        try {
+            nameable.setName(string);
+            nameable.setAttributes(string);
+        }catch (RuntimeException ex) {
+            JOptionPane.showMessageDialog(null, "Name you have entered already exists, please enter another one.");
+        }
+        
 
 
             //TODO podesavam ime konkretnog elementa, ali ga zove i field editor i method editor, kako da resim to?

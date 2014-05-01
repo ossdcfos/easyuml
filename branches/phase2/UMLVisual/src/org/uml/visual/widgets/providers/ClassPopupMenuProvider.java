@@ -11,6 +11,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -129,33 +130,43 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener addAtributeListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Field f = new Field("untitledField", null, Visibility.PRIVATE);
-            classWidget.getComponent().addField(f);
-            FieldWidget w = new FieldWidget(classWidget.getClassDiagramScene(), f);
-            classWidget.addFieldWidget(w);
-            classWidget.getScene().validate();
+            try {
+                Field f = new Field("untitledField", null, Visibility.PRIVATE);
+                classWidget.getComponent().addField(f);
+                FieldWidget w = new FieldWidget(classWidget.getClassDiagramScene(), f);
+                classWidget.addFieldWidget(w);
+                classWidget.getScene().validate();
 
-            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
-            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
-            MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
-            classWidget.getScene().getView().addMouseListener(mouseListener);
-            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
+                WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+                ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
+                MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+                classWidget.getScene().getView().addMouseListener(mouseListener);
+                w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
+            } catch (RuntimeException ex) {
+                JOptionPane.showMessageDialog(null, "Name you have entered already exists, please enter another one.");
+            }
+
         }
     };
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Method m = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
-            classWidget.getComponent().addMethod(m);
-            MethodWidget w = new MethodWidget(classWidget.getClassDiagramScene(), m);
-            classWidget.addMethodWidget(w);
-            classWidget.getScene().validate();
+            try {
+                Method m = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
+                classWidget.getComponent().addMethod(m);
+                MethodWidget w = new MethodWidget(classWidget.getClassDiagramScene(), m);
+                classWidget.addMethodWidget(w);
+                classWidget.getScene().validate();
 
-            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
-            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
-            MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
-            classWidget.getScene().getView().addMouseListener(mouseListener);
-            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
+                WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+                ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
+                MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+                classWidget.getScene().getView().addMouseListener(mouseListener);
+                w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
+            } catch (RuntimeException ex) {
+                JOptionPane.showMessageDialog(null, "Name you have entered already exists, please enter another one.");
+            }
+
         }
     };
     ActionListener addConstructorListener = new ActionListener() {
