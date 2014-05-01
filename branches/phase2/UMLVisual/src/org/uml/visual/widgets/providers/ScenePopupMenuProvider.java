@@ -135,63 +135,6 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
                 dialog.setTitle("Generate code");
                 dialog.setVisible(true);
-
-                //proba serijalizacije, za brisanje
-//                ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
-//                
-//                serializer.setClassDiagramScene(scene);
-//                Document document = DocumentHelper.createDocument();
-//                Element root = document.addElement("ClassDiagram");
-//                serializer.serialize(root);
-//
-//
-//
-//                try {
-//
-//                    OutputFormat format = OutputFormat.createPrettyPrint();
-//                    XMLWriter writer = new XMLWriter(
-//                            new FileWriter("out.xml"), format);
-//                    writer.write(document);
-//
-//                    writer.close();
-//                    System.out.println("Ispisano u fajl");
-//                }catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-                //proba deserijalizacije, za brisanje
-//                try {
-//                    ClassDiagram cd = new ClassDiagram();
-//                    SAXReader reader = new SAXReader();
-//                    Document document = reader.read(new File("out.xml"));
-//                    System.out.println("Fajl ucitan");
-//
-//                    Element root = document.getRootElement();
-//                    ClassDiagramDeserializer cdd = new ClassDiagramDeserializer(cd);
-//                    cdd.deserialize(root);
-//
-//                    System.out.println("Deserialized");
-//
-//                    ClassDiagramXmlSerializer serializer2 = ClassDiagramXmlSerializer.getInstance();
-//                    ClassDiagramScene scene = new ClassDiagramScene(cd);
-//                    serializer2.setClassDiagramScene(scene);
-//                    Document document2 = DocumentHelper.createDocument();
-//                    Element root2 = document2.addElement("ClassDiagram");
-//                    serializer2.serialize(root2);
-//
-//                    OutputFormat format = OutputFormat.createPrettyPrint();
-//                    XMLWriter writer = new XMLWriter(
-//                            new FileWriter("out2.xml"), format);
-//                    writer.write(document2);
-//
-//                    writer.close();
-//                    System.out.println("Ispisano u fajl");
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-
-
-
-
             }
         });
 

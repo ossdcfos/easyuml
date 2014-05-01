@@ -2,7 +2,6 @@ package org.uml.visual.widgets;
 
 import java.awt.BasicStroke;
 import java.util.Set;
-import javax.swing.Action;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.anchor.Anchor;
@@ -54,7 +53,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
     private ClassDiagram umlClassDiagram;
-    InstanceContent content = new InstanceContent();
+    private InstanceContent content = new InstanceContent();
     AbstractLookup aLookup = new AbstractLookup(content);
 
     public ClassDiagramScene(ClassDiagram umlClassDiagram) {
@@ -104,7 +103,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
             @Override
             public void objectStateChanged(ObjectSceneEvent event, Object changedObject, ObjectState previousState, ObjectState newState) {
-                System.out.println("Changed object: " + changedObject);
+                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
@@ -116,7 +115,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
                     }
                     content.remove(o);
                 }
-
                 for (Object o : newSelection) {
                     if (o instanceof ComponentWidgetBase) {
                         ComponentWidgetBase comp = (ComponentWidgetBase) o;
@@ -126,7 +124,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
                     //setSelectedObjects(newSelection);
                 }
             }
-
             @Override
             public void highlightingChanged(ObjectSceneEvent event, Set<Object> previousHighlighting, Set<Object> newHighlighting) {
                 // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -139,20 +136,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
             @Override
             public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-                if (previousFocusedObject instanceof ComponentWidgetBase && newFocusedObject instanceof ClassDiagramScene) {
-                    ComponentWidgetBase comp = (ComponentWidgetBase) previousFocusedObject;
-                    comp.notifyStateChanged(comp.getState(), comp.getState().deriveWidgetFocused(false));
-                }
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED, ObjectSceneEventType.OBJECT_STATE_CHANGED, ObjectSceneEventType.OBJECT_HIGHLIGHTING_CHANGED);
+        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED);
 
-    }
-
-    @Override
-    protected void notifyStateChanged(ObjectState previousState, ObjectState state) {
-        super.notifyStateChanged(previousState, state); //To change body of generated methods, choose Tools | Templates.
-        System.out.println("Prev: " + previousState);
-        System.out.println("Next" + state);
     }
 
     
@@ -178,6 +165,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return aLookup;
     }
 
+    public InstanceContent getContent() {
+        return content;
+    }
+    
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent component) {
 

@@ -6,6 +6,7 @@ package org.uml.visual.widgets;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.JOptionPane;
 import org.uml.visual.widgets.providers.ConstructorPopupMenuProvider;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -39,7 +40,6 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
         this.addChild(construktorNameWidget);
         //construktorNameWidget.getActions().addAction(nameEditorAction);
         construktorNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConstructorPopupMenuProvider(this)));
-        
     }
     
     @Override
@@ -70,6 +70,7 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String newName = evt.getNewValue().toString();
+        constructorComponent.setName(newName);
         setName(newName + "()");
     }
 }

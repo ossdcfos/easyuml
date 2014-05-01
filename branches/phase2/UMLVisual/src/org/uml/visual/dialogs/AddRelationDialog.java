@@ -267,6 +267,10 @@ public class AddRelationDialog extends javax.swing.JDialog {
             HasRelationComponent hasRelation = (HasRelationComponent) relation;
             hasRelation.setCardinalitySource((CardinalityEnum)comboBoxCardinalitySource.getSelectedItem());
             hasRelation.setCardinalityTarget((CardinalityEnum)comboBoxCardinalityTarget.getSelectedItem());
+            String name = textFieldName.getText();
+            if (name != null && !name.equals("")) {
+                hasRelation.setName(name);
+            }
             if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
                 String collectionType = comboBoxCollectionType.getSelectedItem().toString();
                 if (collectionType == null && collectionType.equals("")) {
@@ -333,6 +337,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
             }
    
         }else {
+            textFieldName.setEnabled(false);
             comboBoxCollectionType.setEnabled(false);
         }
         if(jcbRelations.getSelectedItem() instanceof IsRelationComponent) {

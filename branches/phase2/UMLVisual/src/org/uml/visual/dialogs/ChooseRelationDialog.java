@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.jar.JarFile;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
+import org.uml.model.HasRelationComponent;
 import org.uml.model.ImplementsRelationComponent;
 import org.uml.model.RelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
@@ -135,7 +136,7 @@ public class ChooseRelationDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void comboBoxRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRelationshipActionPerformed
-        if (comboBoxRelationship.getSelectedItem() instanceof ImplementsRelationComponent) {
+        if (!(comboBoxRelationship.getSelectedItem() instanceof HasRelationComponent)) {
             textFieldName.setEnabled(false);
         }
     }//GEN-LAST:event_comboBoxRelationshipActionPerformed

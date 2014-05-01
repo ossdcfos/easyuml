@@ -4,6 +4,7 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.openide.util.Exceptions;
 import org.uml.model.Member;
 import org.uml.model.Method;
 import org.uml.visual.parser.WidgetParser;
@@ -86,9 +87,13 @@ public class MethodWidget extends MemberWidgetBase {
             
         } else {
             if (!methodComponent.getDeclaringClass().nameExists(newName)) {
-                methodComponent.getDeclaringClass().notifyMemberNameChanged(methodComponent, oldName);
+                try {
+                    methodComponent.getDeclaringClass().notifyMemberNameChanged(methodComponent, oldName);
+                } catch (Exception ex) {
+                    
+                }
             } else {
-                throw new RuntimeException("Error: name already exists.");
+                
             }
         }
         methodNameWidget.setLabel(methodComponent.getSignatureForLabel());

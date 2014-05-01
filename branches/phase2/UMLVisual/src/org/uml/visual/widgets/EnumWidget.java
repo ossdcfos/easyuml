@@ -117,7 +117,7 @@ public class EnumWidget extends ComponentWidgetBase implements NameableWidget{
             this.addMethodWidget(mw);
         }
         
-        scene.validate();
+       // scene.validate();
     }
 
     public ClassDiagramScene getClassDiagramScene() {

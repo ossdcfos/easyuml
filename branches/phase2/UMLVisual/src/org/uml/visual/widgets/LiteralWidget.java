@@ -8,6 +8,7 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.openide.util.Exceptions;
 import org.uml.model.Literal;
 import org.uml.model.Member;
 import org.uml.visual.widgets.actions.NameEditorAction;

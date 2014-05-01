@@ -127,7 +127,7 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
             MethodWidget mw = new MethodWidget(this.getClassDiagramScene(), methodComp);
             this.addMethodWidget(mw);
         }
-        this.getScene().validate();
+        //this.getScene().validate();
     }
 
     @Override
