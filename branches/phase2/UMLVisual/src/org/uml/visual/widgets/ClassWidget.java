@@ -42,8 +42,8 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
 //            BorderFactory.createResizeBorder(4, Color.black, true);
 //    private static final Border DEFAULT_BORDER =
 //            BorderFactory.createLineBorder();
-    private Widget fieldsWidget;
-    private Widget methodsWidget;
+    private Widget fieldsContainer;
+    private Widget methodsContainer;
     //private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
     private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
@@ -79,25 +79,25 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
-        fieldsWidget = new Widget(scene);
-        fieldsWidget.setMinimumSize(new Dimension(110, 50));
-        fieldsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        fieldsWidget.setOpaque(false);
-        fieldsWidget.setBorder(BORDER_4);
+        fieldsContainer = new Widget(scene);
+        fieldsContainer.setMinimumSize(new Dimension(110, 50));
+        fieldsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
+        fieldsContainer.setOpaque(false);
+        fieldsContainer.setBorder(BORDER_4);
         LabelWidget memberName = new LabelWidget(scene);
-        fieldsWidget.addChild(memberName);
-        addChild(fieldsWidget);
+        fieldsContainer.addChild(memberName);
+        addChild(fieldsContainer);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
-        methodsWidget = new Widget(scene);
-        methodsWidget.setMinimumSize(new Dimension(110, 50));
-        methodsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        methodsWidget.setOpaque(false);
-        methodsWidget.setBorder(BORDER_4);
+        methodsContainer = new Widget(scene);
+        methodsContainer.setMinimumSize(new Dimension(110, 50));
+        methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
+        methodsContainer.setOpaque(false);
+        methodsContainer.setBorder(BORDER_4);
         LabelWidget operationName = new LabelWidget(scene);
-        methodsWidget.addChild(operationName);
-        addChild(methodsWidget);
+        methodsContainer.addChild(operationName);
+        addChild(methodsContainer);
 
         this.nameWidget.setLabel(classComponent.getName());     
         
@@ -182,23 +182,23 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
     }
 
     public void addFieldWidget(FieldWidget fieldWidget) {
-        fieldsWidget.addChild(fieldWidget);
+        fieldsContainer.addChild(fieldWidget);
     }
 
     public void removeField(Widget memberWidget) {
-        fieldsWidget.removeChild(memberWidget);
+        fieldsContainer.removeChild(memberWidget);
     }
 
     public void addMethodWidget(MethodWidget operationWidget) {
-        methodsWidget.addChild(operationWidget);
+        methodsContainer.addChild(operationWidget);
     }
 
     public void addConstructorWidget(ConstructorWidget operationWidget) {
-        methodsWidget.addChild(operationWidget);
+        methodsContainer.addChild(operationWidget);
     }
 
     public void removeMethod(Widget operationWidget) {
-        methodsWidget.removeChild(operationWidget);
+        methodsContainer.removeChild(operationWidget);
     }
 
     @Override
@@ -238,7 +238,7 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
             JOptionPane.showMessageDialog(this.getScene().getView(), "Greska, ime vec postoji.");
         }
         
-        for (Widget w : methodsWidget.getChildren()) {
+        for (Widget w : methodsContainer.getChildren()) {
             if (w instanceof ConstructorWidget) {
                 ((ConstructorWidget) w).propertyChange(new PropertyChangeEvent(nameWidget, "name", oldName, newName));
             }
