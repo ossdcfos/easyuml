@@ -6,13 +6,13 @@ package org.uml.explorer;
 
 import java.beans.PropertyVetoException;
 import java.util.Collection;
+import java.util.HashMap;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -22,27 +22,34 @@ import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
-import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.widgets.ClassWidget;
 
 /**
- * Top component which displays something.
+ * Top component which displays something. See:
+ *
+ * http://platform.netbeans.org/tutorials/nbm-selection-1.html
+ * http://platform.netbeans.org/tutorials/nbm-selection-2.html
+ * http://platform.netbeans.org/tutorials/nbm-nodesapi3.html
+ * http://wiki.netbeans.org/BasicUnderstandingOfTheNetBeansNodesAPI
+ *
+ *
+ * http://netbeans-org.1045718.n5.nabble.com/TopComponent-associateLookup-is-incompatible-with-setActivatedNodes-is-it-a-bug-td3261230.html
  */
 @ConvertAsProperties(
-    dtd = "-//org.uml.explorer.ide.navigator//Explorer//EN",
-autostore = false)
+        dtd = "-//org.uml.explorer.ide.navigator//Explorer//EN",
+        autostore = false)
 @TopComponent.Description(
-    preferredID = "ExplorerTopComponent",
-//iconBase="SET/PATH/TO/ICON/HERE", 
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+        preferredID = "ExplorerTopComponent",
+        //iconBase="SET/PATH/TO/ICON/HERE", 
+        persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
 @ActionID(category = "Window", id = "org.uml.explorer.ExplorerTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
-    displayName = "#CTL_ExplorerAction",
-preferredID = "ExplorerTopComponent")
+        displayName = "#CTL_ExplorerAction",
+        preferredID = "ExplorerTopComponent")
 @Messages({
     "CTL_ExplorerAction=Explorer",
     "CTL_ExplorerTopComponent=Explorer Window",
@@ -51,6 +58,7 @@ preferredID = "ExplorerTopComponent")
 public final class ExplorerTopComponent extends TopComponent implements LookupListener, ExplorerManager.Provider {
 
     private transient ExplorerManager explorerManager = new ExplorerManager();
+    private HashMap<Object, Node> objectsToNodes = new HashMap<Object, Node>(); // mapping of object to corresponding node
 
     public ExplorerTopComponent() {
         initComponents();
@@ -85,9 +93,9 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
         resultCD.addLookupListener(this);
         resultChanged(new LookupEvent(resultCD));
 
-//        resultCc = Utilities.actionsGlobalContext().lookupResult(ClassComponent.class);
-//        resultCc.addLookupListener(this);
-//        resultChanged(new LookupEvent(resultCc));
+        resultCdc = Utilities.actionsGlobalContext().lookupResult(ClassDiagramComponent.class);
+        resultCdc.addLookupListener(this);
+        resultChanged(new LookupEvent(resultCdc));
 //
 //        resultCW = Utilities.actionsGlobalContext().lookupResult(ClassWidget.class);
 //        resultCW.addLookupListener(this);
@@ -116,7 +124,7 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
         return explorerManager;
     }
     Result<ClassDiagram> resultCD;
-    Result<ClassComponent> resultCc;
+    Result<ClassDiagramComponent> resultCdc;
     Result<ClassWidget> resultCW;
     private boolean recursiveCall = false;
 
@@ -124,6 +132,14 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
     public void resultChanged(LookupEvent ev) {
         Lookup.Result localResult = (Lookup.Result) ev.getSource();
         Collection<Object> coll = localResult.allInstances();
+
+        for (Object o : coll) {
+            System.out.println("//////////////////////////");
+            System.out.println(o);
+            System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\");
+        }
+
+
         if (!coll.isEmpty()) {
             for (Object selectedItem : coll) {
                 if (selectedItem instanceof ClassDiagram) {
@@ -133,24 +149,41 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
                     ClassDiagramNode cNode = new ClassDiagramNode(selectedComponent);
                     recursiveCall = true;
                     explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
+
+                    for (Node node : explorerManager.getRootContext().getChildren().getNodes()) {
+                        if (node instanceof ClassDiagramComponentNode){
+                            objectsToNodes.put(((ClassDiagramComponentNode) node).getClassDiagramComponent(), node);
+                        }
+                    }
+
                     try {
                         explorerManager.setExploredContextAndSelection(cNode, new Node[]{cNode});
                     } catch (PropertyVetoException ex) {
                         Exceptions.printStackTrace(ex);
                     }
-                }  else if (selectedItem instanceof ClassWidget) {
-                    System.out.println("Klas vidzet");
-                    ClassWidget selectedClassWidget = (ClassWidget) selectedItem;
-                    this.setName(selectedClassWidget.getName() + " -  Explorer");
-                    ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(selectedClassWidget.getComponent());
-
-                    ((BeanTreeView) jScrollPane1).setRootVisible(true);
-                    recursiveCall = true;
-                    explorerManager.setRootContext(classComponentNode); //this one calls resultChanged recursivly, since global lookup is changed
-                    try {
-                        explorerManager.setExploredContextAndSelection(classComponentNode, new Node[]{classComponentNode});
-                    } catch (PropertyVetoException ex) {
-                        Exceptions.printStackTrace(ex);
+                } else if (selectedItem instanceof ClassDiagramComponent) {
+//                    ClassDiagramComponent selectedClassComponent = (ClassDiagramComponent) selectedItem;
+//                    this.setName(selectedClassComponent.getName() + " -  Explorer");
+//                    ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(selectedClassComponent);
+//
+//                    ((BeanTreeView) jScrollPane1).setRootVisible(true);
+//                    recursiveCall = true;
+//                    explorerManager.setRootContext(classComponentNode); //this one calls resultChanged recursivly, since global lookup is changed
+//                    try {
+//                        explorerManager.setExploredContextAndSelection(classComponentNode, new Node[]{classComponentNode});
+//                        System.out.println("Promenio");
+//                    } catch (PropertyVetoException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+                    Node [] nodes = new Node[1];
+                    nodes[0] = objectsToNodes.get(selectedItem);
+                    if (nodes[0] !=null){
+                        try{
+                            recursiveCall = true;
+                            explorerManager.setSelectedNodes(nodes);
+                        } catch (PropertyVetoException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
                     }
                 } else if (!recursiveCall) {
                     explorerManager.setRootContext(Node.EMPTY);
@@ -166,3 +199,18 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
         }
     }
 }
+//else if (selectedItem instanceof ClassWidget) {
+//                    System.out.println("Klas vidzet");
+//                    ClassWidget selectedClassWidget = (ClassWidget) selectedItem;
+//                    this.setName(selectedClassWidget.getName() + " -  Explorer");
+//                    ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(selectedClassWidget.getComponent());
+//
+//                    ((BeanTreeView) jScrollPane1).setRootVisible(true);
+//                    recursiveCall = true;
+//                    explorerManager.setRootContext(classComponentNode); //this one calls resultChanged recursivly, since global lookup is changed
+//                    try {
+//                        explorerManager.setExploredContextAndSelection(classComponentNode, new Node[]{classComponentNode});
+//                    } catch (PropertyVetoException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+//                }
