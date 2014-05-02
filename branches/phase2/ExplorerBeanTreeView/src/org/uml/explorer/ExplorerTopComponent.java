@@ -59,6 +59,7 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
 
     private transient ExplorerManager explorerManager = new ExplorerManager();
     private HashMap<Object, Node> objectsToNodes = new HashMap<Object, Node>(); // mapping of object to corresponding node
+    private ClassDiagramNode cNode = null;
 
     public ExplorerTopComponent() {
         initComponents();
@@ -136,7 +137,7 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
         for (Object o : coll) {
             System.out.println("//////////////////////////");
             System.out.println(o);
-            System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\");
+            System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
         }
 
 
@@ -146,12 +147,12 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
                     ClassDiagram selectedComponent = (ClassDiagram) selectedItem;
                     //this.setName(selectedComponent.getName() + " -  Explorer");
                     ((BeanTreeView) jScrollPane1).setRootVisible(true);
-                    ClassDiagramNode cNode = new ClassDiagramNode(selectedComponent);
+                    cNode = new ClassDiagramNode(selectedComponent);
                     recursiveCall = true;
                     explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
 
                     for (Node node : explorerManager.getRootContext().getChildren().getNodes()) {
-                        if (node instanceof ClassDiagramComponentNode){
+                        if (node instanceof ClassDiagramComponentNode) {
                             objectsToNodes.put(((ClassDiagramComponentNode) node).getClassDiagramComponent(), node);
                         }
                     }
@@ -175,10 +176,10 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
 //                    } catch (PropertyVetoException ex) {
 //                        Exceptions.printStackTrace(ex);
 //                    }
-                    Node [] nodes = new Node[1];
+                    Node[] nodes = new Node[1];
                     nodes[0] = objectsToNodes.get(selectedItem);
-                    if (nodes[0] !=null){
-                        try{
+                    if (nodes[0] != null) {
+                        try {
                             recursiveCall = true;
                             explorerManager.setSelectedNodes(nodes);
                         } catch (PropertyVetoException ex) {
@@ -196,6 +197,12 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
                 }
             }
 
+        } else if (cNode != null) {
+            try {
+                explorerManager.setExploredContextAndSelection(cNode, new Node[]{cNode});
+            } catch (PropertyVetoException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
     }
 }
