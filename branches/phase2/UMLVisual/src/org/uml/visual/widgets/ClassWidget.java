@@ -1,6 +1,7 @@
 package org.uml.visual.widgets;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
@@ -70,11 +71,6 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
             abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
             classWidget.addChild(abstractLabel);
         }
-        
-        
-        //ImageWidget classImage= new ImageWidget(scene);
-        //classImage.setImage(this.classComponent.getImage());
-
 
         classWidget.addChild(nameWidget);
         addChild(classWidget);
@@ -84,6 +80,7 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
         fieldsWidget = new Widget(scene);
+        fieldsWidget.setMinimumSize(new Dimension(110, 50));
         fieldsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         fieldsWidget.setOpaque(false);
         fieldsWidget.setBorder(BORDER_4);
@@ -94,6 +91,7 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
         methodsWidget = new Widget(scene);
+        methodsWidget.setMinimumSize(new Dimension(110, 50));
         methodsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         methodsWidget.setOpaque(false);
         methodsWidget.setBorder(BORDER_4);
@@ -101,9 +99,7 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
         methodsWidget.addChild(operationName);
         addChild(methodsWidget);
 
-        this.nameWidget.setLabel(classComponent.getName());
-
-        
+        this.nameWidget.setLabel(classComponent.getName());     
         
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
