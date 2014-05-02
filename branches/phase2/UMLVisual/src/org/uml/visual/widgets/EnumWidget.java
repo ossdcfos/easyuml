@@ -1,5 +1,6 @@
 package org.uml.visual.widgets;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -66,6 +67,7 @@ public class EnumWidget extends ComponentWidgetBase implements NameableWidget{
 
         literalsWidget = new Widget(scene);
         literalsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
+        literalsWidget.setMinimumSize(new Dimension(110, 30));
         literalsWidget.setOpaque(false);
         literalsWidget.setBorder(BORDER_4);
         LabelWidget literalName = new LabelWidget(scene);
@@ -76,6 +78,7 @@ public class EnumWidget extends ComponentWidgetBase implements NameableWidget{
         
         fieldsWidget = new Widget(scene);
         fieldsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
+        fieldsWidget.setMinimumSize(new Dimension(110, 30));
         fieldsWidget.setOpaque(false);
         fieldsWidget.setBorder(BORDER_4);
         LabelWidget memberName = new LabelWidget(scene);
@@ -86,6 +89,7 @@ public class EnumWidget extends ComponentWidgetBase implements NameableWidget{
 
         methodsWidget = new Widget(scene);
         methodsWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
+        methodsWidget.setMinimumSize(new Dimension(110, 30));
         methodsWidget.setOpaque(false);
         methodsWidget.setBorder(BORDER_4);
         LabelWidget operationName = new LabelWidget(scene);
