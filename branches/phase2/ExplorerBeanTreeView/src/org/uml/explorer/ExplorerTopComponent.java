@@ -134,11 +134,11 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
         Lookup.Result localResult = (Lookup.Result) ev.getSource();
         Collection<Object> coll = localResult.allInstances();
 
-        for (Object o : coll) {
-            System.out.println("//////////////////////////");
-            System.out.println(o);
-            System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
-        }
+//        for (Object o : coll) {
+//            System.out.println("//////////////////////////");
+//            System.out.println(o);
+//            System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
+//        }
 
 
         if (!coll.isEmpty()) {
