@@ -52,6 +52,8 @@ public class ClassDiagramNode  extends AbstractNode {
         set.setName("Class Diagram Properties");
 
         try {
+            
+            
  //           Node.Property label = new PropertySupport.Reflection(classDiagram, String.class, "getName", null);
 //            Node.Property inputSize = new PropertySupport.Reflection(classDiagramComponent, Integer.class, "getInputSize", null);
 //            Node.Property outputSize = new PropertySupport.Reflection(classDiagramComponent, Integer.class, "getOutputSize", null);
