@@ -1,11 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.model;
 
 /**
  * Contains all four possible types of RelationComponents.
+ *
  * @author zoran
  * @see RelationComponent
  * @see IsRelationComponent
@@ -13,46 +10,52 @@ package org.uml.model;
  * @see UseRelationComponent
  * @see ImplementsRelationComponent
  */
-
 public enum CardinalityEnum {
+
     /**
      * "1..1" relation
      */
     One2One {
         @Override
-        public String toString(){
+        public String toString() {
             return "1..1";
         }
-    }, 
-    
+    },
     /**
      * "0..1" relation
      */
-    Zero2One{
+    Zero2One {
         @Override
-        public String toString(){
+        public String toString() {
             return "0..1";
         }
-    }, 
+    },
     /**
      * "1..*" relation
      */
-    One2Many{
+    One2Many {
         @Override
-        public String toString(){
+        public String toString() {
             return "1..*";
         }
-    }, 
+    },
     /**
      * "0..*" relation
      */
-    Zero2Many{
+    Zero2Many {
         @Override
-        public String toString(){
+        public String toString() {
             return "0..*";
         }
     };
-    
+
+    /**
+     * Converts a String object into adjacent CardinalityEnum element (element
+     * with the same meaning). Case insensitive.
+     *
+     * @param cardinalityEnum
+     * @return
+     */
     public static CardinalityEnum parseString(String cardinalityEnum) {
         if (cardinalityEnum.equalsIgnoreCase("1..1")) {
             return CardinalityEnum.One2One;

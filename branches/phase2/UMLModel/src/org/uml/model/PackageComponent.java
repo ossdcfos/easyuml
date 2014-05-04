@@ -1,15 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.model;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implementation of InterfaceComponent, one of four posible types of
- * ClassDiagramComponents.
+ * Implementation of PackageComponent, one of four possible types of
+ * ClassDiagramComponents. It is used to represent packages in projects.
  *
  * @author zoran
  * @see ClassDiagramComponent
@@ -22,15 +18,16 @@ public class PackageComponent extends ClassDiagramComponent {
     private HashMap<String, ClassDiagramComponent> classDiagramComponent;
 
     /**
-     * Contructor without parameters which sets PackageComponent's name on
-     * "UntitledPackage"
+     * Constructor without parameters which sets PackageComponent's name to its
+     * default value.
      */
     public PackageComponent() {
         this.setName("UntitledPackage");
     }
 
     /**
-     * Constructor with parameter which sets PackageComponent's name
+     * Constructor with parameter which sets PackageComponent's name and 
+     * instantiates classDiagramComponent collection.
      *
      * @param name of PackageComponent
      */
@@ -43,17 +40,31 @@ public class PackageComponent extends ClassDiagramComponent {
         return classDiagramComponent;
     }
 
+    /**
+     * Adds a classDiagramComponent to PackageComponent's classDiagramComponent
+     * collection.
+     * 
+     * @param cdc - classDiagramComponent to be added
+     */
     public void addComponent(ClassDiagramComponent cdc) {
 //        if (cdc instanceof ClassComponent) {
 //            cdc = (ClassDiagramComponent) cdc;
 //        }
         classDiagramComponent.put(cdc.getName(), cdc);
     }
-
+/**
+ * Removes a classDiagramComponent from PackageComponent's classDiagramComponent
+ * collection.
+ * 
+ * @param cdc - classDiagramComponent to be removed
+ */
     public void removeComponent(ClassDiagramComponent cdc) {
         classDiagramComponent.remove(cdc.getName());
     }
-
+/**
+ * Prints all classes that this PackageComponent includes in it into standard 
+ * output (console, in most cases).
+ */
     public void printAllComponentsOnStdOut() {
         System.out.println("PackageComponent: " + this.getName());
         System.out.println("Contains these ClassDiagramComponents: ");

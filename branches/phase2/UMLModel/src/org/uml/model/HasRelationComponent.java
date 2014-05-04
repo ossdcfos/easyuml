@@ -1,20 +1,25 @@
 package org.uml.model;
 
 /**
- * Implementation of one of four possible RelationComponents.
+ * Implementation of one of four possible RelationComponents. Describes Has
+ * relation between UML objects (used usually when an object has another object
+ * as its field).
+ *
  * @author "NUGS"
  * @see RelationComponent
  * @see IsRelationComponent
  * @see UseRelationComponent
  * @see ImplementsRelationComponent
  */
-public class HasRelationComponent extends RelationComponent{
+public class HasRelationComponent extends RelationComponent {
 
     private CardinalityEnum cardinalitySource;
     private CardinalityEnum cardinalityTarget;
     private String collectionType;
+
     /**
-     * Returns name of relation
+     * Returns the name of relation.
+     *
      * @return "Has"
      */
     @Override
@@ -45,6 +50,4 @@ public class HasRelationComponent extends RelationComponent{
     public void setCollectionType(String collectionType) {
         this.collectionType = collectionType;
     }
-    
-    
 }

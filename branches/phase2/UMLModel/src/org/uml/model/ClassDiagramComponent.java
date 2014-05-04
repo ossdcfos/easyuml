@@ -6,9 +6,9 @@ import java.util.HashMap;
 import javax.swing.JOptionPane;
 
 /**
- * Implementation of components that can be added to class diagram - classes,
- * interfaces or enums. Relations are not implemented in this but in class
- * RelationComponent
+ * Implementation of UML components that can be added to class diagram -
+ * classes, interfaces or enums (enumerations). Relations are not represented
+ * through this class as well; they are implemented in class RelationComponent.
  *
  * @author zoran
  * @see ClassComponent
@@ -25,8 +25,14 @@ public class ClassDiagramComponent implements Serializable {
     protected PackageComponent parentPackage;
 
     /**
-     * Default constructor. Initializes only members (fields, methods and
-     * constructors)
+     * Default constructor. Initializes only members of the
+     * ClassDiagramComponent. Members can be fields, methods, constructors and
+     * literals.
+     *
+     * @see Field
+     * @see Method
+     * @see Constructor
+     * @see Literal
      */
     public ClassDiagramComponent() {
         members = new HashMap<String, Member>();
@@ -41,20 +47,32 @@ public class ClassDiagramComponent implements Serializable {
         this.name = name;
     }
 
+    /**
+     * Gets the name of ClassDiagramComponent.
+     *
+     * @return name of this ClassDiagramComponent
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of ClassDiagramComponent.
+     *
+     * @param name to be set to ClassDiagramComponent
+     */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Adds member of ClassDiagramComponent to a members collection. Similar
-     * implementation as in ClassDiagram.
+     * Adds a member of ClassDiagramComponent to the members collection. Similar
+     * implementation as in ClassDiagram for addComponent and addRelation.
      *
-     * @param member
+     * @param member to be added to members collection
      * @see ClassDiagram#addComponent(org.uml.model.ClassDiagramComponent)
+     * @see ClassDiagram#addRelation(org.uml.model.ClassDiagramComponent)
+     * @see Member
      */
     public void addMember(Member member){
         if (nameExists(member.getName())) {
@@ -67,7 +85,8 @@ public class ClassDiagramComponent implements Serializable {
     }
 
     /**
-     * Removes member of ClassDiagramComponent from collection of components.
+     * Removes a member of ClassDiagramComponent from the collection of
+     * components.
      *
      * @param name of component that will be removed
      */
@@ -75,31 +94,45 @@ public class ClassDiagramComponent implements Serializable {
         members.remove(name);
     }
 
+    /**
+     * Gets parentDiagram. Parent diagram is a ClassDiagram object that contains
+     * this ClassDiagramComponent.
+     *
+     * @return ClassDiagram containing this ClassDiagramComponent
+     * @see ClassDiagram
+     */
     public ClassDiagram getParentDiagram() {
         return parentDiagram;
     }
 
+    /**
+     * Sets parentDiagram. Parent diagram is a ClassDiagram object that contains
+     * this ClassDiagramComponent.
+     *
+     * @see ClassDiagram
+     */
     public void setParentDiagram(ClassDiagram parentDiagram) {
         this.parentDiagram = parentDiagram;
     }
 
     /**
-     * Checks if member of ClassDiagramComponent already exists in collection of
-     * components.
+     * Checks if a member of ClassDiagramComponent already exists in the
+     * collection of components.
      *
-     * @param name
-     * @return
+     * @param name of ClassDiagramComponent that is to be checked
+     * @return true if already exists, false if it doesn't
      */
     public boolean nameExists(String name) {
         return members.containsKey(name);
     }
 
     /**
-     * Removes member from ClassDiagramComponent's collection of members and
-     * replaces it with same member but with new name.
+     * Removes a member from ClassDiagramComponent's collection of members and
+     * replaces it with the same member (but with new name).
      *
      * @param member that will be renamed
      * @param oldName old name of that component
+     * @see Member
      */
     public void notifyMemberNameChanged(Member member, String oldName){
         addMember(member);
@@ -124,8 +157,9 @@ public class ClassDiagramComponent implements Serializable {
 
     public void setParentPackage(PackageComponent parentPackage) {
         this.parentPackage = parentPackage;
-     //   parentPackage.addMember(this);
+        //   parentPackage.addMember(this);
     }
+
     public Visibility getVisibility() {
         return visibility;
     }
@@ -133,7 +167,4 @@ public class ClassDiagramComponent implements Serializable {
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
-    
-    
-
 }

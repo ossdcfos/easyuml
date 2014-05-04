@@ -1,14 +1,18 @@
 package org.uml.model;
 
 /**
- * Implementation of argument which is used by method or constructor.
+ * Implementation of input argument which is used to describe Method or
+ * Constructor.
+ * <p>
+ * A representation of input arguments used to create methods or
+ * constructors e.g. "public methodTest(<b>String argOne</b>)".
+ *
  * @author Uros
- * @see Member
- * @see Constructor
  * @see Method
+ * @see Constructor
  */
 public class MethodArgument {
-    
+
     String type;
     String name;
 
@@ -35,13 +39,12 @@ public class MethodArgument {
 
     /**
      * Returns string representing that MethodArgument.
-     * @return string in format: "MethodArgument{" + "type=" + type + ", name=" + name + '}'
+     *
+     * @return string in format: "MethodArgument{" + "type=" + type + ", name="
+     * + name + '}'
      */
     @Override
     public String toString() {
         return "MethodArgument{" + "type=" + type + ", name=" + name + '}';
     }
-
-
-    
 }

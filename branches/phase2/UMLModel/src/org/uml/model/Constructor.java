@@ -3,13 +3,16 @@ package org.uml.model;
 import java.util.HashMap;
 
 /**
- * Implementation of Constructor, one of 4 possible Members.
+ * Implementation of Constructor, one of four possible Members. It is used to
+ * represent class constructors (both with and without parameters).
  *
  * @author zoran
  * @see Member
  * @see Literal
- * @see Method
  * @see Field
+ * @see Method
+ * @see ClassComponent
+ * @see EnumComponent
  */
 public class Constructor extends Member {
 
@@ -17,20 +20,26 @@ public class Constructor extends Member {
     private HashMap<String, MethodArgument> arguments;
 
     /**
-     * Constructor with parameter name which calls super constructor.
+     * Constructor with parameter for setting Constructor's name. Only sets the
+     * name parameter.
+     * <p>
+     * Calls super Constructor.
      *
      * @param name
+     * @see Member
      */
     public Constructor(String name) {
         super(name);
     }
 
     /**
-     * Constructor with more parameters, also calls super constructor
+     * Constructor with three parameters used to set name, type of return
+     * argument and input arguments(variables) of constructor. Calls the super
+     * Constructor.
      *
-     * @param name of Constructor
-     * @param returnType
-     * @param arguments collection of arguments
+     * @param name of the Constructor
+     * @param returnType of Constructor
+     * @param arguments - collection of arguments
      */
     public Constructor(String name, String returnType, HashMap<String, MethodArgument> arguments) {
         super(name);
@@ -47,7 +56,7 @@ public class Constructor extends Member {
     }
 
     public HashMap<String, MethodArgument> getArguments() {
-            return arguments;
+        return arguments;
     }
 
     public void setArguments(HashMap<String, MethodArgument> arguments) {

@@ -1,7 +1,9 @@
 package org.uml.model;
 
 /**
- * Enumeration which implements all possible types of access modifiers - private, protected, public and package.
+ * Enumeration which implements all possible types of access modifiers - 
+ * private, protected, public and package.
+ * 
  * @author Uros
  */
 public enum Visibility {
@@ -34,7 +36,13 @@ public enum Visibility {
         }
     };
 
-    
+    /**
+     * Converts a String object into adjacent Visibility element (element with 
+     * the same name). Case insensitive.
+     * 
+     * @param value - string representation of modifier e.g. "public"
+     * @return Visibility enumeration component
+     */
     public static Visibility stringToVisibility(String value) {
         if("public".equalsIgnoreCase(value)) return PUBLIC;
         if("private".equalsIgnoreCase(value)) return PRIVATE;
