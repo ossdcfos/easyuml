@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 /**
  * Implementation of UML Class Diagrams. Contains collection of
- * ClassDiagramComponents and RelationComponents.
+ * ClassDiagramComponents and RelationComponents. This represents the whole
+ * UML diagram consisting of classes (+ enumerations, interfaces, and packages)
+ * along with their respective relations.
  *
  * @author Uros
  * @version 1.0
@@ -21,7 +23,12 @@ public class ClassDiagram implements Serializable {
     int compCounter = 1;
     private HashMap<String, PackageComponent> packages;
     int relationsCounter = 0;
-
+/**
+ * Standard ClassDiagram constructor without arguments.
+ * <p>
+ * Sets name to default value and instantiates components, relations and packages
+ * hash maps.
+ */
     public ClassDiagram() {
         name = "UML Class Diagram";
         this.components = new HashMap<String, ClassDiagramComponent>();
@@ -55,7 +62,10 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Adds new RealtionComponent into collection of existing relations.
+     * Adds new RealtionComponent into collection of existing relations. If 
+     * relationComponent with same name already exists in relations, a counter
+     * is concatenated to its name and is then added. The counter is then
+     * incremented by one. 
      *
      * @param relationComponent that will be added to the collection of
      * relations
@@ -89,7 +99,7 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Getter for colletion of components.
+     * Getter for collection of components.
      *
      * @return collection of components
      */
@@ -127,7 +137,7 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Removes component from collecion of components and adds same component
+     * Removes component from collection of components and adds same component
      * with new name into that collection.
      *
      * @param comp - component whose name will be changed
@@ -155,15 +165,27 @@ public class ClassDiagram implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
+/**
+ * Adds a PackageComponent into package collection.
+ * 
+ * @param pc package to be added
+ */
     public void addPackage(PackageComponent pc) {
         packages.put(pc.getName(), pc);
     }
-
+/**
+ * Removes package from package collection.
+ * 
+ * @param pc package to be removed
+ */
     public void removePackage(PackageComponent pc) {
         packages.remove(pc.getName());
     }
-
+/**
+ * Gets packages collection of ClassDiagram.
+ * 
+ * @return packages collection
+ */
     public HashMap<String, PackageComponent> getPackages() {
         return packages;
     }
