@@ -5,15 +5,21 @@
 package org.uml.explorer;
 
 import java.awt.Image;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Node;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.model.ClassComponent;
+import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
 import org.uml.model.Field;
@@ -50,98 +56,95 @@ public class ClassDiagramComponentNode extends AbstractNode {
     @Override
     protected Sheet createSheet() {
 
-        Sheet sheet = Sheet.createDefault();
-        Sheet.Set set = Sheet.createPropertiesSet();
-        set.setName("Class Component Properties");
+        Sheet sheet = super.createSheet();
+        Sheet.Set propertiesSet = Sheet.createPropertiesSet();
+        Sheet.Set fieldsSet = Sheet.createPropertiesSet();
+        Sheet.Set methodsSet = Sheet.createPropertiesSet();
+        Sheet.Set literalsSet = Sheet.createPropertiesSet();
+
+        propertiesSet.setName("propertiesSet");
+        propertiesSet.setDisplayName("Properties");
+        fieldsSet.setName("fields");
+        fieldsSet.setDisplayName("Fields");
+        methodsSet.setName("methods");
+        methodsSet.setDisplayName("Methods");
+        literalsSet.setName("literals");
+        literalsSet.setDisplayName("Literals");
+
 
         try {
 
             Property nameProp = new PropertySupport.Reflection(classDiagramComponent, String.class, "getName", null);
             nameProp.setName("Name");
-            set.put(nameProp);
+            propertiesSet.put(nameProp);
 
             if (classDiagramComponent instanceof ClassComponent) {
-                int index = 1;
                 ClassComponent component = (ClassComponent) classDiagramComponent;
+
+
                 HashMap<String, Field> fields = component.getFields();
                 for (Map.Entry<String, Field> entry : fields.entrySet()) {
                     Field field = entry.getValue();
                     Property fieldProp = new PropertySupport.Reflection(field, String.class, "getName", null);
-                    String fieldPropName = "Field " + index;
+                    String fieldPropName = field.getType();
                     fieldProp.setName(fieldPropName);
-                    set.put(fieldProp);
-                    index++;
+                    fieldsSet.put(fieldProp);
                 }
 
-                int index2 = 1;
+
                 HashMap<String, Method> methods = component.getMethods();
                 for (Map.Entry<String, Method> entry : methods.entrySet()) {
                     Method method = entry.getValue();
                     Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
-                    String methodPropName = "Method " + index2;
+                    String methodPropName = method.getSignatureForLabel();
                     methodProp.setName(methodPropName);
-                    set.put(methodProp);
-                    index2++;
+                    methodsSet.put(methodProp);
                 }
             } else if (classDiagramComponent instanceof InterfaceComponent) {
                 InterfaceComponent component = (InterfaceComponent) classDiagramComponent;
-                int index2 = 1;
                 HashMap<String, Method> methods = component.getMethods();
                 for (Map.Entry<String, Method> entry : methods.entrySet()) {
                     Method method = entry.getValue();
                     Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
-                    String methodPropName = "Method " + index2;
+                    String methodPropName = method.getSignatureForLabel();
                     methodProp.setName(methodPropName);
-                    set.put(methodProp);
-                    index2++;
-                    System.out.println("?????");
-                    System.out.println(method.getName());
+                    methodsSet.put(methodProp);
                 }
             } else if (classDiagramComponent instanceof EnumComponent) {
                 EnumComponent component = (EnumComponent) classDiagramComponent;
 
-                int index = 1;
                 HashMap<String, Field> fields = component.getFields();
                 for (Map.Entry<String, Field> entry : fields.entrySet()) {
                     Field field = entry.getValue();
                     Property fieldProp = new PropertySupport.Reflection(field, String.class, "getName", null);
-                    String fieldPropName = "Field " + index;
+                    String fieldPropName = field.getType();
                     fieldProp.setName(fieldPropName);
-                    set.put(fieldProp);
-                    index++;
-                    System.out.println("?????");
-                    System.out.println(field.getName());
+                    fieldsSet.put(fieldProp);
                 }
 
-                int index2 = 1;
                 HashMap<String, Method> methods = component.getMethods();
                 for (Map.Entry<String, Method> entry : methods.entrySet()) {
                     Method method = entry.getValue();
                     Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
-                    String methodPropName = "Method " + index2;
+                    String methodPropName = method.getSignatureForLabel();
                     methodProp.setName(methodPropName);
-                    set.put(methodProp);
-                    index2++;
-                    System.out.println("?????");
-                    System.out.println(method.getName());
+                    methodsSet.put(methodProp);
                 }
 
-                int index3 = 1;
                 HashMap<String, Literal> literals = component.getLiterals();
                 for (Map.Entry<String, Literal> entry : literals.entrySet()) {
                     Literal literal = entry.getValue();
                     Property literalProp = new PropertySupport.Reflection(literal, String.class, "getName", null);
-                    String methodPropName = "Literal " + index3;
-                    literalProp.setName(methodPropName);
-                    set.put(literalProp);
-                    index3++;
-                    System.out.println("?????");
-                    System.out.println(literal.getName());
+                    literalProp.setName("Literal");
+                    literalsSet.put(literalProp);
                 }
 
             }
 
-
+            sheet.put(propertiesSet);
+            sheet.put(fieldsSet);
+            sheet.put(methodsSet);
+            sheet.put(literalsSet);
 
 
 //            
@@ -153,7 +156,7 @@ public class ClassDiagramComponentNode extends AbstractNode {
             System.out.println(ex.getMessage());
         }
 
-        sheet.put(set);
+
         return sheet;
     }
 
