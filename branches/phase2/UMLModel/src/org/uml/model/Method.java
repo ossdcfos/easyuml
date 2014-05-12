@@ -234,4 +234,41 @@ public class Method extends Member {
         result = result.concat(args + ") {} \n");
         return result;
     }
+
+    /**
+     * Creates a string that represents Method's signature.
+     * <p>
+     * By concatenating strings a text is created, which can be used to
+     * represent this Field in the UML diagram's class that holds it e.g.
+     * "public static String firstMethod(int theNumber)".
+     * THIS IS VERSION FOR INTERFACES
+     *
+     * @return specially formed Method's String representation
+     */
+    public String getSignatureForInterfaces() {
+        String result = "";
+        if (visibility != null && !Visibility.PACKAGE.equals(visibility)) {
+            result = result.concat(getVisibility().toString() + " ");
+        }
+        for (int i = 0; i < 4; i++) {
+            if (modifiers[i] > 0) {
+                result = result.concat(Modifier.toString(modifiers[i]) + " ");
+            }
+        }
+
+        result = result.concat(returnType + " ");
+        result = result.concat(getName() + "(");
+        String args = "";
+        if (getArguments() != null) {
+            for (Map.Entry<String, MethodArgument> entry1 : getArguments().entrySet()) {
+                MethodArgument argument = entry1.getValue();
+                args += argument.getType() + " " + argument.getName() + ", ";
+            }
+        }
+        if (!args.equals("")) {
+            args = args.substring(0, args.length() - 2);
+        }
+        result = result.concat(args + ") \n");
+        return result;
+    }
 }
