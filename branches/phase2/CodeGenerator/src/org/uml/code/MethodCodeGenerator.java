@@ -9,25 +9,25 @@ import java.util.Map;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Method;
 import org.uml.model.MethodArgument;
+
 /**
  *
  * @author Uros
  */
-public class MethodCodeGenerator implements CodeGenerator{
+public class MethodCodeGenerator implements CodeGenerator {
 
-    HashMap<String,Method> methods = new HashMap<String,Method>();
-    public MethodCodeGenerator(HashMap<String,Method> methods) {
-    
-        this.methods=methods;
+    HashMap<String, Method> methods = new HashMap<String, Method>();
+
+    public MethodCodeGenerator(HashMap<String, Method> methods) {
+
+        this.methods = methods;
     }
-    
-    
-    
+
     @Override
     public String generateCode() {
-        String methodsString="";
+        String methodsString = "";
         for (Map.Entry<String, Method> entry : methods.entrySet()) {
-            Method method = entry.getValue(); 
+            Method method = entry.getValue();
             methodsString += method.getSignature();
         }
         return methodsString;
@@ -35,7 +35,14 @@ public class MethodCodeGenerator implements CodeGenerator{
 
     @Override
     public void setClassDiagramComponent(ClassDiagramComponent component) {
-       
     }
-    
+
+    String generateCodeMethodsForInterfaces() {
+        String methodsString = "";
+        for (Map.Entry<String, Method> entry : methods.entrySet()) {
+            Method method = entry.getValue();
+            methodsString += method.getSignatureForInterfaces();
+        }
+        return methodsString;
+    }
 }
