@@ -33,7 +33,8 @@ class InterfaceCodeGenerator implements CodeGenerator {
         String code = "";
         String header = "public " + "interface " + interfaceComponent.getName() + " { ";
         MethodCodeGenerator mcg = new MethodCodeGenerator(interfaceComponent.getMethods());
-        String methods = mcg.generateCode();
+//        String methods = mcg.generateCode();
+        String methods = mcg.generateCodeMethodsForInterfaces();
         String end="\n }";
         
         code+=header+"\n";
