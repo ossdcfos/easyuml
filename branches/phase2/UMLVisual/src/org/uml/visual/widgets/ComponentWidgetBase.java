@@ -71,11 +71,13 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
         super.notifyStateChanged(previousState, state);
         if (state.isWidgetFocused()) {
-            if (state.isSelected() && !previousState.isSelected()) {
+            if (state.isSelected() /**&& !previousState.isSelected() */) {
                 setBorder(SELECTED_BORDER);
             } else {
                 setBorder(DEFAULT_BORDER);
             }
+        }else {
+            setBorder(DEFAULT_BORDER);
         }
     }
 

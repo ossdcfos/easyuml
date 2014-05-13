@@ -42,14 +42,18 @@ public class SceneSelectProvider implements SelectProvider{
             for (Widget w : scene.getMainLayer().getChildren()) {
                 ComponentWidgetBase comp = (ComponentWidgetBase) w;
                 scene.getContent().remove(comp.getComponent());
-                comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(false).deriveWidgetAimed(true));
+                //comp.notifyStateChanged(comp.getState(), comp.getState().createNormal());
+                scene.setFocusedObject(null);
             }
             for (Widget w : scene.getConnectionLayer().getChildren()) {
                 ConnectionWidget rel = (ConnectionWidget) w;
                 
-                rel.notifyStateChanged(rel.getState(), rel.getState().deriveSelected(false).deriveWidgetAimed(true));
+                rel.notifyStateChanged(rel.getState(), rel.getState().createNormal());
             }
             scene.validate();
+        }
+        if (widget instanceof ComponentWidgetBase) {
+            System.out.println("jej");
         }
         
     }
