@@ -32,10 +32,8 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
 
     private static final Dimension MINDIMENSION = new Dimension(120, 120);
     private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(4, Color.black, false);
-    private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder(0);
-    
+    private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder();
     //atribut name
-
     protected LabelWidget nameWidget;
     ClassDiagramScene scene;
 
@@ -44,19 +42,18 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         this.scene = scene;
         setBorder(DEFAULT_BORDER);
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
-        
+
         getActions().addAction(ActionFactory.createResizeAction());
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
         getActions().addAction(ActionFactory.createSelectAction(new ComponentSelectProvider()));
-        //getActions().addAction(scene.createSelectAction());
-        getActions().addAction(ActionFactory.createHoverAction (new ChangeCursor ()));
+        getActions().addAction(ActionFactory.createHoverAction(new ChangeCursor()));
 
         setMinimumSize(MINDIMENSION);
-        
+
         nameWidget = new LabelWidget(scene);
         nameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-        nameWidget.setAlignment(LabelWidget.Alignment.CENTER);    
-        
+        nameWidget.setAlignment(LabelWidget.Alignment.CENTER);
+
         //Delete dugme, za sada ne funkcionise kako bi trebalo
 //       InputMap inputMap = new InputMap ();
 //       inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_DELETE, 0, false), "myAction");        
@@ -70,51 +67,36 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
         super.notifyStateChanged(previousState, state);
         if (state.isWidgetAimed()) {
-            if (state.isSelected() && !previousState.isSelected()){
-            setBorder(SELECTED_BORDER);
-        } else {
-            setBorder(DEFAULT_BORDER);
+            if (state.isSelected() && !previousState.isSelected()) {
+                setBorder(SELECTED_BORDER);
+            } else {
+                setBorder(DEFAULT_BORDER);
+            }
         }
-        }
-        
     }
-    
-    
+
     abstract public ClassDiagramComponent getComponent();
 
     abstract public LabelWidget getNameLabel();
-    
+
     // allready has getScene in widget ..
     public ClassDiagramScene getClassDiagramScene() {
         return scene;
     }
 
-    
-    
     private class ChangeCursor implements TwoStateHoverProvider {
 
         @Override
-        public void unsetHovering (Widget widget) {
+        public void unsetHovering(Widget widget) {
+            System.out.println("Hover unset");
             widget.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
         }
 
         @Override
-        public void setHovering (Widget widget) {
+        public void setHovering(Widget widget) {
+            System.out.println("Hover set");
             widget.setCursor(new Cursor(Cursor.HAND_CURSOR));
-       }
-
-    }
-    
-    private static class MyResizeControlPointResolver implements ResizeControlPointResolver {
-
-        public ResizeProvider.ControlPoint resolveControlPoint (Widget widget, Point point) {
-            Rectangle bounds = widget.getBounds ();
-            Insets insets = widget.getBorder ().getInsets ();
-            if (new Rectangle (bounds.x + bounds.width - insets.right, bounds.y + bounds.height - insets.bottom, insets.right, insets.bottom).contains (point))
-                return ResizeProvider.ControlPoint.BOTTOM_RIGHT;
-            return null;
         }
     }
-    
-    
 }

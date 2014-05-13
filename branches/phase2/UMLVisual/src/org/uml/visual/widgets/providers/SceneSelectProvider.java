@@ -6,9 +6,11 @@ package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
 import org.netbeans.api.visual.action.SelectProvider;
+import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ComponentWidgetBase;
+import org.uml.visual.widgets.RelationWidgetBase;
 
 /**
  *
@@ -42,8 +44,14 @@ public class SceneSelectProvider implements SelectProvider{
                 scene.getContent().remove(comp.getComponent());
                 comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(false).deriveWidgetAimed(true));
             }
+            for (Widget w : scene.getConnectionLayer().getChildren()) {
+                ConnectionWidget rel = (ConnectionWidget) w;
+                
+                rel.notifyStateChanged(rel.getState(), rel.getState().deriveSelected(false).deriveWidgetAimed(true));
+            }
             scene.validate();
-        }        
+        }
+        
     }
     
 }
