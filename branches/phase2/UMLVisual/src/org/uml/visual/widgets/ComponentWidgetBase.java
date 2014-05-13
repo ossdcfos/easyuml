@@ -94,14 +94,12 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
 
         @Override
         public void unsetHovering(Widget widget) {
-            System.out.println("Hover unset");
             widget.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
         }
 
         @Override
         public void setHovering(Widget widget) {
-            System.out.println("Hover set");
             widget.setCursor(new Cursor(Cursor.HAND_CURSOR));
         }
     }
