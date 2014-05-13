@@ -43,10 +43,14 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         setBorder(DEFAULT_BORDER);
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
 
+ 
+        getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createResizeAction());
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
-        getActions().addAction(ActionFactory.createSelectAction(new ComponentSelectProvider()));
+        //getActions().addAction(ActionFactory.createSelectAction(new ComponentSelectProvider()));
+        
         getActions().addAction(ActionFactory.createHoverAction(new ChangeCursor()));
+
 
         setMinimumSize(MINDIMENSION);
 
@@ -66,7 +70,7 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
     public void notifyStateChanged(ObjectState previousState, ObjectState state) {
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
         super.notifyStateChanged(previousState, state);
-        if (state.isWidgetAimed()) {
+        if (state.isWidgetFocused()) {
             if (state.isSelected() && !previousState.isSelected()) {
                 setBorder(SELECTED_BORDER);
             } else {
