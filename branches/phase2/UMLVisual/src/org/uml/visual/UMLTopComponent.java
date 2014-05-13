@@ -33,8 +33,8 @@ import org.uml.visual.widgets.ClassDiagramScene;
 @TopComponent.Description(
         preferredID = "UMLTopComponent",
         //iconBase="SET/PATH/TO/ICON/HERE", 
-        persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "editor", openAtStartup = true)
+        persistenceType = TopComponent.PERSISTENCE_NEVER)
+@TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Window", id = "org.uml.visual.UMLTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
@@ -42,10 +42,10 @@ import org.uml.visual.widgets.ClassDiagramScene;
         preferredID = "UMLTopComponent")
 @Messages({
     "CTL_UMLAction=UML",
-    "CTL_UMLTopComponent=UML Window",
-    "HINT_UMLTopComponent=This is a UML window"
+    "CTL_UMLTopComponent=UML Class Diagramv Window",
+    "HINT_UMLTopComponent=This is a UML Class Diagram window"
 })
-public final class UMLTopComponent extends TopComponent /**implements LookupListener**/ {
+public final class UMLTopComponent extends TopComponent {
 
     private ClassDiagram umlClassDiagram;
     private ClassDiagramScene classDiagramScene;
