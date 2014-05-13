@@ -26,6 +26,8 @@ import org.uml.model.Field;
 import org.uml.model.InterfaceComponent;
 import org.uml.model.Literal;
 import org.uml.model.Method;
+import org.uml.model.PackageComponent;
+import org.uml.model.Visibility;
 
 /**
  *
@@ -56,108 +58,140 @@ public class ClassDiagramComponentNode extends AbstractNode {
     @Override
     protected Sheet createSheet() {
 
+
         Sheet sheet = super.createSheet();
         Sheet.Set propertiesSet = Sheet.createPropertiesSet();
-        Sheet.Set fieldsSet = Sheet.createPropertiesSet();
-        Sheet.Set methodsSet = Sheet.createPropertiesSet();
-        Sheet.Set literalsSet = Sheet.createPropertiesSet();
-
         propertiesSet.setName("propertiesSet");
         propertiesSet.setDisplayName("Properties");
-        fieldsSet.setName("fields");
-        fieldsSet.setDisplayName("Fields");
-        methodsSet.setName("methods");
-        methodsSet.setDisplayName("Methods");
-        literalsSet.setName("literals");
-        literalsSet.setDisplayName("Literals");
-
 
         try {
-
             Property nameProp = new PropertySupport.Reflection(classDiagramComponent, String.class, "getName", null);
             nameProp.setName("Name");
             propertiesSet.put(nameProp);
 
             if (classDiagramComponent instanceof ClassComponent) {
-                ClassComponent component = (ClassComponent) classDiagramComponent;
-
-
-                HashMap<String, Field> fields = component.getFields();
-                for (Map.Entry<String, Field> entry : fields.entrySet()) {
-                    Field field = entry.getValue();
-                    Property fieldProp = new PropertySupport.Reflection(field, String.class, "getName", null);
-                    String fieldPropName = field.getType();
-                    fieldProp.setName(fieldPropName);
-                    fieldsSet.put(fieldProp);
-                }
-
-
-                HashMap<String, Method> methods = component.getMethods();
-                for (Map.Entry<String, Method> entry : methods.entrySet()) {
-                    Method method = entry.getValue();
-                    Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
-                    String methodPropName = method.getSignatureForLabel();
-                    methodProp.setName(methodPropName);
-                    methodsSet.put(methodProp);
-                }
-            } else if (classDiagramComponent instanceof InterfaceComponent) {
-                InterfaceComponent component = (InterfaceComponent) classDiagramComponent;
-                HashMap<String, Method> methods = component.getMethods();
-                for (Map.Entry<String, Method> entry : methods.entrySet()) {
-                    Method method = entry.getValue();
-                    Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
-                    String methodPropName = method.getSignatureForLabel();
-                    methodProp.setName(methodPropName);
-                    methodsSet.put(methodProp);
-                }
-            } else if (classDiagramComponent instanceof EnumComponent) {
-                EnumComponent component = (EnumComponent) classDiagramComponent;
-
-                HashMap<String, Field> fields = component.getFields();
-                for (Map.Entry<String, Field> entry : fields.entrySet()) {
-                    Field field = entry.getValue();
-                    Property fieldProp = new PropertySupport.Reflection(field, String.class, "getName", null);
-                    String fieldPropName = field.getType();
-                    fieldProp.setName(fieldPropName);
-                    fieldsSet.put(fieldProp);
-                }
-
-                HashMap<String, Method> methods = component.getMethods();
-                for (Map.Entry<String, Method> entry : methods.entrySet()) {
-                    Method method = entry.getValue();
-                    Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
-                    String methodPropName = method.getSignatureForLabel();
-                    methodProp.setName(methodPropName);
-                    methodsSet.put(methodProp);
-                }
-
-                HashMap<String, Literal> literals = component.getLiterals();
-                for (Map.Entry<String, Literal> entry : literals.entrySet()) {
-                    Literal literal = entry.getValue();
-                    Property literalProp = new PropertySupport.Reflection(literal, String.class, "getName", null);
-                    literalProp.setName("Literal");
-                    literalsSet.put(literalProp);
-                }
-
+                Visibility vis = classDiagramComponent.getVisibility();
+                Property visibilityProp = new PropertySupport.Reflection(vis, String.class, "toString", null);
+                visibilityProp.setName("Visibility");
+                propertiesSet.put(visibilityProp);
             }
 
-            sheet.put(propertiesSet);
-            sheet.put(fieldsSet);
-            sheet.put(methodsSet);
-            sheet.put(literalsSet);
-
-
-//            
-//            Property labelProp = new PropertySupport.Reflection(classDiagramComponent, String.class, "getLabel", null);
-//            labelProp.setName("Label");
-//            set.put(labelProp);
-
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            PackageComponent pack = classDiagramComponent.getParentPackage();
+            Property packageProp = new PropertySupport.Reflection(pack, String.class, "getName", null);
+            packageProp.setName("Package");
+            propertiesSet.put(packageProp);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-
+        sheet.put(propertiesSet);
         return sheet;
+
+//        //STARA METODA KOJA JE POTPUNO FUNKCIONALNA I KOJA U PROPERTIES WINDOW POSTAVLJA FIELDS, METHODS, LITERALS...
+//        Sheet sheet = super.createSheet();
+//        Sheet.Set propertiesSet = Sheet.createPropertiesSet();
+//        Sheet.Set fieldsSet = Sheet.createPropertiesSet();
+//        Sheet.Set methodsSet = Sheet.createPropertiesSet();
+//        Sheet.Set literalsSet = Sheet.createPropertiesSet();
+//
+//        propertiesSet.setName("propertiesSet");
+//        propertiesSet.setDisplayName("Properties");
+//        fieldsSet.setName("fields");
+//        fieldsSet.setDisplayName("Fields");
+//        methodsSet.setName("methods");
+//        methodsSet.setDisplayName("Methods");
+//        literalsSet.setName("literals");
+//        literalsSet.setDisplayName("Literals");
+//
+//
+//        try {
+//
+//            Property nameProp = new PropertySupport.Reflection(classDiagramComponent, String.class, "getName", null);
+//            nameProp.setName("Name");
+//            propertiesSet.put(nameProp);
+//
+//
+//            
+//            if (classDiagramComponent instanceof ClassComponent) {
+//                ClassComponent component = (ClassComponent) classDiagramComponent;
+//
+//
+//                HashMap<String, Field> fields = component.getFields();
+//                for (Map.Entry<String, Field> entry : fields.entrySet()) {
+//                    Field field = entry.getValue();
+//                    Property fieldProp = new PropertySupport.Reflection(field, String.class, "getName", null);
+//                    String fieldPropName = field.getType();
+//                    fieldProp.setName(fieldPropName);
+//                    fieldsSet.put(fieldProp);
+//                }
+//
+//
+//                HashMap<String, Method> methods = component.getMethods();
+//                for (Map.Entry<String, Method> entry : methods.entrySet()) {
+//                    Method method = entry.getValue();
+//                    Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
+//                    String methodPropName = method.getSignatureForLabel();
+//                    methodProp.setName(methodPropName);
+//                    methodsSet.put(methodProp);
+//                }
+//            } else if (classDiagramComponent instanceof InterfaceComponent) {
+//                InterfaceComponent component = (InterfaceComponent) classDiagramComponent;
+//                HashMap<String, Method> methods = component.getMethods();
+//                for (Map.Entry<String, Method> entry : methods.entrySet()) {
+//                    Method method = entry.getValue();
+//                    Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
+//                    String methodPropName = method.getSignatureForLabel();
+//                    methodProp.setName(methodPropName);
+//                    methodsSet.put(methodProp);
+//                }
+//            } else if (classDiagramComponent instanceof EnumComponent) {
+//                EnumComponent component = (EnumComponent) classDiagramComponent;
+//
+//                HashMap<String, Field> fields = component.getFields();
+//                for (Map.Entry<String, Field> entry : fields.entrySet()) {
+//                    Field field = entry.getValue();
+//                    Property fieldProp = new PropertySupport.Reflection(field, String.class, "getName", null);
+//                    String fieldPropName = field.getType();
+//                    fieldProp.setName(fieldPropName);
+//                    fieldsSet.put(fieldProp);
+//                }
+//
+//                HashMap<String, Method> methods = component.getMethods();
+//                for (Map.Entry<String, Method> entry : methods.entrySet()) {
+//                    Method method = entry.getValue();
+//                    Property methodProp = new PropertySupport.Reflection(method, String.class, "getName", null);
+//                    String methodPropName = method.getSignatureForLabel();
+//                    methodProp.setName(methodPropName);
+//                    methodsSet.put(methodProp);
+//                }
+//
+//                HashMap<String, Literal> literals = component.getLiterals();
+//                for (Map.Entry<String, Literal> entry : literals.entrySet()) {
+//                    Literal literal = entry.getValue();
+//                    Property literalProp = new PropertySupport.Reflection(literal, String.class, "getName", null);
+//                    literalProp.setName("Literal");
+//                    literalsSet.put(literalProp);
+//                }
+//
+//            }
+//
+//            sheet.put(propertiesSet);
+//            sheet.put(fieldsSet);
+//            sheet.put(methodsSet);
+//            sheet.put(literalsSet);
+//
+//
+////            
+////            Property labelProp = new PropertySupport.Reflection(classDiagramComponent, String.class, "getLabel", null);
+////            labelProp.setName("Label");
+////            set.put(labelProp);
+//
+//        } catch (Exception ex) {
+//            System.out.println(ex.getMessage());
+//        }
+//
+//
+//        return sheet;
     }
 
     @Override
