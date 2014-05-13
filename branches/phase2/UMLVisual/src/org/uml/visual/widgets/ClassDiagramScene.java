@@ -65,14 +65,16 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         addChild(connectionLayer);
         interractionLayer = new LayerWidget(this);
         addChild(interractionLayer);
+        
         getActions().addAction(ActionFactory.createPanAction());
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
         getActions().addAction(ActionFactory.createSelectAction(new SceneSelectProvider(this), false));
+        
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
         getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         getActions().addAction(ActionFactory.createZoomAction());
-
+        //getActions().addAction(ActionFactory.createHoverAction(new MemberHoverProvider()));
         // dodaj widget ali ne i com[onentu ponovo kao u addNode...
 
         for (ClassDiagramComponent comp : umlClassDiagram.getComponents().values()) {

@@ -4,7 +4,6 @@
  */
 package org.uml.visual.widgets;
 
-import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.RelationComponent;
 
@@ -15,7 +14,7 @@ import org.uml.model.RelationComponent;
 abstract public class RelationWidgetBase extends IconNodeWidget implements NameableWidget{
 
     public RelationWidgetBase(ClassDiagramScene scene) {
-        super(scene);
+        super(scene); 
     }
     
     public RelationComponent getRelationComponent () {

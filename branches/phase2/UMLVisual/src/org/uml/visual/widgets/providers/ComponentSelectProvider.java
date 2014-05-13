@@ -14,7 +14,7 @@ import org.uml.visual.widgets.ComponentWidgetBase;
  *
  * @author stefanpetrovic
  */
-public class ComponentSelectProvider implements SelectProvider{
+public class ComponentSelectProvider implements SelectProvider {
 
     @Override
     public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
@@ -29,14 +29,24 @@ public class ComponentSelectProvider implements SelectProvider{
     @Override
     public void select(Widget widget, Point point, boolean bln) {
         if (widget instanceof ComponentWidgetBase) {
-            ComponentWidgetBase comp = (ComponentWidgetBase) widget;
-            if (comp.getState().isSelected()) {
-                comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(false));
-            }else {
-                ((ClassDiagramScene) comp.getScene()).getContent().add(comp.getComponent());
-                comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(true));
+            ComponentWidgetBase selectedComponent = (ComponentWidgetBase) widget;
+            ClassDiagramScene scene = (ClassDiagramScene) selectedComponent.getScene();
+
+            if (selectedComponent.getState().isSelected()) {
+                selectedComponent.notifyStateChanged(selectedComponent.getState(), selectedComponent.getState().deriveSelected(false));
+            } else {
+                scene.getContent().add(selectedComponent.getComponent());
+
+                selectedComponent.notifyStateChanged(selectedComponent.getState(), selectedComponent.getState().deriveSelected(true));
+
+                for (Widget w : scene.getMainLayer().getChildren()) {
+                    if (!w.equals(selectedComponent)) {
+                        ComponentWidgetBase component = (ComponentWidgetBase) w;
+                        scene.getContent().remove(component.getComponent());
+                        component.notifyStateChanged(component.getState(), component.getState().deriveSelected(false).deriveWidgetAimed(true));
+                    }
+                }
             }
         }
     }
-    
 }
