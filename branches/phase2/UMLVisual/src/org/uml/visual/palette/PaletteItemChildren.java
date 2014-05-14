@@ -13,14 +13,15 @@ public class PaletteItemChildren extends Index.ArrayChildren {
     private PaletteCategory category;
     //TODO Zameniti ostale Pallete iteme sa odgovarajucim widgetima kada se naprave !!!
     private String[][] items = new String[][]{
-        {"Class", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.ClassComponent", "org.uml.visual.widgets.ClassWidget"},
-        {"Interface", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.InterfaceComponent", "org.uml.visual.widgets.InterfaceWidget"},
-        {"Enum", "Objects", "org/uml/visual/icons/class.gif", "org.uml.model.EnumComponent", "org.uml.visual.widgets.EnumWidget"},
-        {"Package", "Objects", "org/uml/visual/icons/package.gif", "org.uml.model.PackageComponent", "org.uml.visual.widgets.PackageWidget"},
+        {"Class", "Components", "org/uml/visual/icons/class.gif", "org.uml.model.ClassComponent", "org.uml.visual.widgets.ClassWidget"},
+        {"Interface", "Components", "org/uml/visual/icons/class.gif", "org.uml.model.InterfaceComponent", "org.uml.visual.widgets.InterfaceWidget"},
+        {"Enum", "Components", "org/uml/visual/icons/class.gif", "org.uml.model.EnumComponent", "org.uml.visual.widgets.EnumWidget"},
+//        {"Package", "Components", "org/uml/visual/icons/package.gif", "org.uml.model.PackageComponent", "org.uml.visual.widgets.PackageWidget"},
         {"Is", "Relations", "org/uml/visual/icons/is.gif", "org.uml.model.IsRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"},
+        {"Implements", "Relations", "org/uml/visual/icons/implements.gif", "org.uml.model.ImplementsRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"}, 
         {"Has", "Relations", "org/uml/visual/icons/has.gif", "org.uml.model.HasRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"},
         {"Use", "Relations", "org/uml/visual/icons/use.gif", "org.uml.model.UseRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"},
-        {"Implements", "Relations", "org/uml/visual/icons/implements.gif", "org.uml.model.ImplementsRelationComponent", "org.uml.visual.widgets.RelationWidgetBase"}, 
+
     //        {"Notes", "Other", "org/uml/visual/icons/notes.gif", "org.uml.model.UmlClassElement"}, 
     //        {"Method","Shapes","org/uml/visual/palette/methodPublic.gif","org.uml.model.Method"},
     //        {"Variable","Shapes","org/uml/visual/palette/variablePublic.gif","org.uml.model.Field"},
