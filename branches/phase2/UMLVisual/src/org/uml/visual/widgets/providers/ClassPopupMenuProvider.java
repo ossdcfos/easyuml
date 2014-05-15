@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
@@ -130,43 +131,47 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener addAtributeListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            Field f = new Field("untitledField", null, Visibility.PRIVATE);
             try {
-                Field f = new Field("untitledField", null, Visibility.PRIVATE);
                 classWidget.getComponent().addField(f);
-                FieldWidget w = new FieldWidget(classWidget.getClassDiagramScene(), f);
-                classWidget.addFieldWidget(w);
-                classWidget.getScene().validate();
-
-                WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
-                ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
-                MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
-                classWidget.getScene().getView().addMouseListener(mouseListener);
-                w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
             } catch (RuntimeException ex) {
-                JOptionPane.showMessageDialog(null, "Name you have entered already exists, please enter another one.");
+                Random r = new Random();
+                int i = r.nextInt(10000);
+                f.setName(f.getName() + i);
+                classWidget.getComponent().addField(f);
             }
+            FieldWidget w = new FieldWidget(classWidget.getClassDiagramScene(), f);
+            classWidget.addFieldWidget(w);
+            classWidget.getScene().validate();
 
+            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
+            MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+            classWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            Method m = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
             try {
-                Method m = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
                 classWidget.getComponent().addMethod(m);
-                MethodWidget w = new MethodWidget(classWidget.getClassDiagramScene(), m);
-                classWidget.addMethodWidget(w);
-                classWidget.getScene().validate();
 
-                WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
-                ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
-                MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
-                classWidget.getScene().getView().addMouseListener(mouseListener);
-                w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
             } catch (RuntimeException ex) {
-                JOptionPane.showMessageDialog(null, "Name you have entered already exists, please enter another one.");
+                Random r = new Random();
+                int i = r.nextInt(10000);
+                m.setName(m.getName() + i);
+                classWidget.getComponent().addMethod(m);
             }
+            MethodWidget w = new MethodWidget(classWidget.getClassDiagramScene(), m);
+            classWidget.addMethodWidget(w);
+            classWidget.getScene().validate();
 
+            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
+            MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+            classWidget.getScene().getView().addMouseListener(mouseListener);
+            
         }
     };
     ActionListener addConstructorListener = new ActionListener() {
@@ -178,7 +183,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.addConstructorWidget(w);
             classWidget.getScene().validate();
 
-            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
+            
         }
     };
     ActionListener addPackageListener = new ActionListener() {
