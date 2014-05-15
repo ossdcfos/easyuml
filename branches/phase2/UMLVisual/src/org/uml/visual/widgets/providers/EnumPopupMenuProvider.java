@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
+import java.util.Random;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -122,8 +123,16 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
     ActionListener addAtributeListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+
             Field f = new Field("untitledField", null, Visibility.PRIVATE);
-            enumWidget.getComponent().addField(f);
+            try {
+                enumWidget.getComponent().addField(f);
+            } catch (RuntimeException ex) {
+                Random r = new Random();
+                int i = r.nextInt(10000);
+                f.setName(f.getName() + i);
+                enumWidget.getComponent().addField(f);
+            }
             FieldWidget w = new FieldWidget(enumWidget.getClassDiagramScene(), f);
             enumWidget.addFieldWidget(w);
             enumWidget.getScene().validate();
@@ -137,9 +146,16 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
             Method m = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
-            enumWidget.getComponent().addMethod(m);
+            try {
+                enumWidget.getComponent().addMethod(m);
+
+            } catch (RuntimeException ex) {
+                Random r = new Random();
+                int i = r.nextInt(10000);
+                m.setName(m.getName() + i);
+                enumWidget.getComponent().addMethod(m);
+            }
             MethodWidget w = new MethodWidget(enumWidget.getClassDiagramScene(), m);
             enumWidget.addMethodWidget(w);
             enumWidget.getScene().validate();

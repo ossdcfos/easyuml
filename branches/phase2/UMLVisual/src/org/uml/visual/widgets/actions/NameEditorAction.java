@@ -41,7 +41,9 @@ public class NameEditorAction implements TextFieldInplaceEditor {
             nameable.setName(string);
             nameable.setAttributes(string);
         }catch (RuntimeException ex) {
-            JOptionPane.showMessageDialog(null, "Name you have entered already exists, please enter another one.");
+            String input = JOptionPane.showInputDialog("Name you have entered already exists, please enter another one.", string);
+            setText(widget, input);
+            //JOptionPane.showMessageDialog(null, "Name you have entered already exists, please enter another one.");
         }
         
 

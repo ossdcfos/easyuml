@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
+import java.util.Random;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -56,7 +57,15 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
         public void actionPerformed(ActionEvent e) {
 
             Method m = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
-            interfaceWidget.getComponent().addMethod(m);
+            try {
+                interfaceWidget.getComponent().addMethod(m);
+
+            } catch (RuntimeException ex) {
+                Random r = new Random();
+                int i = r.nextInt(10000);
+                m.setName(m.getName() + i);
+                interfaceWidget.getComponent().addMethod(m);
+            }
             MethodWidget w = new MethodWidget(interfaceWidget.getClassDiagramScene(), m);
             interfaceWidget.addMethodWidget(w);
             interfaceWidget.getScene().validate();

@@ -59,7 +59,7 @@ public class FieldWidget extends MemberWidgetBase {
             return;
         }
         String oldName = fieldComponent.getName();
-        
+
         if (!fieldComponent.getDeclaringClass().nameExists(newName)) {
             fieldNameWidget.setLabel(newName);
             fieldComponent.setName(newName);
@@ -93,10 +93,12 @@ public class FieldWidget extends MemberWidgetBase {
         wp.fillFieldComponents(fieldComponent, attributes);
         String newName = fieldComponent.getName();
         if (newName.equals(oldName)) {
+            throw new RuntimeException("Error: name already exists.");
         } else {
             if (!fieldComponent.getDeclaringClass().nameExists(newName)) {
                 fieldComponent.getDeclaringClass().notifyMemberNameChanged(fieldComponent, oldName);
             } else {
+                fieldComponent.setName(oldName);
                 throw new RuntimeException("Error: name already exists.");
             }
         }

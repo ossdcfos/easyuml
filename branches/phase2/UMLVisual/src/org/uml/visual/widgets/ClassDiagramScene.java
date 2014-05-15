@@ -138,9 +138,14 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
             @Override
             public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                if (previousFocusedObject != null) {
+                    content.remove(previousFocusedObject);
+                }
+                if (newFocusedObject != null) {
+                    content.add(newFocusedObject);
+                }
             }
-        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED);
+        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED);
 
     }
 
