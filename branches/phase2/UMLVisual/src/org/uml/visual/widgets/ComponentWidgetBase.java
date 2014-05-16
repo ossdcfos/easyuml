@@ -16,6 +16,7 @@ import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.ImageWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.netbeans.api.visual.widget.ResourceTable;
 import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.openide.util.Lookup;
@@ -32,24 +33,27 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
 
     private static final Dimension MINDIMENSION = new Dimension(120, 120);
     private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(4, Color.black, false);
-    private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder();
+    private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder(10);
     //atribut name
     protected LabelWidget nameWidget;
     ClassDiagramScene scene;
-
+    
     public ComponentWidgetBase(ClassDiagramScene scene) {
         super(scene);
         this.scene = scene;
         setBorder(DEFAULT_BORDER);
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
-
- 
-        getActions().addAction(scene.createSelectAction());
-        getActions().addAction(ActionFactory.createResizeAction());
-        getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
-        //getActions().addAction(ActionFactory.createSelectAction(new ComponentSelectProvider()));
         
-        getActions().addAction(ActionFactory.createHoverAction(new ChangeCursor()));
+ 
+        
+        
+        getActions().addAction(ActionFactory.createResizeAction(null, new MyResizeProvider()));
+        getActions().addAction(scene.createSelectAction());
+        getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
+        
+        getActions().addAction(scene.createObjectHoverAction());
+
+        
 
 
         setMinimumSize(MINDIMENSION);
@@ -79,6 +83,11 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         }else {
             setBorder(DEFAULT_BORDER);
         }
+        if (state.isHovered()) {
+            this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        }else {
+            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
     }
 
     abstract public ClassDiagramComponent getComponent();
@@ -89,18 +98,20 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
     public ClassDiagramScene getClassDiagramScene() {
         return scene;
     }
-
-    private class ChangeCursor implements TwoStateHoverProvider {
+    
+    private class MyResizeProvider implements ResizeProvider {
 
         @Override
-        public void unsetHovering(Widget widget) {
+        public void resizingStarted(Widget widget) {
+            widget.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+           System.out.println("resize finish");
+        }
+
+        @Override
+        public void resizingFinished(Widget widget) {
             widget.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
+            System.out.println("resize finish");
         }
-
-        @Override
-        public void setHovering(Widget widget) {
-            widget.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        }
+        
     }
 }
