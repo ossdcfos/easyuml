@@ -268,7 +268,7 @@ public class Method extends Member {
         if (!args.equals("")) {
             args = args.substring(0, args.length() - 2);
         }
-        result = result.concat(args + ") \n");
+        result = result.concat(args + "); \n");
         return result;
     }
 }
