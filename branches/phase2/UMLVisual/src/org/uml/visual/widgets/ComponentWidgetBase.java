@@ -33,7 +33,7 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
 
     private static final Dimension MINDIMENSION = new Dimension(120, 120);
     private static final Border SELECTED_BORDER = BorderFactory.createResizeBorder(4, Color.black, false);
-    private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder(10);
+    private static final Border DEFAULT_BORDER = BorderFactory.createLineBorder();
     //atribut name
     protected LabelWidget nameWidget;
     ClassDiagramScene scene;
@@ -43,16 +43,13 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         this.scene = scene;
         setBorder(DEFAULT_BORDER);
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ClassConnectProvider()));
-        
- 
-        
-        
-        getActions().addAction(ActionFactory.createResizeAction(null, new MyResizeProvider()));
+//        getActions().addAction(ActionFactory.createResizeAction(null, ActionFactory.createDefaultResizeProvider())); // /*new MyResizeProvider())*/);                       
+        getActions().addAction(ActionFactory.createResizeAction());
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
         
         getActions().addAction(scene.createObjectHoverAction());
-
+        
         
 
 
@@ -74,6 +71,7 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
     public void notifyStateChanged(ObjectState previousState, ObjectState state) {
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
         super.notifyStateChanged(previousState, state);
+        
         if (state.isWidgetFocused()) {
             if (state.isSelected() /**&& !previousState.isSelected() */) {
                 setBorder(SELECTED_BORDER);
@@ -83,11 +81,15 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         }else {
             setBorder(DEFAULT_BORDER);
         }
+        
         if (state.isHovered()) {
             this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         }else {
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
+        
+        
     }
 
     abstract public ClassDiagramComponent getComponent();
@@ -99,19 +101,19 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         return scene;
     }
     
-    private class MyResizeProvider implements ResizeProvider {
-
-        @Override
-        public void resizingStarted(Widget widget) {
-            widget.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-           System.out.println("resize finish");
-        }
-
-        @Override
-        public void resizingFinished(Widget widget) {
-            widget.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            System.out.println("resize finish");
-        }
-        
-    }
+//    private class MyResizeProvider implements ResizeProvider {
+//
+//        @Override
+//        public void resizingStarted(Widget widget) {
+//            widget.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+//           System.out.println("resize finish");
+//        }
+//
+//        @Override
+//        public void resizingFinished(Widget widget) {
+//            widget.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//            System.out.println("resize finish");
+//        }
+//        
+//    }
 }
