@@ -1,26 +1,17 @@
 package org.uml.visual;
 
 import java.awt.BorderLayout;
-import java.util.Collection;
 import javax.swing.JScrollPane;
-import org.netbeans.api.project.Project;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.spi.palette.PaletteController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
-import org.openide.util.Lookup.Result;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ClassDiagramComponent;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 
@@ -47,44 +38,39 @@ import org.uml.visual.widgets.ClassDiagramScene;
 })
 public final class UMLTopComponent extends TopComponent {
 
-    private ClassDiagram umlClassDiagram;
+    private ClassDiagram classDiagram;
     private ClassDiagramScene classDiagramScene;
-    PaletteController palette;
-    private JScrollPane shapePane;
-
+    private JScrollPane classDiagramPanel;    
+    private PaletteController palette;
+    
+    
     public UMLTopComponent() {
         initComponents();
         setName(Bundle.CTL_UMLTopComponent());
         setToolTipText(Bundle.HINT_UMLTopComponent());
-        classDiagramScene = new ClassDiagramScene(umlClassDiagram = new ClassDiagram());     // Fresh scene with fresh diagram
-        shapePane = new JScrollPane();
-        shapePane.setViewportView(classDiagramScene.createView());
-        add(shapePane, BorderLayout.CENTER);
+        this.classDiagram = new ClassDiagram(); // create new empty class diagram
+        classDiagramScene = new ClassDiagramScene(this.classDiagram);
+        classDiagramPanel = new JScrollPane();
+        classDiagramPanel.setViewportView(classDiagramScene.createView());
+        add(classDiagramPanel, BorderLayout.CENTER);
         add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
         palette = PaletteSupport.createPalette();
     }
 
-    public UMLTopComponent(ClassDiagram cd) {
-        umlClassDiagram = cd;
+    public UMLTopComponent(ClassDiagram classDiagram) {
+        this.classDiagram = classDiagram;
         initComponents();
-        setName(cd.getName());
+        setName(classDiagram.getName());
         setToolTipText(Bundle.HINT_UMLTopComponent());
-        classDiagramScene = new ClassDiagramScene(cd);
-        shapePane = new JScrollPane();
-        shapePane.setViewportView(classDiagramScene.createView());
-        add(shapePane, BorderLayout.CENTER);
+        
+        classDiagramScene = new ClassDiagramScene(classDiagram);
+        classDiagramPanel = new JScrollPane();
+        classDiagramPanel.setViewportView(classDiagramScene.createView());
+        add(classDiagramPanel, BorderLayout.CENTER);
         add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
 
         palette = PaletteSupport.createPalette();
-
-        // napuni scenu komponentama
-        //ovo se nalazi u konstruktoru scene, tako da treba da se ukloni odavde
-//        for (ClassDiagramComponent comp : cd.getComponents().values()) {
-//            Widget w = classDiagramScene.attach(comp);
-//            w.setPreferredLocation();
-//        }
         classDiagramScene.validate();
-
     }
 
     @Override
@@ -92,26 +78,12 @@ public final class UMLTopComponent extends TopComponent {
         return new ProxyLookup(
                 new Lookup[]{
             classDiagramScene.getLookup(),
-            Lookups.singleton(umlClassDiagram),
-//            Lookups.singleton(selectedProject),
+            Lookups.singleton(classDiagram),
             Lookups.singleton(palette)
         });
 
     }
 
-//    public UMLTopComponent(ClassDiagram umlClassDiagram) {
-//        this.umlClassDiagram = umlClassDiagram;
-//        initComponents();
-//        setName(Bundle.CTL_UMLTopComponent());
-//        setToolTipText(Bundle.HINT_UMLTopComponent());
-//        setLayout(new BorderLayout());
-//        classDiagramScene = new ClassDiagramScene(this.umlClassDiagram);
-//
-//        //implementiraj
-//        //scene.visualizeNetwork();
-//       
-//        associateLookup(Lookups.fixed(new Object[]{PaletteSupport.createPalette()}));
-//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,17 +100,15 @@ public final class UMLTopComponent extends TopComponent {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane viewPane;
     // End of variables declaration//GEN-END:variables
-    Lookup.Result<Project> resultPrj;
 
     @Override
     public void componentOpened() {
-        resultPrj = Utilities.actionsGlobalContext().lookupResult(Project.class);
-//        resultPrj.addLookupListener(this);
+
     }
 
     @Override
     public void componentClosed() {
-        //ViewManager.getInstance().onNetworkClose(umlClassDiagram);
+
     }
 
     void writeProperties(java.util.Properties p) {
