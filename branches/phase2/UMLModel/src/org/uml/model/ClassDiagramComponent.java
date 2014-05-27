@@ -6,9 +6,9 @@ import java.util.HashMap;
 import javax.swing.JOptionPane;
 
 /**
- * Implementation of UML components that can be added to class diagram -
- * classes, interfaces or enums (enumerations). Relations are not represented
- * through this class as well; they are implemented in class RelationComponent.
+ * Base class for all UML class diagram components (classes, interfaces or enums)
+ * that can be added to class diagram. Note that relations are not represented
+ * with this class as well; they are represented with RelationComponent.
  *
  * @author zoran
  * @see ClassComponent

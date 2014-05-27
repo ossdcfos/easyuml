@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Implementation of UML Class Diagrams. Contains collection of
- * ClassDiagramComponents and RelationComponents. This represents the whole
- * UML diagram consisting of classes (+ enumerations, interfaces, and packages)
- * along with their respective relations.
+ * UML Class Diagrams which can contain class, interface and enum components,
+ * along with relations among them. 
  *
  * @author Uros
  * @version 1.0
@@ -149,7 +147,7 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Getter for name of the ClassDiagram
+     * Returns name of this ClassDiagram
      *
      * @return name of the UML Class Diagram
      */
@@ -158,7 +156,7 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Setter for name of the ClassDiagram
+     * Sets name of this ClassDiagram
      *
      * @param name of UML Class Diagram
      */
