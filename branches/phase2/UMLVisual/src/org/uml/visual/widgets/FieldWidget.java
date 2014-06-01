@@ -93,7 +93,7 @@ public class FieldWidget extends MemberWidgetBase {
         wp.fillFieldComponents(fieldComponent, attributes);
         String newName = fieldComponent.getName();
         if (newName.equals(oldName)) {
-            throw new RuntimeException("Error: name already exists.");
+            
         } else {
             if (!fieldComponent.getDeclaringClass().nameExists(newName)) {
                 fieldComponent.getDeclaringClass().notifyMemberNameChanged(fieldComponent, oldName);

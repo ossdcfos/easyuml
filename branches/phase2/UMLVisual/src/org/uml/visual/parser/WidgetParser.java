@@ -19,7 +19,7 @@ public class WidgetParser {
 	Pattern methodModifiers = Pattern.compile("static|final|abstract|synchronized");
         Pattern fieldModifiers = Pattern.compile("static|final|synchronized");
 	Pattern returnValueType = Pattern.compile("(null|void|int|float|double|boolean)|([A-Z]\\w+\\s*(<\\s*\\w+(\\s*,\\s*\\w+\\s*)*\\s*>\\s*)*)");
-	Pattern argumentType = Pattern.compile("(null|int|float|double|boolean)|([A-Z]w+)|([A-Z]\\w+\\s*(<\\s*([A-Z]\\w+)(\\s*,\\s*([A-Z]\\w+)\\s*)*\\s*>\\s*)*)");
+	Pattern argumentType = Pattern.compile("(null|int|float|double|boolean)|([A-Z]\\w+\\s*(<\\s*([A-Z]\\w+)(\\s*,\\s*([A-Z]\\w+)\\s*)*\\s*>\\s*))|([A-Z]\\w+)");
 	Pattern arrayCheck = Pattern.compile("(\\[\\s*\\])?");
 	Pattern name = Pattern.compile("\\w+");
 	Pattern argumentBlock = Pattern.compile("\\(.*\\)");
@@ -313,10 +313,22 @@ public class WidgetParser {
 			return result;
 		}
 		String[] args = arguments.split(",");
-		for (int i = 0; i<args.length - 1; i++) {
-			result = result.concat(parseArgument(args[i])) + ", ";
+		for (int i = 0; i<args.length; i++) {
+                    if (i+1 < args.length && args[i].contains("<") && !args[i].contains(">") && args[i+1].contains(">") && !args[i+1].contains("<")) {
+                        result = result.concat(parseArgument(args[i] +"," + args[i+1]) + ", ");
+                        i++;
+                    }else {
+                        result = result.concat(parseArgument(args[i])) + ", ";
+                    }
+                        
+			
 		}
-		result = result.concat(parseArgument(args[args.length - 1]));
+                //if (!args[args.length - 1].contains(">") || (args[args.length - 1].contains("<") && args[args.length - 1].contains(">"))) result = result.concat(parseArgument(args[args.length - 1]));
+                try {
+                    result = result.substring(0, result.length() - 2);
+                }catch (Exception ex) {
+                    
+                }
 		return result;
 	}
 	
@@ -334,7 +346,8 @@ public class WidgetParser {
 		argument = skipArgumentWhitespaces(argument);
 		Matcher m = argumentType.matcher(argument);
 		if(m.lookingAt()) {
-			result = argument.substring(m.start(), m.end()) + " ";
+			result = argument.substring(m.start(), m.end());
+                        result = result.trim() + " ";
 			argument = argument.substring(m.end());
 			argument = skipArgumentWhitespaces(argument);
 		}else {
@@ -345,7 +358,7 @@ public class WidgetParser {
 		if(m.lookingAt()) {
 			result = result.concat(argument.substring(m.start(), m.end()));
 		}else {
-			result = result.concat("FaliNazivArgumenta ");
+			result = result.concat("ArgumentNameMissing.");
 		}
 		return result;
 	}
@@ -376,21 +389,27 @@ public class WidgetParser {
             m.setReturnType(getReturnType());
             m.setName(getName());
             //m.getDeclaringClass().notifyMemberNameChanged(m, m.getName());
-            String argumenti = getArguments();
-            if(argumenti.equals("")) {
+            String arguments = getArguments();
+            if(arguments.equals("")) {
 		
             }else{
-                argumenti = formatArguments(argumenti);
-                String[] args = argumenti.split(", ");
+                arguments = formatArguments(arguments);
+                String[] args = arguments.split(",");
                 if(m.getArguments() != null) {
                     m.getArguments().clear();
                 }
-                for(String arg : args) {
+                for(int i = 0; i < args.length; i++) {
+                    String arg = args[i];
+                    if (arg.contains("<") && !args[i].contains(">")) {
+                        arg = arg + "," + args[i+1];
+                        i++;
+                    }
+                    skipArgumentWhitespaces(arg);
                     Random r = new Random();
                     int Low = 0;
                     int High = 100;
                     int R = r.nextInt(High - Low) + Low;
-                    m.getArguments().put(Integer.toString(R), new MethodArgument(arg.substring(0,arg.indexOf(" ")), arg.substring(arg.indexOf(" ") + 1)));
+                    m.getArguments().put(Integer.toString(R), new MethodArgument(arg.substring(0,arg.indexOf(" ")).trim(), arg.substring(arg.indexOf(" ") + 1).trim()));
                 }
             }
         }

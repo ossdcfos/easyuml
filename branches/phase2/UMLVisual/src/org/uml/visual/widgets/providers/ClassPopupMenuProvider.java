@@ -25,6 +25,7 @@ import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.Constructor;
 import org.uml.model.Field;
+import org.uml.model.Member;
 import org.uml.model.Method;
 import org.uml.model.MethodArgument;
 import org.uml.model.RelationComponent;
@@ -129,17 +130,12 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         }
     };
     ActionListener addAtributeListener = new ActionListener() {
+        int brojac = 1;
+
         @Override
         public void actionPerformed(ActionEvent e) {
             Field f = new Field("untitledField", null, Visibility.PRIVATE);
-            try {
-                classWidget.getComponent().addField(f);
-            } catch (RuntimeException ex) {
-                Random r = new Random();
-                int i = r.nextInt(10000);
-                f.setName(f.getName() + i);
-                classWidget.getComponent().addField(f);
-            }
+            addField(f);
             FieldWidget w = new FieldWidget(classWidget.getClassDiagramScene(), f);
             classWidget.addFieldWidget(w);
             classWidget.getScene().validate();
@@ -154,15 +150,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             Method m = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
-            try {
-                classWidget.getComponent().addMethod(m);
-
-            } catch (RuntimeException ex) {
-                Random r = new Random();
-                int i = r.nextInt(10000);
-                m.setName(m.getName() + i);
-                classWidget.getComponent().addMethod(m);
-            }
+            addMethod(m);
             MethodWidget w = new MethodWidget(classWidget.getClassDiagramScene(), m);
             classWidget.addMethodWidget(w);
             classWidget.getScene().validate();
@@ -171,7 +159,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
             MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
             classWidget.getScene().getView().addMouseListener(mouseListener);
-            
+
         }
     };
     ActionListener addConstructorListener = new ActionListener() {
@@ -183,7 +171,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.addConstructorWidget(w);
             classWidget.getScene().validate();
 
-            
+
         }
     };
     ActionListener addPackageListener = new ActionListener() {
@@ -281,6 +269,38 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         }
         if (classComponent.isIsAbstract()) {
             abstractJCBMI.setSelected(true);
+        }
+    }
+
+    private int getCounter(Member member) {
+        int brojac = 1;
+        String name = member.getName();
+        String broj = name.substring(name.length() - 1);
+        if (broj.matches("[0-9]")) {
+            name = name.substring(0, name.length() - 1);
+            member.setName(name);
+            brojac = Integer.parseInt(broj) + 1;
+        }
+        return brojac;
+    }
+
+    private void addField(Field f) {
+        try {
+            classWidget.getComponent().addField(f);
+        } catch (RuntimeException ex) {
+            int counter = getCounter(f);
+            f.setName(f.getName() + counter);
+            addField(f);
+        }
+    }
+
+    private void addMethod(Method method) {
+        try {
+            classWidget.getComponent().addMethod(method);
+        }catch (RuntimeException ex) {
+            int counter = getCounter(method);
+            method.setName(method.getName() + counter);
+            addMethod(method);
         }
     }
 }
