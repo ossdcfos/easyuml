@@ -84,7 +84,7 @@ public class MethodWidget extends MemberWidgetBase {
         wp.fillMethodComponents(methodComponent, attributes);
         String newName = methodComponent.getName();
         if (newName.equals(oldName)) {
-            throw new RuntimeException("Error: name already exists.");
+            
         } else {
             if (!methodComponent.getDeclaringClass().nameExists(newName)) {
                 methodComponent.getDeclaringClass().notifyMemberNameChanged(methodComponent, oldName);
