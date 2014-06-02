@@ -1,11 +1,12 @@
 package org.uml.model;
 
 /**
- * Implementation of one of four possible RelationComponents. Describes Uses
- * relation between UML objects (used usually when an object depends of another
- * one - most often the "using" end in a relationship will be aware of the other
- * end it's using, but it's not always the case the "used" end is aware who is
- * using it).
+ * Used to describe Use(s) relation in UML class diagrams. Describes relation
+ * used usually when an object depends of another one - most often the "using"
+ * end in a relationship will be aware of the other end it's using, but it's not
+ * always the case the "used" end is aware who is using it. Implemented usually
+ * when there is an input variable in a class' method which is type of another
+ * class.
  *
  * @author "NUGS"
  * @see RelationComponent

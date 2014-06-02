@@ -1,7 +1,7 @@
 package org.uml.model;
 
 /**
- * Implementation of input argument which is used to describe Method or
+ * Represents an input argument (variable) which is used to describe Method or
  * Constructor.
  * <p>
  * A representation of input arguments used to create methods or

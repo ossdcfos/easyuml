@@ -1,9 +1,8 @@
 package org.uml.model;
 
 /**
- * Implementation of one of four possible RelationComponents. Describes Has
- * relation between UML objects (used usually when an object has another object
- * as its field).
+ * Used to describe Has relation in UML class diagrams. Describes relation used
+ * usually when an object has another object as its field.
  *
  * @author "NUGS"
  * @see RelationComponent
@@ -12,9 +11,14 @@ package org.uml.model;
  * @see ImplementsRelationComponent
  */
 public class HasRelationComponent extends RelationComponent {
+    //Usually 0..*
 
     private CardinalityEnum cardinalitySource;
+    //Usually 0..1
     private CardinalityEnum cardinalityTarget;
+    /**
+     * Can be List, ArrayList or LinkedList
+     */
     private String collectionType;
 
     /**

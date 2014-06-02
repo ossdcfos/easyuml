@@ -3,8 +3,8 @@ package org.uml.model;
 import java.lang.reflect.Type;
 
 /**
- * Implementation of Field, one of four possible Members. It is used to
- * represent class fields - variables inside a class.
+ * Used to represent class fields (variables inside a class). Is one of four
+ * possible Members.
  *
  * @author Uros
  * @see Member
@@ -37,26 +37,58 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
         this.visibility = visibility;
     }
 
+    /**
+     * Returns true if the field has static modifier, false if it is not static
+     *
+     * @return true if field is static, false if it isn't
+     */
     public boolean isStatic() {
         return isStatic;
     }
 
+    /**
+     * Set this field's static modifier to true or false
+     *
+     * @param isStatic - set true if the field is static, false if it isn't
+     */
     public void setStatic(boolean isStatic) {
         this.isStatic = isStatic;
     }
 
+    /**
+     * Returns true if the field has final modifier, false if it is not final
+     *
+     * @return true if field is final, false if it isn't
+     */
     public boolean isFinal() {
         return isFinal;
     }
 
+    /**
+     * Set this field's final modifier to true or false
+     *
+     * @param isFinal - set true if the field is final, false if it isn't
+     */
     public void setFinal(boolean isFinal) {
         this.isFinal = isFinal;
     }
 
+    /**
+     * Returns true if the field has synchronized modifier, false if it is not
+     * synchronized
+     *
+     * @return true if field is synchronized, false if it isn't
+     */
     public boolean isSynchronized() {
         return isSynchronized;
     }
 
+    /**
+     * Set this field's final synchronized to true or false
+     *
+     * @param isSynchronized - set true if the field is synchronized, false if
+     * it isn't
+     */
     public void setSynchronized(boolean isSynchronized) {
         this.isSynchronized = isSynchronized;
     }
@@ -92,10 +124,20 @@ public class Field extends Member /* treba da nasledjuje member a u membberu da 
         setSynchronized(false);
     }
 
+    /**
+     * Returns type of the field (variable)
+     *
+     * @return field's type
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Sets field's type
+     *
+     * @param type of this field
+     */
     public void setType(String type) {
         this.type = type;
     }

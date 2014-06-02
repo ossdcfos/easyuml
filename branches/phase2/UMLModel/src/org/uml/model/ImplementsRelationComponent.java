@@ -1,9 +1,9 @@
 package org.uml.model;
 
 /**
- * Implementation of one of four possible RelationComponents. Describes
- * Implements relation between UML objects (used usually when an object
- * <i>implements</i> another objects behavior; fields, methods, etc.).
+ * Used to describe Implements relation in UML class diagrams. Describes
+ * relation used usually when an object <i>implements</i> another objects
+ * behavior; fields, methods, etc.
  *
  * @author "NUGS"
  * @see RelationComponent

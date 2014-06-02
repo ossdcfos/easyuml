@@ -3,9 +3,9 @@ package org.uml.model;
 import java.util.HashMap;
 
 /**
- * Implementation of InterfaceComponent, one of four possible types of
- * ClassDiagramComponents. It is used to represent Interfaces in the UML
- * diagram.
+ * Representation of Interfaces from UML Class diagrams. Is one of
+ * four possible types of ClassDiagramComponents. Used to represent Interface
+ * classes in UML diagrams.
  *
  * @author zoran
  * @see ClassDiagramComponent
@@ -35,11 +35,19 @@ public class InterfaceComponent extends ClassDiagramComponent {
     public InterfaceComponent(String name) {
         super(name);
     }
-
+    /**
+     * Returns all methods this interface has as a collection (HashMap)
+     * @return HashMap of methods
+     */
     public HashMap<String, Method> getMethods() {
         return methods;
     }
-
+    /**
+     * Returns this interfaces' specific method with the name provided as input
+     * @param name of the method wanted
+     * @return Method object
+     * @see Method
+     */
     public Method getMethod(String name) {
         return methods.get(name);
     }

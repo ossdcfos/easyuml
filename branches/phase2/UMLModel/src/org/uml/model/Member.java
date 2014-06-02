@@ -3,8 +3,8 @@ package org.uml.model;
 import java.lang.reflect.Modifier;
 
 /**
- * Implementation of UML members of classes. Classes can have four types of
- * members: fields, methods, constructors and literals.
+ * Representation of members that a class can have. Classes can have four types
+ * of members: fields, methods, constructors and literals.
  *
  * @author zoran
  * @see Literal

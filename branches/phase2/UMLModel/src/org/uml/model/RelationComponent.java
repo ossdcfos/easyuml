@@ -3,10 +3,9 @@ package org.uml.model;
 import java.io.Serializable;
 
 /**
- * Implementation of UML relation components that can be added to the class
- * diagram. They describe relations (along with cardinalities) between class
- * diagram components. Currently supports Has, Is, Uses and Implements
- * relations.
+ * Describes relations among UML class diagram components. They are represented
+ * along with cardinalities; between class diagram components. Currently
+ * supports Has, Is, Uses and Implements relations.
  *
  * @author "NUGS"
  * @see ClassDiagram
@@ -29,7 +28,7 @@ public class RelationComponent implements Serializable {
     }
 
     /**
-     * Constructor with three parameters used to create Relation object and set 
+     * Constructor with three parameters used to create Relation object and set
      * its name, source and target.
      *
      * @param source - from which ClassDiagramComponent does relation start
