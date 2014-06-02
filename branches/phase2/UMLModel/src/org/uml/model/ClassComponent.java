@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Implementation of ClassComponent, one of four possible types of
- * ClassDiagramComponents. It is used to represent classes in UML diagrams.
+ * Representation of Classes from UML Class diagrams. Is one of four possible
+ * types of ClassDiagramComponents.
  *
  * @author Uros
  * @see ClassDiagramComponent
@@ -48,18 +48,39 @@ public class ClassComponent extends ClassDiagramComponent {
         super(name);
     }
 
+    /**
+     * Returns the collection of fields that this class contains
+     *
+     * @return HashMap of fields contained
+     */
     public HashMap<String, Field> getFields() {
         return fields;
     }
 
+    /**
+     * Returns the collection of methods that this class contains
+     *
+     * @return HashMap of methods contained
+     */
     public HashMap<String, Method> getMethods() {
         return methods;
     }
 
+    /**
+     * Returns the collection of constructors for this class
+     *
+     * @return HashMap of this clas's constructors
+     */
     public HashMap<String, Constructor> getConstructors() {
         return constructors;
     }
 
+    /**
+     * Returns a field from this clas's collection of fields with a given name
+     *
+     * @param name of the field that needs to be returned
+     * @return this clas's field with a given name
+     */
     public Field getField(String name) {
         return fields.get(name);
     }
@@ -79,10 +100,21 @@ public class ClassComponent extends ClassDiagramComponent {
         fields.put(Integer.toString(R), field);
     }
 
+    /**
+     * Removes the field given form this clas's collection of fields
+     *
+     * @param field to be removed
+     */
     public void removeField(Field field) {
         fields.values().remove(field);
     }
 
+    /**
+     * Returns a method from this clas's collection of methods
+     *
+     * @param name of the method to be returned
+     * @return method with a given name
+     */
     public Method getMethod(String name) {
         return methods.get(name);
     }
@@ -111,6 +143,12 @@ public class ClassComponent extends ClassDiagramComponent {
         methods.values().remove(method);
     }
 
+    /**
+     * Returns a constructor with a given name that this class contains
+     *
+     * @param name of the wanted constructor
+     * @return constructor of this class
+     */
     public Constructor getConstuctor(String name) {
         return constructors.get(name);
     }
@@ -127,7 +165,8 @@ public class ClassComponent extends ClassDiagramComponent {
     }
 
     /**
-     * Removes the Constructor from a ClassComponent's collection of constructors.
+     * Removes the Constructor from a ClassComponent's collection of
+     * constructors.
      *
      * @param constructor of constructor which will be removed.
      */
@@ -135,18 +174,40 @@ public class ClassComponent extends ClassDiagramComponent {
         methods.values().remove(constructor);
     }
 
+    /**
+     * Returns visibility modifier of this class
+     *
+     * @return visibility of the class
+     * @see Visibility
+     */
     public Visibility getVisibility() {
         return visibility;
     }
 
+    /**
+     * Sets the visibility modifier of this class
+     *
+     * @param visibility to be set
+     * @see Visibility
+     */
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
 
+    /**
+     * Returns true if this class is set to be abstract, false if not
+     *
+     * @return true if class is abstract
+     */
     public boolean isIsAbstract() {
         return isAbstract;
     }
 
+    /**
+     * Sets abstract modifier to true or false
+     *
+     * @param isAbstract - true if the class is abstract, if not - false
+     */
     public void setIsAbstract(boolean isAbstract) {
         this.isAbstract = isAbstract;
     }

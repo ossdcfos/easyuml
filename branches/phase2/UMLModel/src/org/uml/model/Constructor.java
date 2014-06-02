@@ -3,8 +3,9 @@ package org.uml.model;
 import java.util.HashMap;
 
 /**
- * Implementation of Constructor, one of four possible Members. It is used to
- * represent class constructors (both with and without parameters).
+ * Representation of Constructors from UML Class diagrams. Is one of four
+ * possible types of ClassDiagramComponents. Used to represent class
+ * constructors (both with and without parameters).
  *
  * @author zoran
  * @see Member
@@ -20,10 +21,10 @@ public class Constructor extends Member {
     private HashMap<String, MethodArgument> arguments;
 
     /**
-     * Constructor with parameter for setting Constructor's name. Only sets the
+     * Constructor with parameter for setting constructor's name. Only sets the
      * name parameter.
      * <p>
-     * Calls super Constructor.
+     * Calls super constructor.
      *
      * @param name
      * @see Member
@@ -35,7 +36,7 @@ public class Constructor extends Member {
     /**
      * Constructor with three parameters used to set name, type of return
      * argument and input arguments(variables) of constructor. Calls the super
-     * Constructor.
+     * constructor.
      *
      * @param name of the Constructor
      * @param returnType of Constructor
@@ -47,18 +48,38 @@ public class Constructor extends Member {
         this.arguments = arguments;
     }
 
+    /**
+     * Returns the return type of the constructor
+     *
+     * @return String representation of constructor's return type
+     */
     public String getReturnType() {
         return returnType;
     }
 
+    /**
+     * Sets the return type of this constructor
+     *
+     * @param returnType of the constructor
+     */
     public void setReturnType(String returnType) {
         this.returnType = returnType;
     }
 
+    /**
+     * Returns all arguments that this constructor uses
+     *
+     * @return HashMap of constructor's arguments
+     */
     public HashMap<String, MethodArgument> getArguments() {
         return arguments;
     }
 
+    /**
+     * Sets arguments to this constructor
+     *
+     * @param arguments that the constructor uses
+     */
     public void setArguments(HashMap<String, MethodArgument> arguments) {
         this.arguments = arguments;
     }

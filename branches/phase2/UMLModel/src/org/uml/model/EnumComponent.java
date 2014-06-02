@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Implementation of EnumComponent, one of four possible types of
- * ClassDiagramComponents. It is used to represent enumeration classes in UML
- * diagrams.
+ * Representation of Enumerations (Enums) from UML Class diagrams. Is one of
+ * four possible types of ClassDiagramComponents. Used to represent enumeration
+ * classes in UML diagrams.
  *
  * @author zoran
  * @see ClassDiagramComponents
@@ -43,23 +43,39 @@ public class EnumComponent extends ClassDiagramComponent {
     public EnumComponent(String name) {
         super(name);
     }
-
+/**
+ * Returns the collection of fields that this enum contains
+ * @return HashMap of enum's fields
+ */
     public HashMap<String, Field> getFields() {
         return fields;
     }
-
+/**
+ * Returns the collection of this enum's methods
+ * @return HashMap of enum's methods
+ */
     public HashMap<String, Method> getMethods() {
         return methods;
     }
-
+/**
+ *  Returns the collection of this enum's constructors
+ * @return HashMap of enum's methods
+ */
     public HashMap<String, Constructor> getConstructors() {
         return constructors;
     }
-
+/**
+ * Returns the collection of literals that this enum contains
+ * @return HashMap of enum's literals
+ */
     public HashMap<String, Literal> getLiterals() {
         return literals;
     }
-
+/**
+ * Returns enum's field with the given name from the collection of fields
+ * @param name of the field that is to be returned
+ * @return enum's field
+ */
     public Field getField(String name) {
         return fields.get(name);
     }
@@ -92,7 +108,11 @@ public class EnumComponent extends ClassDiagramComponent {
     public void removeField(String name) {
         fields.remove(name);
     }
-
+/**
+ * Returns the method with the specific name given from enum's collection of methods
+ * @param name of the method to be returned
+ * @return enum's method with a given name
+ */
     public Method getMethod(String name) {
         return methods.get(name);
     }
@@ -125,7 +145,11 @@ public class EnumComponent extends ClassDiagramComponent {
     public void removeMethod(String name) {
         methods.remove(name);
     }
-
+/**
+ * Returns a constructor with a given name from the collection of constructors
+ * @param name of the constructor to be returned
+ * @return this enum's constructor
+ */
     public Constructor getConstuctor(String name) {
         return constructors.get(name);
     }
@@ -156,7 +180,11 @@ public class EnumComponent extends ClassDiagramComponent {
     public void removeConstructor(String name) {
         constructors.remove(name);
     }
-
+/**
+ * Returns the enum's literal with the name provided
+ * @param name of the needed literal
+ * @return enum's literal with the name given
+ */
     public Literal getLiteral(String name) {
         return literals.get(name);
     }

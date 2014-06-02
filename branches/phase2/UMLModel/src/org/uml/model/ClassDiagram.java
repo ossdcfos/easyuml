@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 /**
  * UML Class Diagrams which can contain class, interface and enum components,
- * along with relations among them. 
+ * along with relations among them.
  *
  * @author Uros
  * @version 1.0
@@ -21,12 +21,13 @@ public class ClassDiagram implements Serializable {
     int compCounter = 1;
     private HashMap<String, PackageComponent> packages;
     int relationsCounter = 0;
-/**
- * Standard ClassDiagram constructor without arguments.
- * <p>
- * Sets name to default value and instantiates components, relations and packages
- * hash maps.
- */
+
+    /**
+     * Standard ClassDiagram constructor without arguments.
+     * <p>
+     * Sets name to default value and instantiates components, relations and
+     * packages hash maps.
+     */
     public ClassDiagram() {
         name = "UML Class Diagram";
         this.components = new HashMap<String, ClassDiagramComponent>();
@@ -36,14 +37,6 @@ public class ClassDiagram implements Serializable {
 
     /**
      * Adds new ClassDiagramComponent into collection of existing components. If
-     * component with that name already exists in this collection, new one will
-     * be added with it's name concatenated with current component counter
-     * number.
-     *
-     * @param component to be added to collection
-     */
-    /**
-     * Adds new ClassDiagramComponent into collection of existing components.If
      * component with that name already exists in this collection, new one will
      * be added with it's name concatenated with current component counter
      * number.
@@ -60,10 +53,10 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Adds new RealtionComponent into collection of existing relations. If 
+     * Adds new RealtionComponent into collection of existing relations. If
      * relationComponent with same name already exists in relations, a counter
      * is concatenated to its name and is then added. The counter is then
-     * incremented by one. 
+     * incremented by one.
      *
      * @param relationComponent that will be added to the collection of
      * relations
@@ -72,32 +65,32 @@ public class ClassDiagram implements Serializable {
         if (relations.containsKey(relationComponent.getName())) {
             relations.put(relationComponent.getName() + relationsCounter, relationComponent);
             relationsCounter++;
-        }else {
+        } else {
             relations.put(relationComponent.getName(), relationComponent);
         }
         System.out.println(relations.toString());
     }
 
     /**
-     * Removes component from collection of components.
+     * Removes the given component from this diagram's collection of components.
      *
-     * @param name of the component
+     * @param name of the component to be removed
      */
     public void removeComponent(String name) {
         components.remove(name);
     }
 
     /**
-     * Removes relation from collection of relations.
+     * Removes the given relation from this diagram's collection of relations.
      *
-     * @param name of the relation
+     * @param name of the relation to be removed
      */
     public void removeRelation(String name) {
         relations.remove(name);
     }
 
     /**
-     * Getter for collection of components.
+     * Returns the collection of components that this diagram has.
      *
      * @return collection of components
      */
@@ -106,7 +99,7 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Getter for relations collection.
+     * Returns the collection of this diagram's relations.
      *
      * @return collection of relations
      */
@@ -115,9 +108,9 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Setter for relations collection.
+     * Sets the collection of relations that exist in this diagram.
      *
-     * @param relations
+     * @param relations to be set
      */
     public void setRelations(HashMap<String, RelationComponent> relations) {
         this.relations = relations;
@@ -156,34 +149,37 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Sets name of this ClassDiagram
+     * Sets the name of this ClassDiagram
      *
      * @param name of UML Class Diagram
      */
     public void setName(String name) {
         this.name = name;
     }
-/**
- * Adds a PackageComponent into package collection.
- * 
- * @param pc package to be added
- */
+
+    /**
+     * Adds the PackageComponent into package collection.
+     *
+     * @param pc package to be added
+     */
     public void addPackage(PackageComponent pc) {
         packages.put(pc.getName(), pc);
     }
-/**
- * Removes package from package collection.
- * 
- * @param pc package to be removed
- */
+
+    /**
+     * Removes the package from package collection.
+     *
+     * @param pc package to be removed
+     */
     public void removePackage(PackageComponent pc) {
         packages.remove(pc.getName());
     }
-/**
- * Gets packages collection of ClassDiagram.
- * 
- * @return packages collection
- */
+
+    /**
+     * Gets the packages collection of this ClassDiagram.
+     *
+     * @return packages collection
+     */
     public HashMap<String, PackageComponent> getPackages() {
         return packages;
     }

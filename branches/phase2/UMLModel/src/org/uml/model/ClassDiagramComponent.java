@@ -6,9 +6,10 @@ import java.util.HashMap;
 import javax.swing.JOptionPane;
 
 /**
- * Base class for all UML class diagram components (classes, interfaces or enums)
- * that can be added to class diagram. Note that relations are not represented
- * with this class as well; they are represented with RelationComponent.
+ * Base class for all UML class diagram components (classes, interfaces or
+ * enums) that can be added to class diagram. Note that relations are not
+ * represented with this class as well; they are represented with
+ * RelationComponent.
  *
  * @author zoran
  * @see ClassComponent
@@ -48,7 +49,7 @@ public class ClassDiagramComponent implements Serializable {
     }
 
     /**
-     * Gets the name of ClassDiagramComponent.
+     * Returns the name of this ClassDiagramComponent.
      *
      * @return name of this ClassDiagramComponent
      */
@@ -74,9 +75,9 @@ public class ClassDiagramComponent implements Serializable {
      * @see ClassDiagram#addRelation(org.uml.model.ClassDiagramComponent)
      * @see Member
      */
-    public void addMember(Member member){
+    public void addMember(Member member) {
         if (nameExists(member.getName())) {
-//            member.setName(member.getName() + memberCounter);
+            //member.setName(member.getName() + memberCounter);
             //JOptionPane.showMessageDialog(null, "You have entered name that already exists, please enter new one.");
             throw new RuntimeException("Error while entering member name: name already exists.");
         }
@@ -85,8 +86,8 @@ public class ClassDiagramComponent implements Serializable {
     }
 
     /**
-     * Removes a member of ClassDiagramComponent from the collection of
-     * components.
+     * Removes the member with the given name from this ClassDiagramComponent's
+     * collection of components.
      *
      * @param name of component that will be removed
      */
@@ -95,8 +96,8 @@ public class ClassDiagramComponent implements Serializable {
     }
 
     /**
-     * Gets parentDiagram. Parent diagram is a ClassDiagram object that contains
-     * this ClassDiagramComponent.
+     * Returns parentDiagram of this ClassDiagramComponent. Parent diagram is a
+     * ClassDiagram object that contains this ClassDiagramComponent.
      *
      * @return ClassDiagram containing this ClassDiagramComponent
      * @see ClassDiagram
@@ -106,8 +107,8 @@ public class ClassDiagramComponent implements Serializable {
     }
 
     /**
-     * Sets parentDiagram. Parent diagram is a ClassDiagram object that contains
-     * this ClassDiagramComponent.
+     * Sets parentDiagram of this ClassDiagramComponent. Parent diagram is a
+     * ClassDiagram object that contains this ClassDiagramComponent.
      *
      * @see ClassDiagram
      */
@@ -117,7 +118,7 @@ public class ClassDiagramComponent implements Serializable {
 
     /**
      * Checks if a member of ClassDiagramComponent already exists in the
-     * collection of components.
+     * collection of components (members).
      *
      * @param name of ClassDiagramComponent that is to be checked
      * @return true if already exists, false if it doesn't
@@ -134,36 +135,74 @@ public class ClassDiagramComponent implements Serializable {
      * @param oldName old name of that component
      * @see Member
      */
-    public void notifyMemberNameChanged(Member member, String oldName){
+    public void notifyMemberNameChanged(Member member, String oldName) {
         addMember(member);
         members.remove(oldName);
     }
 
+    /**
+     * Returns members that this ClassDiagramComponent has
+     *
+     * @return all members of this ClassDiagramComponent
+     */
     public HashMap<String, Member> getMembers() {
         return members;
     }
 
+    /**
+     * Returns position that this ClassDiagramComponent has on the scene
+     *
+     * @return point that represents X and Y coordinates
+     */
     public Point getPosition() {
         return position;
     }
 
+    /**
+     * Sets this ClassDiagramComponent's position on scene
+     *
+     * @param position that the component has
+     */
     public void setPosition(Point position) {
         this.position = position;
     }
 
+    /**
+     * Returns package that contains this ClassDiagramComponent
+     *
+     * @return PackageComponent of this ClassDiagramComponent
+     * @see PackageComponent
+     */
     public PackageComponent getParentPackage() {
         return parentPackage;
     }
 
+    /**
+     * Sets the package that contains this ClassDiagramComponent
+     *
+     * @param parentPackage
+     */
     public void setParentPackage(PackageComponent parentPackage) {
         this.parentPackage = parentPackage;
         //   parentPackage.addMember(this);
     }
 
+    /**
+     * Returns the visibility modifier of this ClassDiagramComponent
+     *
+     * @return visibility of this ClassDiagramComponent
+     * @see Visibility
+     */
     public Visibility getVisibility() {
         return visibility;
     }
 
+    /**
+     * Sets the visibility modifier of this ClassDiagramComponent
+     *
+     * @param visibility to be set
+     * @see Visibility
+     */
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }

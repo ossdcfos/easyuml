@@ -1,7 +1,7 @@
 package org.uml.model;
 
 /**
- * Contains all four possible types of RelationComponents.
+ * Defines all four combinations of cardinalities.
  *
  * @author zoran
  * @see RelationComponent

@@ -1,8 +1,8 @@
 package org.uml.model;
 
 /**
- * Implementation of Literal, one of four possible Members. It is used to
- * represent enum elements (constants).
+ * Representation of enum's elements - Literals (constants). Is one of
+ * four possible Members
  *
  * @author Jelena
  * @see EnumComponent

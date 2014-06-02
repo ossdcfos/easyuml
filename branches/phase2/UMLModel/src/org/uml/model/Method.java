@@ -5,10 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implementation of Method, one of four possible Members. It is used to
- * represent methods inside ClassComponent(s), EnumComponent(s) and
- * InterfaceComponent(s); based upon their representations inside Classes,
- * Enumerations and Interfaces inside projects.
+ * Representation of Methods, used inside Classes, Enumerations and Interfaces.
+ * Is one of four possible Members.
  *
  * @author Uros
  * @see ClassComponent
@@ -240,8 +238,8 @@ public class Method extends Member {
      * <p>
      * By concatenating strings a text is created, which can be used to
      * represent this Field in the UML diagram's class that holds it e.g.
-     * "public static String firstMethod(int theNumber)".
-     * THIS IS VERSION FOR INTERFACES
+     * "public static String firstMethod(int theNumber)". THIS IS VERSION FOR
+     * INTERFACES
      *
      * @return specially formed Method's String representation
      */

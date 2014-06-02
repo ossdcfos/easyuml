@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implementation of PackageComponent, one of four possible types of
- * ClassDiagramComponents. It is used to represent packages in projects.
+ * Representation of UML class diagram packages, used to describe packages
+ * inside projects. Is one of four possible members.
  *
  * @author zoran
  * @see ClassDiagramComponent
@@ -26,7 +26,7 @@ public class PackageComponent extends ClassDiagramComponent {
     }
 
     /**
-     * Constructor with parameter which sets PackageComponent's name and 
+     * Constructor with parameter which sets PackageComponent's name and
      * instantiates classDiagramComponent collection.
      *
      * @param name of PackageComponent
@@ -43,7 +43,7 @@ public class PackageComponent extends ClassDiagramComponent {
     /**
      * Adds a classDiagramComponent to PackageComponent's classDiagramComponent
      * collection.
-     * 
+     *
      * @param cdc - classDiagramComponent to be added
      */
     public void addComponent(ClassDiagramComponent cdc) {
@@ -52,19 +52,21 @@ public class PackageComponent extends ClassDiagramComponent {
 //        }
         classDiagramComponent.put(cdc.getName(), cdc);
     }
-/**
- * Removes a classDiagramComponent from PackageComponent's classDiagramComponent
- * collection.
- * 
- * @param cdc - classDiagramComponent to be removed
- */
+
+    /**
+     * Removes a classDiagramComponent from PackageComponent's
+     * classDiagramComponent collection.
+     *
+     * @param cdc - classDiagramComponent to be removed
+     */
     public void removeComponent(ClassDiagramComponent cdc) {
         classDiagramComponent.remove(cdc.getName());
     }
-/**
- * Prints all classes that this PackageComponent includes in it into standard 
- * output (console, in most cases).
- */
+
+    /**
+     * Prints all classes that this PackageComponent includes in it into
+     * standard output (console, in most cases).
+     */
     public void printAllComponentsOnStdOut() {
         System.out.println("PackageComponent: " + this.getName());
         System.out.println("Contains these ClassDiagramComponents: ");

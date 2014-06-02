@@ -1,9 +1,9 @@
 package org.uml.model;
 
 /**
- * Implementation of one of four possible RelationComponents. Describes Is
- * relation between UML objects (used usually when an object <i>extends</i> another
- * one).
+ * Used to describe Is relation in UML class diagrams. Describes relation used
+ * usually when an object <i>extends</i>
+ * another one.
  *
  * @author "NUGS"
  * @see RelationComponent
