@@ -21,7 +21,7 @@ public class ClassCodeGenerator implements CodeGenerator {
 
     ClassComponent classComponent;
     List<RelationComponent> relevantRelations;
-    
+
     public ClassCodeGenerator() {
     }
 
@@ -36,7 +36,7 @@ public class ClassCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         String code = "";
-        PackageComponent pc= classComponent.getParentPackage();
+        PackageComponent pc = classComponent.getParentPackage();
         if (pc != null && !pc.getName().equals("")) {
             String pack = pc.getName();
             code += "package " + pack + "; \n";
@@ -71,8 +71,8 @@ public class ClassCodeGenerator implements CodeGenerator {
         //classComponent.get
 
         code += header + "\n";
-        code += constructors + "\n";
         code += fields + "\n";
+        code += constructors + "\n";
         code += methods + "\n";
         code += end;
         return code;
@@ -82,7 +82,7 @@ public class ClassCodeGenerator implements CodeGenerator {
     public void setClassDiagramComponent(ClassDiagramComponent component) {
         classComponent = (ClassComponent) component;
     }
-    
+
     public String getClassThatIsExtended(List<RelationComponent> relations) {
         String extendedClassName = null;
         for (int i = 0; i < relations.size(); i++) {
@@ -90,9 +90,9 @@ public class ClassCodeGenerator implements CodeGenerator {
                 extendedClassName = ((ClassComponent) relations.get(i).getTarget()).getName();
             }
         }
-        return extendedClassName;        
+        return extendedClassName;
     }
-    
+
     public String getClassesThatAreImplemented(List<RelationComponent> relations) {
         String implementedClasses = "";
         for (int i = 0; i < relations.size(); i++) {
@@ -105,7 +105,7 @@ public class ClassCodeGenerator implements CodeGenerator {
         }
         return implementedClasses;
     }
-    
+
     public String getMethodsFromInterfaces(List<RelationComponent> relations) {
         String methods = "";
         for (int i = 0; i < relations.size(); i++) {
@@ -116,18 +116,19 @@ public class ClassCodeGenerator implements CodeGenerator {
         }
         return methods;
     }
+
     public String getFieldsFromUseRelations(List<RelationComponent> relations) {
         String fields = "";
         for (int i = 0; i < relations.size(); i++) {
             if (relations.get(i) instanceof UseRelationComponent) {
                 String fieldType = relations.get(i).getTarget().getName();
                 String fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1, fieldType.length());
-                fields += "private " + fieldType + " " + fieldName + ";\n"; 
+                fields += "private " + fieldType + " " + fieldName + ";\n";
             }
         }
         return fields;
     }
-    
+
     public String getFieldsFromHasRelations(List<RelationComponent> relations) {
         String fields = "";
         for (int i = 0; i < relations.size(); i++) {
@@ -138,7 +139,7 @@ public class ClassCodeGenerator implements CodeGenerator {
                 if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
                     String field = "private " + hasRelation.getCollectionType() + "<" + hasRelation.getTarget().getName() + "> " + fieldName + "s;\n";
                     fields += field;
-                }else {
+                } else {
                     String field = "private " + fieldType + " " + fieldName + ";\n";
                     fields += field;
                 }
