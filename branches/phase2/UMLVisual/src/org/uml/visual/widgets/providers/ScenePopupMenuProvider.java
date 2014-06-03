@@ -11,26 +11,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.windows.WindowManager;
+import org.uml.jung.JUNGEngine;
 import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagram;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.dialogs.AddRelationDialog;
@@ -40,8 +33,6 @@ import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.EnumWidget;
 import org.uml.visual.widgets.InterfaceWidget;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
-import org.uml.xmlDeserialization.ClassDiagramDeserializer;
-import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 
 /**
  *
@@ -56,6 +47,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem createRelationshipItem;
     private JMenuItem generateCode;
     private JMenuItem exportAsImage;
+    private JMenuItem applyJUNGLayout;
     private ClassDiagramScene scene;
     private Point popupPoint;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
@@ -170,6 +162,14 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             }
         });
 
+        applyJUNGLayout = new JMenuItem("Arrange diagram");
+        applyJUNGLayout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JUNGEngine je = new JUNGEngine(scene);
+                je.applyJUNGLayout();
+            }
+        });
 
         sceneMenu.add(createClassItem);
 
@@ -182,5 +182,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         sceneMenu.add(generateCode);
 
         sceneMenu.add(exportAsImage);
+
+        sceneMenu.add(applyJUNGLayout);
     }
 }
