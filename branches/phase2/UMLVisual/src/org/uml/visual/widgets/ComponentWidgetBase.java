@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -116,4 +117,13 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
 //        }
 //        
 //    }
+    
+    
+    public Graphics2D returnGraphics(){
+        return this.getGraphics();
+    }
+    
+    public void setGraphics(Graphics2D newGraphics){
+        this.setGraphics(newGraphics);
+    }
 }

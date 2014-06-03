@@ -1,6 +1,8 @@
 package org.uml.visual.widgets;
 
 import java.awt.BasicStroke;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Set;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -43,6 +45,7 @@ import org.uml.visual.widgets.providers.SceneSelectProvider;
 /**
  *
  * https://blogs.oracle.com/geertjan/entry/how_to_serialize_visual_library
+ * https://platform.netbeans.org/graph/examples.html
  * layout, serijalizacija, save as image
  *
  * @author NUGS
@@ -90,7 +93,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
         GraphLayoutFactory.createOrthogonalGraphLayout(this, true);
 
-        
+
 
         addObjectSceneListener(new ObjectSceneListener() {
             @Override
@@ -126,6 +129,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
                     //setSelectedObjects(newSelection);
                 }
             }
+
             @Override
             public void highlightingChanged(ObjectSceneEvent event, Set<Object> previousHighlighting, Set<Object> newHighlighting) {
                 // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -149,8 +153,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
 
     }
 
-    
-    
     //TODO Osmisliti preko graphics-a iscrtavanje prilikom dragovanja 
 //    private Image getImageFromTransferable(Transferable transferable) {
 //        Object o = null;
@@ -175,7 +177,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public InstanceContent getContent() {
         return content;
     }
-    
+
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent component) {
 
@@ -228,7 +230,8 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
             widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);
             e.setName("is");
         } else if (e.getClass().getSimpleName().equals("HasRelationComponent")) {
-            widget.setSourceAnchorShape(AnchorShapeFactory.createImageAnchorShape(ImageUtilities.loadImage("org/uml/visual/icons/rhombus.gif")));
+//            widget.setSourceAnchorShape(AnchorShapeFactory.createImageAnchorShape(ImageUtilities.loadImage("org/uml/visual/icons/rhombus.gif")));
+            widget.setSourceAnchorShape(new RhombusAnchorShape(45, 10));
             widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
             HasRelationComponent hasRelation = (HasRelationComponent) e;
             LabelWidget cardinalityTarget = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());

@@ -138,6 +138,34 @@
                 <package>org.uml.xmlDeserialization</package>
                 <package>org.uml.xmlSerialization</package>
             </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/vl-jung-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/vl-jung-1.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jung-api-2.0.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jung-api-2.0.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jung-algorithms-2.0.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jung-algorithms-2.0.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jung-visualization-2.0.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jung-visualization-2.0.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jung-graph-impl-2.0.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jung-graph-impl-2.0.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/collections-generic-4.01.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/collections-generic-4.01.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/vl-jung-extensions-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/vl-jung-extensions-1.0.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>
