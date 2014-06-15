@@ -132,6 +132,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>org.uml.jung</package>
                 <package>org.uml.visual</package>
                 <package>org.uml.visual.palette</package>
                 <package>org.uml.visual.widgets</package>
