@@ -3,8 +3,8 @@ package org.uml.model;
 import java.lang.reflect.Type;
 
 /**
- * Used to represent class fields (variables inside a class). Is one of four
- * possible Members.
+ * Represents a class field (variables inside a class). 
+ * It extends Member class and it is one of four possible Members.
  *
  * @author Uros
  * @see Member

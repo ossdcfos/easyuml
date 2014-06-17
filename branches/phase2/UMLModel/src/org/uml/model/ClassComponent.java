@@ -1,13 +1,11 @@
 package org.uml.model;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Representation of Classes from UML Class diagrams. Is one of four possible
- * types of ClassDiagramComponents.
- *
+ * A class component in UML Class diagram. 
+  *
  * @author Uros
  * @see ClassDiagramComponent
  * @see EnumComponent
