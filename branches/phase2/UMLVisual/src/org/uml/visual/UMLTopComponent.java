@@ -6,7 +6,6 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.spi.palette.PaletteController;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
@@ -32,7 +31,7 @@ import org.uml.visual.widgets.ClassDiagramScene;
         displayName = "#CTL_UMLAction",
         preferredID = "UMLTopComponent")
 @Messages({
-    "CTL_UMLAction=UML",
+    "CTL_UMLAction=UML Designer",
     "CTL_UMLTopComponent=UML Class Diagramv Window",
     "HINT_UMLTopComponent=This is a UML Class Diagram window"
 })
@@ -53,8 +52,16 @@ public final class UMLTopComponent extends TopComponent {
         classDiagramPanel = new JScrollPane();
         classDiagramPanel.setViewportView(classDiagramScene.createView());
         add(classDiagramPanel, BorderLayout.CENTER);
-        add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
+        //Instead of adding the satellite view to the TopComponent,
+        //use the Navigator panel:
+//        add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
         palette = PaletteSupport.createPalette();
+        associateLookup(Lookups.fixed(
+                classDiagramScene,
+                classDiagramScene.getLookup(),
+                classDiagram,
+                palette, 
+                new UMLNavigatorLookupHint()));
     }
 
     public UMLTopComponent(ClassDiagram classDiagram) {
@@ -67,22 +74,32 @@ public final class UMLTopComponent extends TopComponent {
         classDiagramPanel = new JScrollPane();
         classDiagramPanel.setViewportView(classDiagramScene.createView());
         add(classDiagramPanel, BorderLayout.CENTER);
-        add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
+        //Instead of adding the satellite view to the TopComponent,
+        //use the Navigator panel:
+//        add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
 
         palette = PaletteSupport.createPalette();
         classDiagramScene.validate();
+        associateLookup(Lookups.fixed(
+                classDiagramScene,
+                classDiagramScene.getLookup(),
+                classDiagram,
+                palette, 
+                new UMLNavigatorLookupHint()));
     }
 
-    @Override
-    public Lookup getLookup() {
-        return new ProxyLookup(
-                new Lookup[]{
-            classDiagramScene.getLookup(),
-            Lookups.singleton(classDiagram),
-            Lookups.singleton(palette)
-        });
-
-    }
+//    Use associateLookup to define the Lookup of the TopComponent,
+//    instead of the getLookup:
+//    @Override
+//    public Lookup getLookup() {
+//        return new ProxyLookup(
+//                new Lookup[]{
+//            classDiagramScene.getLookup(),
+//            Lookups.singleton(classDiagram),
+//            Lookups.singleton(palette)
+//        });
+//
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
