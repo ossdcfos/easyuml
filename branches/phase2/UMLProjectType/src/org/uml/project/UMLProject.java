@@ -16,10 +16,12 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ProjectState;
+import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.netbeans.spi.project.ui.CustomizerProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
+import org.openide.awt.Actions;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -80,7 +82,9 @@ public class UMLProject implements Project {
                         new UMLCustomizerProvider(this)
                     });
         }
-        return lkp;
+        return LookupProviderSupport.createCompositeLookup(
+                lkp,
+                "Projects/org-uml-project/Lookup");
     }
 
     public void addNotify() {
@@ -189,7 +193,6 @@ public class UMLProject implements Project {
                             CommonProjectActions.copyProjectAction(),
                             CommonProjectActions.deleteProjectAction(),
                             CommonProjectActions.customizeProjectAction(),
-                            CommonProjectActions.closeProjectAction()
                         };
             }
 
