@@ -17,21 +17,23 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
-import org.openide.filesystems.FileObject;
-import org.uml.filetype.cdgfiletype.CDGDataObject;
 import org.uml.model.ClassDiagram;
 import org.uml.visual.UMLTopComponent;
 import org.openide.filesystems.FileObject;
 import org.uml.jung.JUNGEngine;
 import org.openide.NotifyDescriptor.Confirmation;
+import org.openide.awt.ActionReferences;
 
 @ActionID(
         category = "Source",
         id = "org.uml.reveng.ReverseEngineer")
 @ActionRegistration(
         displayName = "#CTL_ReverseEngineer")
-@ActionReference(path = "Menu/Source", position = 50)
-@Messages("CTL_ReverseEngineer=Reverse engineer")
+@ActionReferences({
+    @ActionReference(path = "Menu/Source", position = 50),
+    @ActionReference(path = "Projects/org-netbeans-modules-java-j2seproject/Actions", position = 1050)
+})
+@Messages("CTL_ReverseEngineer=Reverse Engineer")
 public final class ReverseEngineer implements ActionListener {
 
     private final Project context;
