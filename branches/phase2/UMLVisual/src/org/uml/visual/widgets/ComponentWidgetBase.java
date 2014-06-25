@@ -8,10 +8,13 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.MoveProvider;
 import org.netbeans.api.visual.action.ResizeControlPointResolver;
 import org.netbeans.api.visual.action.ResizeProvider;
 import org.netbeans.api.visual.action.TwoStateHoverProvider;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.model.ObjectState;
@@ -50,7 +53,8 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
         
         getActions().addAction(scene.createObjectHoverAction());
-        
+        getActions().addAction(new KeyboardMoveAction());
+
         
 
 
@@ -66,6 +70,42 @@ abstract public class ComponentWidgetBase extends ImageWidget implements Nameabl
 //       ActionMap actionMap = new ActionMap ();
 //       actionMap.put ("myAction", new DeleteClassAction (this));     
 //       getActions().addAction(ActionFactory.createActionMapAction(inputMap, actionMap));
+    }
+    
+        private final class KeyboardMoveAction extends WidgetAction.Adapter {
+
+        private final MoveProvider provider;
+
+        private KeyboardMoveAction() {
+            this.provider = ActionFactory.createDefaultMoveProvider();
+        }
+
+        @Override
+        public WidgetAction.State keyPressed(Widget widget, WidgetAction.WidgetKeyEvent event) {
+            Point originalSceneLocation = provider.getOriginalLocation(widget);
+            int newY = originalSceneLocation.y;
+            int newX = originalSceneLocation.x;
+            if (event.getKeyCode() == KeyEvent.VK_UP) {
+                newY = newY - 20;
+            } else if (event.getKeyCode() == KeyEvent.VK_DOWN) {
+                newY = newY + 20;
+            } else if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
+                newX = newX + 20;
+            } else if (event.getKeyCode() == KeyEvent.VK_LEFT) {
+                newX = newX - 20;
+            } else if (event.getKeyCode() == KeyEvent.VK_DELETE) {
+                widget.removeFromParent();
+            }
+            provider.movementStarted(widget);
+            provider.setNewLocation(widget, new Point(newX, newY));
+            return WidgetAction.State.CONSUMED;
+        }
+
+        @Override
+        public WidgetAction.State keyReleased(Widget widget, WidgetAction.WidgetKeyEvent event) {
+            provider.movementFinished(widget);
+            return WidgetAction.State.REJECTED;
+        }
     }
 
     @Override
