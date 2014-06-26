@@ -1,7 +1,7 @@
 package org.uml.model;
 
 /**
- * Used to describe Implements relation in UML class diagrams. Describes
+ * Implements relation in UML class diagrams. Describes
  * relation used usually when an object <i>implements</i> another objects
  * behavior; fields, methods, etc.
  *

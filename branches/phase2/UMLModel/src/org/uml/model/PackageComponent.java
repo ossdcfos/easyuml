@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Representation of UML class diagram packages, used to describe packages
+ * UML class diagram packages, used to describe packages
  * inside projects. Is one of four possible members.
  *
  * @author zoran

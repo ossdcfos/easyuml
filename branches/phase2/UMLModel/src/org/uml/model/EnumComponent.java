@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Representation of Enumerations (Enums) from UML Class diagrams. Is one of
- * four possible types of ClassDiagramComponents. Used to represent enumeration
+ * Enumerations (Enums) from UML Class diagrams. Used to represent enumeration
  * classes in UML diagrams.
  *
  * @author zoran

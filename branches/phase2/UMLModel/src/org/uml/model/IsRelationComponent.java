@@ -1,9 +1,8 @@
 package org.uml.model;
 
 /**
- * Used to describe Is relation in UML class diagrams. Describes relation used
- * usually when an object <i>extends</i>
- * another one.
+ * Is relation in UML class diagrams. Describes relation used usually
+ * when an object <i>extends</i> another one.
  *
  * @author "NUGS"
  * @see RelationComponent

@@ -1,8 +1,8 @@
 package org.uml.model;
 
 /**
- * Represents an input argument (variable) which is used to describe Method or
- * Constructor.
+ * An input argument (variable) which is used to describe Methods or
+ * Constructors.
  * <p>
  * A representation of input arguments used to create methods or
  * constructors e.g. "public methodTest(<b>String argOne</b>)".

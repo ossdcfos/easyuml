@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Representation of Methods, used inside Classes, Enumerations and Interfaces.
- * Is one of four possible Members.
+ * Methods used inside Classes, Enumerations and Interfaces.
  *
  * @author Uros
  * @see ClassComponent
