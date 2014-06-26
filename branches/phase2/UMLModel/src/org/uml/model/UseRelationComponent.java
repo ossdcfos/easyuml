@@ -1,7 +1,7 @@
 package org.uml.model;
 
 /**
- * Used to describe Use(s) relation in UML class diagrams. Describes relation
+ * Use(s) relation in UML class diagrams. Describes relation
  * used usually when an object depends of another one - most often the "using"
  * end in a relationship will be aware of the other end it's using, but it's not
  * always the case the "used" end is aware who is using it. Implemented usually

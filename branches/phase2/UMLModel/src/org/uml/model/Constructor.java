@@ -3,8 +3,7 @@ package org.uml.model;
 import java.util.HashMap;
 
 /**
- * Representation of Constructors from UML Class diagrams. Is one of four
- * possible types of ClassDiagramComponents. Used to represent class
+ * Constructors from UML Class diagrams. Used to represent class
  * constructors (both with and without parameters).
  *
  * @author zoran

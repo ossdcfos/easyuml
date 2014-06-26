@@ -3,8 +3,7 @@ package org.uml.model;
 import java.util.HashMap;
 
 /**
- * Representation of Interfaces from UML Class diagrams. Is one of
- * four possible types of ClassDiagramComponents. Used to represent Interface
+ * Interfaces from UML Class diagrams. Used to represent Interface
  * classes in UML diagrams.
  *
  * @author zoran

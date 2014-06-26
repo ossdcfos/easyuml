@@ -1,8 +1,7 @@
 package org.uml.model;
 
 /**
- * Representation of enum's elements - Literals (constants). Is one of
- * four possible Members
+ * Enum's elements - Literals (constants).
  *
  * @author Jelena
  * @see EnumComponent
