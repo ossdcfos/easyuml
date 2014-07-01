@@ -31,10 +31,19 @@ public class FileWriter {
     private static FileWriter instance;
     private Project project;
 
+    /**
+     * A constructor without parameters - only sets project variable to null.
+     */
     private FileWriter() {
         project = null;
     }
 
+    /**
+     * Used to instantiate and get this singleton's instance. Basic singleton
+     * implementation method.
+     *
+     * @return FileWriter singleton instance
+     */
     public static FileWriter getInstance() {
         if (instance == null) {
             instance = new FileWriter();
@@ -42,6 +51,13 @@ public class FileWriter {
         return instance;
     }
 
+    /**
+     * Creates folder (package) structure and writes .java code into it.
+     *
+     * @param code to be written
+     * @param name of .java file
+     * @param pack - package where it should be written
+     */
     public void writeFiles(String code, String name, String pack) {
         FileObject folder = getProject().getProjectDirectory();
         String path = folder.getPath();
@@ -86,9 +102,6 @@ public class FileWriter {
         }
 
 //this one was used: https://blogs.oracle.com/geertjan/entry/format_files_while_starting_netbeans1 
-
-
-
         File oneFileToBeFormatted = new File(longestPath + name + ".java");
         try {
             FileObject fo = FileUtil.toFileObject(oneFileToBeFormatted);
@@ -115,29 +128,29 @@ public class FileWriter {
         } catch (IOException ex) {
         }
 
-
-
-
-
-
-
-
-
-
-
-
     }
 
+    /**
+     * If the file does not exist, it is created.
+     */
     public void createDirectory(File file) {
         if (!file.exists()) {
             file.mkdir();
         }
     }
-
+    
+    /**
+     * Returns project currently worked on by FileWriter instance.
+     * @return project that is currently set
+     */
     public Project getProject() {
         return project;
     }
 
+    /**
+     * Sets project for FileWriter instance to work on.
+     * @param project to be used for code generating
+     */
     public void setProject(Project project) {
         this.project = project;
     }

@@ -14,6 +14,8 @@ import org.uml.model.RelationComponent;
 import org.uml.model.UseRelationComponent;
 
 /**
+ * Class component's code generating class. Implements all necessary methods
+ * that are used in order to generate code from ClassComponents
  *
  * @author zoran
  */
@@ -22,17 +24,41 @@ public class ClassCodeGenerator implements CodeGenerator {
     ClassComponent classComponent;
     List<RelationComponent> relevantRelations;
 
+    /**
+     * Parameterless constructor. Does not instantiate any field.
+     *
+     */
     public ClassCodeGenerator() {
     }
 
+    /**
+     * Sets class component whose code needs to be generated.
+     *
+     * @param classComponent used for code generation
+     */
     public void setClassComponent(ClassComponent classComponent) {
         this.classComponent = classComponent;
     }
 
+    /**
+     * Sets relevant relations - relations where previously set ClassComponent
+     * is the source.
+     *
+     * @param relevantRelations List of relations with this object's
+     * ClassComponent as a source
+     */
     public void setRelevantRelations(List<RelationComponent> relevantRelations) {
         this.relevantRelations = relevantRelations;
     }
 
+    /**
+     * Generates code for this object's ClassComponent. Along with standard
+     * class definitions and descriptions, fields, methods and constructors are
+     * also appended.
+     *
+     * @return code of the generated class
+     * @see ClassComponent
+     */
     @Override
     public String generateCode() {
         String code = "";
@@ -78,11 +104,24 @@ public class ClassCodeGenerator implements CodeGenerator {
         return code;
     }
 
+    /**
+     * Sets Class diagram component (casted to Class component), for this object
+     * to generate code from.
+     *
+     * @param component used for code generating
+     */
     @Override
     public void setClassDiagramComponent(ClassDiagramComponent component) {
         classComponent = (ClassComponent) component;
     }
 
+    /**
+     * Returns name of the class that is connected with this object's Class
+     * component via Is relation - extends.
+     *
+     * @param relations where search should be conducted
+     * @return(s) name of the extended class
+     */
     public String getClassThatIsExtended(List<RelationComponent> relations) {
         String extendedClassName = null;
         for (int i = 0; i < relations.size(); i++) {
@@ -93,6 +132,13 @@ public class ClassCodeGenerator implements CodeGenerator {
         return extendedClassName;
     }
 
+    /**
+     * Returns name of the class that is connected with this object's Class
+     * component via Implements relation.
+     *
+     * @param relations where search should be conducted
+     * @return name(s) of the implemented class
+     */
     public String getClassesThatAreImplemented(List<RelationComponent> relations) {
         String implementedClasses = "";
         for (int i = 0; i < relations.size(); i++) {
@@ -106,6 +152,12 @@ public class ClassCodeGenerator implements CodeGenerator {
         return implementedClasses;
     }
 
+    /**
+     * Returns methods that are implemented from classComponent's interfaces.
+     *
+     * @param relations where search should be conducted
+     * @return name(s) of the implemented methods
+     */
     public String getMethodsFromInterfaces(List<RelationComponent> relations) {
         String methods = "";
         for (int i = 0; i < relations.size(); i++) {
@@ -117,6 +169,13 @@ public class ClassCodeGenerator implements CodeGenerator {
         return methods;
     }
 
+    /**
+     * Returns all fields (with access modifiers, names and types) that are
+     * implemented via Use relations.
+     *
+     * @param relations where search should be conducted
+     * @return name(s) of the implemented fields
+     */
     public String getFieldsFromUseRelations(List<RelationComponent> relations) {
         String fields = "";
         for (int i = 0; i < relations.size(); i++) {
@@ -129,6 +188,13 @@ public class ClassCodeGenerator implements CodeGenerator {
         return fields;
     }
 
+    /**
+     * Returns all fields (with access modifiers, names and types) that are
+     * implemented via Has relations.
+     *
+     * @param relations where search should be conducted
+     * @return name(s) of the implemented fields
+     */
     public String getFieldsFromHasRelations(List<RelationComponent> relations) {
         String fields = "";
         for (int i = 0; i < relations.size(); i++) {
