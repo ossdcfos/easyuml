@@ -6,27 +6,27 @@ import org.netbeans.api.visual.anchor.AnchorShape;
 
 /**
  *
- * @author Ilija
+ * @author Zoran
+ *
+ * http://bits.netbeans.org/dev/javadoc/org-netbeans-api-visual/org/netbeans/api/visual/anchor/package-summary.html
  * @see http://grepcode.com/file/repo1.maven.org/maven2/com.googlecode.sarasvati.thirdparty.netbeans/visual/7.3/org/netbeans/modules/visual/anchor/ArrowAnchorShape.java#ArrowAnchorShape
  * @see http://www.javaprogrammingforums.com/object-oriented-programming/10461-java-graphics-drawing-one-object-into-another.html
  */
-public class RhombusAnchorShape implements AnchorShape {
+public class CardinalityAnchor implements AnchorShape {
 
     private static final Stroke STROKE = new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     private GeneralPath path;
-    private int size;
+    private int size=10;
     int degrees;
+    
+    String cardinality;
     
     // http://www.dickbaldwin.com/java/Java310-fig17.htm  kako nacrtati romb
     // http://www.ehow.com/how_12165313_draw-diamond-java.html
 
-    public RhombusAnchorShape(int degrees, int size) {
-        this.size = size;
-        this.degrees=degrees;
+    public CardinalityAnchor(String cardinality) {
         path = new GeneralPath();
-        double radians = Math.PI * degrees / 180.0;
-        double cos = Math.cos(radians / 2.0);
-        double sin = Math.sin(radians / 2.0);
+        this.cardinality = cardinality;
       //  double sin = -size * Math.sqrt(1 - cos * cos);
       //  cos *= size;
 
@@ -60,7 +60,7 @@ public class RhombusAnchorShape implements AnchorShape {
 
     @Override
     public boolean isLineOriented() {
-        return true;
+        return false;
     }
 
     @Override
@@ -70,33 +70,12 @@ public class RhombusAnchorShape implements AnchorShape {
 
     @Override
     public double getCutDistance() {
-        return 0;
+        return 5;
     }
 
     @Override
     public void paint(Graphics2D graphics, boolean source) {
-        Stroke previousStroke = graphics.getStroke();
-        graphics.setStroke(STROKE);
-        graphics.draw(path);
-        graphics.setStroke(previousStroke);
+        graphics.drawString(cardinality, 10, -10);
 
-        graphics.setColor(Color.BLACK);
-        graphics.fill(path);
-        
-    //    graphics.rotate(Math.toRadians(degrees));
-        
-//        super.paintComponent(graphics);
-
-
-        // ilija
-//        Graphics2D g2d = (Graphics2D) graphics;
-//
-////        g2d.translate(275, 75);
-//        g2d.rotate(Math.toRadians(45));
-//
-//        Rectangle r = new Rectangle(0, 0, size, size);
-//        g2d.fillRect(0, 0, size, size);
-//        graphics.setColor(Color.BLACK);
-//        g2d.draw(r);
     }
 }
