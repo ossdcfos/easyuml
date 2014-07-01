@@ -232,8 +232,10 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         } else if (e.getClass().getSimpleName().equals("HasRelationComponent")) {
 //            widget.setSourceAnchorShape(AnchorShapeFactory.createImageAnchorShape(ImageUtilities.loadImage("org/uml/visual/icons/rhombus.gif")));
             widget.setSourceAnchorShape(new RhombusAnchorShape(45, 10));
-            widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
+          //  widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
+              
             HasRelationComponent hasRelation = (HasRelationComponent) e;
+        //    widget.setTargetAnchorShape(new CardinalityAnchor(hasRelation.getCardinalityTarget().toString()));
             LabelWidget cardinalityTarget = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
             cardinalityTarget.setOpaque(true);
             widget.addChild(cardinalityTarget);
@@ -289,15 +291,6 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return interractionLayer;
     }
 
-    /**
-     * Ads widget to main layer
-     *
-     * @param widget
-     */
-//    public void addWidget(IconNodeWidget widget) {
-//        mainLayer.addChild(widget);
-//        validate();
-//    }
     public LayerWidget getConnectionLayer() {
         return connectionLayer;
     }
@@ -306,7 +299,4 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return mainLayer;
     }
 
-    public Widget attach(ClassDiagramComponent cd) {
-        return attachNodeWidget(cd);
-    }
 }
