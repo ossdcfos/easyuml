@@ -17,6 +17,8 @@ import org.uml.model.PackageComponent;
 import org.uml.model.RelationComponent;
 
 /**
+ * Main class for the start of code generating. Every component is being
+ * processed and code is generated code for it.
  *
  * @author zoran
  */
@@ -26,6 +28,10 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
     ClassDiagram classDiagram;
     HashMap<Class, CodeGenerator> generators;
 
+    /**
+     * Constructor without parameters that instantiates and fills generators
+     * field with needed classes.
+     */
     public ClassDiagramCodeGenerator() {
         this.generators = new HashMap<Class, CodeGenerator>();
         generators.put(ClassComponent.class, new ClassCodeGenerator());
@@ -33,6 +39,12 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
         generators.put(EnumComponent.class, new EnumCodeGenerator());
     }
 
+    /**
+     * Used to instantiate and get this singleton's instance. Basic singleton
+     * implementation method.
+     *
+     * @return ClassDiagramCodeGenerator shared instance
+     */
     public static ClassDiagramCodeGenerator getInstance() {
         if (instance == null) {
             instance = new ClassDiagramCodeGenerator();
@@ -41,10 +53,22 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
         return instance;
     }
 
+    /**
+     * Sets class diagram that is currently worked on.
+     *
+     * @param classDiagram to be processed
+     */
     public void setClassDiagram(ClassDiagram classDiagram) {
         this.classDiagram = classDiagram;
     }
 
+    /**
+     * Generates code for every variable (Class, Interface, Enum) inside
+     * previously set classDiagram.
+     *
+     * @return generated code for the Class diagram
+     * @see ClassDiagram
+     */
     @Override
     public String generateCode() {
         StringBuilder sb = new StringBuilder();
@@ -52,7 +76,9 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
         for (ClassDiagramComponent comp : classDiagram.getComponents().values()) {
             CodeGenerator codeGen = generators.get(comp.getClass());
             codeGen.setClassDiagramComponent(comp);
-            if (comp instanceof ClassComponent) ((ClassCodeGenerator) codeGen).setRelevantRelations(getRelevantRelations(comp, classDiagram.getRelations()));
+            if (comp instanceof ClassComponent) {
+                ((ClassCodeGenerator) codeGen).setRelevantRelations(getRelevantRelations(comp, classDiagram.getRelations()));
+            }
             String code = codeGen.generateCode();
             PackageComponent pc = comp.getParentPackage();
             String packName;
@@ -68,9 +94,17 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
         }
         return sb.toString();
     }
-    
+
+    /**
+     * Finds relations which source is equal to ClassDiagramComponent given, and
+     * returns a List of them (relations).
+     *
+     * @param component whose relations need to be found
+     * @param relations among components that need to be searched
+     * @return List<RelationComponent> where component given is source
+     */
     public List<RelationComponent> getRelevantRelations(ClassDiagramComponent component, HashMap<String, RelationComponent> relations) {
-        List<RelationComponent> relevantRelations = new LinkedList<RelationComponent>(); 
+        List<RelationComponent> relevantRelations = new LinkedList<RelationComponent>();
         for (RelationComponent rc : relations.values()) {
             if (rc.getSource().equals(component)) {
                 relevantRelations.add(rc);
@@ -78,11 +112,10 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
         }
         return relevantRelations;
     }
-    
+
     //this method must be implemented because of the CodeGenerator interface, although it is never used
     @Override
     public void setClassDiagramComponent(ClassDiagramComponent component) {
     }
-    
-    
+
 }

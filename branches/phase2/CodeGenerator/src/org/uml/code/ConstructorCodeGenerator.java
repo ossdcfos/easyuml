@@ -10,6 +10,8 @@ import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Constructor;
 
 /**
+ * Constructor's code generating class. It is used to fully generate code for
+ * Class constructors.
  *
  * @author Uros
  */
@@ -17,10 +19,23 @@ public class ConstructorCodeGenerator implements CodeGenerator {
 
     HashMap<String, Constructor> constructors;
 
+    /**
+     * Constructor that sets this object's constructors field to the given
+     * value.
+     *
+     * @param constructors to be set
+     */
     public ConstructorCodeGenerator(HashMap<String, Constructor> constructors) {
         this.constructors = constructors;
     }
 
+    /**
+     * Generates code for previously set Hash map of Constructors. Iterates
+     * through it and writes empty constructors.
+     *
+     * @return code of the generated constructor
+     * @see Constructor
+     */
     @Override
     public String generateCode() {
         String code = "";
@@ -37,6 +52,7 @@ public class ConstructorCodeGenerator implements CodeGenerator {
         return code;
     }
 
+    //this method must be implemented because of the CodeGenerator interface, although it is never used
     @Override
     public void setClassDiagramComponent(ClassDiagramComponent component) {
     }
