@@ -10,11 +10,16 @@ import java.util.HashMap;
 import org.uml.model.ClassDiagram;
 
 /**
+ * A singleton-type class that is used for interchanging generated Relation
+ * components among objects. Also stores generated Class diagrams, and keeps
+ * track and increments components's early position on scene, count of the
+ * relations generated and a flag that is used to signal whether compilation
+ * process is successful.
  *
  * @author Milan Djoric
  */
 public class GeneratedDiagramManager {
-    
+
     private static GeneratedDiagramManager instance;
     private ClassDiagram classDiagram;
     private HashMap<String, HashMap<String, Object>> hasRelationships;
@@ -32,7 +37,11 @@ public class GeneratedDiagramManager {
     public void setZeroClassesGenerated(boolean zeroClassesGenerated) {
         this.zeroClassesGenerated = zeroClassesGenerated;
     }
-   
+
+    /**
+     * Default parameterless constructor that initialises all necessary fields.
+     *
+     */
     private GeneratedDiagramManager() {
         classDiagram = new ClassDiagram();
         hasRelationships = new HashMap<String, HashMap<String, Object>>();
@@ -43,10 +52,18 @@ public class GeneratedDiagramManager {
         componentPosition = new Point(50, 50);
     }
 
+    /**
+     * Resets all fields of this singleton to their default values.
+     */
     public void clearContent() {
         instance = new GeneratedDiagramManager();
     }
 
+    /**
+     * Singleton-type getter
+     *
+     * @return instance of GeneratedDiagramManager
+     */
     public static GeneratedDiagramManager getDefault() {
         if (instance == null) {
             instance = new GeneratedDiagramManager();
@@ -106,6 +123,12 @@ public class GeneratedDiagramManager {
         return relationCounter;
     }
 
+    /**
+     * Creates the position coordinates of a component. Auto increments for each
+     * successive component.
+     *
+     * @return Point object that consists of X and Y position on scene
+     */
     public Point getComponentPosition() {
         Point oldPoint = new Point();
         if (componentPosition.getX() > 1000) {

@@ -19,7 +19,8 @@ import java.util.List;
 import org.openide.util.Exceptions;
 
 /**
- *
+ * Used for manually parsing generated files, may be required one day for getting method paramers's names.
+ * 
  * @author intellex
  */
 public class PreMapper {

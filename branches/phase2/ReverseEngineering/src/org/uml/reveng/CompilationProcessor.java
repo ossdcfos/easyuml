@@ -25,6 +25,10 @@ import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
 
 /**
+ * This class plays the most important role during the compilation process. It
+ * analyzes every file that is being compiled, and in a manner of a side effect,
+ * sends the file to further processing in order to get all the required data
+ * from it.
  *
  * @author Milan Djoric
  */
@@ -33,37 +37,50 @@ import org.uml.model.InterfaceComponent;
 public class CompilationProcessor extends AbstractProcessor {
 
     public static ClassDiagram generatedDiagram = new ClassDiagram();
-    
+
     public static List<ClassDiagramComponent> allFoundClasses = new ArrayList<ClassDiagramComponent>();
-    
+
     public static HashMap<String, HashMap<String, Object>> hasRelationships = new HashMap<String, HashMap<String, Object>>();
     public static HashMap<String, HashMap<String, Object>> useRelationships = new HashMap<String, HashMap<String, Object>>();
     public static HashMap<String, HashMap<String, Object>> isRelationships = new HashMap<String, HashMap<String, Object>>();
     public static HashMap<String, HashMap<String, Object>> implementsRelationships = new HashMap<String, HashMap<String, Object>>();
-    
+
     public static ClassComponent genClass = null;
     public static InterfaceComponent genInterface = null;
     public static EnumComponent genEnum = null;
 
+    /**
+     * Inherited method that handles every file that is being compiled. Also
+     * sends it to further processing.
+     *
+     * @param annotations 
+     * @param roundEnvironment
+     * @return true if the compilation was successful
+     */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
+        //For each element (class) found inside compilation task
         for (Element e : roundEnvironment.getRootElements()) {
+            //Creates a Top level component (Class, Enum or Interface component)
             ComponentCreation.createTopElementComponent(e);
             /*System.out.println(
-                    e.getKind() + " "
-                    + e.getModifiers() + " "
-                    + e.asType().getKind() + " "
-                    + e.getSimpleName() + "// "
-                    + e.getClass() + " "
-                    + e.toString() + " "
-                    + e.getEnclosingElement().getSimpleName());*/
+             e.getKind() + " "
+             + e.getModifiers() + " "
+             + e.asType().getKind() + " "
+             + e.getSimpleName() + "// "
+             + e.getClass() + " "
+             + e.toString() + " "
+             + e.getEnclosingElement().getSimpleName());*/
+            //Populates it based on data it contains
             ComponentCreation.populateTopElementComponent(e);
         }
+        //When all classes are processed, fill in the adjecent Hash Maps
         GeneratedDiagramManager.getDefault().setClassDiagram(generatedDiagram);
         GeneratedDiagramManager.getDefault().setUsesRelationships(useRelationships);
         GeneratedDiagramManager.getDefault().setHasRelationships(hasRelationships);
         GeneratedDiagramManager.getDefault().setIsRelationships(isRelationships);
         GeneratedDiagramManager.getDefault().setImplementsRelationships(implementsRelationships);
+        //Create Has and Use(s) relation components based on preocessed elements
         RelationshipResolver.resolveRelationsHasAndUses();
         return true;
     }

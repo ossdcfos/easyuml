@@ -9,18 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.openide.util.Exceptions;
 import org.uml.model.CardinalityEnum;
 import org.uml.model.ClassDiagramComponent;
+import org.uml.model.Field;
 import org.uml.model.HasRelationComponent;
 import org.uml.model.ImplementsRelationComponent;
 import org.uml.model.IsRelationComponent;
+import org.uml.model.Method;
 import org.uml.model.RelationComponent;
 import org.uml.model.UseRelationComponent;
 import org.uml.reveng.CompilationProcessor;
 import org.uml.reveng.GeneratedDiagramManager;
 
 /**
+ * Relationships among diagram components are created in this class. Here, all
+ * required parsing, connecting and resolving is taking place.
  *
  * @author Milan
  */
@@ -28,6 +31,13 @@ import org.uml.reveng.GeneratedDiagramManager;
 //IT DOES NOT ALSO SUPPORT ARRAYS [ ] AND IN PLACES WHERE ARRAYS EXIST, USER WILL BE INFORMED BY COMMENT TO REPLACE CURRENT VARIABLE
 public class RelationshipResolver {
 
+    /**
+     * Tests whether the given parameter has the same name as a primitive type
+     * variable.
+     *
+     * @param strtst name (class) of the parameter to be tested
+     * @return true if the parameter name equals to one of primitive's type
+     */
     private static boolean primitiveTest(String strtst) {
         if (strtst.equals("byte")
                 || strtst.equals("short")
@@ -44,6 +54,19 @@ public class RelationshipResolver {
     }
     private static String fieldNameHas = "";
 
+    /**
+     * Creates Has relationship among objects by parsing their names, types and
+     * some additional data.
+     *
+     * @param testEl type of Field's class
+     * @param fieldClassPath from which class does the relation start (Field's
+     * class)
+     * @param additionalData auto-generated data during the recursion process,
+     * required for nested structures(i.e. HashMap<String, Object>)
+     * @param fieldName name of the Field for which the relation is being
+     * resolved - later the name of the relation
+     * @see Field
+     */
     public static void relationshipHasCreator(String testEl, String fieldClassPath, String additionalData, String fieldName) {
         GeneratedDiagramManager.getDefault().getHasRelationships().clear();
         fieldNameHas = fieldName;
@@ -71,6 +94,19 @@ public class RelationshipResolver {
     static String leftSharpBracketOpen = "";
     private static String fieldNameUses = "";
 
+    /**
+     * Creates Use(s) relationship among objects by parsing method parameters's
+     * names, types and some additional data.
+     *
+     * @param methodArgs type of Method argument(s)'s class(es)
+     * @param methodClassPath from which class does the relation start (Method's
+     * class)
+     * @param addData auto-generated data during the recursion process, required
+     * for nested structures(i.e. HashMap<String, Object>)
+     * @param paramterName name of the Method for which the relation is being
+     * resolved - later the name of the relation
+     * @see Method
+     */
     public static void relationshipUsesCreator(String methodArgs, String methodClassPath, String addData, String paramterName) {
         fieldNameUses = paramterName;
         GeneratedDiagramManager.getDefault().getUsesRelationships().clear();
@@ -96,6 +132,15 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Clears arguments from sharp brackets ( < and > ) and further processes
+     * generated data, based upon the outcome.
+     *
+     * @param arguments that contain sharp brackets, to be processed
+     * @param methodClassPath - to which class does the argument belong
+     * @param designatedRelation - to which relation does the final outcome
+     * belong
+     */
     private static void sharpBracketResolver(String arguments, String methodClassPath, HashMap<String, HashMap<String, Object>> designatedRelation) {
         boolean isHasRelation = false;
         if (designatedRelation == CompilationProcessor.hasRelationships) {
@@ -175,7 +220,7 @@ public class RelationshipResolver {
             additionalRelationData = arguments.split("<")[0];
             Class cl = Class.forName(arguments.split("<")[0]);
         } catch (ClassNotFoundException ex) {
-            //YET TO BE IMPLEMENTED
+//YET TO BE IMPLEMENTED
             if (isHasRelation) {
                 putIntoRelHashMap(designatedRelation, methodClassPath, "COLLECTION", additionalRelationData, fieldNameHas);
             } else {
@@ -184,6 +229,15 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Clears arguments from square brackets ( [ and ] ) and further processes
+     * generated data, based upon the outcome.
+     *
+     * @param arguments that contain square brackets, to be processed
+     * @param methodClassPath - to which class does the argument belong
+     * @param designatedRelation - to which relation does the final outcome
+     * belong
+     */
     private static void squareBracketResolver(String arguments, String methodClassPath, HashMap<String, HashMap<String, Object>> designatedRelation) {
         boolean isHasRelation = false;
         if (designatedRelation == CompilationProcessor.hasRelationships) {
@@ -206,6 +260,16 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Processes arguments that have no brackets and populates adjacent
+     * relationship hash maps.
+     *
+     * @param arguments that contain square brackets, to be processed
+     * @param methodClassPath - to which class does the argument belong
+     * @param aditionalData data required for specific cardinalities
+     * @param designatedRelation - to which relation does the final outcome
+     * @see CardinalityEnum
+     */
     private static void noBracketsReslover(String arguments, String methodClassPath, String aditionalData, HashMap<String, HashMap<String, Object>> designatedRelation) {
         boolean isHasRelation = false;
         if (designatedRelation == CompilationProcessor.hasRelationships) {
@@ -237,6 +301,17 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Puts the found relationship into adjacent hash map. These relationships
+     * are not objects yet, but are stored for further processing.
+     *
+     * @param desHashMap to which a relation needs to be put
+     * @param relationFrom which class a relation starts
+     * @param relationTo which class a relation ends
+     * @param additionalData required for further relation generating
+     * @param fieldName - name of the field for which the relation is being
+     * resolved, later the name of the relation
+     */
     public static void putIntoRelHashMap(HashMap<String, HashMap<String, Object>> desHashMap, String relationFrom, String relationTo, Object additionalData, String fieldName) {
         if (desHashMap.containsKey(relationFrom)) {
             if (desHashMap.get(relationFrom).containsKey(relationTo)) {
@@ -255,6 +330,17 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Recursively checks whether the desired key exists inside a designated
+     * hash map, and adds it + as many times necessary in order it to have a
+     * unique name.
+     *
+     * @param hashMapToBeChecked for the key's existence
+     * @param desiredKey to be checked for inside a hash map
+     * @param initPlusString initial number of plusses (used for recursion)
+     * @param addData required for the recursion process
+     * @return
+     */
     public static String plusIterator(HashMap<String, Object> hashMapToBeChecked, String desiredKey, String initPlusString, String addData) {
         if (hashMapToBeChecked.containsKey(desiredKey + initPlusString)) {
             if (!hashMapToBeChecked.get(desiredKey + initPlusString).toString().equals(addData)) {
@@ -268,16 +354,29 @@ public class RelationshipResolver {
         return initPlusString;
     }
 
+    /**
+     * Call for batch Use(s) and Has relationship resolving.
+     */
     public static void resolveRelationsHasAndUses() {
         populateUseRelation();
         populateHasRelation();
     }
 
+    /**
+     * Call for batch Is and Implements relationship resolving.
+     */
     public static void resolveRelationsIsAndImplements() {
         populateIsRelation();
         populateImplementsRelation();
     }
 
+    /**
+     * Creates Has relation components from adjacent static Hash map and adds
+     * them to the previously generated Class diagram.
+     *
+     * @see HasRelationComponent
+     * @see ClassDIagram
+     */
     private static void populateHasRelation() {
         for (Map.Entry firstLevel : CompilationProcessor.hasRelationships.entrySet()) {
             ClassDiagramComponent source = selectDefinitiveComponent(firstLevel.getKey().toString());
@@ -287,7 +386,7 @@ public class RelationshipResolver {
                 relation.setSource(source);
                 //ClassDiagramComponent targetCandidate = new ClassDiagramComponent();
                 ClassDiagramComponent targetCandidate = selectDefinitiveComponent(secondLevel.getKey().toString());
-                ObjectArray addDataContainer = (ObjectArray)secondLevel.getValue();
+                ObjectArray addDataContainer = (ObjectArray) secondLevel.getValue();
                 Object addData = addDataContainer.getObject();
                 String name = addDataContainer.getField();
                 relation.setName(name);
@@ -315,6 +414,13 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Creates Use(s) relation components from adjacent static Hash map and adds
+     * them to the previously generated Class diagram.
+     *
+     * @see UseRelationComponent
+     * @see ClassDIagram
+     */
     private static void populateUseRelation() {
         for (Map.Entry firstLevel : CompilationProcessor.useRelationships.entrySet()) {
             ClassDiagramComponent source = (selectDefinitiveComponent(firstLevel.getKey().toString()));
@@ -324,10 +430,10 @@ public class RelationshipResolver {
                 relation.setSource(source);
                 ClassDiagramComponent target = selectDefinitiveComponent(secondLevel.getKey().toString());
                 relation.setTarget(target);
-                
-                ObjectArray addDataContainer = (ObjectArray)secondLevel.getValue();
+
+                ObjectArray addDataContainer = (ObjectArray) secondLevel.getValue();
                 String name = addDataContainer.getField();
-                
+
                 relation.setName(name);//GeneratedDiagramManager.getDefault().getRelationCounter() + "");
                 GeneratedDiagramManager.getDefault().incrementRelationCounter();
                 relation.setCardinalitySource(CardinalityEnum.Zero2Many);
@@ -342,6 +448,13 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Creates Is relation components from adjacent static Hash map and adds
+     * them to the previously generated Class diagram
+     *
+     * @see IsRelationComponent
+     * @see ClassDIagram
+     */
     private static void populateIsRelation() {
         for (Map.Entry firstLevel : GeneratedDiagramManager.getDefault().getIsRelationships().entrySet()) {
             ClassDiagramComponent source = selectDefinitiveComponent(firstLevel.getKey().toString());
@@ -350,7 +463,7 @@ public class RelationshipResolver {
                 IsRelationComponent relation = new IsRelationComponent();
                 relation.setSource(source);
                 relation.setTarget(selectDefinitiveComponent(secondLevel.getKey().toString()));
-                ObjectArray addDataContainer = (ObjectArray)secondLevel.getValue();
+                ObjectArray addDataContainer = (ObjectArray) secondLevel.getValue();
                 String name = addDataContainer.getField();
                 relation.setName(name);
                 //relation.setName(GeneratedDiagramManager.getDefault().getRelationCounter() + "");
@@ -360,6 +473,13 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Creates Implements relation components from adjacent static Hash map and
+     * adds them to the previously generated Class diagram
+     *
+     * @see ImplementsRelationComponent
+     * @see ClassDIagram
+     */
     private static void populateImplementsRelation() {
         for (Map.Entry firstLevel : GeneratedDiagramManager.getDefault().getImplementsRelationships().entrySet()) {
             ClassDiagramComponent source = selectDefinitiveComponent(firstLevel.getKey().toString());
@@ -368,7 +488,7 @@ public class RelationshipResolver {
                 ImplementsRelationComponent relation = new ImplementsRelationComponent();
                 relation.setSource(source);
                 relation.setTarget(selectDefinitiveComponent(secondLevel.getKey().toString()));
-                ObjectArray addDataContainer = (ObjectArray)secondLevel.getValue();
+                ObjectArray addDataContainer = (ObjectArray) secondLevel.getValue();
                 String name = addDataContainer.getField();
                 relation.setName(name);
                 //relation.setName(GeneratedDiagramManager.getDefault().getRelationCounter() + "");
@@ -378,6 +498,15 @@ public class RelationshipResolver {
         }
     }
 
+    /**
+     * Selects the definitive component from all components generated, by
+     * removing package names and + signs; therefore making possible to have
+     * many references to just one instance of object, instead it-s duplicates
+     * *made by appending + signs during relationship reloving).
+     *
+     * @param componentName to be found unique
+     * @return definitive unique copy of an object
+     */
     public static ClassDiagramComponent selectDefinitiveComponent(String componentName) {
         String[] componentNameArray = componentName.split("\\.");
         String componentClasName = componentNameArray[componentNameArray.length - 1].split("\\+")[0];
@@ -397,6 +526,16 @@ public class RelationshipResolver {
         return new ClassDiagramComponent();
     }
 
+    /**
+     * Raises (returns) a flag if the relationship already exists in the list of
+     * adjacent relationships.
+     *
+     * @param source of the relation
+     * @param target of the relation
+     * @param relationType - used for additional cardinality testing (checking)
+     * @param targetCardinaliy - used for additional cardinality checking
+     * @return true if the relationship already exists inside Class diagram component's hash map of all relations, false if it does not
+     */
     private static boolean denyDuplicates(ClassDiagramComponent source, ClassDiagramComponent target, String relationType, CardinalityEnum targetCardinaliy) {
         boolean reappears = false;
         HashMap<String, RelationComponent> relations = GeneratedDiagramManager.getDefault().getClassDiagram().getRelations();

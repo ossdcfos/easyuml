@@ -21,11 +21,18 @@ import org.apache.commons.io.FileUtils;
 import org.uml.reveng.classProcessing.ClassProcessing;
 
 /**
+ * Compilation process that processes all required files starts here.
  *
  * @author Milan Djoric
  */
 public class Compilation {
 
+    /**
+     * Starts the compilation process and cleans compiled files afterwards.
+     *
+     * @param projectSource where the selected project is located
+     * @param separator default file system separator character
+     */
     public static void initiateCompilation(String projectSource, String separator) {
         //Creating an instance of Java compiler
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -35,14 +42,14 @@ public class Compilation {
         String source = projectSource + separator + "src";
         String extension = "java";
         //Generating an array of filepaths corresponding to found files
-        List<String> listOfFoundFiles = FileSearch.pretražiDirektorijum(new File(source), extension);
+        List<String> listOfFoundFiles = FileSearch.searchTheDirectory(new File(source), extension);
         String[] listaStr = new String[listOfFoundFiles.size()];
         for (int i = 0; i < listOfFoundFiles.size(); i++) {
             listaStr[i] = listOfFoundFiles.get(i).toString();
         }
         //Creating a list of files to be compiled
         Iterable<? extends JavaFileObject> compilationUnit = fileManager.getJavaFileObjects(listaStr);
-        //Creating tempClasses file and emptying one if already exists
+        //Creating tempClasses file and emptying one, if it already exists
         String temporaryClassFolderName = "UMLTemp";
         String path = listOfFoundFiles.get(0).split("src")[0] + temporaryClassFolderName;
         File f = new File(path);
@@ -50,9 +57,9 @@ public class Compilation {
         try {
             FileUtils.cleanDirectory(f);
         } catch (IOException ex) {
-            System.out.println("Could not erase folder contents!");
+            System.out.println("Could not erase folder's contents!");
         }
-        //Setting compilation options
+        //Setting the compilation options
         String encodingType = "UTF-8";
         Iterable<String> compOptions = Arrays.asList("-g", "-encoding", encodingType, "-d", path);
         //Creating a compilation task that will compile found files
@@ -65,24 +72,21 @@ public class Compilation {
         task.setProcessors(processors);
         //Staritng the compilation
         task.call();
-
-        //Nema fajlova u UMLTemp-u ako ne valja nešto
-
         //Searching for .class files that have been made
-        List<String> listOfFoundClasses = FileSearch.pretražiDirektorijum(new File(projectSource + separator
+        List<String> listOfFoundClasses = FileSearch.searchTheDirectory(new File(projectSource + separator
                 + temporaryClassFolderName), "class");
-        //Fill in data that compiler couldn't get
+        //Fill in data about Implements and Extends relations that the compiler couldn't get
         ClassProcessing.ClassProcessor(listOfFoundClasses, separator, temporaryClassFolderName);
         //Debug diagram
         GeneratedDiagramManager genDiag = GeneratedDiagramManager.getDefault();
-
+        //Raises the flag if there are no .class files generated during th compilation process -
+        //if it has failed (usually if the project selected has errors)
         if (f.listFiles().length == 0) {
             GeneratedDiagramManager.getDefault().setZeroClassesGenerated(true);
         } else {
             GeneratedDiagramManager.getDefault().setZeroClassesGenerated(false);
         }
-
-
+        //Delete the folder containing compiled .class files
         try {
             FileUtils.deleteDirectory(f);
         } catch (IOException ex) {

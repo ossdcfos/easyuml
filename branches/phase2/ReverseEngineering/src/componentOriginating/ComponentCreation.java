@@ -23,11 +23,23 @@ import org.uml.reveng.CompilationProcessor;
 import org.uml.reveng.GeneratedDiagramManager;
 
 /**
+ * Classes, Enums and Interfaces found during compilation process are being
+ * created, populated and stored for later handling inside adjacent collections,
+ * by this class.
  *
  * @author Milan
  */
 public class ComponentCreation {
 
+    /**
+     * Takes an Element object from the Compilation processor and creates an
+     * object similar to it, that is used in diagram creation. Here are Classes,
+     * Enums and Interfaces created.
+     *
+     * @param tlcc element to be processed
+     * @see Element
+     * @see CompilationProcessor
+     */
     public static void createTopElementComponent(Element tlcc) {
         Object[] rootModifiers = tlcc.getModifiers().toArray();
         switch (tlcc.getKind()) {
@@ -37,7 +49,7 @@ public class ComponentCreation {
                 try {
                     CompilationProcessor.generatedDiagram.addComponent(CompilationProcessor.genClass);
                 } catch (RuntimeException rtex) {
-                    System.out.println("Greška");
+                    System.out.println("Error in Class creation!");
                 }
                 break;
             case ENUM:
@@ -46,7 +58,7 @@ public class ComponentCreation {
                 try {
                     CompilationProcessor.generatedDiagram.addComponent(CompilationProcessor.genEnum);
                 } catch (RuntimeException rtex) {
-                    System.out.println("Greška");
+                    System.out.println("Error in Enum creation!");
                 }
                 break;
             case INTERFACE:
@@ -55,12 +67,21 @@ public class ComponentCreation {
                 try {
                     CompilationProcessor.generatedDiagram.addComponent(CompilationProcessor.genInterface);
                 } catch (RuntimeException rtex) {
-                    System.out.println("Greška");
+                    System.out.println("Error in Interface creation!");
                 }
                 break;
         }
     }
 
+    /**
+     * Creates a Class component object based upon given Element object.
+     *
+     * @param elem based on which a Class component should be created
+     * @param modifierElemnts that define the behavior of this class
+     * (abstract...)
+     * @return fully created Class component
+     * @see ClassComponent
+     */
     private static ClassComponent classBuilder(Element elem, Object[] modifierElemnts) {
         String projectPath = elem.toString();
         String className = elem.getSimpleName().toString();
@@ -74,6 +95,15 @@ public class ComponentCreation {
         return createdClass;
     }
 
+    /**
+     * Creates an Interface component object based upon given Element object.
+     *
+     * @param elem based on which an Interface component should be created
+     * @param modifierElemnts that define the behavior of this interface
+     * (abstract...)
+     * @return fully created Interface component
+     * @see InterfaceComponent
+     */
     private static InterfaceComponent interfaceBuilder(Element elem, Object[] modifierElemnts) {
         String projectPath = elem.toString();
         InterfaceComponent createdInterface = new InterfaceComponent();
@@ -87,6 +117,15 @@ public class ComponentCreation {
         return createdInterface;
     }
 
+    /**
+     * Creates an Enum component object based upon given Element object.
+     *
+     * @param elem based on which an Enum component should be created
+     * @param modifierElemnts that define the behavior of this enum
+     * (abstract...)
+     * @return fully created Enum component
+     * @see EnumComponent
+     */
     private static EnumComponent enumBuilder(Element elem, Object[] modifierElemnts) {
         String projectPath = elem.toString();
         String enumName = elem.getSimpleName().toString();
@@ -100,6 +139,14 @@ public class ComponentCreation {
         return createdEnum;
     }
 
+    /**
+     * Populates Class, Enum or Interface by adding them Fields, Methods,
+     * Constructors (and Literals) that the Element object, based upon which
+     * they are created, contains. Classes, Enums and Interfaces that are being
+     * modified are ones inside the CompilationProcesseor.
+     *
+     * @param tlc element based on which the component is created
+     */
     public static void populateTopElementComponent(Element tlc) {
         int methodCounter = 1;
         int construstorCounter = 1;
@@ -125,7 +172,7 @@ public class ComponentCreation {
                             break;
                         case CONSTRUCTOR:
                             Object newConstructor = MemberBuilding.methodAndConstructorBuilder(el, modifierElemnts, false);
-                            if (newConstructor instanceof String){
+                            if (newConstructor instanceof String) {
                                 continue;
                             }
                             Constructor genConstr = (Constructor) newConstructor;
@@ -161,7 +208,7 @@ public class ComponentCreation {
                             break;
                         case CONSTRUCTOR:
                             Object newConstructor = MemberBuilding.methodAndConstructorBuilder(el, modifierElemnts, false);
-                            if (newConstructor instanceof String){
+                            if (newConstructor instanceof String) {
                                 continue;
                             }
                             Constructor genConstructor = (Constructor) newConstructor;
