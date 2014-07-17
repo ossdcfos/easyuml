@@ -21,11 +21,22 @@ import org.uml.reveng.CompilationProcessor;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * Creates Class diagram component's (Class, Enum od Interface) members (fields,
+ * methods, constructors or literals).
  *
  * @author Milan
  */
 public class MemberBuilding {
 
+    /**
+     * Selects and sets the right Package component for the Class diagram
+     * component given, if one exists; if not, it is created and coupled with
+     * the component.
+     *
+     * @param cdc for which a package should be found
+     * @param packageName of Class diagram component
+     * @see PackageComponent
+     */
     public static void packageSelector(ClassDiagramComponent cdc, String packageName) {
         if (CompilationProcessor.generatedDiagram.getPackages().containsKey(packageName)) {
             PackageComponent tempPack = CompilationProcessor.generatedDiagram.getPackages().get(packageName);
@@ -42,6 +53,15 @@ public class MemberBuilding {
         }
     }
 
+    /**
+     * Fully builds a Field component out of given Element object and creates a
+     * Has relationship component if needed.
+     *
+     * @param element based on which a Field component is created
+     * @param modifierElemnts visibility and other modifiers (public, static...)
+     * @return fully built Field component
+     * @see Field
+     */
     public static Field fieldBuilder(Element element, Object[] modifierElemnts) {
         String fName = element.getSimpleName().toString();
         String type = element.asType().toString();
@@ -54,6 +74,15 @@ public class MemberBuilding {
         return createdField;
     }
 
+    /**
+     * Makes method's arguments representation shorter - takes packages out of
+     * their class names.
+     *
+     * @param type - full type of argument (i.e. java.util.HashMap)
+     * @return shortened type of argument (i.e. HashMap)
+     * @see Method
+     * @see MethodArgument
+     */
     private static String getShorterArguments(String type) {
         String typeOfField = type;
         String[] types = type.split("<|>|,");
@@ -64,10 +93,21 @@ public class MemberBuilding {
         }
         return typeOfField;
     }
-    
+
+    /**
+     * Fully builds a Method or Constructor component out of given Element
+     * object and creates an Uses relationship component if needed.
+     *
+     * @param element based on which a Method or Constructor component is
+     * created
+     * @param modifierElemnts visibility and other modifiers (public, static...)
+     * @return fully built Method or Constructor component
+     * @see Method
+     * @see Constructor
+     */
     public static Object methodAndConstructorBuilder(Element element, Object[] modifierElemnts, boolean isMethod) {
         String name = element.getSimpleName().toString();
-        if (name.equals("<init>")){
+        if (name.equals("<init>")) {
             return "Default constructor";
         }
         String[] allTypes = element.asType().toString().split("\\)");
@@ -92,12 +132,28 @@ public class MemberBuilding {
         }
     }
 
+    /**
+     * Fully builds a Literal component out of given Element object and creates
+     * an Uses relationship component if needed.
+     *
+     * @param element based on which a Literal component is created
+     * @param modifierElemnts visibility and other modifiers (public, static...)
+     * @return fully built Literal component
+     * @see Literal
+     */
     public static Literal literalBuilder(Element element, Object[] modifierElemnts) {
         Literal createdLiteral = new Literal(element.getSimpleName().toString());
         setModifiers(modifierElemnts, element);
         return createdLiteral;
     }
 
+    /**
+     * Sets modifiers (public, static, abstract...) to the given Member object.
+     *
+     * @param modifierElemnts earlier found modifiers
+     * @param elementToProcess Member object for modifiers to be set
+     * @see Member
+     */
     public static void setModifiers(Object[] modifierElemnts, Object elementToProcess) {
         Field fElement = null;
         Method mElement = null;
@@ -203,6 +259,14 @@ public class MemberBuilding {
         }
     }
 
+    /**
+     * Creates Method arguments.
+     *
+     * @param argumentTypes types (classes) of method arguments
+     * @param generatedArgumens arguments created
+     * @param truePaths if arguments's classes should be represented without
+     * their packages
+     */
     private static void argumentsPopulation(String argumentTypes, HashMap<String, MethodArgument> generatedArgumens, boolean truePaths) {
         generatedArgumens.clear();
         if (argumentTypes.contains(",")) {
