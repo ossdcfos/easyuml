@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -58,26 +60,32 @@ public final class ClassDiagramWizardIterator implements WizardDescriptor.Instan
     public Set<?> instantiate() throws IOException {
         boolean cancelled = getWizard().getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
-            UMLProject project = (UMLProject) getWizard().getProperty("project");
+//            UMLProject project = (UMLProject) getWizard().getProperty("project");
+            Project project = (Project) getWizard().getProperty("project");            
 //            if (project != null) {
 //                CurrentProject.getInstance().setCurrentProject(project);
 //            }
+            
+            if (project instanceof UMLProject) {
+                ClassDiagramProjectFilesFactory fileFactory = ClassDiagramProjectFilesFactory.getDefault();
+                fileFactory.setProject((UMLProject)project);
 
-            ClassDiagramProjectFilesFactory fileFactory = ClassDiagramProjectFilesFactory.getDefault();
-            fileFactory.setProject(project);
+                String classDiagramName = (String) getWizard().getProperty("classDiagramName");
 
-            String classDiagramName = (String) getWizard().getProperty("classDiagramName");
-
-            ClassDiagram classDiagram = new ClassDiagram();
-            classDiagram.setName(classDiagramName);
-            fileFactory.createClassDiagramFile(classDiagram);
+                ClassDiagram classDiagram = new ClassDiagram();
+                classDiagram.setName(classDiagramName);
+                fileFactory.createClassDiagramFile(classDiagram);
 
 
-            String createdFilePath = fileFactory.getCreatedFilePath();
+                String createdFilePath = fileFactory.getCreatedFilePath();
 
-            FileObject fao = FileUtil.toFileObject(new File(createdFilePath));
-            DataObject dao = DataObject.find(fao);
-            return dao != null ? Collections.singleton(dao) : Collections.EMPTY_SET;
+                FileObject fao = FileUtil.toFileObject(new File(createdFilePath));
+                DataObject dao = DataObject.find(fao);
+                return dao != null ? Collections.singleton(dao) : Collections.EMPTY_SET;
+            } else {
+               // throw new RuntimeException("Cannot create class diagrams for this project type. Only for UML Projects.");
+                JOptionPane.showMessageDialog(null, "Cannot create class diagrams for this project type. Please create UML Project first.");
+            }
 
         }
 
