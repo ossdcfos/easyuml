@@ -26,19 +26,19 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel4" max="32767" attributes="0"/>
-                  <Component id="jLabel3" max="32767" attributes="0"/>
-                  <Component id="labelCardinalitySource" pref="124" max="32767" attributes="0"/>
-                  <Component id="jLabel1" max="32767" attributes="0"/>
+                  <Component id="lblName" max="32767" attributes="0"/>
+                  <Component id="lblRelationType" max="32767" attributes="0"/>
+                  <Component id="lblCardinalitySource" pref="124" max="32767" attributes="0"/>
+                  <Component id="lblSource" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="jLabel2" max="32767" attributes="0"/>
+                      <Component id="lblTarget" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="labelCardinalityTarget" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
-                          <Component id="jbtnOk" alignment="0" min="-2" pref="81" max="-2" attributes="0"/>
-                          <Component id="labelCardinalityTarget1" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
+                          <Component id="lblCardinalityTarget" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
+                          <Component id="btnOk" alignment="0" min="-2" pref="81" max="-2" attributes="0"/>
+                          <Component id="lblCollectionType" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -47,16 +47,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="comboBoxCardinalityTarget" max="32767" attributes="0"/>
-                          <Component id="comboBoxCardinalitySource" max="32767" attributes="0"/>
-                          <Component id="jcbClassesSource" max="32767" attributes="0"/>
-                          <Component id="jcbRelations" alignment="0" max="32767" attributes="0"/>
-                          <Component id="textFieldName" alignment="0" min="-2" pref="136" max="-2" attributes="0"/>
-                          <Component id="comboBoxCollectionType" alignment="1" max="32767" attributes="0"/>
+                          <Component id="cbxCardinalityTarget" max="32767" attributes="0"/>
+                          <Component id="cbxCardinalitySource" max="32767" attributes="0"/>
+                          <Component id="cbxClassesSource" max="32767" attributes="0"/>
+                          <Component id="cbxRelations" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txfName" alignment="0" min="-2" pref="136" max="-2" attributes="0"/>
+                          <Component id="cbxCollectionType" alignment="1" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="jcbClassesTarget" min="-2" pref="136" max="-2" attributes="0"/>
+                      <Component id="cbxClassesTarget" min="-2" pref="136" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jbtnCancel" min="-2" pref="98" max="-2" attributes="0"/>
+                  <Component id="btnCancel" min="-2" pref="98" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
           </Group>
@@ -67,43 +67,43 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jcbRelations" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel3" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
+                  <Component id="cbxRelations" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblRelationType" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="textFieldName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txfName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                  <Component id="jcbClassesSource" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblSource" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbxClassesSource" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jcbClassesTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbxClassesTarget" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="comboBoxCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="labelCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbxCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="labelCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="comboBoxCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbxCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="labelCardinalityTarget1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="comboBoxCollectionType" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblCollectionType" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbxCollectionType" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="19" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jbtnOk" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jbtnCancel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnOk" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnCancel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
           </Group>
@@ -111,132 +111,150 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JComboBox" name="jcbClassesSource">
+    <Component class="javax.swing.JComboBox" name="cbxClassesSource">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbClassesSourceActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxClassesSourceActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Widget&gt;"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JComboBox" name="jcbClassesTarget">
+    <Component class="javax.swing.JComboBox" name="cbxClassesTarget">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbClassesTargetActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxClassesTargetActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Widget&gt;"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="lblSource">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.lblSource.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel2">
+    <Component class="javax.swing.JLabel" name="lblTarget">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.jLabel2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.lblTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jbtnOk">
+    <Component class="javax.swing.JButton" name="btnOk">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.jbtnOk.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.btnOk.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtnOkActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOkActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jbtnCancel">
+    <Component class="javax.swing.JButton" name="btnCancel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.jbtnCancel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.btnCancel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbtnCancelActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel3">
+    <Component class="javax.swing.JLabel" name="lblRelationType">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.jLabel3.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.lblRelationType.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="jcbRelations">
+    <Component class="javax.swing.JComboBox" name="cbxRelations">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbRelationsActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxRelationsActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;RelationComponent&gt;"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel4">
+    <Component class="javax.swing.JLabel" name="lblName">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.jLabel4.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.lblName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="textFieldName">
+    <Component class="javax.swing.JTextField" name="txfName">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.textFieldName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.txfName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="comboBoxCardinalityTarget">
+    <Component class="javax.swing.JComboBox" name="cbxCardinalityTarget">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;CardinalityEnum&gt;"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JComboBox" name="comboBoxCardinalitySource">
+    <Component class="javax.swing.JComboBox" name="cbxCardinalitySource">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;CardinalityEnum&gt;"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="labelCardinalityTarget">
+    <Component class="javax.swing.JLabel" name="lblCardinalityTarget">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.labelCardinalityTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.lblCardinalityTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="labelCardinalitySource">
+    <Component class="javax.swing.JLabel" name="lblCardinalitySource">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.labelCardinalitySource.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.lblCardinalitySource.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="labelCardinalityTarget1">
+    <Component class="javax.swing.JLabel" name="lblCollectionType">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.labelCardinalityTarget1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="AddRelationDialog.lblCollectionType.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="comboBoxCollectionType">
+    <Component class="javax.swing.JComboBox" name="cbxCollectionType">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

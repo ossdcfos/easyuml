@@ -38,7 +38,7 @@ public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, 
         if  (topComponent !=null) {
             if (topComponent.isOpened()) {
                 topComponent.requestActive();
-            } else {            
+            } else {
                 topComponent.open();
                 topComponent.requestActive();
              }
@@ -46,12 +46,14 @@ public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, 
                ClassDiagram cdiag = classDiagramDataObject.getLookup().lookup(ClassDiagram.class);
 
                topComponent = new UMLTopComponent(cdiag);
-               topComponent.open(); 
-               topComponent.requestActive();                            
-        }  
+               topComponent.open();
+               topComponent.requestActive();
+        }
         ClassDiagramScene scene = ((UMLTopComponent)topComponent).getScene();
         ClassDiagramManager.getDefault().addScene(scene);
+        
+        // dependency na Visual Library API
+//        scene.getView().requestFocusInWindow();
+//        Widget focused = scene.getFocusedWidget();
     }
-
-
 }

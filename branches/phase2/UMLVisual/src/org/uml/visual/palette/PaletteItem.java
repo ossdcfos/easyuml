@@ -4,8 +4,6 @@
  */
 package org.uml.visual.palette;
 
-import org.netbeans.api.visual.widget.general.IconNodeWidget;
-
 /**
  *
  * @author NUGS
@@ -15,8 +13,8 @@ public class PaletteItem {
     String icon;
     String title;
     String category;
-    Class targetWidget;
-    Class dropClass;
+    Class<?> dropComponentClass;
+    //Class<?> widget;
 
     public PaletteItem() {
     }
@@ -45,19 +43,19 @@ public class PaletteItem {
         this.category = category;
     }
 
-    public Class getDropClass() {
-        return dropClass;
+    public Class<?> getDropClass() {
+        return dropComponentClass;
     }
 
-    public void setDropClass(Class dropClass) {
-        this.dropClass = dropClass;
+    public void setDropClass(Class<?> dropClass) {
+        this.dropComponentClass = dropClass;
     }
 
-    public Class getTargetWidget() {
-        return targetWidget;
-    }
-
-    public void setTargetWidget(Class targetWidget) {
-        this.targetWidget = targetWidget;
-    }
+//    public Class<?> getTargetWidget() {
+//        return widget;
+//    }
+//
+//    public void setTargetWidget(Class<?> targetWidget) {
+//        this.widget = targetWidget;
+//    }
 }

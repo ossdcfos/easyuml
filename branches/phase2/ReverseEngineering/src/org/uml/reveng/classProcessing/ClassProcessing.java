@@ -63,9 +63,9 @@ public class ClassProcessing {
                 Field[] fields = cls.getDeclaredFields();
                 //Implements - IMPLEMENTS
                 Class<?>[] interfaces = cls.getInterfaces();
-                for (Class clasI : interfaces) {
+                for (Class<?> clasI : interfaces) {
                     try {
-                        Class cla = Class.forName(clasI.getName());
+                        Class<?> cla = Class.forName(clasI.getName());
                     } catch (ClassNotFoundException ex) {
                         RelationshipResolver.putIntoRelHashMap(GeneratedDiagramManager.getDefault().getImplementsRelationships(), nameWithPackage, clasI.getName(), "", "");
                     }
@@ -74,7 +74,7 @@ public class ClassProcessing {
                 Class<?> superclass = cls.getSuperclass();
                 if (superclass != null) {
                     try {
-                        Class cla = Class.forName(superclass.getName());
+                        Class<?> cla = Class.forName(superclass.getName());
                     } catch (ClassNotFoundException ex) {
                         RelationshipResolver.putIntoRelHashMap(GeneratedDiagramManager.getDefault().getIsRelationships(), nameWithPackage, superclass.getName(), "", "<<extends>>");
                     }

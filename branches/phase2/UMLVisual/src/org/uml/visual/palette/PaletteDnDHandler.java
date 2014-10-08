@@ -27,10 +27,10 @@ public class PaletteDnDHandler extends DragAndDropHandler {
         //gets paletteItem when node is PaletteItem.class
         PaletteItem paletteItem = node.getLookup().lookup(PaletteItem.class);
         //gets the Class of paletteItem, ex. Class,Method,Field...
-        final Class dropClass = paletteItem.getDropClass();
-        final Class targetWidgetClass = paletteItem.getTargetWidget();
+        final Class<?> dropClass = paletteItem.getDropClass();
+        //final Class<?> targetWidgetClass = paletteItem.getTargetWidget();
 
-        final Image image = (Image) node.getIcon(BeanInfo.ICON_COLOR_16x16);
+        final Image image = node.getIcon(BeanInfo.ICON_COLOR_16x16);
         
         et.put(new ExTransferable.Single(DataFlavor.imageFlavor) {
             @Override
@@ -45,12 +45,11 @@ public class PaletteDnDHandler extends DragAndDropHandler {
             }
         });
 
-        et.put(new ExTransferable.Single(new DataFlavor(targetWidgetClass, targetWidgetClass.getSimpleName())) {
-            @Override
-            protected Object getData() throws IOException, UnsupportedFlavorException {
-                return targetWidgetClass;
-            }
-        });
-
+//        et.put(new ExTransferable.Single(new DataFlavor(targetWidgetClass, targetWidgetClass.getSimpleName())) {
+//            @Override
+//            protected Object getData() throws IOException, UnsupportedFlavorException {
+//                return targetWidgetClass;
+//            }
+//        });
     }
 }

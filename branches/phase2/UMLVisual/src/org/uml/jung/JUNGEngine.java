@@ -74,7 +74,7 @@ public class JUNGEngine {
 //                classDiagramScene = (ClassDiagramScene) o;
 //            }
 //        }
-        Graph graph = null;
+        Graph<ComponentWidgetBase, RelationComponent> graph = null;
         if (scene != null) {
             graph = UMLSparseMultigraph.create(scene);
         }
@@ -100,7 +100,7 @@ public class JUNGEngine {
 //        System.out.println(g.toString());
 
         if (graph != null) {
-            Layout<ComponentWidgetBase, RelationComponent> layout = new CircleLayout(graph);
+            Layout<ComponentWidgetBase, RelationComponent> layout = new CircleLayout<>(graph);
 //            Layout<ComponentWidgetBase, RelationComponent> layout = new SpringLayout<>(graph); // ovaj layout isto moze da radi
 
             layout.setSize(new Dimension(700, 700));

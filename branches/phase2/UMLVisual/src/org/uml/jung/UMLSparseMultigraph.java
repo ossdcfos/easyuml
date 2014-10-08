@@ -36,7 +36,6 @@ import org.uml.model.ClassDiagramComponent;
 import org.uml.model.RelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ComponentWidgetBase;
-import org.uml.visual.widgets.RelationWidgetBase;
 
 /**
  *
@@ -50,7 +49,7 @@ public class UMLSparseMultigraph extends SparseMultigraph<ComponentWidgetBase, R
      * @param classDiagramScene
      * @return 
      */
-    public static Graph create(ClassDiagramScene classDiagramScene) {
+    public static Graph<ComponentWidgetBase, RelationComponent> create(ClassDiagramScene classDiagramScene) {
 
         Graph<ComponentWidgetBase, RelationComponent> graph = new edu.uci.ics.jung.graph.SparseMultigraph<>();
 

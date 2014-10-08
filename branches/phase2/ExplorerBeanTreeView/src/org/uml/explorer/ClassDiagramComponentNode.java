@@ -5,27 +5,16 @@
 package org.uml.explorer;
 
 import java.awt.Image;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Node;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
-import org.uml.model.Field;
 import org.uml.model.InterfaceComponent;
-import org.uml.model.Literal;
-import org.uml.model.Method;
 import org.uml.model.PackageComponent;
 import org.uml.model.Visibility;
 
@@ -50,34 +39,28 @@ public class ClassDiagramComponentNode extends AbstractNode {
         this.classDiagramComponent = component;
         this.setDisplayName(component.getName());
     }
-
-//    @Override
-//    public Image getIcon(int type) {
-//        return ImageUtilities.loadImage("org/neuroph/netbeans/files/dset/iconTs.png");
-//    }
+    
     @Override
     protected Sheet createSheet() {
-
-
         Sheet sheet = super.createSheet();
         Sheet.Set propertiesSet = Sheet.createPropertiesSet();
         propertiesSet.setName("propertiesSet");
         propertiesSet.setDisplayName("Properties");
 
         try {
-            Property nameProp = new PropertySupport.Reflection(classDiagramComponent, String.class, "getName", null);
+            Property<String> nameProp = new PropertySupport.Reflection<>(classDiagramComponent, String.class, "getName", null);
             nameProp.setName("Name");
             propertiesSet.put(nameProp);
 
             if (classDiagramComponent instanceof ClassComponent) {
                 Visibility vis = classDiagramComponent.getVisibility();
-                Property visibilityProp = new PropertySupport.Reflection(vis, String.class, "toString", null);
+                Property<String> visibilityProp = new PropertySupport.Reflection<>(vis, String.class, "toString", null);
                 visibilityProp.setName("Visibility");
                 propertiesSet.put(visibilityProp);
             }
 
             PackageComponent pack = classDiagramComponent.getParentPackage();
-            Property packageProp = new PropertySupport.Reflection(pack, String.class, "getName", null);
+            Property<String> packageProp = new PropertySupport.Reflection<>(pack, String.class, "getName", null);
             packageProp.setName("Package");
             propertiesSet.put(packageProp);
         } catch (Exception e) {
@@ -197,29 +180,21 @@ public class ClassDiagramComponentNode extends AbstractNode {
     @Override
     public Image getIcon(int type) {
         if (classDiagramComponent instanceof ClassComponent) {
-            return ImageUtilities.loadImage("org/uml/explorer/klasaIcon.png");
+            return ImageUtilities.loadImage("org/uml/explorer/icons/klasaIcon.png");
         }
         if (classDiagramComponent instanceof InterfaceComponent) {
-            return ImageUtilities.loadImage("org/uml/explorer/interfejsIcon.png");
+            return ImageUtilities.loadImage("org/uml/explorer/icons/interfejsIcon.png");
         }
         if (classDiagramComponent instanceof EnumComponent) {
-            return ImageUtilities.loadImage("org/uml/explorer/enumIcon.png");
+            return ImageUtilities.loadImage("org/uml/explorer/icons/enumIcon.png");
         }
-        return null;
+        return super.getIcon(type);
+        //return null;
     }
 
     @Override
     public Image getOpenedIcon(int type) {
-        if (classDiagramComponent instanceof ClassComponent) {
-            return ImageUtilities.loadImage("org/uml/explorer/klasaIcon.png");
-        }
-        if (classDiagramComponent instanceof InterfaceComponent) {
-            return ImageUtilities.loadImage("org/uml/explorer/interfejsIcon.png");
-        }
-        if (classDiagramComponent instanceof EnumComponent) {
-            return ImageUtilities.loadImage("org/uml/explorer/enumIcon.png");
-        }
-        return super.getIcon(type);
+        return getIcon(type);
     }
 
     public ClassDiagramComponent getClassDiagramComponent() {

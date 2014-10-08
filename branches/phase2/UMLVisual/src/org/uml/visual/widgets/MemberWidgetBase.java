@@ -4,6 +4,7 @@
  */
 package org.uml.visual.widgets;
 
+import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.uml.model.Member;
 
@@ -17,6 +18,9 @@ public abstract class MemberWidgetBase extends LabelWidget /*IconNodeWidget*/ im
     public MemberWidgetBase(ClassDiagramScene scene) {
         super(scene);
         
+        // To support hovering (in notifyStateChanged), otherwise a Provider is needed
+        getActions().addAction(scene.createObjectHoverAction());
+        
     }
     
     public Member getMember() {
@@ -25,6 +29,16 @@ public abstract class MemberWidgetBase extends LabelWidget /*IconNodeWidget*/ im
     
     abstract public LabelWidget getNameLabel();
 
-    
+    @Override
+    public void notifyStateChanged(ObjectState previousState, ObjectState state) {
+        // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
+        super.notifyStateChanged(previousState, state);
+        
+//        if (state.isHovered()) {
+//            this.setBackground(new Color(0x808080));
+//        }else {
+//            this.setBackground(new Color(0xF7F7F7));
+//        }
+    }
     
 }

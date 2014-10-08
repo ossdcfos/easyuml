@@ -12,7 +12,7 @@ import org.openide.util.Exceptions;
 import org.uml.model.Literal;
 import org.uml.model.Member;
 import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.LiteralPopupProvider;
+import org.uml.visual.widgets.providers.popups.LiteralPopupProvider;
 
 /**
  *

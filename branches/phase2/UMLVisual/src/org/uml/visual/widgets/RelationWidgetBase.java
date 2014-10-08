@@ -6,6 +6,8 @@ package org.uml.visual.widgets;
 
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
 import org.uml.model.RelationComponent;
+import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.NameableWidget;
 
 /**
  *

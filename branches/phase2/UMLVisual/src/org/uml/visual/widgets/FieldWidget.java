@@ -8,7 +8,6 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.openide.util.Exceptions;
 import org.uml.model.Field;
 import org.uml.model.Member;
 import static org.uml.model.Visibility.PACKAGE;
@@ -17,7 +16,7 @@ import static org.uml.model.Visibility.PROTECTED;
 import static org.uml.model.Visibility.PUBLIC;
 import org.uml.visual.parser.WidgetParser;
 import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.FieldPopupMenuProvider;
 
 /**
  *

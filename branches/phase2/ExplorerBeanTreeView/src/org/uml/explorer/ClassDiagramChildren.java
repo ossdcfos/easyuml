@@ -5,12 +5,9 @@
 package org.uml.explorer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import org.openide.nodes.Children;
-import org.openide.nodes.Index;
 import org.openide.nodes.Node;
-import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 
@@ -34,7 +31,7 @@ public class ClassDiagramChildren  extends Children.Keys<Object> {
             classDiagramComponentNode.setName(classDiagramComponent.getName());
             return new Node[] { classDiagramComponentNode }; 
         }else { 
-            return new Node[] {  };
+            return new Node[] {};
         }
     }
     
@@ -43,15 +40,14 @@ public class ClassDiagramChildren  extends Children.Keys<Object> {
         super.addNotify();
         ArrayList<Object> keys = new ArrayList<Object>();
         if(classDiagram.getComponents()!=null){
-            Iterator it = classDiagram.getComponents().entrySet().iterator();
+            Iterator<java.util.Map.Entry<String,ClassDiagramComponent>> it = classDiagram.getComponents().entrySet().iterator();
             while (it.hasNext()) {
-                java.util.Map.Entry pairs = (java.util.Map.Entry) it.next();
-                ClassDiagramComponent component = (ClassDiagramComponent) pairs.getValue();
+                java.util.Map.Entry<String,ClassDiagramComponent> pairs = (java.util.Map.Entry<String,ClassDiagramComponent>) it.next();
+                ClassDiagramComponent component = pairs.getValue();
                 keys.add(component);
             }
         }
         
-        setKeys(keys); 
-        
+        setKeys(keys);
     }
 }

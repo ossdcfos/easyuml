@@ -18,9 +18,9 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.InterfaceComponent;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.InterfacePopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.InterfacePopupMenuProvider;
 import org.uml.visual.widgets.providers.InterfaceWidgetAcceptProvider;
-import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.MethodPopupMenuProvider;
 
 /**
  *

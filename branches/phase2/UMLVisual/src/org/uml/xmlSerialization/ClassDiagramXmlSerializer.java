@@ -33,8 +33,8 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
     private static ClassDiagramXmlSerializer instance;
     private ClassDiagram classDiagram;
     private ClassDiagramScene classDiagramScene;
-    private HashMap<Class, ClassDiagramComponentSerializer> componentSerializers;
-    private HashMap<Class, RelationSerializer> relationSerializers;
+    private HashMap<Class<?>, ClassDiagramComponentSerializer> componentSerializers;
+    private HashMap<Class<?>, RelationSerializer> relationSerializers;
 
     private ClassDiagramXmlSerializer() {
         componentSerializers = new HashMap<>();
