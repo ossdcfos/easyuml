@@ -17,6 +17,7 @@ public class ClassSelectProvider implements SelectProvider{
 
     @Override
     public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
+        //return true;
         return false;
     }
 
@@ -27,6 +28,7 @@ public class ClassSelectProvider implements SelectProvider{
 
     @Override
     public void select(Widget widget, Point point, boolean bln) {
+        widget.getScene().setFocusedWidget(widget);
         widget.setBackground(Color.WHITE);
     }
     

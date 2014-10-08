@@ -27,10 +27,10 @@ public class ClassComponent extends ClassDiagramComponent {
      */
     public ClassComponent() {
         this.setName("UntitledClass");
-        fields = new HashMap<String, Field>();
-        methods = new HashMap<String, Method>();
-        constructors = new HashMap<String, Constructor>();
-        setVisibility(Visibility.PUBLIC);
+        fields = new HashMap<>();
+        methods = new HashMap<>();
+        constructors = new HashMap<>();
+        visibility = Visibility.PUBLIC;
         isAbstract = false;
         parentPackage = null;
     }
@@ -74,10 +74,10 @@ public class ClassComponent extends ClassDiagramComponent {
     }
 
     /**
-     * Returns a field from this clas's collection of fields with a given name
+     * Returns a field from this class's collection of fields with a given name
      *
      * @param name of the field that needs to be returned
-     * @return this clas's field with a given name
+     * @return this class's field with a given name
      */
     public Field getField(String name) {
         return fields.get(name);

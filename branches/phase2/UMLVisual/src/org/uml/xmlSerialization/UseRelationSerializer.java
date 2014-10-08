@@ -35,8 +35,8 @@ public class UseRelationSerializer implements RelationSerializer{
     @Override
     public void serialize(Element node) {
         if (useRelationComponent.getName() != null) node.addAttribute("name", useRelationComponent.getName());
-        ClassDiagramComponent sourceComponent = (ClassDiagramComponent) useRelationComponent.getSource();
-        ClassDiagramComponent targetComponent = (ClassDiagramComponent) useRelationComponent.getTarget();
+        ClassDiagramComponent sourceComponent = useRelationComponent.getSource();
+        ClassDiagramComponent targetComponent = useRelationComponent.getTarget();
         if (sourceComponent != null) { 
             node.addAttribute("source", sourceComponent.getName());
         }else {

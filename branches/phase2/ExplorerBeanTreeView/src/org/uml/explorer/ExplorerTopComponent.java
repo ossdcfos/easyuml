@@ -55,20 +55,34 @@ import org.uml.visual.widgets.ClassWidget;
     "CTL_ExplorerTopComponent=Explorer Window",
     "HINT_ExplorerTopComponent=This is a Explorer window"
 })
-public final class ExplorerTopComponent extends TopComponent implements LookupListener, ExplorerManager.Provider {
-
+public final class ExplorerTopComponent extends TopComponent implements ExplorerManager.Provider, LookupListener 
+{
+    // why transient?
     private transient ExplorerManager explorerManager = new ExplorerManager();
+    
     private HashMap<Object, Node> objectsToNodes = new HashMap<Object, Node>(); // mapping of object to corresponding node
     private ClassDiagramNode cNode = null;
+    
+    Result<ClassDiagram> resultCD;
+    Result<ClassDiagramComponent> resultCdc;
+    //Result<ClassWidget> resultCW;
+    private boolean recursiveCall = false;
 
     public ExplorerTopComponent() {
         initComponents();
+        
         setName(Bundle.CTL_ExplorerTopComponent());
         setToolTipText(Bundle.HINT_ExplorerTopComponent());
+        
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
 //        explorerManager.setRootContext(new AbstractNode(new CategoryChildren()));
 //        explorerManager.getRootContext().setDisplayName("UML class diagram");  
-        ((BeanTreeView) jScrollPane1).setRootVisible(false);
+        ((BeanTreeView) jScrollPaneTree).setRootVisible(false);
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return explorerManager;
     }
 
     /**
@@ -79,35 +93,36 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new BeanTreeView();
+        jScrollPaneTree = new BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        add(jScrollPaneTree, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPaneTree;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void componentOpened() {
         resultCD = Utilities.actionsGlobalContext().lookupResult(ClassDiagram.class);
         resultCD.addLookupListener(this);
-        resultChanged(new LookupEvent(resultCD));
+        // zasto ovaj poziv? radi i bez toga, jer je registrovan lookup, sam zove resultChanged
+        //resultChanged(new LookupEvent(resultCD));
 
         resultCdc = Utilities.actionsGlobalContext().lookupResult(ClassDiagramComponent.class);
         resultCdc.addLookupListener(this);
-        resultChanged(new LookupEvent(resultCdc));
-//
+        //resultChanged(new LookupEvent(resultCdc));
+
 //        resultCW = Utilities.actionsGlobalContext().lookupResult(ClassWidget.class);
 //        resultCW.addLookupListener(this);
 //        resultChanged(new LookupEvent(resultCW));
     }
 
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
-
+//    @Override
+//    public void componentClosed() {
+//        // TODO add custom code on component closing
+//    }
+//
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -121,32 +136,19 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
     }
 
     @Override
-    public ExplorerManager getExplorerManager() {
-        return explorerManager;
-    }
-    Result<ClassDiagram> resultCD;
-    Result<ClassDiagramComponent> resultCdc;
-    Result<ClassWidget> resultCW;
-    private boolean recursiveCall = false;
-
-    @Override
     public void resultChanged(LookupEvent ev) {
         Lookup.Result localResult = (Lookup.Result) ev.getSource();
         Collection<Object> coll = localResult.allInstances();
 
 //        for (Object o : coll) {
-//            System.out.println("//////////////////////////");
 //            System.out.println(o);
-//            System.out.println("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
 //        }
-
-
         if (!coll.isEmpty()) {
             for (Object selectedItem : coll) {
                 if (selectedItem instanceof ClassDiagram) {
                     ClassDiagram selectedComponent = (ClassDiagram) selectedItem;
                     //this.setName(selectedComponent.getName() + " -  Explorer");
-                    ((BeanTreeView) jScrollPane1).setRootVisible(true);
+                    ((BeanTreeView) jScrollPaneTree).setRootVisible(true);
                     cNode = new ClassDiagramNode(selectedComponent);
                     recursiveCall = true;
                     explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
@@ -188,15 +190,13 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
                     }
                 } else if (!recursiveCall) {
                     explorerManager.setRootContext(Node.EMPTY);
-                    BeanTreeView btw = (BeanTreeView) jScrollPane1;
+                    BeanTreeView btw = (BeanTreeView) jScrollPaneTree;
                     btw.setRootVisible(false);
                     this.setName("Explorer");
-
                 } else {
                     recursiveCall = false;
                 }
             }
-
         } else if (cNode != null) {
             try {
                 explorerManager.setExploredContextAndSelection(cNode, new Node[]{cNode});
@@ -204,6 +204,8 @@ public final class ExplorerTopComponent extends TopComponent implements LookupLi
                 Exceptions.printStackTrace(ex);
             }
         }
+        //repaint();
+        //validate();
     }
 }
 //else if (selectedItem instanceof ClassWidget) {

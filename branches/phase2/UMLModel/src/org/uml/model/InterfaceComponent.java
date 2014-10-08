@@ -22,7 +22,7 @@ public class InterfaceComponent extends ClassDiagramComponent {
      */
     public InterfaceComponent() {
         this.setName("UntitledInterface");
-        methods = new HashMap<String, Method>();
+        methods = new HashMap<>();
     }
 
     /**

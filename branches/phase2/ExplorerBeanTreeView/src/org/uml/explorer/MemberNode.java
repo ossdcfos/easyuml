@@ -10,7 +10,6 @@ import org.openide.nodes.FilterNode;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.uml.model.ClassDiagramComponent;
 import org.uml.model.Constructor;
 import org.uml.model.Field;
 import org.uml.model.Literal;
@@ -40,19 +39,18 @@ public class MemberNode extends AbstractNode {
     @Override
     public Image getIcon(int type) {
         if (member instanceof Field) {
-            return ImageUtilities.loadImage("org/uml/explorer/atributPublicIcon.png");
+            return ImageUtilities.loadImage("org/uml/explorer/icons/atributPublicIcon.png");
         }
         if (member instanceof Method) {
-            return ImageUtilities.loadImage("org/uml/explorer/metodaPublicIcon.png");
+            return ImageUtilities.loadImage("org/uml/explorer/icons/metodaPublicIcon.png");
         }
         if (member instanceof Constructor) {
-            return ImageUtilities.loadImage("org/uml/explorer/konstruktorPublicIcon.png");
+            return ImageUtilities.loadImage("org/uml/explorer/icons/konstruktorPublicIcon.png");
         }
         if (member instanceof Literal) {
-            return ImageUtilities.loadImage("org/uml/explorer/literalIcon.png");
+            return ImageUtilities.loadImage("org/uml/explorer/icons/literalIcon.png");
         }
         return super.getIcon(type);
     }
-    
     
 }

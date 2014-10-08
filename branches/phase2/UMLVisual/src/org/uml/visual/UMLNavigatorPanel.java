@@ -27,7 +27,6 @@ public class UMLNavigatorPanel extends JPanel implements NavigatorPanel, LookupL
         pane = new JScrollPane();
         add(pane, BorderLayout.CENTER);
         lookup = new AbstractLookup(ic);
-        
     }
     Result<Scene> scenesInLookup;
 

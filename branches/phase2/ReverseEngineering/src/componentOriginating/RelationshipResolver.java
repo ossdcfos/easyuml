@@ -202,7 +202,7 @@ public class RelationshipResolver {
                 if (primitiveTest(arguments.split(">")[0])) {
                     return;
                 }
-                Class cl = Class.forName(arguments.split(">")[0]);
+                Class<?> cl = Class.forName(arguments.split(">")[0]);
             } catch (ClassNotFoundException ex) {
                 if (isHasRelation) {
                     relationshipHasCreator(arguments.split(">")[0], methodClassPath, leftSharpBracketOpen, fieldNameHas);
@@ -218,7 +218,7 @@ public class RelationshipResolver {
                 return;
             }
             additionalRelationData = arguments.split("<")[0];
-            Class cl = Class.forName(arguments.split("<")[0]);
+            Class<?> cl = Class.forName(arguments.split("<")[0]);
         } catch (ClassNotFoundException ex) {
 //YET TO BE IMPLEMENTED
             if (isHasRelation) {
@@ -250,7 +250,7 @@ public class RelationshipResolver {
                 return;
             }
             additionalRelationData = "/*CHANGE TO ARRAY WITH [ ]*/ List";
-            Class cl = Class.forName(splitted);
+            Class<?> cl = Class.forName(splitted);
         } catch (ClassNotFoundException ex) {
             if (isHasRelation) {
                 putIntoRelHashMap(designatedRelation, methodClassPath, splitted, additionalRelationData, fieldNameHas);
@@ -283,7 +283,7 @@ public class RelationshipResolver {
             if (primitiveTest(arguments)) {
                 return;
             }
-            Class cl = Class.forName(arguments);
+            Class<?> cl = Class.forName(arguments);
         } catch (ClassNotFoundException ex) {
             if (!aditionalData.equals("")) {
                 if (isHasRelation) {
@@ -378,10 +378,10 @@ public class RelationshipResolver {
      * @see ClassDIagram
      */
     private static void populateHasRelation() {
-        for (Map.Entry firstLevel : CompilationProcessor.hasRelationships.entrySet()) {
+        for (Map.Entry<String, HashMap<String, Object>> firstLevel : CompilationProcessor.hasRelationships.entrySet()) {
             ClassDiagramComponent source = selectDefinitiveComponent(firstLevel.getKey().toString());
-            HashMap<String, Object> midLevel = (HashMap<String, Object>) firstLevel.getValue();
-            for (Map.Entry secondLevel : midLevel.entrySet()) {
+            HashMap<String, Object> midLevel = firstLevel.getValue();
+            for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
                 HasRelationComponent relation = new HasRelationComponent();
                 relation.setSource(source);
                 //ClassDiagramComponent targetCandidate = new ClassDiagramComponent();
@@ -422,10 +422,10 @@ public class RelationshipResolver {
      * @see ClassDIagram
      */
     private static void populateUseRelation() {
-        for (Map.Entry firstLevel : CompilationProcessor.useRelationships.entrySet()) {
+        for (Map.Entry<String, HashMap<String, Object>> firstLevel : CompilationProcessor.useRelationships.entrySet()) {
             ClassDiagramComponent source = (selectDefinitiveComponent(firstLevel.getKey().toString()));
-            HashMap<String, Object> midLevel = (HashMap<String, Object>) firstLevel.getValue();
-            for (Map.Entry secondLevel : midLevel.entrySet()) {
+            HashMap<String, Object> midLevel = firstLevel.getValue();
+            for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
                 UseRelationComponent relation = new UseRelationComponent();
                 relation.setSource(source);
                 ClassDiagramComponent target = selectDefinitiveComponent(secondLevel.getKey().toString());
@@ -456,10 +456,10 @@ public class RelationshipResolver {
      * @see ClassDIagram
      */
     private static void populateIsRelation() {
-        for (Map.Entry firstLevel : GeneratedDiagramManager.getDefault().getIsRelationships().entrySet()) {
+        for (Map.Entry<String, HashMap<String, Object>> firstLevel : GeneratedDiagramManager.getDefault().getIsRelationships().entrySet()) {
             ClassDiagramComponent source = selectDefinitiveComponent(firstLevel.getKey().toString());
-            HashMap<String, Object> midLevel = (HashMap<String, Object>) firstLevel.getValue();
-            for (Map.Entry secondLevel : midLevel.entrySet()) {
+            HashMap<String, Object> midLevel = firstLevel.getValue();
+            for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
                 IsRelationComponent relation = new IsRelationComponent();
                 relation.setSource(source);
                 relation.setTarget(selectDefinitiveComponent(secondLevel.getKey().toString()));
@@ -481,10 +481,10 @@ public class RelationshipResolver {
      * @see ClassDIagram
      */
     private static void populateImplementsRelation() {
-        for (Map.Entry firstLevel : GeneratedDiagramManager.getDefault().getImplementsRelationships().entrySet()) {
+        for (Map.Entry<String, HashMap<String, Object>> firstLevel : GeneratedDiagramManager.getDefault().getImplementsRelationships().entrySet()) {
             ClassDiagramComponent source = selectDefinitiveComponent(firstLevel.getKey().toString());
-            HashMap<String, Object> midLevel = (HashMap<String, Object>) firstLevel.getValue();
-            for (Map.Entry secondLevel : midLevel.entrySet()) {
+            HashMap<String, Object> midLevel = firstLevel.getValue();
+            for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
                 ImplementsRelationComponent relation = new ImplementsRelationComponent();
                 relation.setSource(source);
                 relation.setTarget(selectDefinitiveComponent(secondLevel.getKey().toString()));
@@ -523,7 +523,9 @@ public class RelationshipResolver {
                 return component;
             }
         }
-        return new ClassDiagramComponent();
+        return null;
+        // zasto se ovo vraca?
+        //return new ClassDiagramComponent();
     }
 
     /**

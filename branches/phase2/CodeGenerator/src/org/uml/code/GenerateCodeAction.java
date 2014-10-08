@@ -17,9 +17,9 @@ import org.uml.model.ClassDiagram;
 @ActionID(
     category = "Source",
 id = "org.uml.code.GenerateCodeAction")
+@ActionReference(path = "Menu/Source", position = 200)
 @ActionRegistration(
     displayName = "#CTL_GenerateCodeAction")
-@ActionReference(path = "Menu/Source", position = 200)
 @Messages("CTL_GenerateCodeAction=Generate Code")
 public final class GenerateCodeAction implements ActionListener {
 
@@ -31,9 +31,6 @@ public final class GenerateCodeAction implements ActionListener {
       
       FileWriter.getInstance().setProject(project);
       ClassDiagramCodeGenerator.getInstance().generateCode();
-      
-
-      
       
 //      FileWriter.writeFiles();
       

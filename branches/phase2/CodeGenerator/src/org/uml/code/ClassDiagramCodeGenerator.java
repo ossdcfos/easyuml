@@ -26,14 +26,14 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
 
     private static ClassDiagramCodeGenerator instance;
     ClassDiagram classDiagram;
-    HashMap<Class, CodeGenerator> generators;
+    HashMap<Class<?>, CodeGenerator> generators;
 
     /**
      * Constructor without parameters that instantiates and fills generators
      * field with needed classes.
      */
     public ClassDiagramCodeGenerator() {
-        this.generators = new HashMap<Class, CodeGenerator>();
+        this.generators = new HashMap<Class<?>, CodeGenerator>();
         generators.put(ClassComponent.class, new ClassCodeGenerator());
         generators.put(InterfaceComponent.class, new InterfaceCodeGenerator());
         generators.put(EnumComponent.class, new EnumCodeGenerator());

@@ -9,7 +9,7 @@ import org.uml.model.Member;
 import org.uml.model.Method;
 import org.uml.visual.parser.WidgetParser;
 import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.MethodPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.MethodPopupMenuProvider;
 
 /**
  *

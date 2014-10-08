@@ -16,8 +16,8 @@ import org.uml.model.EnumComponent;
 import org.uml.model.Field;
 import org.uml.model.Literal;
 import org.uml.model.Method;
-import org.uml.visual.widgets.providers.EnumPopupMenuProvider;
-import org.uml.visual.widgets.providers.FieldPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.EnumPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.FieldPopupMenuProvider;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
 

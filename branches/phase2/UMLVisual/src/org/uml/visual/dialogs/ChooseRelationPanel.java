@@ -7,6 +7,7 @@ package org.uml.visual.dialogs;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import org.uml.model.CardinalityEnum;
 import org.uml.model.HasRelationComponent;
 import org.uml.model.RelationComponent;
 
@@ -19,15 +20,10 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
     /**
      * Creates new form ChooseRelationPanel
      */
-    
-
-    
     public ChooseRelationPanel() {
         initComponents();
         fillCollectionsComboBox();
     }
-    
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,144 +34,143 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        comboBoxRelationship = new javax.swing.JComboBox();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        textFieldName = new javax.swing.JTextField();
-        labelCardinalitySource = new javax.swing.JLabel();
-        labelCardinalityTarget = new javax.swing.JLabel();
-        comboBoxCardinalitySource = new javax.swing.JComboBox();
-        comboBoxCardinalityTarget = new javax.swing.JComboBox();
-        labelCardinalityTarget1 = new javax.swing.JLabel();
-        comboBoxCollectionType = new javax.swing.JComboBox();
+        cbxRelationship = new javax.swing.JComboBox<RelationComponent>();
+        lblRelationType = new javax.swing.JLabel();
+        lblName = new javax.swing.JLabel();
+        txfName = new javax.swing.JTextField();
+        lblCardinalitySource = new javax.swing.JLabel();
+        lblCardinalityTarget = new javax.swing.JLabel();
+        cbxCardinalitySource = new javax.swing.JComboBox<CardinalityEnum>();
+        cbxCardinalityTarget = new javax.swing.JComboBox<CardinalityEnum>();
+        lblCollectionType = new javax.swing.JLabel();
+        cbxCollectionType = new javax.swing.JComboBox<String>();
 
-        comboBoxRelationship.addActionListener(new java.awt.event.ActionListener() {
+        cbxRelationship.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxRelationshipActionPerformed(evt);
+                cbxRelationshipActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblRelationType, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.lblRelationType.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.jLabel2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblName, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.lblName.text")); // NOI18N
 
-        textFieldName.setText(org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.textFieldName.text")); // NOI18N
+        txfName.setText(org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.txfName.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(labelCardinalitySource, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.labelCardinalitySource.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblCardinalitySource, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.lblCardinalitySource.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(labelCardinalityTarget, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.labelCardinalityTarget.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblCardinalityTarget, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.lblCardinalityTarget.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(labelCardinalityTarget1, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.labelCardinalityTarget1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblCollectionType, org.openide.util.NbBundle.getMessage(ChooseRelationPanel.class, "ChooseRelationPanel.lblCollectionType.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblCardinalityTarget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCardinalitySource, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCollectionType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblRelationType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-                        .addGap(79, 79, 79))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(labelCardinalitySource, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                        .addComponent(labelCardinalityTarget, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labelCardinalityTarget1, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(comboBoxCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(textFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(comboBoxCardinalityTarget, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboBoxRelationship, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboBoxCollectionType, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addComponent(cbxCardinalityTarget, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbxCollectionType, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(cbxRelationship, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txfName)
+                        .addComponent(cbxCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(comboBoxRelationship, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblRelationType)
+                    .addComponent(cbxRelationship, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(textFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblName)
+                    .addComponent(txfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboBoxCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelCardinalitySource))
+                    .addComponent(cbxCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCardinalitySource))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboBoxCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelCardinalityTarget))
+                    .addComponent(cbxCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCardinalityTarget))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelCardinalityTarget1)
-                    .addComponent(comboBoxCollectionType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                    .addComponent(lblCollectionType)
+                    .addComponent(cbxCollectionType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void comboBoxRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRelationshipActionPerformed
-        RelationComponent relation = (RelationComponent) comboBoxRelationship.getSelectedItem();
+    private void cbxRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxRelationshipActionPerformed
+        RelationComponent relation = (RelationComponent) cbxRelationship.getSelectedItem();
         if (!(relation instanceof HasRelationComponent)) {
-            textFieldName.setEnabled(false);
-            comboBoxCollectionType.setEnabled(false);
-        }else {
-            textFieldName.setEnabled(true);
-            comboBoxCollectionType.setEnabled(true);
+            txfName.setEnabled(false);
+            cbxCollectionType.setEnabled(false);
+        } else {
+            txfName.setEnabled(true);
+            cbxCollectionType.setEnabled(true);
         }
-    }//GEN-LAST:event_comboBoxRelationshipActionPerformed
-    public String getNameFieldValue () {
-        return textFieldName.getText();
+    }//GEN-LAST:event_cbxRelationshipActionPerformed
+
+    public String getNameFieldValue() {
+        return txfName.getText();
     }
-    
-    public RelationComponent getRelationComponent () {
-         return (RelationComponent)comboBoxRelationship.getSelectedItem();       
+
+    public RelationComponent getRelationComponent() {
+        return (RelationComponent) cbxRelationship.getSelectedItem();
     }
-    
-    public JComboBox getRelationComponents () {
-        return comboBoxRelationship;
+
+    public JComboBox<RelationComponent> getRelationComponentsComboBox() {
+        return cbxRelationship;
     }
-    
-    public JTextField getNameTextField () {
-        return textFieldName;
+
+    public JTextField getNameTextField() {
+        return txfName;
     }
-    
-    public JComboBox getCardinalitySourceComboBox () {
-        return comboBoxCardinalitySource;
+
+    public JComboBox<CardinalityEnum> getCardinalitySourceComboBox() {
+        return cbxCardinalitySource;
     }
-    
-    public JComboBox getCardinalityTargetComboBox () {
-        return comboBoxCardinalityTarget;
+
+    public JComboBox<CardinalityEnum> getCardinalityTargetComboBox() {
+        return cbxCardinalityTarget;
     }
-    
+
     public String getCollectionType() {
-        return comboBoxCollectionType.getSelectedItem().toString();
+        return cbxCollectionType.getSelectedItem().toString();
     }
-    
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox comboBoxCardinalitySource;
-    private javax.swing.JComboBox comboBoxCardinalityTarget;
-    private javax.swing.JComboBox comboBoxCollectionType;
-    private javax.swing.JComboBox comboBoxRelationship;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel labelCardinalitySource;
-    private javax.swing.JLabel labelCardinalityTarget;
-    private javax.swing.JLabel labelCardinalityTarget1;
-    private javax.swing.JTextField textFieldName;
+    private javax.swing.JComboBox<CardinalityEnum> cbxCardinalitySource;
+    private javax.swing.JComboBox<CardinalityEnum> cbxCardinalityTarget;
+    private javax.swing.JComboBox<String> cbxCollectionType;
+    private javax.swing.JComboBox<RelationComponent> cbxRelationship;
+    private javax.swing.JLabel lblCardinalitySource;
+    private javax.swing.JLabel lblCardinalityTarget;
+    private javax.swing.JLabel lblCollectionType;
+    private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblRelationType;
+    private javax.swing.JTextField txfName;
     // End of variables declaration//GEN-END:variables
 
     private void fillCollectionsComboBox() {
         String[] collectionTypes = new String[]{"List", "ArrayList", "LinkedList"};
-        comboBoxCollectionType.removeAllItems();
-        comboBoxCollectionType.setModel(new DefaultComboBoxModel(collectionTypes));
-        comboBoxCollectionType.setSelectedIndex(0);
-        comboBoxCollectionType.setEditable(true);
+        cbxCollectionType.removeAllItems();
+        cbxCollectionType.setModel(new DefaultComboBoxModel<>(collectionTypes));
+        cbxCollectionType.setSelectedIndex(0);
+        cbxCollectionType.setEditable(true);
     }
 
 }

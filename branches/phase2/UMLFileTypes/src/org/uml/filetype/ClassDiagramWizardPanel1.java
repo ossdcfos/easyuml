@@ -52,7 +52,7 @@ public class ClassDiagramWizardPanel1 implements WizardDescriptor.Panel<WizardDe
 
     @Override
     public void readSettings(WizardDescriptor wiz) {
-        String classDiagramName =((ClassDiagramVisualPanel1)getComponent()).getClassDiagramNameField().getText();
+        String classDiagramName = getComponent().getClassDiagramNameField().getText();
 //        if(neuralNetworkName.equals("")){
 //            throw new WizardValidationException(null, "Invalid input! Neural network name must not be null value!", null);
 //        }
@@ -60,7 +60,7 @@ public class ClassDiagramWizardPanel1 implements WizardDescriptor.Panel<WizardDe
     
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        wiz.putProperty("classDiagramName", ((ClassDiagramVisualPanel1) getComponent()).getClassDiagramNameField().getText().trim());
+        wiz.putProperty("classDiagramName", getComponent().getClassDiagramNameField().getText().trim());
     }
     
     

@@ -1,46 +1,20 @@
 package org.uml.visual.widgets;
 
+import org.uml.visual.widgets.providers.popups.ConnectionPopupMenuProvider;
 import java.awt.BasicStroke;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.Set;
-import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.WidgetAction;
-import org.netbeans.api.visual.anchor.Anchor;
-import org.netbeans.api.visual.anchor.AnchorFactory;
-import org.netbeans.api.visual.anchor.AnchorShape;
-import org.netbeans.api.visual.anchor.AnchorShapeFactory;
-import org.netbeans.api.visual.anchor.PointShape;
+import java.awt.event.KeyEvent;
+import org.netbeans.api.visual.action.*;
+import org.netbeans.api.visual.anchor.*;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.graph.layout.GraphLayoutFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
-import org.netbeans.api.visual.model.ObjectSceneEvent;
-import org.netbeans.api.visual.model.ObjectSceneEventType;
-import org.netbeans.api.visual.model.ObjectSceneListener;
-import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.router.RouterFactory;
-import org.netbeans.api.visual.widget.ConnectionWidget;
-import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.LayerWidget;
-import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.ImageUtilities;
+import org.netbeans.api.visual.widget.*;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
-import org.uml.model.ClassDiagram;
-import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagramComponent;
-import org.uml.model.EnumComponent;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.InterfaceComponent;
-import org.uml.model.PackageComponent;
-import org.uml.model.RelationComponent;
-import org.uml.model.UseRelationComponent;
+import org.openide.util.lookup.*;
+import org.uml.model.*;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
-import org.uml.visual.widgets.providers.ConnectionPopupMenuProvider;
-import org.uml.visual.widgets.providers.ScenePopupMenuProvider;
-import org.uml.visual.widgets.providers.SceneAcceptProvider;
-import org.uml.visual.widgets.providers.SceneSelectProvider;
+import org.uml.visual.widgets.providers.*;
 
 /**
  *
@@ -69,16 +43,26 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         interractionLayer = new LayerWidget(this);
         addChild(interractionLayer);
         
+        // middle-click + drag  Scene.getInputBindings().getPanActionButton()
         getActions().addAction(ActionFactory.createPanAction());
-        getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
-        getActions().addAction(ActionFactory.createSelectAction(new SceneSelectProvider(this), false));
         
+        // ctrl + scroll        Scene.getInputBindings().getZoomActionModifiers()
+        getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
+        //getActions().addAction(ActionFactory.createZoomAction());
+ 
+        // To support selecting background scene (deselecting all widgets)
+        getActions().addAction(ActionFactory.createSelectAction(new SceneSelectProvider(this), false));
+        //getActions().addAction(this.createSelectAction());
+        
+        // To support drag-and-drop from the palette
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
-        getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
-        getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
-        getActions().addAction(ActionFactory.createZoomAction());
+        
+        //getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
+        //getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
+        //getActions().addAction(ActionFactory.createZoomAction());
+        //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
         //getActions().addAction(ActionFactory.createHoverAction(new MemberHoverProvider()));
-        // dodaj widget ali ne i com[onentu ponovo kao u addNode...
+        // dodaj widget ali ne i componentu ponovo kao u addNode...
 
         for (ClassDiagramComponent comp : umlClassDiagram.getComponents().values()) {
             Widget w = addNode(comp);
@@ -91,65 +75,64 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
             this.setEdgeTarget(rel, rel.getTarget());
         }
 
-        GraphLayoutFactory.createOrthogonalGraphLayout(this, true);
-
-
-
-        addObjectSceneListener(new ObjectSceneListener() {
-            @Override
-            public void objectAdded(ObjectSceneEvent event, Object addedObject) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void objectStateChanged(ObjectSceneEvent event, Object changedObject, ObjectState previousState, ObjectState newState) {
-                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void selectionChanged(ObjectSceneEvent event, Set<Object> previousSelection, Set<Object> newSelection) {
-                for (Object o : previousSelection) {
-                    if (o instanceof ComponentWidgetBase) {
-                        ComponentWidgetBase comp = (ComponentWidgetBase) o;
-                        comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(false));
-                    }
-                    content.remove(o);
-                }
-                for (Object o : newSelection) {
-                    if (o instanceof ComponentWidgetBase) {
-                        ComponentWidgetBase comp = (ComponentWidgetBase) o;
-                        comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(true));
-                    }
-                    content.add(o);
-                    //setSelectedObjects(newSelection);
-                }
-            }
-
-            @Override
-            public void highlightingChanged(ObjectSceneEvent event, Set<Object> previousHighlighting, Set<Object> newHighlighting) {
-                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void hoverChanged(ObjectSceneEvent event, Object previousHoveredObject, Object newHoveredObject) {
-                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-                if (previousFocusedObject != null) {
-                    content.remove(previousFocusedObject);
-                }
-                if (newFocusedObject != null) {
-                    content.add(newFocusedObject);
-                }
-            }
-        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED);
+        // ne treba ovde, vec tamo gde se pravi scena
+        //GraphLayoutFactory.createOrthogonalGraphLayout(this, true);
+        
+//        addObjectSceneListener(new ObjectSceneListener() {
+//            @Override
+//            public void objectAdded(ObjectSceneEvent event, Object addedObject) {
+//                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//            @Override
+//            public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
+//                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//            @Override
+//            public void objectStateChanged(ObjectSceneEvent event, Object changedObject, ObjectState previousState, ObjectState newState) {
+//                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//            @Override
+//            public void selectionChanged(ObjectSceneEvent event, Set<Object> previousSelection, Set<Object> newSelection) {
+//                for (Object o : previousSelection) {
+//                    if (o instanceof ComponentWidgetBase) {
+//                        ComponentWidgetBase comp = (ComponentWidgetBase) o;
+//                        comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(false));
+//                    }
+//                    content.remove(o);
+//                }
+//                for (Object o : newSelection) {
+//                    if (o instanceof ComponentWidgetBase) {
+//                        ComponentWidgetBase comp = (ComponentWidgetBase) o;
+//                        comp.notifyStateChanged(comp.getState(), comp.getState().deriveSelected(true));
+//                    }
+//                    content.add(o);
+//                    //setSelectedObjects(newSelection);
+//                }
+//            }
+//
+//            @Override
+//            public void highlightingChanged(ObjectSceneEvent event, Set<Object> previousHighlighting, Set<Object> newHighlighting) {
+//                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//            @Override
+//            public void hoverChanged(ObjectSceneEvent event, Object previousHoveredObject, Object newHoveredObject) {
+//                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//            @Override
+//            public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
+//                if (previousFocusedObject != null) {
+//                    content.remove(previousFocusedObject);
+//                }
+//                if (newFocusedObject != null) {
+//                    content.add(newFocusedObject);
+//                }
+//            }
+//        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED);
 
     }
 
@@ -168,7 +151,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
     public ClassDiagram getUmlClassDiagram() {
         return umlClassDiagram;
     }
-
+    
     @Override
     public Lookup getLookup() {
         return aLookup;
@@ -178,16 +161,16 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         return content;
     }
 
+    // adding of a component
     @Override
     protected Widget attachNodeWidget(ClassDiagramComponent component) {
-
         ComponentWidgetBase widget = null;
 
-        if (!umlClassDiagram.getComponents().containsValue(component)) { // need to check, if loading existing diagram...
+        // need to check, if loading existing diagram...
+        if (!umlClassDiagram.getComponents().containsValue(component)) {
             umlClassDiagram.addComponent(component);
         }
-
-
+        
         if (component instanceof ClassComponent) {
             widget = new ClassWidget(this, (ClassComponent) component);
         } else if (component instanceof InterfaceComponent) {
@@ -201,11 +184,11 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         }
 
         mainLayer.addChild(widget);
-
-
+        
         return widget;
     }
 
+    // adding of a relation
     @Override
     protected Widget attachEdgeWidget(RelationComponent e) {
         LabelWidget name = new LabelWidget(this, e.getName());

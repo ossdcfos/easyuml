@@ -1,13 +1,8 @@
 package org.uml.visual.widgets;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import javax.sound.sampled.FloatControl;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -26,27 +21,27 @@ import org.uml.model.Field;
 import org.uml.model.Method;
 import org.uml.model.Visibility;
 import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.ClassPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ClassWidgetAcceptProvider;
-import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
  *
  * @author NUGS
  */
- public class ClassWidget extends ComponentWidgetBase implements NameableWidget {
+public class ClassWidget extends ComponentWidgetBase implements NameableWidget {
 
     //TODO Zoki da li si razmisljao da napravimo domen neki UmlElement pa da ovi nasledjuju to? 
     ClassComponent classComponent;
+    private Widget fieldsContainer;
+    private Widget methodsContainer;
+    //private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+    // koristi se na vise mesta
+    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
+    private static final Border BORDER_6 = BorderFactory.createEmptyBorder(6);
 //    private static final Border RESIZE_BORDER =
 //            BorderFactory.createResizeBorder(4, Color.black, true);
 //    private static final Border DEFAULT_BORDER =
 //            BorderFactory.createLineBorder();
-    private Widget fieldsContainer;
-    private Widget methodsContainer;
-    //private WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
-    private static final Border BORDER_4 = BorderFactory.createEmptyBorder(6);
     private final Lookup lookup;
 
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
@@ -54,71 +49,69 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
         this.classComponent = classComponent;
         lookup = Lookups.fixed(classComponent, this);
         //lookup = Lookups.singleton(classComponent);
-        this.scene = scene;
 //        setChildConstraint(this, 1); // getImageWidget()
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setBorder(BorderFactory.createLineBorder());
         setOpaque(true);
         setCheckClipping(true);
-        
 
-        Widget classWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
-        classWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        classWidget.setBorder(BORDER_4);
+        // header widget
+        Widget headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
+        headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
+        headerWidget.setBorder(BORDER_6);
         if (classComponent.isIsAbstract()) {
-            LabelWidget abstractLabel = new LabelWidget(classWidget.getScene(), "<<abstract>>");
-            abstractLabel.setFont(classWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
+            LabelWidget abstractLabel = new LabelWidget(headerWidget.getScene(), "<<abstract>>");
+            abstractLabel.setFont(headerWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
             abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
-            classWidget.addChild(abstractLabel);
+            headerWidget.addChild(abstractLabel);
         }
-
-        classWidget.addChild(nameWidget);
-        addChild(classWidget);
         
+        nameWidget.setLabel(classComponent.getName());
         nameWidget.getActions().addAction(nameEditorAction);
+        headerWidget.addChild(nameWidget);
+        addChild(headerWidget);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
+        // fields
         fieldsContainer = new Widget(scene);
         fieldsContainer.setMinimumSize(new Dimension(110, 50));
         fieldsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
         fieldsContainer.setOpaque(false);
-        fieldsContainer.setBorder(BORDER_4);
-        LabelWidget memberName = new LabelWidget(scene);
-        fieldsContainer.addChild(memberName);
+        fieldsContainer.setBorder(BORDER_6);
+        LabelWidget fieldName = new LabelWidget(scene);
+        fieldsContainer.addChild(fieldName);
         addChild(fieldsContainer);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
+        // methods
         methodsContainer = new Widget(scene);
         methodsContainer.setMinimumSize(new Dimension(110, 50));
         methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
         methodsContainer.setOpaque(false);
-        methodsContainer.setBorder(BORDER_4);
-        LabelWidget operationName = new LabelWidget(scene);
-        methodsContainer.addChild(operationName);
+        methodsContainer.setBorder(BORDER_6);
+        LabelWidget methodName = new LabelWidget(scene);
+        methodsContainer.addChild(methodName);
         addChild(methodsContainer);
 
-        this.nameWidget.setLabel(classComponent.getName());     
-        
+        // actions
         getActions().addAction(ActionFactory.createAcceptAction(new ClassWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
+//        getActions().addAction(ActionFactory.createMoveAction());
+//        getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
         
-  //      getActions().addAction(ActionFactory.createMoveAction());
-        //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
-        
-        //filling this widget when loading existing diagram
+        // Fill the widget when loading an existing diagram
         for (Constructor c : classComponent.getConstructors().values()) {
             ConstructorWidget w = new ConstructorWidget(scene, c);
             this.addConstructorWidget(w);
         }
-        
+
         for (Field fieldComp : classComponent.getFields().values()) {
-            
             FieldWidget w = new FieldWidget(this.getClassDiagramScene(), fieldComp);
             this.addFieldWidget(w);
         }
-        
+
         for (Method methodComp : classComponent.getMethods().values()) {
             MethodWidget mw = new MethodWidget(this.getClassDiagramScene(), methodComp);
             this.addMethodWidget(mw);
@@ -146,7 +139,6 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
         fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
         //fieldWidget.addChild(createAtributeModifierPicker(scene));
-
         LabelWidget visibilityLabel = new LabelWidget(scene);
         visibilityLabel.setLabel("+");
         fieldWidget.addChild(visibilityLabel);
@@ -167,7 +159,6 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
         widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
         //widget.addChild(createMethodModifierPicker(scene));
-
         LabelWidget visibilityLabel = new LabelWidget(scene);
         visibilityLabel.setLabel("+");
         widget.addChild(visibilityLabel);
@@ -237,7 +228,7 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
             //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
             JOptionPane.showMessageDialog(this.getScene().getView(), "Greska, ime vec postoji.");
         }
-        
+
         for (Widget w : methodsContainer.getChildren()) {
             if (w instanceof ConstructorWidget) {
                 ((ConstructorWidget) w).propertyChange(new PropertyChangeEvent(nameWidget, "name", oldName, newName));
@@ -252,8 +243,8 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
     @Override
     public void setAttributes(String attributes) {
-        String [] keyWords = attributes.split(" ");
-        for (String keyWord: keyWords) {
+        String[] keyWords = attributes.split(" ");
+        for (String keyWord : keyWords) {
             if (keyWord.equals("public")) {
                 classComponent.setVisibility(Visibility.PUBLIC);
             }
@@ -263,7 +254,7 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
             if (keyWord.equals("private")) {
                 classComponent.setVisibility(Visibility.PRIVATE);
             }
-            if(keyWord.equals("abstract")) {
+            if (keyWord.equals("abstract")) {
                 classComponent.setIsAbstract(true);
             }
         }

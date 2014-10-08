@@ -5,19 +5,17 @@
 package org.uml.visual.palette;
 
 import org.openide.nodes.AbstractNode;
-import org.openide.util.lookup.Lookups;
+import org.openide.nodes.Children;
 
 /**
  *
  * @author NUGS
  */
-public class PaletteCategoryNode extends AbstractNode{
+public class PaletteCategoryNode extends AbstractNode {
 
     public PaletteCategoryNode(PaletteCategory category) {
-        super( new PaletteItemChildren(category), Lookups.singleton(category));
+        super(Children.create(new PaletteItemChildFactory(category), true));
+        //super(new PaletteItemChildren(category));
         setDisplayName(category.getName());
-        
     }
-    
-    
 }

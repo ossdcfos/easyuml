@@ -14,7 +14,7 @@ import org.openide.util.lookup.Lookups;
  */
 public class PaletteItemNode extends AbstractNode{
     
-    private PaletteItem paletteItem;
+    private final PaletteItem paletteItem;
 
     public PaletteItemNode(PaletteItem key) {
         super(Children.LEAF, Lookups.singleton(key));
@@ -26,6 +26,4 @@ public class PaletteItemNode extends AbstractNode{
     public PaletteItem getPaletteItem() {
         return paletteItem;
     }
-    
-    
 }

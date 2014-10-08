@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @see ClassDiagram
  * @see ClassDiagramComponent
  */
-public class RelationComponent implements Serializable {
+public abstract class RelationComponent implements Serializable {
 
     ClassDiagramComponent source;
     ClassDiagramComponent target;

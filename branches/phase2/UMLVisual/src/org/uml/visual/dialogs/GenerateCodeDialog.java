@@ -51,15 +51,13 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jLabelRequest = new javax.swing.JLabel();
-        jComboBoxProjects = new javax.swing.JComboBox();
+        jComboBoxProjects = new javax.swing.JComboBox<String>();
         jBGenerateCode = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabelRequest, org.openide.util.NbBundle.getMessage(GenerateCodeDialog.class, "GenerateCodeDialog.jLabelRequest.text")); // NOI18N
-
-        jComboBoxProjects.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         org.openide.awt.Mnemonics.setLocalizedText(jBGenerateCode, org.openide.util.NbBundle.getMessage(GenerateCodeDialog.class, "GenerateCodeDialog.jBGenerateCode.text")); // NOI18N
         jBGenerateCode.addActionListener(new java.awt.event.ActionListener() {
@@ -178,7 +176,7 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton jBGenerateCode;
-    private javax.swing.JComboBox jComboBoxProjects;
+    private javax.swing.JComboBox<String> jComboBoxProjects;
     private javax.swing.JLabel jLabelRequest;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

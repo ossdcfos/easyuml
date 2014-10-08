@@ -16,7 +16,7 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.PackageComponent;
 import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.PackagePopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.PackagePopupMenuProvider;
 
 /**
  *

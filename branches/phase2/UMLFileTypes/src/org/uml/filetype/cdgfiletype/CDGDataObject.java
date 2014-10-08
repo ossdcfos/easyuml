@@ -1,11 +1,8 @@
 package org.uml.filetype.cdgfiletype;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.openide.awt.ActionID;

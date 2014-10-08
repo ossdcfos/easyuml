@@ -7,7 +7,7 @@ package org.uml.visual.widgets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
-import org.uml.visual.widgets.providers.ConstructorPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.ConstructorPopupMenuProvider;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;

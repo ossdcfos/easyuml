@@ -8,12 +8,12 @@ import java.awt.BasicStroke;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.openide.util.Exceptions;
 import org.uml.model.ClassDiagram;
 import org.uml.model.RelationComponent;
-import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
  *
@@ -52,26 +52,26 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        comboBoxRelation = new javax.swing.JComboBox();
-        buttonOK = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        lblRelationType = new javax.swing.JLabel();
+        cbxRelation = new javax.swing.JComboBox<RelationComponent>();
+        btnOK = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblRelationType, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.lblRelationType.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(buttonOK, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.buttonOK.text")); // NOI18N
-        buttonOK.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(btnOK, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.btnOK.text")); // NOI18N
+        btnOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonOKActionPerformed(evt);
+                btnOKActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(btnCancel, org.openide.util.NbBundle.getMessage(ChangeRelationTypeDialog.class, "ChangeRelationTypeDialog.btnCancel.text")); // NOI18N
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnCancelActionPerformed(evt);
             }
         });
 
@@ -83,14 +83,14 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(51, 51, 51)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblRelationType, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboBoxRelation, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cbxRelation, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(59, 59, 59)
-                        .addComponent(buttonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(57, 57, 57)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -98,24 +98,24 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(comboBoxRelation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblRelationType)
+                    .addComponent(cbxRelation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonOK)
-                    .addComponent(jButton2))
+                    .addComponent(btnOK)
+                    .addComponent(btnCancel))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void buttonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOKActionPerformed
-        RelationComponent relation = (RelationComponent) comboBoxRelation.getSelectedItem();
+    private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
+        RelationComponent relation = (RelationComponent) cbxRelation.getSelectedItem();
         relation.setName(oldRelation.getName());
         relation.setSource(oldRelation.getSource());
         relation.setTarget(oldRelation.getTarget());
@@ -134,7 +134,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
         }
      
         this.dispose();
-    }//GEN-LAST:event_buttonOKActionPerformed
+    }//GEN-LAST:event_btnOKActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,10 +178,10 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonOK;
-    private javax.swing.JComboBox comboBoxRelation;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnOK;
+    private javax.swing.JComboBox<RelationComponent> cbxRelation;
+    private javax.swing.JLabel lblRelationType;
     // End of variables declaration//GEN-END:variables
 
     private void fillCombos(boolean isProject) {
@@ -193,7 +193,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
             else {
             jar = new JarFile(new File("../build/cluster/modules/org-uml-model.jar"));
             }
-            Enumeration entries= jar.entries();
+            Enumeration<JarEntry> entries= jar.entries();
             while(entries.hasMoreElements()) {
                 String fullUrl = entries.nextElement().toString();
                 if(fullUrl.startsWith("org/uml/model/")&& fullUrl.contains("RelationComponent")&&!fullUrl.equals("org/uml/model/RelationComponent.class")) {
@@ -201,7 +201,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
                         fullUrl= fullUrl.replace(".class", "");
                         fullUrl= fullUrl.replace("/", ".");
                         Class<? extends RelationComponent> forName= (Class<? extends RelationComponent>) Class.forName(fullUrl);
-                        comboBoxRelation.addItem(forName.newInstance());
+                        cbxRelation.addItem(forName.newInstance());
                     } catch (        InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
                         Exceptions.printStackTrace(ex);
                     }

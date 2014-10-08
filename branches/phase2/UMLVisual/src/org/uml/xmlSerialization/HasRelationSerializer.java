@@ -39,8 +39,8 @@ public class HasRelationSerializer implements RelationSerializer{
     @Override
     public void serialize(Element node) {
         if (hasRelationComponent.getName() != null) node.addAttribute("name", hasRelationComponent.getName());
-        ClassDiagramComponent sourceComponent = (ClassDiagramComponent) hasRelationComponent.getSource();
-        ClassDiagramComponent targetComponent = (ClassDiagramComponent) hasRelationComponent.getTarget();
+        ClassDiagramComponent sourceComponent = hasRelationComponent.getSource();
+        ClassDiagramComponent targetComponent = hasRelationComponent.getTarget();
         if (sourceComponent != null) { 
             node.addAttribute("source", sourceComponent.getName());
         }else {
