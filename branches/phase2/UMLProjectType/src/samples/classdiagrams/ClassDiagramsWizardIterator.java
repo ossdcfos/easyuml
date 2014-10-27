@@ -1,8 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package samples.classdiagrams.classdiagram1;
+package samples.classdiagrams;
 
 import java.awt.Component;
 import java.io.ByteArrayInputStream;
@@ -37,30 +38,30 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 // TODO define position attribute
-@TemplateRegistration(folder = "Project/UML", displayName = "#UMLProject_displayName", description = "UMLProjectDescription.html", iconBase = "samples/classdiagrams/classdiagram1/classdiagramicon.gif", content = "UMLDiagramProjectTemplate.zip")
-@Messages("UMLProject_displayName=UML Diagrams")
-public class ClassDiagramSample1WizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
+@TemplateRegistration(folder = "Project/UML", displayName = "#ClassDiagrams_displayName", description = "ClassDiagramsDescription.html", iconBase = "samples/classdiagrams/ClassDiagrams.png", content = "ClassDiagramsProject.zip")
+@Messages("ClassDiagrams_displayName=Class Diagrams")
+public class ClassDiagramsWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
 
     private int index;
     private WizardDescriptor.Panel[] panels;
     private WizardDescriptor wiz;
 
-    public ClassDiagramSample1WizardIterator() {
+    public ClassDiagramsWizardIterator() {
     }
 
-    public static ClassDiagramSample1WizardIterator createIterator() {
-        return new ClassDiagramSample1WizardIterator();
+    public static ClassDiagramsWizardIterator createIterator() {
+        return new ClassDiagramsWizardIterator();
     }
 
     private WizardDescriptor.Panel[] createPanels() {
         return new WizardDescriptor.Panel[]{
-                    new ClassDiagramSample1WizardPanel(),};
+            new ClassDiagramsWizardPanel(),};
     }
 
     private String[] createSteps() {
         return new String[]{
-                    NbBundle.getMessage(ClassDiagramSample1WizardIterator.class, "LBL_CreateProjectStep")
-                };
+            NbBundle.getMessage(ClassDiagramsWizardIterator.class, "LBL_CreateProjectStep")
+        };
     }
 
     public Set/*<FileObject>*/ instantiate(/*ProgressHandle handle*/) throws IOException {
@@ -222,4 +223,5 @@ public class ClassDiagramSample1WizardIterator implements WizardDescriptor./*Pro
         }
 
     }
+
 }

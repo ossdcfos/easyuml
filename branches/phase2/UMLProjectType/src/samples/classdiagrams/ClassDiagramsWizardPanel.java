@@ -1,8 +1,9 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package samples.classdiagrams.classdiagram1;
+package samples.classdiagrams;
 
 import java.awt.Component;
 import java.util.HashSet;
@@ -17,31 +18,32 @@ import org.openide.util.NbBundle;
 /**
  * Panel just asking for basic info.
  */
-public class ClassDiagramSample1WizardPanel implements WizardDescriptor.Panel,
+public class ClassDiagramsWizardPanel implements WizardDescriptor.Panel,
         WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
     private WizardDescriptor wizardDescriptor;
-    private ClassDiagramSample1PanelVisual component;
+    private ClassDiagramsPanelVisual component;
 
-    public ClassDiagramSample1WizardPanel() {
+    public ClassDiagramsWizardPanel() {
     }
 
     public Component getComponent() {
         if (component == null) {
-            component = new ClassDiagramSample1PanelVisual(this);
-            component.setName(NbBundle.getMessage(ClassDiagramSample1WizardPanel.class, "LBL_CreateProjectStep"));
+            component = new ClassDiagramsPanelVisual(this);
+            component.setName(NbBundle.getMessage(ClassDiagramsWizardPanel.class, "LBL_CreateProjectStep"));
         }
         return component;
     }
 
     public HelpCtx getHelp() {
-        return new HelpCtx(ClassDiagramSample1WizardPanel.class);
+        return new HelpCtx(ClassDiagramsWizardPanel.class);
     }
 
     public boolean isValid() {
         getComponent();
         return component.valid(wizardDescriptor);
     }
+
     private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
 
     public final void addChangeListener(ChangeListener l) {
@@ -85,4 +87,5 @@ public class ClassDiagramSample1WizardPanel implements WizardDescriptor.Panel,
         getComponent();
         component.validate(wizardDescriptor);
     }
+
 }

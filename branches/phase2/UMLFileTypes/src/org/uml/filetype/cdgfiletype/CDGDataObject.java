@@ -40,7 +40,7 @@ mimeType = "text/x-cdg",
 extension = {"cdg", "CDG"})
 @DataObject.Registration(
     mimeType = "text/x-cdg",
-iconBase = "org/uml/filetype/cdgfiletype/classdiagramicon.gif",
+iconBase = "org/uml/filetype/cdgfiletype/classdiagramicon.png",
 displayName = "#LBL_CDG_LOADER",
 position = 300)
 @ActionReferences({
