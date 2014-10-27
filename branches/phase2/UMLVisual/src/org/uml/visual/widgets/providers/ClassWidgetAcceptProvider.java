@@ -50,19 +50,23 @@ public class ClassWidgetAcceptProvider implements AcceptProvider {
         Image dragImage = ImageUtilities.loadImage(pin.getPaletteItem().getIcon());
         JComponent view = widget.getScene().getView();
         Graphics2D g2 = (Graphics2D) view.getGraphics();
-//        Rectangle visRect = view.getVisibleRect();
-//        view.paintImmediately(visRect.x, visRect.y, visRect.width, visRect.height);
-        g2.drawImage(dragImage, widget.getLocation().x + point.getLocation().x, widget.getLocation().y + point.getLocation().y, view);
+        //Rectangle visRect = view.getVisibleRect();
+        //view.paintImmediately(visRect.x, visRect.y, visRect.width, visRect.height);
+       view.paintImmediately(point.x + widget.getLocation().x, point.y + widget.getLocation().y, widget.getClientArea().width, widget.getClientArea().height);
 //        g2.drawImage()
 //                dragImage,
 //                AffineTransform.getTranslateInstance(point.getLocation().getX(), point.getLocation().getY()),
 //                null);
         
-        
+        //view.repaint();
         //Node node = NodeTransfer.node(t, NodeTransfer.DND_COPY_OR_MOVE);
         //PaletteItemNode pin = (PaletteItemNode)node;
+        //view.paint(g2);
+        g2.drawImage(dragImage, widget.getLocation().x + point.getLocation().x, widget.getLocation().y + point.getLocation().y, view);
+        
+        //widget.repaint();
         //view.repaint();
-        widget.getScene().validate();
+        //widget.getScene().validate();
         Class<?> droppedClass = pin.getPaletteItem().getDropClass();
         drClass = droppedClass;
         return canAccept(droppedClass) ? ConnectorState.ACCEPT : ConnectorState.REJECT;

@@ -72,12 +72,12 @@ public class ClassDiagramNode  extends AbstractNode {
 
     @Override
     public Image getIcon(int type) {
-        return ImageUtilities.loadImage("org/uml/explorer/icons/classDiagramIcon.gif");
+        return ImageUtilities.loadImage("org/uml/explorer/icons/classDiagramIcon.png");
     }
 
     @Override
     public Image getOpenedIcon(int type) {
-        return ImageUtilities.loadImage("org/uml/explorer/icons/classDiagramIcon.gif");
+        return ImageUtilities.loadImage("org/uml/explorer/icons/classDiagramIcon.png");
     }
     
     

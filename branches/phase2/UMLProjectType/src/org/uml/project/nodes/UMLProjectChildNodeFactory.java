@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.uml.projecttype.nodes;
+package org.uml.project.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +12,8 @@ import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
-import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.uml.project.UMLProject;
 
 /**
@@ -44,8 +41,8 @@ public class UMLProjectChildNodeFactory implements NodeFactory {
         @Override
         public List<Node> keys() {
             FileObject classDiagFileObject = 
-                project.getProjectDirectory().getFileObject(UMLProject.Class_Diagrams_DIR);
-            List<Node> result = new ArrayList<Node>();
+                project.getProjectDirectory().getFileObject(UMLProject.CLASS_DIAGRAMS_DIR);
+            List<Node> result = new ArrayList<>();
             
             DataFolder classDiagFolder = DataFolder.findFolder(classDiagFileObject);
             Node classDiagNode = classDiagFolder.getNodeDelegate();            
@@ -83,6 +80,6 @@ public class UMLProjectChildNodeFactory implements NodeFactory {
         @Override
         public void removeChangeListener(ChangeListener cl) {
         }
-        
-    }  
+    }
+    
 }

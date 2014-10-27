@@ -15,6 +15,7 @@ import org.openide.util.lookup.*;
 import org.uml.model.*;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
 import org.uml.visual.widgets.providers.*;
+import org.uml.visual.widgets.providers.unused.ScenePopupMenuProvider;
 
 /**
  *
@@ -57,7 +58,7 @@ public class ClassDiagramScene extends GraphScene<ClassDiagramComponent, Relatio
         // To support drag-and-drop from the palette
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));
         
-        //getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
+        getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
         //getActions().addAction(ActionFactory.createMoveAction(ActionFactory.createSnapToGridMoveStrategy(16, 16), null));
         //getActions().addAction(ActionFactory.createZoomAction());
         //getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));

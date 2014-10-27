@@ -46,12 +46,16 @@ public class SceneAcceptProvider implements AcceptProvider {
         Image dragImage = ImageUtilities.loadImage(pin.getPaletteItem().getIcon());
         JComponent view = classDiagramScene.getView();
         Graphics2D g2 = (Graphics2D) view.getGraphics();
-        Rectangle visRect = view.getVisibleRect();
-        view.paintImmediately(visRect.x, visRect.y, visRect.width, visRect.height);
-        g2.drawImage(
-                dragImage,
-                AffineTransform.getTranslateInstance(point.getLocation().getX(), point.getLocation().getY()),
-                null);
+        view.paint(g2);
+//        Rectangle visRect = view.getVisibleRect();
+//        view.paintImmediately(visRect.x, visRect.y, visRect.width, visRect.height);
+        
+        //view.paintImmediately(point.x, point.y, dragImage.getWidth(view), dragImage.getHeight(view));
+        g2.drawImage(dragImage, widget.getLocation().x + point.getLocation().x, widget.getLocation().y + point.getLocation().y, view);
+//        g2.drawImage(
+//                dragImage,
+//                AffineTransform.getTranslateInstance(point.getLocation().getX(), point.getLocation().getY()),
+//                null);
 
         //DataFlavor flavor = t.getTransferDataFlavors()[2];
         //Class droppedClass = flavor.getRepresentationClass();

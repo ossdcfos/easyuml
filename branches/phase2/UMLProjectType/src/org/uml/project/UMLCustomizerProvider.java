@@ -46,12 +46,11 @@ public class UMLCustomizerProvider implements CustomizerProvider {
     }
 
     private class OKOptionListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             StatusDisplayer.getDefault().setStatusText("OK button clicked for "
                     + project.getProjectDirectory().getName() + " customizer!");
         }
-
-    }  
+    }
+    
 }

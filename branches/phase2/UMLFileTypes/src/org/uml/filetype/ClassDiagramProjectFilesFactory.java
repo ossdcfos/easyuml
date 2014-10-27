@@ -36,7 +36,7 @@ public class ClassDiagramProjectFilesFactory {
 //            currentProject = genlokup.lookup(UMLProject.class);
             //currentProject = CurrentProject.getInstance().getCurrentProject();                     
             String path = currentProject.getProjectDirectory().getPath();
-            path += "/" + UMLProject.Class_Diagrams_DIR + "/";
+            path += "/" + UMLProject.CLASS_DIAGRAMS_DIR + "/";
             this.classDiagram = cd;
             classDiagramName = this.classDiagram.getName();
             String fullFilePath = path + classDiagramName + ".cdg";
