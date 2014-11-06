@@ -1,5 +1,6 @@
 package org.uml.model;
 
+import org.uml.model.members.Method;
 import java.util.HashMap;
 
 /**

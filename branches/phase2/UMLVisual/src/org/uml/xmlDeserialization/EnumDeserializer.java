@@ -7,13 +7,13 @@ package org.uml.xmlDeserialization;
 import java.awt.Point;
 import java.util.Iterator;
 import org.dom4j.Element;
-import org.uml.model.Constructor;
+import org.uml.model.members.Constructor;
 import org.uml.model.EnumComponent;
-import org.uml.model.Field;
-import org.uml.model.Literal;
-import org.uml.model.Method;
+import org.uml.model.members.Field;
+import org.uml.model.members.Literal;
+import org.uml.model.members.Method;
 import org.uml.model.PackageComponent;
-import org.uml.model.Visibility;
+import org.uml.model.members.Visibility;
 
 /**
  *
@@ -52,7 +52,7 @@ public class EnumDeserializer implements XmlDeserializer{
             enumComponent.setVisibility(Visibility.stringToVisibility(visibility));
         }
         
-        Iterator literalIterator = node.element("Literals").elementIterator("Literal");
+        Iterator<?> literalIterator = node.element("Literals").elementIterator("Literal");
         while (literalIterator != null && literalIterator.hasNext()) {
             Element literalElement = (Element) literalIterator.next();
             Literal literal = new Literal(null);
@@ -62,7 +62,7 @@ public class EnumDeserializer implements XmlDeserializer{
             literal.setDeclaringClass(enumComponent);
         }
         
-        Iterator constructorIterator = node.element("Constructors").elementIterator("Constructor");
+        Iterator<?> constructorIterator = node.element("Constructors").elementIterator("Constructor");
         while (constructorIterator != null && constructorIterator.hasNext()) {
             Element constructorElement = (Element) constructorIterator.next();
             Constructor constructor = new Constructor(null);
@@ -71,7 +71,7 @@ public class EnumDeserializer implements XmlDeserializer{
             enumComponent.addConstructor(constructor);
             constructor.setDeclaringClass(enumComponent);
         }
-        Iterator fieldIterator = node.element("Fields").elementIterator("Field");
+        Iterator<?> fieldIterator = node.element("Fields").elementIterator("Field");
         while (fieldIterator != null && fieldIterator.hasNext()) {
             Element fieldElement = (Element) fieldIterator.next();
             Field field = new Field("unknownField", "Object", Visibility.PACKAGE);
@@ -81,7 +81,7 @@ public class EnumDeserializer implements XmlDeserializer{
             field.setDeclaringClass(enumComponent);
         }
 
-        Iterator methodIterator = node.element("Methods").elementIterator("Method");
+        Iterator<?> methodIterator = node.element("Methods").elementIterator("Method");
         while (methodIterator != null && methodIterator.hasNext()) {
             Element methodElement = (Element) methodIterator.next();
             Method method = new Method(null);

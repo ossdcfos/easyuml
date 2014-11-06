@@ -7,14 +7,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -23,22 +20,22 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.windows.WindowManager;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.Constructor;
-import org.uml.model.Field;
-import org.uml.model.Member;
-import org.uml.model.Method;
-import org.uml.model.MethodArgument;
-import org.uml.model.RelationComponent;
-import org.uml.model.Visibility;
-import static org.uml.model.Visibility.PACKAGE;
-import static org.uml.model.Visibility.PRIVATE;
-import static org.uml.model.Visibility.PROTECTED;
-import static org.uml.model.Visibility.PUBLIC;
+import org.uml.model.members.Constructor;
+import org.uml.model.members.Field;
+import org.uml.model.members.Member;
+import org.uml.model.members.Method;
+import org.uml.model.members.MethodArgument;
+import org.uml.model.members.Visibility;
+import static org.uml.model.members.Visibility.PACKAGE;
+import static org.uml.model.members.Visibility.PRIVATE;
+import static org.uml.model.members.Visibility.PROTECTED;
+import static org.uml.model.members.Visibility.PUBLIC;
+import org.uml.model.relations.RelationComponent;
 import org.uml.visual.dialogs.PackageDialog;
 import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.ConstructorWidget;
-import org.uml.visual.widgets.FieldWidget;
-import org.uml.visual.widgets.MethodWidget;
+import org.uml.visual.widgets.members.ConstructorWidget;
+import org.uml.visual.widgets.members.FieldWidget;
+import org.uml.visual.widgets.members.MethodWidget;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
@@ -115,19 +112,18 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            classWidget.getComponent().getParentDiagram().removeComponent(classWidget.getName());
             ClassDiagram classDiagram = classWidget.getComponent().getParentDiagram();
-
-            for (Map.Entry<String, RelationComponent> entry : classDiagram.getRelations().entrySet()) {
-                RelationComponent relation = entry.getValue();
-                if (relation.getSource().getName().equals(classWidget.getClassName()) || relation.getTarget().getName().equals(classWidget.getClassName())) {
-                    classDiagram.removeRelation(relation.getName());
-                    classWidget.getClassDiagramScene().removeEdge(relation);
-                }
-            }
-
-            classWidget.removeFromParent();
-
+            classDiagram.removeComponent(classWidget.getName());
+//            classWidget.removeFromParent();
+//            
+//            for (Map.Entry<String, RelationComponent> entry : classDiagram.getRelations().entrySet()) {
+//                RelationComponent relation = entry.getValue();
+//                if (relation.getSource().getName().equals(classWidget.getName()) || relation.getTarget().getName().equals(classWidget.getName())) {
+//                    classDiagram.removeRelation(relation.getName());
+//                    classWidget.getClassDiagramScene().removeEdge(relation);
+//                }
+//            }
+//            classWidget.getClassDiagramScene().removeNode(classWidget.getComponent());
         }
     };
     ActionListener addAtributeListener = new ActionListener() {
@@ -171,15 +167,13 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
             classWidget.addConstructorWidget(w);
             classWidget.getScene().validate();
-
-
         }
     };
     ActionListener addPackageListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
 //            String pack = "";
-            PackageDialog pd = new PackageDialog(null, true, classWidget.getComponent(), classWidget.getClassDiagramScene().getUmlClassDiagram());
+            PackageDialog pd = new PackageDialog(null, true, classWidget.getComponent(), classWidget.getClassDiagramScene().getClassDiagram());
             pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
             pd.setTitle("Package");
             pd.setVisible(true);

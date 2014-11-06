@@ -13,12 +13,12 @@ import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.ElementKind.INTERFACE;
 import static javax.lang.model.element.ElementKind.METHOD;
 import org.uml.model.ClassComponent;
-import org.uml.model.Constructor;
+import org.uml.model.members.Constructor;
 import org.uml.model.EnumComponent;
-import org.uml.model.Field;
+import org.uml.model.members.Field;
 import org.uml.model.InterfaceComponent;
-import org.uml.model.Literal;
-import org.uml.model.Method;
+import org.uml.model.members.Literal;
+import org.uml.model.members.Method;
 import org.uml.reveng.CompilationProcessor;
 import org.uml.reveng.GeneratedDiagramManager;
 

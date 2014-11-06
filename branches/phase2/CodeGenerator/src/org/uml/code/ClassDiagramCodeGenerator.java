@@ -4,17 +4,16 @@
  */
 package org.uml.code;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
 import org.uml.model.PackageComponent;
-import org.uml.model.RelationComponent;
+import org.uml.model.EnumComponent;
+import org.uml.model.relations.RelationComponent;
 
 /**
  * Main class for the start of code generating. Every component is being

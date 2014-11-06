@@ -6,8 +6,8 @@ package org.uml.xmlSerialization;
 
 import java.util.HashMap;
 import org.dom4j.Element;
-import org.uml.model.Constructor;
-import org.uml.model.MethodArgument;
+import org.uml.model.members.Constructor;
+import org.uml.model.members.MethodArgument;
 
 /**
  *

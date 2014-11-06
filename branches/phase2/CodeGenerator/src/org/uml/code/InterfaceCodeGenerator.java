@@ -6,7 +6,6 @@ package org.uml.code;
 
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.InterfaceComponent;
-import org.uml.model.Method;
 
 /**
  * Interface's code generating class. Implements all necessary methods that are

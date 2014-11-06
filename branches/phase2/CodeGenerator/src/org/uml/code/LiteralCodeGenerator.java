@@ -6,7 +6,7 @@ package org.uml.code;
 
 import java.util.HashMap;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.Literal;
+import org.uml.model.members.Literal;
 
 /**
  * Enumeration literal's code generating class.

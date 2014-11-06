@@ -10,9 +10,9 @@ import java.util.Iterator;
 import java.util.Random;
 import org.dom4j.Element;
 import org.uml.model.ClassComponent;
-import org.uml.model.Method;
-import org.uml.model.MethodArgument;
-import org.uml.model.Visibility;
+import org.uml.model.members.Method;
+import org.uml.model.members.MethodArgument;
+import org.uml.model.members.Visibility;
 
 /**
  *
@@ -47,7 +47,7 @@ public class MethodDeserializer implements XmlDeserializer{
         if (isAbstract != null) method.addModifier(Modifier.ABSTRACT);
         if (isSynchronized != null) method.addModifier(Modifier.SYNCHRONIZED);
         HashMap<String, MethodArgument> arguments = new HashMap<String, MethodArgument>();
-        Iterator argumentIterator = node.elementIterator("Argument");
+        Iterator<?> argumentIterator = node.elementIterator("Argument");
         while (argumentIterator != null && argumentIterator.hasNext()) {
             Element argumentElement = (Element) argumentIterator.next();
             String argumentType = argumentElement.attributeValue("type");

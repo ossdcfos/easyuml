@@ -4,11 +4,11 @@ import java.lang.reflect.Modifier;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import org.uml.model.Field;
-import org.uml.model.Member;
-import org.uml.model.Method;
-import org.uml.model.MethodArgument;
-import org.uml.model.Visibility;
+import org.uml.model.members.Field;
+import org.uml.model.members.Member;
+import org.uml.model.members.Method;
+import org.uml.model.members.MethodArgument;
+import org.uml.model.members.Visibility;
 
 public class WidgetParser {
 

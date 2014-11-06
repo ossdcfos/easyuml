@@ -8,6 +8,7 @@ import java.awt.Point;
 import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassWidget;
+import org.uml.visual.widgets.members.FieldWidget;
 
 /**
  *
@@ -34,7 +35,6 @@ import org.uml.visual.widgets.ClassWidget;
 
         @Override
         public void select(Widget widget, Point point, boolean bln) {
-            classWidget.removeField(widget.getParentWidget());
-
+            classWidget.removeField((FieldWidget)widget.getParentWidget());
         }
     }

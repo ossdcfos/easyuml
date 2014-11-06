@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 import org.dom4j.Element;
-import org.uml.model.MethodArgument;
+import org.uml.model.members.MethodArgument;
 
 /**
  *
@@ -28,7 +28,7 @@ public class MethodArgumentsDeserializer implements XmlDeserializer{
      */
     @Override
     public void deserialize(Element node) {
-        Iterator argumentIterator = node.elementIterator("Constructor");
+        Iterator<?> argumentIterator = node.elementIterator("Constructor");
         while (argumentIterator != null && argumentIterator.hasNext()) {
             Element argument = (Element) argumentIterator.next();
             String type = argument.attributeValue("type");

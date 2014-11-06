@@ -6,9 +6,9 @@ package org.uml.xmlDeserialization;
 
 import java.util.List;
 import org.dom4j.Element;
-import org.uml.model.CardinalityEnum;
+import org.uml.model.relations.CardinalityEnum;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.UseRelationComponent;
+import org.uml.model.relations.UseRelationComponent;
 
 /**
  *

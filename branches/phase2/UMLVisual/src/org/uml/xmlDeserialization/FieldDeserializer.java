@@ -5,8 +5,8 @@
 package org.uml.xmlDeserialization;
 
 import org.dom4j.Element;
-import org.uml.model.Field;
-import org.uml.model.Visibility;
+import org.uml.model.members.Field;
+import org.uml.model.members.Visibility;
 
 /**
  *

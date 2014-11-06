@@ -123,7 +123,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         generateCode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GenerateCodeDialog dialog = new GenerateCodeDialog(null, true, scene.getUmlClassDiagram());
+                GenerateCodeDialog dialog = new GenerateCodeDialog(null, true, scene.getClassDiagram());
                 dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
                 dialog.setTitle("Generate code");
                 dialog.setVisible(true);

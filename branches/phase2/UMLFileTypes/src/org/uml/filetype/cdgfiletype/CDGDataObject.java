@@ -26,23 +26,23 @@ import org.uml.model.ClassDiagram;
 import org.uml.xmlDeserialization.ClassDiagramDeserializer;
 
 
- @MIMEResolver.Registration(
-   displayName="#CLASS_DIAGRAM_FILE",
-   resource="ClassDiagramResolver.xml"
- )
-@Messages({
-    "LBL_CDG_LOADER=Files of CDG",
-    "CLASS_DIAGRAM_FILE=Class Diagram File"
-})
-@MIMEResolver.ExtensionRegistration(
-    displayName = "#LBL_CDG_LOADER",
-mimeType = "text/x-cdg",
-extension = {"cdg", "CDG"})
-@DataObject.Registration(
-    mimeType = "text/x-cdg",
-iconBase = "org/uml/filetype/cdgfiletype/classdiagramicon.png",
-displayName = "#LBL_CDG_LOADER",
-position = 300)
+// @MIMEResolver.Registration(
+//   displayName="#CLASS_DIAGRAM_FILE",
+//   resource="ClassDiagramResolver.xml"
+// )
+//@Messages({
+//    "LBL_CDG_LOADER=Files of CDG",
+//    "CLASS_DIAGRAM_FILE=Class Diagram File"
+//})
+//@MIMEResolver.ExtensionRegistration(
+//    displayName = "#LBL_CDG_LOADER",
+//mimeType = "text/x-cdg",
+//extension = {"cdg", "CDG"})
+//@DataObject.Registration(
+//    mimeType = "text/x-cdg",
+//iconBase = "org/uml/filetype/cdgfiletype/classdiagramicon.png",
+//displayName = "#LBL_CDG_LOADER",
+//position = 300)
 @ActionReferences({
     @ActionReference(
         path = "Loaders/text/x-cdg/Actions",

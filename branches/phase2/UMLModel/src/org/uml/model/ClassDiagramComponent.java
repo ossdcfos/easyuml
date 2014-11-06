@@ -1,9 +1,11 @@
 package org.uml.model;
 
+import org.uml.model.members.Member;
+import org.uml.model.members.Visibility;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.HashMap;
-import javax.swing.JOptionPane;
+import org.uml.model.relations.RelationComponent;
 
 /**
  * Base class for all UML class diagram components (classes, interfaces or

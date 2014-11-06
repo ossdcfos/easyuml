@@ -6,9 +6,9 @@ package org.uml.xmlDeserialization;
 
 import java.util.HashMap;
 import org.dom4j.Element;
-import org.uml.model.Constructor;
-import org.uml.model.MethodArgument;
-import org.uml.model.Visibility;
+import org.uml.model.members.Constructor;
+import org.uml.model.members.MethodArgument;
+import org.uml.model.members.Visibility;
 
 /**
  *

@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -17,12 +18,14 @@ import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.windows.WindowManager;
-import org.uml.model.Method;
-import org.uml.model.MethodArgument;
+import org.uml.model.ClassDiagram;
+import org.uml.model.members.Method;
+import org.uml.model.members.MethodArgument;
+import org.uml.model.relations.RelationComponent;
 import org.uml.visual.dialogs.PackageDialog;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 import org.uml.visual.widgets.InterfaceWidget;
-import org.uml.visual.widgets.MethodWidget;
+import org.uml.visual.widgets.members.MethodWidget;
 import org.uml.visual.widgets.actions.LabelTextFieldEditorAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
@@ -81,7 +84,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
 //            String pack = "";
-            PackageDialog pd = new PackageDialog(null, true, interfaceWidget.getComponent(), interfaceWidget.getClassDiagramScene().getUmlClassDiagram());
+            PackageDialog pd = new PackageDialog(null, true, interfaceWidget.getComponent(), interfaceWidget.getClassDiagramScene().getClassDiagram());
             pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
             pd.setTitle("Package");
             pd.setVisible(true);
@@ -99,9 +102,20 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            interfaceWidget.getComponent().getParentDiagram().removeComponent(interfaceWidget.getName());
-            interfaceWidget.removeFromParent();
-            interfaceWidget.getScene().validate();
+            ClassDiagram classDiagram = interfaceWidget.getComponent().getParentDiagram();
+            classDiagram.removeComponent(interfaceWidget.getName());
+//            interfaceWidget.removeFromParent();
+//            
+//            for (Map.Entry<String, RelationComponent> entry : classDiagram.getRelations().entrySet()) {
+//                RelationComponent relation = entry.getValue();
+//                if (relation.getSource().getName().equals(interfaceWidget.getName()) || relation.getTarget().getName().equals(interfaceWidget.getName())) {
+//                    classDiagram.removeRelation(relation.getName());
+//                    interfaceWidget.getClassDiagramScene().removeEdge(relation);
+//                }
+//            }
+//            interfaceWidget.getClassDiagramScene().removeNode(interfaceWidget.getComponent());
+//            
+//            interfaceWidget.getScene().validate();
         }
     };
 

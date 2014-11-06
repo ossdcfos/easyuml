@@ -16,13 +16,13 @@ import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassComponent;
-import org.uml.model.Field;
-import org.uml.model.Visibility;
-import static org.uml.model.Visibility.PACKAGE;
-import static org.uml.model.Visibility.PRIVATE;
-import static org.uml.model.Visibility.PROTECTED;
-import static org.uml.model.Visibility.PUBLIC;
-import org.uml.visual.widgets.FieldWidget;
+import org.uml.model.members.Field;
+import org.uml.model.members.Visibility;
+import static org.uml.model.members.Visibility.PACKAGE;
+import static org.uml.model.members.Visibility.PRIVATE;
+import static org.uml.model.members.Visibility.PROTECTED;
+import static org.uml.model.members.Visibility.PUBLIC;
+import org.uml.visual.widgets.members.FieldWidget;
 
 /**
  *

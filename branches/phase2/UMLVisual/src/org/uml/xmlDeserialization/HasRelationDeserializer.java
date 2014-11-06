@@ -6,9 +6,9 @@ package org.uml.xmlDeserialization;
 
 import java.util.List;
 import org.dom4j.Element;
-import org.uml.model.CardinalityEnum;
+import org.uml.model.relations.CardinalityEnum;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.HasRelationComponent;
+import org.uml.model.relations.HasBaseRelationComponent;
 
 /**
  *
@@ -16,10 +16,10 @@ import org.uml.model.HasRelationComponent;
  */
 public class HasRelationDeserializer implements XmlDeserializer{
 
-    private HasRelationComponent relation;
+    private HasBaseRelationComponent relation;
     private List<ClassDiagramComponent> components;
     
-    public HasRelationDeserializer(HasRelationComponent relation, List<ClassDiagramComponent> components) {
+    public HasRelationDeserializer(HasBaseRelationComponent relation, List<ClassDiagramComponent> components) {
         this.relation = relation;
         this.components = components;
     }

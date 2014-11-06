@@ -8,6 +8,7 @@ import java.awt.Point;
 import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassWidget;
+import org.uml.visual.widgets.members.MethodWidget;
 
 /**
  *
@@ -32,6 +33,6 @@ public class DeleteMethodAction implements SelectProvider {
 
         @Override
         public void select(Widget widget, Point point, boolean bln) {
-            classWidget.removeMethod(widget.getParentWidget());
+            classWidget.removeMethod((MethodWidget)widget.getParentWidget());
         }
     }

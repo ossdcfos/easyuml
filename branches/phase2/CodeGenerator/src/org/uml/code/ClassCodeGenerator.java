@@ -1,17 +1,16 @@
 package org.uml.code;
 
-import java.util.Iterator;
 import java.util.List;
-import org.uml.model.CardinalityEnum;
+import org.uml.model.relations.CardinalityEnum;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.ImplementsRelationComponent;
+import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.ImplementsRelationComponent;
 import org.uml.model.InterfaceComponent;
-import org.uml.model.IsRelationComponent;
+import org.uml.model.relations.IsRelationComponent;
 import org.uml.model.PackageComponent;
-import org.uml.model.RelationComponent;
-import org.uml.model.UseRelationComponent;
+import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.UseRelationComponent;
 
 /**
  * Class component's code generating class. Implements all necessary methods
@@ -198,8 +197,8 @@ public class ClassCodeGenerator implements CodeGenerator {
     public String getFieldsFromHasRelations(List<RelationComponent> relations) {
         String fields = "";
         for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof HasRelationComponent) {
-                HasRelationComponent hasRelation = (HasRelationComponent) relations.get(i);
+            if (relations.get(i) instanceof HasBaseRelationComponent) {
+                HasBaseRelationComponent hasRelation = (HasBaseRelationComponent) relations.get(i);
                 String fieldType = hasRelation.getTarget().getName();
                 String fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1, fieldType.length());
                 if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {

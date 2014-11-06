@@ -14,8 +14,8 @@ import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassComponent;
-import org.uml.model.Constructor;
-import org.uml.visual.widgets.ConstructorWidget;
+import org.uml.model.members.Constructor;
+import org.uml.visual.widgets.members.ConstructorWidget;
 
 /**
  *

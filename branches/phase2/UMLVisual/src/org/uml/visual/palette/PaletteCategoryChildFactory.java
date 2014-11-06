@@ -5,14 +5,10 @@
  */
 package org.uml.visual.palette;
 
-import java.beans.IntrospectionException;
 import java.util.LinkedList;
 import java.util.List;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.ChildFactory;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 
 /**
  *

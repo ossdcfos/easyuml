@@ -29,7 +29,7 @@ public class ClassDiagramManager {
     }
     
     public void addScene(ClassDiagramScene scene) {
-        ClassDiagram diagram = scene.getUmlClassDiagram();
+        ClassDiagram diagram = scene.getClassDiagram();
         diagramSceneMapping.put(diagram, scene);
     }
     

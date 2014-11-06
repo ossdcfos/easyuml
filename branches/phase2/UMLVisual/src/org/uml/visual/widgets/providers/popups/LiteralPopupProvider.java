@@ -13,8 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.visual.widgets.FieldWidget;
-import org.uml.visual.widgets.LiteralWidget;
+import org.uml.visual.widgets.members.FieldWidget;
+import org.uml.visual.widgets.members.LiteralWidget;
 
 /**
  *

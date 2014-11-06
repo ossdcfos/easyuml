@@ -19,9 +19,9 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.Field;
-import org.uml.model.Method;
-import org.uml.model.Visibility;
+import org.uml.model.members.Field;
+import org.uml.model.members.Method;
+import org.uml.model.members.Visibility;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 

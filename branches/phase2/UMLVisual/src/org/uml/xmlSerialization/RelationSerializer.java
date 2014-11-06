@@ -4,7 +4,7 @@
  */
 package org.uml.xmlSerialization;
 
-import org.uml.model.RelationComponent;
+import org.uml.model.relations.RelationComponent;
 
 /**
  *

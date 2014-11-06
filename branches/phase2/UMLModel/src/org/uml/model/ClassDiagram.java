@@ -1,7 +1,12 @@
 package org.uml.model;
 
+import org.uml.model.relations.RelationComponent;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * UML Class Diagrams which can contain class, interface and enum components,
@@ -21,6 +26,7 @@ public class ClassDiagram implements Serializable {
     int compCounter = 1;
     private HashMap<String, PackageComponent> packages;
     int relationsCounter = 0;
+    private List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
 
     /**
      * Standard ClassDiagram constructor without arguments.
@@ -33,6 +39,10 @@ public class ClassDiagram implements Serializable {
         this.components = new HashMap<String, ClassDiagramComponent>();
         this.relations = new HashMap<String, RelationComponent>();
         this.packages = new HashMap<String, PackageComponent>();
+    }
+
+    public void addDeleteListener(IComponentDeleteListener icdl) {
+        deleteListeners.add(icdl);
     }
 
     /**
@@ -77,6 +87,9 @@ public class ClassDiagram implements Serializable {
      * @param name of the component to be removed
      */
     public void removeComponent(String name) {
+        for (IComponentDeleteListener icdl : deleteListeners) {
+            icdl.componentDeleted(components.get(name));
+        }
         components.remove(name);
     }
 
@@ -87,6 +100,19 @@ public class ClassDiagram implements Serializable {
      */
     public void removeRelation(String name) {
         relations.remove(name);
+    }
+
+    public void removeRelationsForAComponent(ClassDiagramComponent component) {
+        List<RelationComponent> toRemove = new LinkedList<>();
+        for (Map.Entry<String, RelationComponent> entry : relations.entrySet()) {
+            RelationComponent relation = entry.getValue();
+            if (relation.getSource().getName().equals(component.getName()) || relation.getTarget().getName().equals(component.getName())) {
+                toRemove.add(relation);
+            }
+        }
+        for(RelationComponent rc : toRemove){
+            relations.remove(rc.getName());
+        }
     }
 
     /**

@@ -5,7 +5,7 @@
 package org.uml.xmlDeserialization;
 
 import org.dom4j.Element;
-import org.uml.model.Literal;
+import org.uml.model.members.Literal;
 
 /**
  *

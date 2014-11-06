@@ -7,8 +7,7 @@ package org.uml.code;
 import java.util.HashMap;
 import java.util.Map;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.Method;
-import org.uml.model.MethodArgument;
+import org.uml.model.members.Method;
 
 /**
  * Method's code generating class.
