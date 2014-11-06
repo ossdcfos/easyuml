@@ -43,7 +43,7 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
     @ActionReference(path = "Menu/Source", position = 50),
     @ActionReference(path = "Projects/org-netbeans-modules-java-j2seproject/Actions", position = 1050)
 })
-@Messages("CTL_ReverseEngineer=Reverse Engineer")
+@Messages("CTL_ReverseEngineer=easyUML Reverse Engineer")
 /**
  * Class that responds to Reverse Engineer command from the main window
  * 
@@ -94,7 +94,8 @@ public final class ReverseEngineer implements ActionListener {
             //Make top component
             UMLTopComponent tc;
             //Initialise it with generated Class diagram
-            tc = new UMLTopComponent(generatedDiagram);
+            tc = new UMLTopComponent(generatedDiagram, null);
+            
             //Save the diagram into project's path
             File savedFile = saveDiagramLocally(projectFile, generatedDiagram, tc, separator);
             //Present the generated diagram to user

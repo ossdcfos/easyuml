@@ -130,7 +130,7 @@ public class WindowStyleResizeProvider extends ResizeStrategyProvider {
             widget.setMinimumSize(minResSize);
             //AS IN 6.1, default and always used mode is preferred size mode allowing to resize to any size, but now with some reasonable limit
             widget.setPreferredSize(null);//disable to not have side effects
-            ((ComponentWidgetBase)widget).setResizeMode(ComponentWidgetBase.RESIZEMODE.PREFERREDBOUNDS);
+            //((ComponentWidgetBase)widget).setResizeMode(ComponentWidgetBase.RESIZEMODE.PREFERREDBOUNDS);
 
         } else {
             widget.setMinimumSize(new Dimension(10, 10));

@@ -15,7 +15,7 @@ import org.openide.util.Utilities;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
-@NavigatorPanel.Registration(mimeType = "application/uml", displayName = "Abc File Content")
+@NavigatorPanel.Registration(mimeType = "application/uml", displayName = "UML File Content")
 public class UMLNavigatorPanel extends JPanel implements NavigatorPanel, LookupListener {
 
     JScrollPane pane;
@@ -62,12 +62,12 @@ public class UMLNavigatorPanel extends JPanel implements NavigatorPanel, LookupL
 
     @Override
     public String getDisplayName() {
-        return "Abc File Content";
+        return "UML File Content";
     }
 
     @Override
     public String getDisplayHint() {
-        return "Abc File Content";
+        return "UML File Content";
     }
 
     @Override

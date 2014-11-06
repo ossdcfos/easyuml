@@ -3,7 +3,7 @@ package org.uml.visual.dialogs;
 import java.util.List;
 import javax.swing.JComboBox;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.CardinalityEnum;
+import org.uml.model.relations.CardinalityEnum;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.ComponentWidgetBase;
 import org.uml.visual.widgets.EnumWidget;
@@ -11,7 +11,7 @@ import org.uml.visual.widgets.EnumWidget;
 /**
  *
  * @author Uros
- * Acrive when CTRL-clicking dragging from component to component. 
+ * Active when CTRL-clicking dragging from component to component. 
  */
 public class ClassUseRelationPanel extends javax.swing.JPanel {
 
@@ -36,34 +36,34 @@ public class ClassUseRelationPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        textFieldName = new javax.swing.JTextField();
-        labelCardinalitySource = new javax.swing.JLabel();
-        comboBoxCardinalitySource = new javax.swing.JComboBox<CardinalityEnum>();
-        labelCardinalityTarget = new javax.swing.JLabel();
-        comboBoxCardinalityTarget = new javax.swing.JComboBox<CardinalityEnum>();
-        jLabel1 = new javax.swing.JLabel();
-        comboBoxTarget = new javax.swing.JComboBox<Widget>();
+        lblName = new javax.swing.JLabel();
+        txfName = new javax.swing.JTextField();
+        lblCardinalitySource = new javax.swing.JLabel();
+        cbxCardinalitySource = new javax.swing.JComboBox<CardinalityEnum>();
+        lblCardinalityTarget = new javax.swing.JLabel();
+        cbxCardinalityTarget = new javax.swing.JComboBox<CardinalityEnum>();
+        lblTarget = new javax.swing.JLabel();
+        cbxTarget = new javax.swing.JComboBox<Widget>();
         lblRelation = new javax.swing.JLabel();
         lblRelationType = new javax.swing.JLabel();
         lblSource = new javax.swing.JLabel();
         lblSourceClass = new javax.swing.JLabel();
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.jLabel2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblName, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.lblName.text")); // NOI18N
 
-        textFieldName.setText(org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.textFieldName.text")); // NOI18N
+        txfName.setText(org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.txfName.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(labelCardinalitySource, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.labelCardinalitySource.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblCardinalitySource, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.lblCardinalitySource.text")); // NOI18N
 
-        comboBoxCardinalitySource.addActionListener(new java.awt.event.ActionListener() {
+        cbxCardinalitySource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxCardinalitySourceActionPerformed(evt);
+                cbxCardinalitySourceActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(labelCardinalityTarget, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.labelCardinalityTarget.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblCardinalityTarget, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.lblCardinalityTarget.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lblTarget, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.lblTarget.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lblRelation, org.openide.util.NbBundle.getMessage(ClassUseRelationPanel.class, "ClassUseRelationPanel.lblRelation.text")); // NOI18N
 
@@ -87,22 +87,22 @@ public class ClassUseRelationPanel extends javax.swing.JPanel {
                                     .addComponent(lblRelation, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblSource, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
+                            .addComponent(lblName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblTarget, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblSourceClass, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(textFieldName, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(comboBoxTarget, 0, 170, Short.MAX_VALUE)
+                            .addComponent(txfName, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbxTarget, 0, 170, Short.MAX_VALUE)
                             .addComponent(lblRelationType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelCardinalitySource)
-                            .addComponent(labelCardinalityTarget))
+                            .addComponent(lblCardinalitySource)
+                            .addComponent(lblCardinalityTarget))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(comboBoxCardinalityTarget, 0, 170, Short.MAX_VALUE)
-                            .addComponent(comboBoxCardinalitySource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cbxCardinalityTarget, 0, 170, Short.MAX_VALUE)
+                            .addComponent(cbxCardinalitySource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -118,76 +118,76 @@ public class ClassUseRelationPanel extends javax.swing.JPanel {
                     .addComponent(lblSource))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(comboBoxTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTarget)
+                    .addComponent(cbxTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(textFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblName)
+                    .addComponent(txfName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelCardinalitySource)
-                    .addComponent(comboBoxCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblCardinalitySource)
+                    .addComponent(cbxCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelCardinalityTarget)
-                    .addComponent(comboBoxCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblCardinalityTarget)
+                    .addComponent(cbxCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void comboBoxCardinalitySourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxCardinalitySourceActionPerformed
+    private void cbxCardinalitySourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxCardinalitySourceActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_comboBoxCardinalitySourceActionPerformed
+    }//GEN-LAST:event_cbxCardinalitySourceActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<CardinalityEnum> comboBoxCardinalitySource;
-    private javax.swing.JComboBox<CardinalityEnum> comboBoxCardinalityTarget;
-    private javax.swing.JComboBox<Widget> comboBoxTarget;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel labelCardinalitySource;
-    private javax.swing.JLabel labelCardinalityTarget;
+    private javax.swing.JComboBox<CardinalityEnum> cbxCardinalitySource;
+    private javax.swing.JComboBox<CardinalityEnum> cbxCardinalityTarget;
+    private javax.swing.JComboBox<Widget> cbxTarget;
+    private javax.swing.JLabel lblCardinalitySource;
+    private javax.swing.JLabel lblCardinalityTarget;
+    private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblRelation;
     private javax.swing.JLabel lblRelationType;
     private javax.swing.JLabel lblSource;
     private javax.swing.JLabel lblSourceClass;
-    private javax.swing.JTextField textFieldName;
+    private javax.swing.JLabel lblTarget;
+    private javax.swing.JTextField txfName;
     // End of variables declaration//GEN-END:variables
 
-    private void fillCombos(ComponentWidgetBase componentWidget) {
-               
+    private void fillCombos(ComponentWidgetBase widget) {
         List<Widget> widgets =  componentWidget.getClassDiagramScene().getMainLayer().getChildren();
         for (Widget w : widgets) {
-            if ((w instanceof ClassWidget||w instanceof EnumWidget)&&!w.equals(componentWidget)) {
-                comboBoxTarget.addItem(w);
+            if (!w.equals(widget) && w instanceof ComponentWidgetBase) {
+                cbxTarget.addItem(w);
             }
         }
-        lblSourceClass.setText(componentWidget.getName());
         
-        comboBoxCardinalitySource.addItem(CardinalityEnum.Zero2One);
-        comboBoxCardinalitySource.addItem(CardinalityEnum.One2One);
-        comboBoxCardinalitySource.addItem(CardinalityEnum.One2Many);
-        comboBoxCardinalitySource.addItem(CardinalityEnum.Zero2Many);
+        lblSourceClass.setText(widget.getName());
         
-        comboBoxCardinalityTarget.addItem(CardinalityEnum.Zero2One);
-        comboBoxCardinalityTarget.addItem(CardinalityEnum.One2One);
-        comboBoxCardinalityTarget.addItem(CardinalityEnum.One2Many);
-        comboBoxCardinalityTarget.addItem(CardinalityEnum.Zero2Many);
+        cbxCardinalitySource.addItem(CardinalityEnum.Zero2One);
+        cbxCardinalitySource.addItem(CardinalityEnum.One2One);
+        cbxCardinalitySource.addItem(CardinalityEnum.One2Many);
+        cbxCardinalitySource.addItem(CardinalityEnum.Zero2Many);
+        
+        cbxCardinalityTarget.addItem(CardinalityEnum.Zero2One);
+        cbxCardinalityTarget.addItem(CardinalityEnum.One2One);
+        cbxCardinalityTarget.addItem(CardinalityEnum.One2Many);
+        cbxCardinalityTarget.addItem(CardinalityEnum.Zero2Many);
     }
     
     public JComboBox<CardinalityEnum> getComboBoxCardinalitySource () {
-        return comboBoxCardinalitySource;
+        return cbxCardinalitySource;
     }
     
     public JComboBox<CardinalityEnum> getComboBoxCardinalityTarget () {
-        return comboBoxCardinalityTarget;
+        return cbxCardinalityTarget;
     }
 
     public JComboBox<Widget> getComboBoxTarget() {
-        return comboBoxTarget;
+        return cbxTarget;
     }
     public String getRelationName () {
-        return textFieldName.getText();
+        return txfName.getText();
     }
 }

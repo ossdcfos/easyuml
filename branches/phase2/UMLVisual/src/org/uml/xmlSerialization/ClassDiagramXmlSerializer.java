@@ -5,24 +5,19 @@
 package org.uml.xmlSerialization;
 
 import java.util.HashMap;
-import java.util.List;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.ImplementsRelationComponent;
+import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.ImplementsRelationComponent;
 import org.uml.model.InterfaceComponent;
-import org.uml.model.IsRelationComponent;
-import org.uml.model.RelationComponent;
-import org.uml.model.UseRelationComponent;
+import org.uml.model.relations.IsRelationComponent;
+import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.UseRelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ClassWidget;
 
 /**
  *
@@ -44,7 +39,7 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
         componentSerializers.put(EnumComponent.class, new EnumSerializer());
         relationSerializers.put(UseRelationComponent.class, new UseRelationSerializer());
         relationSerializers.put(IsRelationComponent.class, new IsRelationSerializer());
-        relationSerializers.put(HasRelationComponent.class, new HasRelationSerializer());
+        relationSerializers.put(HasBaseRelationComponent.class, new HasRelationSerializer());
         relationSerializers.put(ImplementsRelationComponent.class, new ImplementsRelationSerializer());
     }
 
@@ -112,7 +107,7 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
                 serializer.addRelationComponent(component);
                 serializer.serialize(componentNode);
             }
-            if (component instanceof HasRelationComponent) {
+            if (component instanceof HasBaseRelationComponent) {
                 Element componentNode = classDiagramRelations.addElement("HasRelation");
                 
                 RelationSerializer serializer = relationSerializers.get(component.getClass());

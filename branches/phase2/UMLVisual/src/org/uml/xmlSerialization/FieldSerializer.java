@@ -6,7 +6,7 @@ package org.uml.xmlSerialization;
 
 import java.util.HashMap;
 import org.dom4j.Element;
-import org.uml.model.Field;
+import org.uml.model.members.Field;
 
 /**
  *

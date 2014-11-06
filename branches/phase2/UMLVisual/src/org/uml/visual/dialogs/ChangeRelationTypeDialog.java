@@ -13,7 +13,7 @@ import java.util.jar.JarFile;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.openide.util.Exceptions;
 import org.uml.model.ClassDiagram;
-import org.uml.model.RelationComponent;
+import org.uml.model.relations.RelationComponent;
 
 /**
  *
@@ -200,9 +200,10 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
                     try {
                         fullUrl= fullUrl.replace(".class", "");
                         fullUrl= fullUrl.replace("/", ".");
-                        Class<? extends RelationComponent> forName= (Class<? extends RelationComponent>) Class.forName(fullUrl);
+                        Class<?> cls = Class.forName(fullUrl);
+                        Class<? extends RelationComponent> forName = cls.asSubclass(RelationComponent.class);
                         cbxRelation.addItem(forName.newInstance());
-                    } catch (        InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+                    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
                         Exceptions.printStackTrace(ex);
                     }
                 }

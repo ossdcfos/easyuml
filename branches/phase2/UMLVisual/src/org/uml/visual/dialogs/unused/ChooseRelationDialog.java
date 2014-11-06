@@ -11,9 +11,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.ImplementsRelationComponent;
-import org.uml.model.RelationComponent;
+import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.RelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ComponentWidgetBase;
 
@@ -136,7 +135,7 @@ public class ChooseRelationDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void comboBoxRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRelationshipActionPerformed
-        if (!(comboBoxRelationship.getSelectedItem() instanceof HasRelationComponent)) {
+        if (!(comboBoxRelationship.getSelectedItem() instanceof HasBaseRelationComponent)) {
             textFieldName.setEnabled(false);
         }
     }//GEN-LAST:event_comboBoxRelationshipActionPerformed
@@ -150,9 +149,7 @@ public class ChooseRelationDialog extends javax.swing.JDialog {
             ComponentWidgetBase target= (ComponentWidgetBase) targetWidget;
             relation.setSource(source.getComponent());
             relation.setTarget(target.getComponent());
-            scene.addEdge(relation);
-            scene.setEdgeSource(relation,source.getComponent());
-            scene.setEdgeTarget(relation,target.getComponent());
+            scene.addRelationToScene(relation, source.getComponent(), target.getComponent());
             this.dispose();
         }
     }//GEN-LAST:event_buttonOKActionPerformed
@@ -224,7 +221,9 @@ public class ChooseRelationDialog extends javax.swing.JDialog {
                     try {
                         fullUrl= fullUrl.replace(".class", "");
                         fullUrl= fullUrl.replace("/", ".");
-                        Class<? extends RelationComponent> forName= (Class<? extends RelationComponent>) Class.forName(fullUrl);
+                        Class<?> cls = Class.forName(fullUrl);
+                        Class<? extends RelationComponent> forName = cls.asSubclass(RelationComponent.class);
+                       // Class<? extends RelationComponent> forName= (Class<? extends RelationComponent>) Class.forName(fullUrl);
                         comboBoxRelationship.addItem(forName.newInstance());
                     } catch (        InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
                         Exceptions.printStackTrace(ex);

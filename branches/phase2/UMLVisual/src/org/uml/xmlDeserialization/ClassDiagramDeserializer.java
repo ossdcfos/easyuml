@@ -4,21 +4,19 @@
  */
 package org.uml.xmlDeserialization;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import org.dom4j.Element;
 import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ClassDiagramComponent;
 import org.uml.model.EnumComponent;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.ImplementsRelationComponent;
+import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.ImplementsRelationComponent;
 import org.uml.model.InterfaceComponent;
-import org.uml.model.IsRelationComponent;
-import org.uml.model.UseRelationComponent;
-import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.model.relations.AggregationRelationComponent;
+import org.uml.model.relations.IsRelationComponent;
+import org.uml.model.relations.UseRelationComponent;
 
 /**
  *
@@ -44,7 +42,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
         classDiagram.setName(node.attributeValue("name"));
 
         Element classDiagramComponents = node.element("ClassDiagramComponents");
-        Iterator classIterator = classDiagramComponents.elementIterator("Class");
+        Iterator<?> classIterator = classDiagramComponents.elementIterator("Class");
         while (classIterator != null && classIterator.hasNext()) {
             Element componentNode = (Element) classIterator.next();
 
@@ -54,7 +52,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             classDiagram.addComponent(component);
         }
 
-        Iterator interfaceIterator = classDiagramComponents.elementIterator("Interface");
+        Iterator<?> interfaceIterator = classDiagramComponents.elementIterator("Interface");
         while (interfaceIterator != null && interfaceIterator.hasNext()) {
             Element interfaceNode = (Element) interfaceIterator.next();
 
@@ -64,7 +62,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             classDiagram.addComponent(component);
         }
         
-        Iterator enumIterator = classDiagramComponents.elementIterator("Enum");
+        Iterator<?> enumIterator = classDiagramComponents.elementIterator("Enum");
         while (enumIterator != null && enumIterator.hasNext()) {
             Element enumNode = (Element) enumIterator.next();
             
@@ -76,7 +74,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
         
         ArrayList<ClassDiagramComponent> components = new ArrayList<>(classDiagram.getComponents().values());
         Element classDiagramRelations = node.element("ClassDiagramRelations");
-        Iterator isRelationIterator = classDiagramRelations.elementIterator("IsRelation");
+        Iterator<?> isRelationIterator = classDiagramRelations.elementIterator("IsRelation");
         while (isRelationIterator != null && isRelationIterator.hasNext()) {
             Element isRelationNode = (Element) isRelationIterator.next();
             
@@ -86,17 +84,18 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             classDiagram.addRelation(relation);
         }
         
-        Iterator hasRelationIterator = classDiagramRelations.elementIterator("HasRelation");
+        Iterator<?> hasRelationIterator = classDiagramRelations.elementIterator("HasRelation");
         while (hasRelationIterator != null && hasRelationIterator.hasNext()) {
             Element hasRelationNode = (Element) hasRelationIterator.next();
             
-            HasRelationComponent relation = new HasRelationComponent();
+            // TODO needs to support composition
+            HasBaseRelationComponent relation = new AggregationRelationComponent();
             HasRelationDeserializer deserializer = new HasRelationDeserializer(relation, components);
             deserializer.deserialize(hasRelationNode);
             classDiagram.addRelation(relation);
         }
         
-        Iterator useRelationIterator = classDiagramRelations.elementIterator("UseRelation");
+        Iterator<?> useRelationIterator = classDiagramRelations.elementIterator("UseRelation");
         while (useRelationIterator != null && useRelationIterator.hasNext()) {
             Element useRelationNode = (Element) useRelationIterator.next();
             
@@ -106,7 +105,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             classDiagram.addRelation(relation);
         }
         
-        Iterator implementsRelationIterator = classDiagramRelations.elementIterator("ImplementsRelation");
+        Iterator<?> implementsRelationIterator = classDiagramRelations.elementIterator("ImplementsRelation");
         while (implementsRelationIterator != null && implementsRelationIterator.hasNext()) {
             Element implementsRelationNode = (Element) implementsRelationIterator.next();
             

@@ -2,6 +2,11 @@ package org.uml.model;
 
 import java.util.HashMap;
 import java.util.Random;
+import org.uml.model.ClassDiagramComponent;
+import org.uml.model.members.Constructor;
+import org.uml.model.members.Field;
+import org.uml.model.members.Literal;
+import org.uml.model.members.Method;
 
 /**
  * Enumerations (Enums) from UML Class diagrams. Used to represent enumeration

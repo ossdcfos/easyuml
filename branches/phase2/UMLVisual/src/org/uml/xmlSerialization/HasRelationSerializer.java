@@ -5,10 +5,10 @@
 package org.uml.xmlSerialization;
 
 import org.dom4j.Element;
-import org.uml.model.CardinalityEnum;
+import org.uml.model.relations.CardinalityEnum;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.RelationComponent;
+import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.RelationComponent;
 
 /**
  *
@@ -16,16 +16,16 @@ import org.uml.model.RelationComponent;
  */
 public class HasRelationSerializer implements RelationSerializer{
 
-    private HasRelationComponent hasRelationComponent;
+    private HasBaseRelationComponent hasRelationComponent;
     
     /**
      * Sets the hasRelationComponent object that is going to be serialized.
-     * @param component represents HasRelationComponent object to be serialized.
+     * @param relation represents HasRelationComponent object to be serialized.
      */
     @Override
     public void addRelationComponent(RelationComponent relation) {
         try{
-            hasRelationComponent = (HasRelationComponent) relation;
+            hasRelationComponent = (HasBaseRelationComponent) relation;
         }catch (ClassCastException e) {
             System.out.println("You have tried to cast invalid type to HasRelationComponent!");
             e.printStackTrace();

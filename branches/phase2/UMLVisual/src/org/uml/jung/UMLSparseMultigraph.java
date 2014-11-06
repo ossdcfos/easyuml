@@ -33,7 +33,7 @@ import java.util.Map;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.RelationComponent;
+import org.uml.model.relations.RelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ComponentWidgetBase;
 
@@ -70,7 +70,7 @@ public class UMLSparseMultigraph extends SparseMultigraph<ComponentWidgetBase, R
 
         //now we need to make edges
 
-        HashMap<String, RelationComponent> relations = classDiagramScene.getUmlClassDiagram().getRelations();
+        HashMap<String, RelationComponent> relations = classDiagramScene.getClassDiagram().getRelations();
 
         for (Map.Entry<ClassDiagramComponent, ComponentWidgetBase> component : components.entrySet()) {
             ClassDiagramComponent classDiagramComponent = component.getKey();

@@ -28,26 +28,26 @@
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jLabel2" max="32767" attributes="0"/>
-                          <Component id="jLabel1" pref="84" max="32767" attributes="0"/>
+                          <Component id="lblName" max="32767" attributes="0"/>
+                          <Component id="lblTarget" pref="84" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="lblSourceClass" alignment="1" max="32767" attributes="0"/>
-                          <Component id="textFieldName" alignment="1" max="32767" attributes="0"/>
-                          <Component id="comboBoxTarget" pref="170" max="32767" attributes="0"/>
+                          <Component id="txfName" alignment="1" max="32767" attributes="0"/>
+                          <Component id="cbxTarget" pref="170" max="32767" attributes="0"/>
                           <Component id="lblRelationType" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="labelCardinalitySource" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="labelCardinalityTarget" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCardinalitySource" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCardinalityTarget" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="comboBoxCardinalityTarget" pref="170" max="32767" attributes="0"/>
-                          <Component id="comboBoxCardinalitySource" max="32767" attributes="0"/>
+                          <Component id="cbxCardinalityTarget" pref="170" max="32767" attributes="0"/>
+                          <Component id="cbxCardinalitySource" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -70,23 +70,23 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="comboBoxTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbxTarget" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="textFieldName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txfName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="labelCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="comboBoxCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbxCardinalitySource" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="labelCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="comboBoxCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbxCardinalityTarget" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -94,48 +94,48 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="jLabel2">
+    <Component class="javax.swing.JLabel" name="lblName">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.jLabel2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.lblName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="textFieldName">
+    <Component class="javax.swing.JTextField" name="txfName">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.textFieldName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.txfName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="labelCardinalitySource">
+    <Component class="javax.swing.JLabel" name="lblCardinalitySource">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.labelCardinalitySource.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.lblCardinalitySource.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="comboBoxCardinalitySource">
+    <Component class="javax.swing.JComboBox" name="cbxCardinalitySource">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboBoxCardinalitySourceActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxCardinalitySourceActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;CardinalityEnum&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="labelCardinalityTarget">
+    <Component class="javax.swing.JLabel" name="lblCardinalityTarget">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.labelCardinalityTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.lblCardinalityTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="comboBoxCardinalityTarget">
+    <Component class="javax.swing.JComboBox" name="cbxCardinalityTarget">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>
@@ -145,14 +145,14 @@
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;CardinalityEnum&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="lblTarget">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/uml/visual/dialogs/Bundle.properties" key="ClassUseRelationPanel.lblTarget.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="comboBoxTarget">
+    <Component class="javax.swing.JComboBox" name="cbxTarget">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="0"/>

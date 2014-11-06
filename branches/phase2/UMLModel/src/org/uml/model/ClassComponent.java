@@ -1,5 +1,9 @@
 package org.uml.model;
 
+import org.uml.model.members.Visibility;
+import org.uml.model.members.Method;
+import org.uml.model.members.Field;
+import org.uml.model.members.Constructor;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -170,26 +174,6 @@ public class ClassComponent extends ClassDiagramComponent {
      */
     public void removeConstructor(Constructor constructor) {
         methods.values().remove(constructor);
-    }
-
-    /**
-     * Returns visibility modifier of this class
-     *
-     * @return visibility of the class
-     * @see Visibility
-     */
-    public Visibility getVisibility() {
-        return visibility;
-    }
-
-    /**
-     * Sets the visibility modifier of this class
-     *
-     * @param visibility to be set
-     * @see Visibility
-     */
-    public void setVisibility(Visibility visibility) {
-        this.visibility = visibility;
     }
 
     /**

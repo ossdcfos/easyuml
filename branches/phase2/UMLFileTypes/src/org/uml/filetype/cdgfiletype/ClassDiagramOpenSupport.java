@@ -45,7 +45,7 @@ public class ClassDiagramOpenSupport extends OpenSupport implements OpenCookie, 
         } else {
                ClassDiagram cdiag = classDiagramDataObject.getLookup().lookup(ClassDiagram.class);
 
-               topComponent = new UMLTopComponent(cdiag);
+               topComponent = new UMLTopComponent(cdiag, null);
                topComponent.open();
                topComponent.requestActive();
         }

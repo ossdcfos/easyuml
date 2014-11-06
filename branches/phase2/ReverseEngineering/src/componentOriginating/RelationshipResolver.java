@@ -9,15 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.uml.model.CardinalityEnum;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.Field;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.ImplementsRelationComponent;
-import org.uml.model.IsRelationComponent;
-import org.uml.model.Method;
-import org.uml.model.RelationComponent;
-import org.uml.model.UseRelationComponent;
+import org.uml.model.members.Field;
+import org.uml.model.members.Method;
+import org.uml.model.relations.AggregationRelationComponent;
+import org.uml.model.relations.CardinalityEnum;
+import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.ImplementsRelationComponent;
+import org.uml.model.relations.IsRelationComponent;
+import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.UseRelationComponent;
 import org.uml.reveng.CompilationProcessor;
 import org.uml.reveng.GeneratedDiagramManager;
 
@@ -374,7 +375,7 @@ public class RelationshipResolver {
      * Creates Has relation components from adjacent static Hash map and adds
      * them to the previously generated Class diagram.
      *
-     * @see HasRelationComponent
+     * @see HasBaseRelationComponent
      * @see ClassDIagram
      */
     private static void populateHasRelation() {
@@ -382,7 +383,8 @@ public class RelationshipResolver {
             ClassDiagramComponent source = selectDefinitiveComponent(firstLevel.getKey().toString());
             HashMap<String, Object> midLevel = firstLevel.getValue();
             for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
-                HasRelationComponent relation = new HasRelationComponent();
+                // TODO needs to support composition
+                HasBaseRelationComponent relation = new AggregationRelationComponent();
                 relation.setSource(source);
                 //ClassDiagramComponent targetCandidate = new ClassDiagramComponent();
                 ClassDiagramComponent targetCandidate = selectDefinitiveComponent(secondLevel.getKey().toString());
@@ -554,7 +556,7 @@ public class RelationshipResolver {
                  }
                  } else */
                 if (relationType.equals("Has")) {
-                    HasRelationComponent hasTest = (HasRelationComponent) relation.getValue();
+                    HasBaseRelationComponent hasTest = (HasBaseRelationComponent) relation.getValue();
                     if (hasTest.getCardinalityTarget().equals(targetCardinaliy)) {
                         reappears = true;
                         break;

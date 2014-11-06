@@ -7,8 +7,8 @@ package org.uml.xmlSerialization;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import org.dom4j.Element;
-import org.uml.model.Method;
-import org.uml.model.MethodArgument;
+import org.uml.model.members.Method;
+import org.uml.model.members.MethodArgument;
 
 /**
  *

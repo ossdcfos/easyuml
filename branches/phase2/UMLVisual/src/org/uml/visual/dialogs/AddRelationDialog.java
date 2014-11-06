@@ -4,27 +4,21 @@
  */
 package org.uml.visual.dialogs;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Exceptions;
-import org.uml.model.CardinalityEnum;
-import org.uml.model.HasRelationComponent;
-import org.uml.model.ImplementsRelationComponent;
-import org.uml.model.IsRelationComponent;
-import org.uml.model.RelationComponent;
-import org.uml.model.UseRelationComponent;
+import org.uml.model.relations.CardinalityEnum;
+import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.ImplementsRelationComponent;
+import org.uml.model.relations.IsRelationComponent;
+import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.RelationUtilities;
+import org.uml.model.relations.UseRelationComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ClassWidget;
 import org.uml.visual.widgets.ComponentWidgetBase;
-import org.uml.visual.widgets.EnumWidget;
 import org.uml.visual.widgets.InterfaceWidget;
 
 /**
@@ -33,62 +27,19 @@ import org.uml.visual.widgets.InterfaceWidget;
  */
 public class AddRelationDialog extends javax.swing.JDialog {
 
+    ClassDiagramScene classDiagramScene;
+
     /**
      * Creates new form AddRelationDialog
      */
-    ClassDiagramScene classDiagramScene;
-
-    public AddRelationDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        fillCollectionsComboBox();
-    }
-
     public AddRelationDialog(java.awt.Frame parent, ClassDiagramScene classDiagramScene, boolean modal) {
         super(parent, modal);
         initComponents();
         this.classDiagramScene = classDiagramScene;
         setTitle("Add Relation");
-        fillCombos(true);
-        fillCollectionsComboBox();
-    }
-
-    public final void fillCombos(boolean isProject) {
-        try {
-            /* List<Widget> widgets=classDiagramScene.getMainLayer().getChildren();
-             for(Widget widget: widgets) {           //TODO needs a check if it's a ClassWidget or not
-             jcbClassesSource.addItem(widget);
-             jcbClassesTarget.addItem(widget);
-                
-             } */
-            JarFile jar;
-            if (isProject) {
-                jar = new JarFile(new File("build/cluster/modules/org-uml-model.jar"));
-            } else {
-                jar = new JarFile(new File("../build/cluster/modules/org-uml-model.jar"));
-            }
-            Enumeration<JarEntry> entries = jar.entries();
-            while (entries.hasMoreElements()) {
-                String fullUrl = entries.nextElement().toString();
-                if (fullUrl.startsWith("org/uml/model/") && fullUrl.contains("RelationComponent") && !fullUrl.equals("org/uml/model/RelationComponent.class")) {
-                    try {
-                        fullUrl = fullUrl.replace(".class", "");
-                        fullUrl = fullUrl.replace("/", ".");
-                        Class<? extends RelationComponent> forName = (Class<? extends RelationComponent>) Class.forName(fullUrl);
-                        cbxRelations.addItem(forName.newInstance());
-                    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            }
-            cbxRelations.setSelectedItem(null);
-            cbxCardinalitySource.removeAllItems();
-            cbxCardinalityTarget.removeAllItems();
-            cbxClassesSource.removeAllItems();
-            cbxClassesTarget.removeAllItems();
-        } catch (IOException ex) {
-            fillCombos(false);
-        }
+        clearAndDisableComboBoxes();
+        fillRelationsComboBox();
+        cbxCollectionType.setEditable(true);
     }
 
     /**
@@ -172,11 +123,11 @@ public class AddRelationDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblRelationType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblCardinalitySource, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                    .addComponent(lblCardinalitySource, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblSource, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblTarget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -184,27 +135,30 @@ public class AddRelationDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCollectionType, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblCollectionType, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(17, 17, 17)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbxCardinalityTarget, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbxCardinalitySource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbxClassesSource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbxRelations, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txfName, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxCollectionType, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(cbxClassesTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(cbxCardinalityTarget, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbxCardinalitySource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbxClassesSource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbxRelations, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txfName, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbxCollectionType, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cbxClassesTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxRelations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblRelationType, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -236,7 +190,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOk)
                     .addComponent(btnCancel))
-                .addGap(27, 27, 27))
+                .addContainerGap())
         );
 
         pack();
@@ -245,58 +199,48 @@ public class AddRelationDialog extends javax.swing.JDialog {
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
 
         if (cbxRelations.getSelectedItem() == null) {
-            JOptionPane.showMessageDialog(this, "Please choose relation!", "Error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please choose a relation!", "Incomplete choice", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        try {
-            String packageURL = "org.uml.model.";
-            packageURL += cbxRelations.getSelectedItem().toString() + "RelationComponent";
+        RelationComponent relation = (RelationComponent) cbxRelations.getSelectedItem();
 
-            Class<? extends RelationComponent> forName = (Class<? extends RelationComponent>) Class.forName(packageURL);
-            RelationComponent relation = forName.newInstance();
-            relation.setName(txfName.getText());
+        //if (cbxClassesSource.getSelectedItem() instanceof ComponentWidgetBase && cbxClassesTarget.getSelectedItem() instanceof ComponentWidgetBase) {
+        ComponentWidgetBase source = (ComponentWidgetBase) cbxClassesSource.getSelectedItem();
+        ComponentWidgetBase target = (ComponentWidgetBase) cbxClassesTarget.getSelectedItem();
+        relation.setSource(source.getComponent());
+        relation.setTarget(target.getComponent());
 
-            if (cbxClassesSource.getSelectedItem() instanceof ComponentWidgetBase && cbxClassesTarget.getSelectedItem() instanceof ComponentWidgetBase) {
-                ComponentWidgetBase source = (ComponentWidgetBase) cbxClassesSource.getSelectedItem();
-                ComponentWidgetBase target = (ComponentWidgetBase) cbxClassesTarget.getSelectedItem();
-                relation.setSource(source.getComponent());
-                relation.setTarget(target.getComponent());
-                if (relation instanceof HasRelationComponent) {
-                    HasRelationComponent hasRelation = (HasRelationComponent) relation;
-                    hasRelation.setCardinalitySource((CardinalityEnum) cbxCardinalitySource.getSelectedItem());
-                    hasRelation.setCardinalityTarget((CardinalityEnum) cbxCardinalityTarget.getSelectedItem());
-                    String name = txfName.getText();
-                    if (name != null && !name.equals("")) {
-                        hasRelation.setName(name);
-                    }
-                    if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
-                        String collectionType = cbxCollectionType.getSelectedItem().toString();
-                        if (collectionType == null && collectionType.equals("")) {
-                            collectionType = "List";
-                        }
-                        hasRelation.setCollectionType(collectionType);
-                    }
-                }
-                if (relation instanceof UseRelationComponent) {
-                    UseRelationComponent useRelation = (UseRelationComponent) relation;
-                    useRelation.setCardinalitySource((CardinalityEnum) cbxCardinalitySource.getSelectedItem());
-                    useRelation.setCardinalityTarget((CardinalityEnum) cbxCardinalityTarget.getSelectedItem());
-                }
-                classDiagramScene.addEdge(relation);
-                classDiagramScene.setEdgeSource(relation, source.getComponent());
-                classDiagramScene.setEdgeTarget(relation, target.getComponent());
+        if (relation instanceof HasBaseRelationComponent) {
+            HasBaseRelationComponent hasRelation = (HasBaseRelationComponent) relation;
+            if (txfName.getText() != null && !txfName.getText().equals("")) {
+                hasRelation.setName(txfName.getText());
             }
 
-            classDiagramScene.validate();
+            // TODO has cardinality source?
+            //hasRelation.setCardinalitySource((CardinalityEnum) cbxCardinalitySource.getSelectedItem());
+            hasRelation.setCardinalityTarget((CardinalityEnum) cbxCardinalityTarget.getSelectedItem());
 
-        } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+            if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
+                String collectionType = cbxCollectionType.getSelectedItem().toString();
+                if (collectionType == null || collectionType.equals("")) {
+                    collectionType = "List";
+                }
+                hasRelation.setCollectionType(collectionType);
+            }
+        } else if (relation instanceof UseRelationComponent) {
+            UseRelationComponent useRelation = (UseRelationComponent) relation;
+            if (txfName.getText() != null && !txfName.getText().equals("")) {
+                useRelation.setName(txfName.getText());
+            }
+
+            useRelation.setCardinalitySource((CardinalityEnum) cbxCardinalitySource.getSelectedItem());
+            useRelation.setCardinalityTarget((CardinalityEnum) cbxCardinalityTarget.getSelectedItem());
         }
+
+        classDiagramScene.addRelationToScene(relation, source.getComponent(), target.getComponent());
+        
+        classDiagramScene.validate();
         this.dispose();
     }//GEN-LAST:event_btnOkActionPerformed
 
@@ -304,91 +248,146 @@ public class AddRelationDialog extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void cbxClassesTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxClassesTargetActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbxClassesTargetActionPerformed
+    private void cbxRelationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxRelationsActionPerformed
+        RelationComponent rc = (RelationComponent) cbxRelations.getSelectedItem();
+
+        txfName.setEnabled(false);
+        clearAndDisableComboBoxes();
+
+        cbxClassesSource.setEnabled(true);
+        cbxClassesTarget.setEnabled(true);
+
+        fillSourceAndTargetComboBoxes(rc);
+
+        if (rc instanceof HasBaseRelationComponent) {
+            txfName.setEnabled(true);
+            fillCardinalityComboBox(cbxCardinalityTarget);
+            fillCollectionsComboBox();
+        } else if (rc instanceof UseRelationComponent) {
+            txfName.setEnabled(true);
+            fillCardinalityComboBox(cbxCardinalitySource);
+            fillCardinalityComboBox(cbxCardinalityTarget);
+        }
+
+    }//GEN-LAST:event_cbxRelationsActionPerformed
 
     private void cbxClassesSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxClassesSourceActionPerformed
-        // TODO add your handling code here:
+        ComponentWidgetBase src = (ComponentWidgetBase) cbxClassesSource.getSelectedItem();
+        ComponentWidgetBase trg = (ComponentWidgetBase) cbxClassesTarget.getSelectedItem();
+
+        if (src != null && trg != null && src.equals(trg) && cbxRelations.getSelectedItem().getClass() != HasBaseRelationComponent.class) {
+            cbxClassesTarget.setSelectedItem(null);
+//            cbxClassesTarget.removeAllItems();
+//
+//            RelationComponent rc = (RelationComponent) cbxRelations.getSelectedItem();
+//            reinitTargetComboBoxExcept(rc, src);
+        }
     }//GEN-LAST:event_cbxClassesSourceActionPerformed
 
-    private void cbxRelationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxRelationsActionPerformed
-        if (cbxRelations.getSelectedItem() instanceof HasRelationComponent) {
-            txfName.setEnabled(true);
-            cbxCardinalityTarget.removeAllItems();
-            cbxCardinalityTarget.addItem(CardinalityEnum.One2Many);
-            cbxCardinalityTarget.addItem(CardinalityEnum.Zero2Many);
-            cbxCardinalityTarget.addItem(CardinalityEnum.One2One);
-            cbxCardinalityTarget.addItem(CardinalityEnum.Zero2One);
-            cbxCardinalitySource.removeAllItems();
-            cbxCardinalitySource.setEnabled(false);
-            cbxCardinalityTarget.setEnabled(true);
-            cbxCollectionType.setEnabled(true);
-            List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
-            cbxClassesSource.removeAllItems();
-            cbxClassesTarget.removeAllItems();
-            for (Widget widget : widgets) {
-                if (!(widget instanceof EnumWidget)) {
-                    cbxClassesSource.addItem(widget);
-                }
-                cbxClassesTarget.addItem(widget);
-            }
+    private void cbxClassesTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxClassesTargetActionPerformed
+        ComponentWidgetBase src = (ComponentWidgetBase) cbxClassesSource.getSelectedItem();
+        ComponentWidgetBase trg = (ComponentWidgetBase) cbxClassesTarget.getSelectedItem();
 
-        } else {
-            txfName.setEnabled(false);
-            cbxCollectionType.setEnabled(false);
+        if (src != null && trg != null && src.equals(trg) && cbxRelations.getSelectedItem().getClass() != HasBaseRelationComponent.class) {
+            cbxClassesSource.setSelectedItem(null);
         }
-        if (cbxRelations.getSelectedItem() instanceof IsRelationComponent) {
-            cbxCardinalityTarget.removeAllItems();
-            txfName.setEnabled(false);
-            //comboBoxCardinalityTarget.addItem(CardinalityEnum.One2One);
-            //comboBoxCardinalityTarget.addItem(CardinalityEnum.Zero2One);
-            cbxCardinalitySource.removeAllItems();
-            cbxCardinalitySource.setEnabled(false);
-            cbxCardinalityTarget.setEnabled(false);
+    }//GEN-LAST:event_cbxClassesTargetActionPerformed
 
-            List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
-            cbxClassesSource.removeAllItems();
-            cbxClassesTarget.removeAllItems();
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//
+//        /* Create and display the dialog */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                AddRelationDialog dialog = new AddRelationDialog(new javax.swing.JFrame(), true);
+//                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+//                    @Override
+//                    public void windowClosing(java.awt.event.WindowEvent e) {
+//                        System.exit(0);
+//                    }
+//                });
+//                dialog.setVisible(true);
+//            }
+//        });
+//    }
+    public JComboBox<RelationComponent> getRelationComponents() {
+        return cbxRelations;
+    }
+
+    // nepotrebno ako je deselektovano na pocetku sve iz combo boxeva
+    private void reinitTargetComboBoxExcept(RelationComponent rc, ComponentWidgetBase src) {
+        List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
+
+        if (rc instanceof IsRelationComponent) {
             for (Widget widget : widgets) {
-                if (widget instanceof ClassWidget) {
-                    cbxClassesSource.addItem(widget);
+                if (!widget.equals(src) && widget instanceof ClassWidget) {
                     cbxClassesTarget.addItem(widget);
                 }
             }
-
-        }
-        if (cbxRelations.getSelectedItem() instanceof UseRelationComponent) {
-            txfName.setEnabled(true);
-            cbxCardinalityTarget.removeAllItems();
-            cbxCardinalityTarget.addItem(CardinalityEnum.One2Many);
-            cbxCardinalityTarget.addItem(CardinalityEnum.Zero2Many);
-            cbxCardinalityTarget.addItem(CardinalityEnum.One2One);
-            cbxCardinalityTarget.addItem(CardinalityEnum.Zero2One);
-            cbxCardinalitySource.addItem(CardinalityEnum.One2Many);
-            cbxCardinalitySource.addItem(CardinalityEnum.Zero2Many);
-            cbxCardinalitySource.addItem(CardinalityEnum.One2One);
-            cbxCardinalitySource.addItem(CardinalityEnum.Zero2One);
-            cbxCardinalitySource.setEnabled(true);
-            cbxCardinalityTarget.setEnabled(true);
-
-            List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
-            cbxClassesSource.removeAllItems();
-            cbxClassesTarget.removeAllItems();
+        } else if (rc instanceof HasBaseRelationComponent) {
             for (Widget widget : widgets) {
-                cbxClassesSource.addItem(widget);
                 cbxClassesTarget.addItem(widget);
             }
-
+        } else if (rc instanceof UseRelationComponent) {
+            for (Widget widget : widgets) {
+                if (!widget.equals(src)) {
+                    cbxClassesTarget.addItem(widget);
+                }
+            }
+        } else if (rc instanceof ImplementsRelationComponent) {
+            for (Widget widget : widgets) {
+                if (widget instanceof InterfaceWidget) {
+                    cbxClassesTarget.addItem(widget);
+                }
+            }
         }
-        if (cbxRelations.getSelectedItem() instanceof ImplementsRelationComponent) {
-            txfName.setEnabled(false);
-            cbxCardinalitySource.setEnabled(false);
-            cbxCardinalityTarget.setEnabled(false);
+        cbxClassesTarget.setSelectedItem(null);
+    }
 
-            List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
-            cbxClassesSource.removeAllItems();
-            cbxClassesTarget.removeAllItems();
+    private void fillSourceAndTargetComboBoxes(RelationComponent rc) {
+        List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
+
+        if (rc instanceof IsRelationComponent) {
+            for (Widget widget : widgets) {
+                if (widget instanceof ClassWidget) {
+                    cbxClassesSource.addItem(widget);
+                    //if(!widget.equals(cbxClassesSource.getItemAt(0))) 
+                    cbxClassesTarget.addItem(widget);
+                }
+            }
+        } else if (rc instanceof HasBaseRelationComponent) {
+            for (Widget widget : widgets) {
+                if (widget instanceof ClassWidget) {
+                    cbxClassesSource.addItem(widget);
+                }
+                cbxClassesTarget.addItem(widget);
+            }
+        } else if (rc instanceof UseRelationComponent) {
+            for (Widget widget : widgets) {
+                if (widget instanceof ClassWidget || widget instanceof InterfaceWidget) {
+                    cbxClassesSource.addItem(widget);
+                }
+                //if(!widget.equals(cbxClassesSource.getItemAt(0)))
+                cbxClassesTarget.addItem(widget);
+            }
+        } else if (rc instanceof ImplementsRelationComponent) {
             for (Widget widget : widgets) {
                 if (widget instanceof ClassWidget) {
                     cbxClassesSource.addItem(widget);
@@ -397,51 +396,50 @@ public class AddRelationDialog extends javax.swing.JDialog {
                     cbxClassesTarget.addItem(widget);
                 }
             }
-
         }
-    }//GEN-LAST:event_cbxRelationsActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddRelationDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AddRelationDialog dialog = new AddRelationDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+        cbxClassesSource.setSelectedItem(null);
+        cbxClassesTarget.setSelectedItem(null);
     }
+
+    private void fillRelationsComboBox() {
+        for (RelationComponent rc : RelationUtilities.allRelations()) {
+            cbxRelations.addItem(rc);
+        }
+        cbxRelations.setSelectedItem(null);
+    }
+
+    private void fillCardinalityComboBox(JComboBox<CardinalityEnum> comboBox) {
+        comboBox.addItem(CardinalityEnum.One2Many);
+        comboBox.addItem(CardinalityEnum.Zero2Many);
+        comboBox.addItem(CardinalityEnum.One2One);
+        comboBox.addItem(CardinalityEnum.Zero2One);
+        comboBox.setEnabled(true);
+    }
+
+    private void fillCollectionsComboBox() {
+        String[] collectionTypes = new String[]{"List", "ArrayList", "LinkedList"};
+        cbxCollectionType.removeAllItems();
+        cbxCollectionType.setModel(new DefaultComboBoxModel<>(collectionTypes));
+        cbxCollectionType.setSelectedIndex(0);
+        cbxCollectionType.setEditable(true);
+        cbxCollectionType.setEnabled(true);
+    }
+
+    private void clearAndDisableComboBox(JComboBox<?> comboBox) {
+        comboBox.removeAllItems();
+        comboBox.setEnabled(false);
+    }
+
+    private void clearAndDisableComboBoxes() {
+        clearAndDisableComboBox(cbxClassesSource);
+        clearAndDisableComboBox(cbxClassesTarget);
+
+        clearAndDisableComboBox(cbxCardinalitySource);
+        clearAndDisableComboBox(cbxCardinalityTarget);
+        clearAndDisableComboBox(cbxCollectionType);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnOk;
@@ -461,20 +459,4 @@ public class AddRelationDialog extends javax.swing.JDialog {
     private javax.swing.JTextField txfName;
     // End of variables declaration//GEN-END:variables
 
-    public void setRelationSelectedItem(RelationComponent rc) {
-        cbxRelations.setSelectedItem(rc);
-        validate();
-    }
-
-    public JComboBox<RelationComponent> getRelationComponents() {
-        return cbxRelations;
-    }
-
-    private void fillCollectionsComboBox() {
-        String[] collectionTypes = new String[]{"List", "ArrayList", "LinkedList"};
-        cbxCollectionType.removeAllItems();
-        cbxCollectionType.setModel(new DefaultComboBoxModel<String>(collectionTypes));
-        cbxCollectionType.setSelectedIndex(0);
-        cbxCollectionType.setEditable(true);
-    }
 }

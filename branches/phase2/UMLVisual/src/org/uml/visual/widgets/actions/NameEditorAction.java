@@ -9,15 +9,15 @@ import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.Field;
-import org.uml.model.Member;
-import org.uml.model.Method;
-import org.uml.model.MethodArgument;
-import org.uml.model.Visibility;
+import org.uml.model.members.Field;
+import org.uml.model.members.Member;
+import org.uml.model.members.Method;
+import org.uml.model.members.MethodArgument;
+import org.uml.model.members.Visibility;
 import org.uml.visual.parser.WidgetParser;
-import org.uml.visual.widgets.FieldWidget;
-import org.uml.visual.widgets.MethodWidget;
-import org.uml.visual.widgets.NameableWidget;
+import org.uml.visual.widgets.members.FieldWidget;
+import org.uml.visual.widgets.members.MethodWidget;
+import org.uml.visual.widgets.INameableWidget;
 
 /**
  *
@@ -25,12 +25,12 @@ import org.uml.visual.widgets.NameableWidget;
  */
 public class NameEditorAction implements TextFieldInplaceEditor {
 
-    NameableWidget nameable;
+    private INameableWidget nameable;
+    private String oldName;
 
-    public NameEditorAction(NameableWidget umlWidget) {
+    public NameEditorAction(INameableWidget umlWidget) {
         this.nameable = umlWidget;
     }
-    private String oldName;
 
     @Override
     public boolean isEnabled(Widget widget) {
@@ -45,23 +45,20 @@ public class NameEditorAction implements TextFieldInplaceEditor {
 
     @Override
     public void setText(Widget widget, String string) {
-
         try {
             nameable.setName(string);
             nameable.setAttributes(string);
         } catch (RuntimeException ex) {
             String input = JOptionPane.showInputDialog("Name you have entered already exists, please enter another one.", getName(nameable));
-            setText(widget, input);
+            //setText(widget, input);
             //JOptionPane.showMessageDialog(null, "Name you have entered already exists, please enter another one.");
         }
-
-
-
+        
         //TODO podesavam ime konkretnog elementa, ali ga zove i field editor i method editor, kako da resim to?
         //classWidget.umlClassElement.setName(string);
     }
     
-    private String getName(NameableWidget widget) {
+    private String getName(INameableWidget widget) {
         Field f = new Field("", "", Visibility.PRIVATE);
         Method m = new Method("", "", new HashMap<String, MethodArgument>());
         WidgetParser wp = new WidgetParser();

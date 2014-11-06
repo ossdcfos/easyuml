@@ -7,7 +7,7 @@ package org.uml.code;
 import java.util.HashMap;
 import java.util.Map;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.Field;
+import org.uml.model.members.Field;
 
 /**
  * Class field's code generating class.

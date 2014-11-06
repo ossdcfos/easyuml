@@ -3,9 +3,9 @@
 <filesystem>
     <folder name="Windows2">
         <folder name="Modes">
-            <folder name="commonpalette">
+<!--            <folder name="commonpalette">
                 <file name="CommonPalette.wstcref" url="CommonPaletteWstcref.xml"/>
-            </folder>
+            </folder>-->
         </folder>
     </folder>
 </filesystem>

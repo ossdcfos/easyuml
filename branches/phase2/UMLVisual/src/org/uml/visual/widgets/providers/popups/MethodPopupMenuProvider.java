@@ -13,9 +13,9 @@ import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassComponent;
-import org.uml.model.Method;
-import org.uml.model.Visibility;
-import org.uml.visual.widgets.MethodWidget;
+import org.uml.model.members.Method;
+import org.uml.model.members.Visibility;
+import org.uml.visual.widgets.members.MethodWidget;
 
 /**
  *

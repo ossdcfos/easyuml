@@ -22,6 +22,8 @@
             </test-dependencies>
             <public-packages>
                 <package>org.uml.model</package>
+                <package>org.uml.model.members</package>
+                <package>org.uml.model.relations</package>
             </public-packages>
         </data>
     </configuration>

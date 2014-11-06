@@ -7,7 +7,7 @@ package org.uml.code;
 import java.util.HashMap;
 import java.util.Map;
 import org.uml.model.ClassDiagramComponent;
-import org.uml.model.Constructor;
+import org.uml.model.members.Constructor;
 
 /**
  * Constructor's code generating class. It is used to fully generate code for
