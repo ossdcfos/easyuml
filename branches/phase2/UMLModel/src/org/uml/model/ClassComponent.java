@@ -1,6 +1,5 @@
 package org.uml.model;
 
-import org.uml.model.members.Visibility;
 import org.uml.model.members.Method;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
@@ -11,43 +10,42 @@ import java.util.Random;
  * A class component in UML Class diagram. 
   *
  * @author Uros
- * @see ClassDiagramComponent
+ * @see ComponentBase
  * @see EnumComponent
  * @see InterfaceComponent
  * @see PackageComponent
  */
-public class ClassComponent extends ClassDiagramComponent {
+public class ClassComponent extends ComponentBase {
 
-    private HashMap<String, Constructor> constructors;
     private HashMap<String, Field> fields;
+    private HashMap<String, Constructor> constructors;
     private HashMap<String, Method> methods;
     private boolean isAbstract;
-    // private Type type; // we dont know why this is here...
 
     /**
      * Default constructor without parameters. Sets name to default value,
-     * instantiates fields, methods and constructors collections, as well as
-     * parentPackage field; sets visibility to public and isAbstract to false.
+     * 
      */
     public ClassComponent() {
-        this.setName("UntitledClass");
-        fields = new HashMap<>();
-        methods = new HashMap<>();
-        constructors = new HashMap<>();
-        visibility = Visibility.PUBLIC;
-        isAbstract = false;
-        parentPackage = null;
+        this("UntitledClass");
     }
 
     /**
      * Constructor with parameters which calls its super constructor.
-     * <p>
-     * Only sets the name of Class.
+     * Instantiates fields, methods and constructors collections, as well as
+     * parentPackage field; Sets isAbstract to false.
+     * 
+     * <p> Only sets the name of Class. </p>
      *
      * @param name to be set
      */
     public ClassComponent(String name) {
         super(name);
+        //setParentPackage(null);
+        fields = new HashMap<>();
+        constructors = new HashMap<>();
+        methods = new HashMap<>();
+        isAbstract = false;
     }
 
     /**
@@ -76,17 +74,7 @@ public class ClassComponent extends ClassDiagramComponent {
     public HashMap<String, Constructor> getConstructors() {
         return constructors;
     }
-
-    /**
-     * Returns a field from this class's collection of fields with a given name
-     *
-     * @param name of the field that needs to be returned
-     * @return this class's field with a given name
-     */
-    public Field getField(String name) {
-        return fields.get(name);
-    }
-
+    
     /**
      * Adds the field to ClassComponent's collection of fields.
      *
@@ -109,16 +97,6 @@ public class ClassComponent extends ClassDiagramComponent {
      */
     public void removeField(Field field) {
         fields.values().remove(field);
-    }
-
-    /**
-     * Returns a method from this clas's collection of methods
-     *
-     * @param name of the method to be returned
-     * @return method with a given name
-     */
-    public Method getMethod(String name) {
-        return methods.get(name);
     }
 
     /**
@@ -146,16 +124,6 @@ public class ClassComponent extends ClassDiagramComponent {
     }
 
     /**
-     * Returns a constructor with a given name that this class contains
-     *
-     * @param name of the wanted constructor
-     * @return constructor of this class
-     */
-    public Constructor getConstuctor(String name) {
-        return constructors.get(name);
-    }
-
-    /**
      * Adds the Constructor to ClassComponent's collection of constructors.
      *
      * @param constructor which will be added to collection.
@@ -173,7 +141,7 @@ public class ClassComponent extends ClassDiagramComponent {
      * @param constructor of constructor which will be removed.
      */
     public void removeConstructor(Constructor constructor) {
-        methods.values().remove(constructor);
+        constructors.values().remove(constructor);
     }
 
     /**
@@ -181,7 +149,7 @@ public class ClassComponent extends ClassDiagramComponent {
      *
      * @return true if class is abstract
      */
-    public boolean isIsAbstract() {
+    public boolean isAbstract() {
         return isAbstract;
     }
 
@@ -190,14 +158,8 @@ public class ClassComponent extends ClassDiagramComponent {
      *
      * @param isAbstract - true if the class is abstract, if not - false
      */
-    public void setIsAbstract(boolean isAbstract) {
+    public void setAbstract(boolean isAbstract) {
         this.isAbstract = isAbstract;
     }
-//    public Type getType() {
-//        return type;
-//    }
-//
-//    public void setType(Type type) {
-//        this.type = type;
-//    }
+    
 }

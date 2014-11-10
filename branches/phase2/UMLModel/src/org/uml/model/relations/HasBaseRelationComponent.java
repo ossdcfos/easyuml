@@ -2,7 +2,7 @@ package org.uml.model.relations;
 
 import java.util.Objects;
 import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagramComponent;
+import org.uml.model.ComponentBase;
 
 /**
  * Has relation in UML class diagrams. Describes relation used usually when an
@@ -120,7 +120,7 @@ public abstract class HasBaseRelationComponent extends RelationComponent {
     }
 
     @Override
-    public boolean canConnect(ClassDiagramComponent source, ClassDiagramComponent target) {
+    public boolean canConnect(ComponentBase source, ComponentBase target) {
         Class<?> sc = source.getClass();
         if(sc == ClassComponent.class) return true;
         return false;

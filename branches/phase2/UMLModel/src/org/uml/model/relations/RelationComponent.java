@@ -3,7 +3,7 @@ package org.uml.model.relations;
 import java.io.Serializable;
 import java.util.Objects;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ClassDiagramComponent;
+import org.uml.model.ComponentBase;
 
 /**
  * Relation between two UML Class Diagram components. 
@@ -15,12 +15,12 @@ import org.uml.model.ClassDiagramComponent;
  * @see UseRelationComponent
  * @see ImplementsRelationComponent
  * @see ClassDiagram
- * @see ClassDiagramComponent
+ * @see ComponentBase
  */
 public abstract class RelationComponent implements Serializable {
 
-    ClassDiagramComponent source;
-    ClassDiagramComponent target;
+    ComponentBase source;
+    ComponentBase target;
     protected String name;
 
     /**
@@ -36,27 +36,27 @@ public abstract class RelationComponent implements Serializable {
      * @param source - from which ClassDiagramComponent does relation start
      * @param target - to which ClassDiagramComponent does relation go
      * @param name of the Relation
-     * @see ClassDiagramComponent
+     * @see ComponentBase
      */
-    public RelationComponent(ClassDiagramComponent source, ClassDiagramComponent target, String name) {
+    public RelationComponent(ComponentBase source, ComponentBase target, String name) {
         this.source = source;
         this.target = target;
         this.name = name;
     }
 
-    public ClassDiagramComponent getSource() {
+    public ComponentBase getSource() {
         return source;
     }
 
-    public ClassDiagramComponent getTarget() {
+    public ComponentBase getTarget() {
         return target;
     }
 
-    public void setSource(ClassDiagramComponent source) {
+    public void setSource(ComponentBase source) {
         this.source = source;
     }
 
-    public void setTarget(ClassDiagramComponent target) {
+    public void setTarget(ComponentBase target) {
         this.target = target;
     }
 
@@ -72,7 +72,7 @@ public abstract class RelationComponent implements Serializable {
         return "Subclass should override this method";
     }
     
-    public abstract boolean canConnect(ClassDiagramComponent source, ClassDiagramComponent target);
+    public abstract boolean canConnect(ComponentBase source, ComponentBase target);
     
     @Override
     public abstract int hashCode();

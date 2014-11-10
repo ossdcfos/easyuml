@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.io.IOException;
 import javax.swing.Action;
 import org.openide.actions.DeleteAction;
+import org.openide.actions.RenameAction;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
@@ -11,7 +12,7 @@ import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagramComponent;
+import org.uml.model.ComponentBase;
 import org.uml.model.EnumComponent;
 import org.uml.model.InterfaceComponent;
 
@@ -23,13 +24,13 @@ public class ClassDiagramComponentNode extends AbstractNode {
 
 //    https://platform.netbeans.org/tutorials/nbm-nodesapi2.html#propertysheet
 //    http://bits.netbeans.org/dev/javadoc/org-openide-nodes/org/openide/nodes/PropertySupport.html
-    private ClassDiagramComponent component;
+    private ComponentBase component;
 
-    public ClassDiagramComponentNode(ClassDiagramComponent component) {
+    public ClassDiagramComponentNode(ComponentBase component) {
         this(component, new InstanceContent());
     }
 
-    private ClassDiagramComponentNode(ClassDiagramComponent component, InstanceContent content) {
+    private ClassDiagramComponentNode(ComponentBase component, InstanceContent content) {
         super(Children.create(new ClassDiagramComponentChildrenFactory(component), true), new AbstractLookup(content));
         content.add(this);
 
@@ -40,11 +41,16 @@ public class ClassDiagramComponentNode extends AbstractNode {
     
     @Override
     public Action[] getActions(boolean context) {
-        return new Action[]{(SystemAction.get(DeleteAction.class))};
+        return new Action[]{SystemAction.get(DeleteAction.class), SystemAction.get(RenameAction.class)};
     }
 
     @Override
     public boolean canDestroy() {
+        return true;
+    }
+    
+    @Override
+    public boolean canRename(){
         return true;
     }
 
@@ -53,6 +59,8 @@ public class ClassDiagramComponentNode extends AbstractNode {
         component.getParentDiagram().removeComponent(component.getName());
         fireNodeDestroyed();
     }
+    
+    
 
     @Override
     public Image getIcon(int type) {
@@ -73,7 +81,7 @@ public class ClassDiagramComponentNode extends AbstractNode {
         return getIcon(type);
     }
 
-    public ClassDiagramComponent getComponent() {
+    public ComponentBase getComponent() {
         return component;
     }
 }

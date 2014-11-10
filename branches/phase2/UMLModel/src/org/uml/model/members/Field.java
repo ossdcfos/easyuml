@@ -1,6 +1,7 @@
 package org.uml.model.members;
 
-import java.lang.reflect.Type;
+import org.uml.model.ClassComponent;
+import org.uml.model.EnumComponent;
 
 /**
  * Represents a class field (variables inside a class). 
@@ -15,7 +16,7 @@ import java.lang.reflect.Type;
  * @see EnumComponent
  *
  */
-public class Field extends Member /* treba da nasledjuje member a u membberu da bude visibility*/ {
+public class Field extends Member {
     // sta ako je niz? da li treba koristiti Type?
 
     private String type;
