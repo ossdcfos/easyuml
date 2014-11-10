@@ -4,52 +4,44 @@ import org.uml.model.members.Method;
 import java.util.HashMap;
 
 /**
- * Interfaces from UML Class diagrams. Used to represent Interface
- * classes in UML diagrams.
+ * Interfaces from UML Class diagrams. Used to represent Interface classes in
+ * UML diagrams.
  *
  * @author zoran
- * @see ClassDiagramComponent
+ * @see ComponentBase
  * @see ClassComponent
  * @see EnumComponent
  * @see PackageComponent
  */
-public class InterfaceComponent extends ClassDiagramComponent {
+public class InterfaceComponent extends ComponentBase {
 
     private HashMap<String, Method> methods;
 
     /**
-     * Constructor without parameters. Sets the name to default value and
-     * instantiates the methods collection.
+     * Constructor without parameters. Sets the name to default value.
      */
     public InterfaceComponent() {
-        this.setName("UntitledInterface");
+        this("UntitledInterface");
+    }
+
+    /**
+     * One parameter constructor. Sets the name and instantiates methods.
+     *
+     * @param name of InterfaceComponent
+     * @see ComponentBase
+     */
+    public InterfaceComponent(String name) {
+        super(name);
         methods = new HashMap<>();
     }
 
     /**
-     * One parameter constructor. Only sets the name.
-     *
-     * @param name of InterfaceComponent
-     * @see ClassDiagramComponent
-     */
-    public InterfaceComponent(String name) {
-        super(name);
-    }
-    /**
      * Returns all methods this interface has as a collection (HashMap)
+     *
      * @return HashMap of methods
      */
     public HashMap<String, Method> getMethods() {
         return methods;
-    }
-    /**
-     * Returns this interfaces' specific method with the name provided as input
-     * @param name of the method wanted
-     * @return Method object
-     * @see Method
-     */
-    public Method getMethod(String name) {
-        return methods.get(name);
     }
 
     /**

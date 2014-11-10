@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
-import org.uml.model.ClassDiagramComponent;
+import org.uml.model.ComponentBase;
 import org.uml.model.members.Member;
 
 /**
@@ -18,9 +18,9 @@ import org.uml.model.members.Member;
  */
 public class ClassDiagramComponentChildrenFactory extends ChildFactory<Member> {
 
-    private ClassDiagramComponent component;
+    private ComponentBase component;
 
-    public ClassDiagramComponentChildrenFactory(ClassDiagramComponent component) {
+    public ClassDiagramComponentChildrenFactory(ComponentBase component) {
         this.component = component;
     }
 

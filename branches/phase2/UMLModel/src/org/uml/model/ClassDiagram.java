@@ -14,13 +14,13 @@ import java.util.Map;
  *
  * @author Uros
  * @version 1.0
- * @see ClassDiagramComponent
+ * @see ComponentBase
  * @see RelationComponent
  */
 public class ClassDiagram implements Serializable {
 
     private String name;
-    private HashMap<String, ClassDiagramComponent> components; // contains classes, interfaces or enums
+    private HashMap<String, ComponentBase> components; // contains classes, interfaces or enums
     private HashMap<String, RelationComponent> relations;
     //compoments counter:
     int compCounter = 1;
@@ -36,9 +36,9 @@ public class ClassDiagram implements Serializable {
      */
     public ClassDiagram() {
         name = "UML Class Diagram";
-        this.components = new HashMap<String, ClassDiagramComponent>();
-        this.relations = new HashMap<String, RelationComponent>();
-        this.packages = new HashMap<String, PackageComponent>();
+        this.components = new HashMap<>();
+        this.relations = new HashMap<>();
+        this.packages = new HashMap<>();
     }
 
     public void addDeleteListener(IComponentDeleteListener icdl) {
@@ -53,7 +53,7 @@ public class ClassDiagram implements Serializable {
      *
      * @param component to be added to collection
      */
-    public void addComponent(ClassDiagramComponent component) {
+    public void addComponent(ComponentBase component) {
         if (nameExists(component.getName())) {
             component.setName(component.getName() + compCounter);
         }
@@ -102,7 +102,7 @@ public class ClassDiagram implements Serializable {
         relations.remove(name);
     }
 
-    public void removeRelationsForAComponent(ClassDiagramComponent component) {
+    public void removeRelationsForAComponent(ComponentBase component) {
         List<RelationComponent> toRemove = new LinkedList<>();
         for (Map.Entry<String, RelationComponent> entry : relations.entrySet()) {
             RelationComponent relation = entry.getValue();
@@ -120,7 +120,7 @@ public class ClassDiagram implements Serializable {
      *
      * @return collection of components
      */
-    public HashMap<String, ClassDiagramComponent> getComponents() {
+    public HashMap<String, ComponentBase> getComponents() {
         return components;
     }
 
@@ -160,7 +160,7 @@ public class ClassDiagram implements Serializable {
      * @param comp - component whose name will be changed
      * @param oldName - old component's name
      */
-    public void componentNameChanged(ClassDiagramComponent comp, String oldName) {
+    public void componentNameChanged(ComponentBase comp, String oldName) {
         components.remove(oldName);
         addComponent(comp);
     }

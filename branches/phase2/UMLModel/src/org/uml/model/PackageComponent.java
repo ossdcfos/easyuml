@@ -8,36 +8,36 @@ import java.util.Map;
  * inside projects. Is one of four possible members.
  *
  * @author zoran
- * @see ClassDiagramComponent
+ * @see ComponentBase
  * @see ClassComponent
  * @see EnumComponent
  * @see InterfaceComponent
  */
-public class PackageComponent extends ClassDiagramComponent {
+public class PackageComponent extends ComponentBase {
 
-    private HashMap<String, ClassDiagramComponent> classDiagramComponent;
+    private HashMap<String, ComponentBase> classDiagramComponents;
 
     /**
      * Constructor without parameters which sets PackageComponent's name to its
      * default value.
      */
     public PackageComponent() {
-        this.setName("UntitledPackage");
+        this("UntitledPackage");
     }
 
     /**
      * Constructor with parameter which sets PackageComponent's name and
-     * instantiates classDiagramComponent collection.
+     * instantiates classDiagramComponents collection.
      *
      * @param name of PackageComponent
      */
     public PackageComponent(String name) {
         super(name);
-        classDiagramComponent = new HashMap<String, ClassDiagramComponent>();
+        classDiagramComponents = new HashMap<>();
     }
 
-    public HashMap<String, ClassDiagramComponent> getComponents() {
-        return classDiagramComponent;
+    public HashMap<String, ComponentBase> getComponents() {
+        return classDiagramComponents;
     }
 
     /**
@@ -46,11 +46,11 @@ public class PackageComponent extends ClassDiagramComponent {
      *
      * @param cdc - classDiagramComponent to be added
      */
-    public void addComponent(ClassDiagramComponent cdc) {
+    public void addComponent(ComponentBase cdc) {
 //        if (cdc instanceof ClassComponent) {
 //            cdc = (ClassDiagramComponent) cdc;
 //        }
-        classDiagramComponent.put(cdc.getName(), cdc);
+        classDiagramComponents.put(cdc.getName(), cdc);
     }
 
     /**
@@ -59,8 +59,8 @@ public class PackageComponent extends ClassDiagramComponent {
      *
      * @param cdc - classDiagramComponent to be removed
      */
-    public void removeComponent(ClassDiagramComponent cdc) {
-        classDiagramComponent.remove(cdc.getName());
+    public void removeComponent(ComponentBase cdc) {
+        classDiagramComponents.remove(cdc.getName());
     }
 
     /**
@@ -71,9 +71,9 @@ public class PackageComponent extends ClassDiagramComponent {
         System.out.println("PackageComponent: " + this.getName());
         System.out.println("Contains these ClassDiagramComponents: ");
         int counter = 1;
-        for (Map.Entry<String, ClassDiagramComponent> entry : classDiagramComponent.entrySet()) {
+        for (Map.Entry<String, ComponentBase> entry : classDiagramComponents.entrySet()) {
             String string = entry.getKey();
-            ClassDiagramComponent classComponent = entry.getValue();
+            ComponentBase classComponent = entry.getValue();
             System.out.println("Component no." + counter + ": \t" + classComponent.getName());
             counter++;
         }

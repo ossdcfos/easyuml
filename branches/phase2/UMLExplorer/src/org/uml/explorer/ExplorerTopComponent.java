@@ -3,8 +3,6 @@ package org.uml.explorer;
 import java.awt.BorderLayout;
 import java.util.Collection;
 import java.util.HashMap;
-import javax.swing.Action;
-import javax.swing.ActionMap;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -20,7 +18,7 @@ import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ClassDiagramComponent;
+import org.uml.model.ComponentBase;
 
 /**
  * Top component which displays something. See:
@@ -61,7 +59,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     private HashMap<Object, Node> objectsToNodes = new HashMap<>(); // mapping of object to corresponding node
 
     Result<ClassDiagram> resultCD;
-    Result<ClassDiagramComponent> resultCDC;
+    Result<ComponentBase> resultCDC;
     private boolean recursiveCall = false;
 
     public ExplorerTopComponent() {
@@ -110,7 +108,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
         // zasto ovaj poziv? radi i bez toga, jer je registrovan lookup, sam zove resultChanged
 //        resultChanged(new LookupEvent(resultCD));
 
-        resultCDC = Utilities.actionsGlobalContext().lookupResult(ClassDiagramComponent.class);
+        resultCDC = Utilities.actionsGlobalContext().lookupResult(ComponentBase.class);
         resultCDC.addLookupListener(this);
 //        resultChanged(new LookupEvent(resultCdc));
     }

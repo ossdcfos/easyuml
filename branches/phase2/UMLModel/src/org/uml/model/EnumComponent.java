@@ -2,7 +2,6 @@ package org.uml.model;
 
 import java.util.HashMap;
 import java.util.Random;
-import org.uml.model.ClassDiagramComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
 import org.uml.model.members.Literal;
@@ -18,7 +17,7 @@ import org.uml.model.members.Method;
  * @see InterfaceComponent
  * @see PackageComponent
  */
-public class EnumComponent extends ClassDiagramComponent {
+public class EnumComponent extends ComponentBase {
 
     private HashMap<String, Field> fields;
     private HashMap<String, Method> methods;
@@ -26,62 +25,62 @@ public class EnumComponent extends ClassDiagramComponent {
     private HashMap<String, Constructor> constructors;
 
     /**
-     * Default constructor without parameters. Sets name to default value and
-     * instantiates fields, methods, constructors and literals collections.
+     * Default constructor without parameters. Sets name to default value.
      */
     public EnumComponent() {
-        this.setName("UntitledEnum");
-        fields = new HashMap<String, Field>();
-        methods = new HashMap<String, Method>();
-        constructors = new HashMap<String, Constructor>();
-        literals = new HashMap<String, Literal>();
+        this("UntitledEnum");
     }
 
     /**
-     * Parameterized Constructor, calls the default constructor (only sets name
-     * to default value).
+     * Parameterized Constructor, calls the default constructor (sets the name
+     * to default value). Instantiates fields, methods, constructors and
+     * literals collections.
      *
      * @param name of EnumComponent
-     * @see ClassDiagramComponent
+     * @see ComponentBase
      */
     public EnumComponent(String name) {
         super(name);
+        fields = new HashMap<>();
+        methods = new HashMap<>();
+        constructors = new HashMap<>();
+        literals = new HashMap<>();
     }
-/**
- * Returns the collection of fields that this enum contains
- * @return HashMap of enum's fields
- */
+
+    /**
+     * Returns the collection of fields that this enum contains
+     *
+     * @return HashMap of enum's fields
+     */
     public HashMap<String, Field> getFields() {
         return fields;
     }
-/**
- * Returns the collection of this enum's methods
- * @return HashMap of enum's methods
- */
+
+    /**
+     * Returns the collection of this enum's methods
+     *
+     * @return HashMap of enum's methods
+     */
     public HashMap<String, Method> getMethods() {
         return methods;
     }
-/**
- *  Returns the collection of this enum's constructors
- * @return HashMap of enum's methods
- */
+
+    /**
+     * Returns the collection of this enum's constructors
+     *
+     * @return HashMap of enum's methods
+     */
     public HashMap<String, Constructor> getConstructors() {
         return constructors;
     }
-/**
- * Returns the collection of literals that this enum contains
- * @return HashMap of enum's literals
- */
+
+    /**
+     * Returns the collection of literals that this enum contains
+     *
+     * @return HashMap of enum's literals
+     */
     public HashMap<String, Literal> getLiterals() {
         return literals;
-    }
-/**
- * Returns enum's field with the given name from the collection of fields
- * @param name of the field that is to be returned
- * @return enum's field
- */
-    public Field getField(String name) {
-        return fields.get(name);
     }
 
     /**
@@ -112,14 +111,6 @@ public class EnumComponent extends ClassDiagramComponent {
     public void removeField(String name) {
         fields.remove(name);
     }
-/**
- * Returns the method with the specific name given from enum's collection of methods
- * @param name of the method to be returned
- * @return enum's method with a given name
- */
-    public Method getMethod(String name) {
-        return methods.get(name);
-    }
 
     /**
      * Adds a method to EnumComponent's collection of methods.
@@ -149,14 +140,6 @@ public class EnumComponent extends ClassDiagramComponent {
     public void removeMethod(String name) {
         methods.remove(name);
     }
-/**
- * Returns a constructor with a given name from the collection of constructors
- * @param name of the constructor to be returned
- * @return this enum's constructor
- */
-    public Constructor getConstuctor(String name) {
-        return constructors.get(name);
-    }
 
     /**
      * Adds a constructor to EnumComponent's collection of constructors.
@@ -183,14 +166,6 @@ public class EnumComponent extends ClassDiagramComponent {
      */
     public void removeConstructor(String name) {
         constructors.remove(name);
-    }
-/**
- * Returns the enum's literal with the name provided
- * @param name of the needed literal
- * @return enum's literal with the name given
- */
-    public Literal getLiteral(String name) {
-        return literals.get(name);
     }
 
     /**

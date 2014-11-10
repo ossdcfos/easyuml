@@ -1,7 +1,6 @@
 package org.uml.model.members;
 
-import java.lang.reflect.Modifier;
-import org.uml.model.ClassDiagramComponent;
+import org.uml.model.ComponentBase;
 
 /**
  * Represents  a class member.
@@ -11,12 +10,13 @@ import org.uml.model.ClassDiagramComponent;
  * @see Field
  * @see Method
  * @see Constructor
- * @see ClassDiagramComponent
+ * @see ComponentBase
  *
  */
 public class Member {
 
     private String name;
+    
     /*
      * Modifier is a int value representing access and non-access modifier in
      * Java e.g. public is represented as 0x00000001, static as 0x00000008.
@@ -25,7 +25,7 @@ public class Member {
      */
     private int modifier;
     //private String modifiers; //modifiers are implemented as Strings, it is possible to later be changed to enum
-    private ClassDiagramComponent declaringClass;
+    private ComponentBase declaringClass;
     protected Visibility visibility;
 
     /**
@@ -53,11 +53,11 @@ public class Member {
         this.modifier = modifier;
     }
 
-    public ClassDiagramComponent getDeclaringClass() {
+    public ComponentBase getDeclaringClass() {
         return declaringClass;
     }
 
-    public void setDeclaringClass(ClassDiagramComponent declaringClass) {
+    public void setDeclaringClass(ComponentBase declaringClass) {
         this.declaringClass = declaringClass;
     }
 

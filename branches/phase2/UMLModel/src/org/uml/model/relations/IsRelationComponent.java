@@ -2,7 +2,7 @@ package org.uml.model.relations;
 
 import java.util.Objects;
 import org.uml.model.ClassComponent;
-import org.uml.model.ClassDiagramComponent;
+import org.uml.model.ComponentBase;
 import org.uml.model.InterfaceComponent;
 
 /**
@@ -28,7 +28,7 @@ public class IsRelationComponent extends RelationComponent {
     }
 
     @Override
-    public boolean canConnect(ClassDiagramComponent source, ClassDiagramComponent target) {
+    public boolean canConnect(ComponentBase source, ComponentBase target) {
         Class<?> sc = source.getClass();
         Class<?> tc = target.getClass();
         if(sc == ClassComponent.class && tc == ClassComponent.class) return true;
