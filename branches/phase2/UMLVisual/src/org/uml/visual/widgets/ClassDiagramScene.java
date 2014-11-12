@@ -7,6 +7,7 @@ import org.uml.model.relations.RelationComponent;
 import org.uml.model.relations.HasBaseRelationComponent;
 import org.uml.visual.widgets.providers.popups.ConnectionPopupMenuProvider;
 import java.awt.BasicStroke;
+import java.awt.Rectangle;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.anchor.*;
@@ -99,6 +100,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
         for (ComponentBase comp : umlClassDiagram.getComponents().values()) {
             Widget w = addNode(comp);
             w.setPreferredLocation(convertLocalToScene(comp.getPosition()));
+            w.setPreferredBounds(comp.getBounds());
         }
 
         for (RelationComponent rel : umlClassDiagram.getRelations().values()) {

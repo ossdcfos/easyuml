@@ -28,7 +28,7 @@ public class PackageWidget extends ComponentWidgetBase implements INameableWidge
 
         Widget packageWidget = new Widget(scene);
         packageWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        packageWidget.setBorder(EMPTY_BORDER_6);
+//        packageWidget.setBorder(EMPTY_BORDER_6);
 
         nameWidget.setLabel(component.getName());
         packageWidget.addChild(nameWidget);

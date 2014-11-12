@@ -33,7 +33,7 @@ public class EnumWidget extends ComponentWidgetBase implements INameableWidget {
 
         Widget headerWidget = new Widget(scene);
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        headerWidget.setBorder(EMPTY_BORDER_6);
+        headerWidget.setBorder(EMPTY_BORDER_4);
 
         LabelWidget stereotype = new LabelWidget(scene, "<<enumeration>>");
         stereotype.setAlignment(LabelWidget.Alignment.CENTER);
@@ -49,7 +49,7 @@ public class EnumWidget extends ComponentWidgetBase implements INameableWidget {
         literalsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
         literalsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
         literalsContainer.setOpaque(false);
-        literalsContainer.setBorder(EMPTY_BORDER_6);
+        literalsContainer.setBorder(EMPTY_BORDER_4);
         LabelWidget literalName = new LabelWidget(scene);
         literalsContainer.addChild(literalName);
         addChild(literalsContainer);
@@ -60,7 +60,7 @@ public class EnumWidget extends ComponentWidgetBase implements INameableWidget {
         fieldsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
         fieldsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
         fieldsContainer.setOpaque(false);
-        fieldsContainer.setBorder(EMPTY_BORDER_6);
+        fieldsContainer.setBorder(EMPTY_BORDER_4);
         LabelWidget memberName = new LabelWidget(scene);
         fieldsContainer.addChild(memberName);
         addChild(fieldsContainer);
@@ -71,7 +71,7 @@ public class EnumWidget extends ComponentWidgetBase implements INameableWidget {
         methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
         methodsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
         methodsContainer.setOpaque(false);
-        methodsContainer.setBorder(EMPTY_BORDER_6);
+        methodsContainer.setBorder(EMPTY_BORDER_4);
         LabelWidget operationName = new LabelWidget(scene);
         methodsContainer.addChild(operationName);
         addChild(methodsContainer);

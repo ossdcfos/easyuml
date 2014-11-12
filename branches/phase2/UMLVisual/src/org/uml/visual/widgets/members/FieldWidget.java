@@ -135,11 +135,4 @@ public class FieldWidget extends MemberWidgetBase {
         }
     }
 
-//    @Override
-//    public void notifyStateChanged(ObjectState previousState, ObjectState state) {
-//        super.notifyStateChanged(previousState, state);
-//        
-//        if(state.isHovered()) setBorder(HOVER_BORDER);
-//        else setBorder(EMPTY_BORDER);
-//    }
 }

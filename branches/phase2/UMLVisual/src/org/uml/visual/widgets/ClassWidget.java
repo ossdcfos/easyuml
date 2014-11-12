@@ -42,7 +42,7 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
         // Header
         Widget headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        headerWidget.setBorder(EMPTY_BORDER_6);
+        headerWidget.setBorder(EMPTY_BORDER_4);
         if (classComponent.isAbstract()) {
             LabelWidget abstractLabel = new LabelWidget(headerWidget.getScene(), "<<abstract>>");
             abstractLabel.setFont(headerWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
@@ -61,7 +61,7 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
         fieldsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
         fieldsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
         fieldsContainer.setOpaque(false);
-        fieldsContainer.setBorder(EMPTY_BORDER_6);
+        fieldsContainer.setBorder(EMPTY_BORDER_4);
         LabelWidget fieldName = new LabelWidget(scene);
         fieldsContainer.addChild(fieldName);
         addChild(fieldsContainer);
@@ -73,7 +73,7 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
         methodsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
         methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
         methodsContainer.setOpaque(false);
-        methodsContainer.setBorder(EMPTY_BORDER_6);
+        methodsContainer.setBorder(EMPTY_BORDER_4);
         LabelWidget methodName = new LabelWidget(scene);
         methodsContainer.addChild(methodName);
         addChild(methodsContainer);
@@ -82,8 +82,6 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
         // Actions
         getActions().addAction(ActionFactory.createAcceptAction(new ComponentWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
-//        getActions().addAction(ActionFactory.createMoveAction());
-//        getActions().addAction(ActionFactory.createHoverAction(new ClassHoverProvider()));
         
         // Fill the widget when loading an existing diagram
         for (Constructor c : classComponent.getConstructors().values()) {

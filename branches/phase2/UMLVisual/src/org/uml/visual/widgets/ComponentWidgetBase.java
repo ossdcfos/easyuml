@@ -36,17 +36,22 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
 
     // attribute name
     protected static final Dimension MIN_DIMENSION = new Dimension(120, 120);
-    protected static final Dimension CONTAINER_MIN_DIMENSION = new Dimension(110, 50);
+    protected static final Dimension CONTAINER_MIN_DIMENSION = new Dimension(112, 50);
 
-    public static final Border EMPTY_BORDER_6 = BorderFactory.createEmptyBorder(6);
-    public static final Border DEFAULT_BORDER = BorderFactory.createLineBorder(2);
-    public static final Border HOVER_BORDER = BorderFactory.createCompositeBorder(BorderFactory.createLineBorder(), BorderFactory.createLineBorder());
-    
     public static final int RESIZE_SIZE = 5;
-    public static final Border RESIZE_BORDER = BorderFactory.createResizeBorder(RESIZE_SIZE, Color.black, false);
-//    private static final Border RESIZE_BORDER = new ResizeBorder(RESIZE_SIZE, Color.BLACK, getResizeControlPoints());
-//    public static ResizeBorder NON_RESIZABLE_BORDER = new ResizeBorder(5, Color.BLACK, new ResizeProvider.ControlPoint[]{});
 
+    public static final Color DEFAULT_COLOR = new Color(0xFBFBFB);
+    public static final Color HOVER_COLOR = new Color(0xF2F2F2);
+    public static final Color HOVER_SELECTED_COLOR = new Color(0xF7F7F7);
+    public static final Color SELECTED_COLOR = new Color(0xFAFAFA);
+
+    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_SIZE), BorderFactory.createLineBorder());
+    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_SIZE), BorderFactory.createDashedBorder(new Color(0x000047), 1, 1, true));
+    // +1, because dashed line falls into the widget (thickness of resize border is 
+    public static final Border RESIZE_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(RESIZE_SIZE), BorderFactory.createEmptyBorder(1));
+
+    public static final Border EMPTY_BORDER_4 = BorderFactory.createEmptyBorder(4);
+    
     public ComponentWidgetBase(ClassDiagramScene scene) {
         super(scene);
 
@@ -55,14 +60,14 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
         setMinimumSize(MIN_DIMENSION);
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setOpaque(true);
-        setCheckClipping(true);
-        setBackground(new Color(0xFBFBFB));
-        
+        //setCheckClipping(true);
+        setBackground(DEFAULT_COLOR);
+
         nameWidget = new LabelWidget(scene);
         nameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         nameWidget.setAlignment(LabelWidget.Alignment.CENTER);
         nameWidget.getActions().addAction(nameEditorAction);
-        
+
         // **** Actions ****
         // Connect action - CTRL + click
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ComponentConnectProvider()));
@@ -71,13 +76,11 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
         // Hover, select and resize
         getActions().addAction(scene.createWidgetHoverAction());
         getActions().addAction(scene.createSelectAction());
-        
-        // RESIZE NOT DONE
-//        getActions().addAction(new ResizeAction(new WindowStyleResizeProvider()));
         getActions().addAction(ActionFactory.createResizeAction());
-//        getActions().addAction(ActionFactory.createResizeAction(null, ActionFactory.createDefaultResizeProvider())); // /*new MyResizeProvider())*/);     
+        // Move drag and align action
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
-        
+//        getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
+
         // TODO: Change detection - check how this works
 //        addDependency(new Dependency() {
 //            @Override
@@ -89,7 +92,7 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
 
     @Override
     public void notifyStateChanged(ObjectState previousState, ObjectState state) {
-        // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
+        // Reaction to hover, focus and selection goes here
         super.notifyStateChanged(previousState, state);
 
         // resize reaction
@@ -97,12 +100,19 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
         boolean wasSelected = previousState.isFocused();
 
         if (state.isHovered()) {
-            // ne radi hover debljina jos
-            if (!select) setBorder(HOVER_BORDER);
-            setBackground(new Color(0xF0F0F0));
+            if (!select) {
+                setBorder(HOVER_BORDER);
+                setBackground(HOVER_COLOR);
+            } else {
+                setBackground(HOVER_SELECTED_COLOR);
+            }
         } else {
-            if (!select) setBorder(DEFAULT_BORDER);
-            setBackground(new Color(0xFBFBFB));
+            if (!select) {
+                setBorder(DEFAULT_BORDER);
+                setBackground(DEFAULT_COLOR);
+            } else {
+                setBackground(SELECTED_COLOR);
+            }
         }
 
         if (select && !wasSelected) {
@@ -129,31 +139,13 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
 //                Exceptions.printStackTrace(ex);
 //            }
             setBorder(RESIZE_BORDER);
-            Rectangle bnd = getPreferredBounds();
-            bnd.width += 2 * RESIZE_SIZE;
-            bnd.height += 2 * RESIZE_SIZE;
-            setPreferredBounds(bnd);
-
-            Point loc = getLocation();
-            loc.translate(-RESIZE_SIZE, -RESIZE_SIZE + 1);
-            setPreferredLocation(loc);
         } else if (!select && wasSelected) {
             //if(getActions().getActions().get(0) instanceof ResizeAction)
             //createActions(DesignerTools.SELECT).removeAction(0);
             //setBorder(BorderFactory.createEmptyBorder());
 
             setBorder(DEFAULT_BORDER);
-            Rectangle bnd = getPreferredBounds();
-            bnd.width -= 2 * RESIZE_SIZE;
-            bnd.height -= 2 * RESIZE_SIZE;
-            setPreferredBounds(bnd);
-
-            Point loc = getLocation();
-            loc.translate(RESIZE_SIZE, RESIZE_SIZE - 1);
-            setPreferredLocation(loc);
         }
-
-        // RESIZE REACTION
     }
 
     abstract public ComponentBase getComponent();
@@ -262,18 +254,5 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
             return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
         }
     }
-
-//    protected static ResizeProvider.ControlPoint[] getResizeControlPoints() {
-//        //by default all sized are active for resize;
-//        return new ResizeProvider.ControlPoint[]{
-//            ResizeProvider.ControlPoint.TOP_LEFT,
-//            ResizeProvider.ControlPoint.TOP_CENTER,
-//            ResizeProvider.ControlPoint.TOP_RIGHT,
-//            ResizeProvider.ControlPoint.CENTER_LEFT,
-//            ResizeProvider.ControlPoint.BOTTOM_LEFT,
-//            ResizeProvider.ControlPoint.BOTTOM_CENTER,
-//            ResizeProvider.ControlPoint.BOTTOM_RIGHT,
-//            ResizeProvider.ControlPoint.CENTER_RIGHT
-//        };
-//    }
+    
 }
