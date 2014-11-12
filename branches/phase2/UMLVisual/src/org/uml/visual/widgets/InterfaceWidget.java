@@ -26,7 +26,7 @@ public class InterfaceWidget extends ComponentWidgetBase implements INameableWid
 
         Widget headerWidget = new Widget(scene);
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        headerWidget.setBorder(EMPTY_BORDER_6);
+        headerWidget.setBorder(EMPTY_BORDER_4);
 
         LabelWidget stereotip = new LabelWidget(scene, "<<interface>>");
         stereotip.setAlignment(LabelWidget.Alignment.CENTER);
@@ -42,7 +42,7 @@ public class InterfaceWidget extends ComponentWidgetBase implements INameableWid
         methodsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
         methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
         methodsContainer.setOpaque(false);
-        methodsContainer.setBorder(EMPTY_BORDER_6);
+        methodsContainer.setBorder(EMPTY_BORDER_4);
         LabelWidget operationName = new LabelWidget(scene);
         methodsContainer.addChild(operationName);
         addChild(methodsContainer);

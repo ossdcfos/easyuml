@@ -1,5 +1,6 @@
 package org.uml.model;
 
+import java.awt.Dimension;
 import org.uml.model.members.Method;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;

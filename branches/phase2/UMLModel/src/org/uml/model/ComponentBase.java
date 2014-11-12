@@ -3,8 +3,13 @@ package org.uml.model;
 import org.uml.model.members.Member;
 import org.uml.model.members.Visibility;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.HashMap;
+import org.uml.model.members.Constructor;
+import org.uml.model.members.Field;
+import org.uml.model.members.Literal;
+import org.uml.model.members.Method;
 import org.uml.model.relations.RelationComponent;
 
 /**
@@ -18,8 +23,9 @@ import org.uml.model.relations.RelationComponent;
  * @see RelationComponent
  */
 public abstract class ComponentBase implements Serializable {
-    
+
     private Point position; // this should be removed in future
+    private Rectangle bounds;
 
     private String name;
     private HashMap<String, Member> members; // index of all fields, methods and constructors
@@ -28,8 +34,8 @@ public abstract class ComponentBase implements Serializable {
     private PackageComponent parentPackage;
 
     /**
-     * Default constructor. Initializes members of the ComponentBase.
-     * Members can be fields, methods, constructors and literals.
+     * Default constructor. Initializes members of the ComponentBase. Members
+     * can be fields, methods, constructors and literals.
      *
      * @param name of component
      * @see Field
@@ -42,7 +48,7 @@ public abstract class ComponentBase implements Serializable {
         members = new HashMap<>();
         visibility = Visibility.PUBLIC;
     }
-    
+
     /**
      * Adds a member of ClassDiagramComponent to the members collection. Similar
      * implementation as in ClassDiagram for addComponent and addRelation.
@@ -202,4 +208,13 @@ public abstract class ComponentBase implements Serializable {
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
+
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(Rectangle bounds) {
+        this.bounds = bounds;
+    }
+    
 }

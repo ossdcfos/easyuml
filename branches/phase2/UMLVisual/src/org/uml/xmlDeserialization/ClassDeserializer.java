@@ -4,7 +4,9 @@
  */
 package org.uml.xmlDeserialization;
 
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
 import org.uml.model.ClassComponent;
@@ -42,7 +44,13 @@ public class ClassDeserializer implements XmlDeserializer {
         String visibility = node.attributeValue("visibility");
         int xPos = (int) Double.parseDouble(node.attributeValue("xPosition"));
         int yPos = (int) Double.parseDouble(node.attributeValue("yPosition"));
+        int width = Integer.parseInt(node.attributeValue("width"));
+        int height = Integer.parseInt(node.attributeValue("height"));
+        int xOff = Integer.parseInt(node.attributeValue("xOff"));
+        int yOff = Integer.parseInt(node.attributeValue("yOff"));
+        
         classComponent.setPosition(new Point(xPos, yPos));
+        classComponent.setBounds(new Rectangle(xOff, yOff, width, height));
         if (packageName != null) {
             classComponent.setParentPackage(new PackageComponent(packageName));
         }
