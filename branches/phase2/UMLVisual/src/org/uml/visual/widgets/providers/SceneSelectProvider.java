@@ -41,7 +41,7 @@ public class SceneSelectProvider implements SelectProvider{
 //            }
             
             //scene.getView().requestFocusInWindow();
-            scene.setFocusedWidget(null);
+            //scene.setFocusedWidget(null);
             scene.setFocusedObject(null);
             
 //            for (Widget w : scene.getConnectionLayer().getChildren()) {

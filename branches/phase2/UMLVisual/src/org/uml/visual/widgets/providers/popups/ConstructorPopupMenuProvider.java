@@ -61,6 +61,7 @@ public class ConstructorPopupMenuProvider implements PopupMenuProvider {
             if(constructorWidget.getMember().getDeclaringClass() instanceof ClassComponent) {
                ((ClassComponent) constructorWidget.getMember().getDeclaringClass()).removeConstructor((Constructor) constructorWidget.getMember());
            }
+            constructorWidget.getClassDiagramScene().removeObject(constructorWidget.getMember());
             constructorWidget.removeFromParent();
         }
     };

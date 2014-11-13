@@ -3,11 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/members/MemberWidgetBase.java</file>
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/InterfaceWidget.java</file>
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/ClassWidget.java</file>
             <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/ComponentWidgetBase.java</file>
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/EnumWidget.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/ClassWidget.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/ClassDiagramScene.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/members/MemberWidgetBase.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/UMLTopComponent.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/members/FieldWidget.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/members/ConstructorWidget.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/members/LiteralWidget.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/members/MethodWidget.java</file>
         </group>
     </open-files>
 </project-private>

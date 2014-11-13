@@ -33,8 +33,9 @@ public class FieldWidget extends MemberWidgetBase {
     WidgetParser wp;
 
     public FieldWidget(ClassDiagramScene scene, Field field) {
-        super(scene);
+        super(scene, field);
         this.fieldComponent = field;
+        //scene.addObject(field, this);
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
        
         visibilityLabel = new LabelWidget(getScene());
@@ -90,10 +91,6 @@ public class FieldWidget extends MemberWidgetBase {
         return fieldNameWidget;
     }
 
-    public Field getFieldComponent() {
-        return fieldComponent;
-    }
-
     @Override
     public void setAttributes(String attributes) {
         String oldName = fieldComponent.getName();
@@ -132,6 +129,17 @@ public class FieldWidget extends MemberWidgetBase {
                     visibilityLabel.setLabel("~");
                     break;
             }
+        }
+    }
+
+    @Override
+    protected void setSelected(boolean isSelected) {
+        if(isSelected){
+            visibilityLabel.setForeground(SELECT_FONT_COLOR);
+            fieldNameWidget.setForeground(SELECT_FONT_COLOR);
+        } else {
+            visibilityLabel.setForeground(DEFAULT_FONT_COLOR);
+            fieldNameWidget.setForeground(DEFAULT_FONT_COLOR);
         }
     }
 

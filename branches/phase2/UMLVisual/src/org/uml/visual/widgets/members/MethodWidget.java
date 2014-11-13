@@ -21,29 +21,29 @@ public class MethodWidget extends MemberWidgetBase {
     Method methodComponent;
     private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     LabelWidget visibilityLabel;
-    LabelWidget methodNameWidget;
+    LabelWidget nameLabel;
     WidgetParser wp;
 
     public MethodWidget(ClassDiagramScene scene, Method method) {
-        super(scene);
+        super(scene, method);
         this.methodComponent = method;
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
         visibilityLabel = new LabelWidget(getScene());
         visibilityLabel.setLabel("+");
         this.addChild(visibilityLabel);
 
-        methodNameWidget = new LabelWidget(getScene());
-        methodNameWidget.setLabel(methodComponent.getSignatureForLabel());
-        this.addChild(methodNameWidget);
-        methodNameWidget.getActions().addAction(nameEditorAction);
-        methodNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
+        nameLabel = new LabelWidget(getScene());
+        nameLabel.setLabel(methodComponent.getSignatureForLabel());
+        this.addChild(nameLabel);
+        nameLabel.getActions().addAction(nameEditorAction);
+        nameLabel.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
         wp = new WidgetParser();
         refreshLabel();
     }
 
     @Override
     public LabelWidget getNameLabel() {
-        return methodNameWidget;
+        return nameLabel;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MethodWidget extends MemberWidgetBase {
         }
         String oldName = methodComponent.getName();
         if (!methodComponent.getDeclaringClass().nameExists(newName)) {
-            methodNameWidget.setLabel(newName);
+            nameLabel.setLabel(newName);
             methodComponent.setName(newName);
             methodComponent.getDeclaringClass().notifyMemberNameChanged(methodComponent, oldName);
         } else {
@@ -72,11 +72,7 @@ public class MethodWidget extends MemberWidgetBase {
     }
 
     public LabelWidget getMethodNameWidget() {
-        return methodNameWidget;
-    }
-
-    public Method getMethodComponent() {
-        return methodComponent;
+        return nameLabel;
     }
 
     @Override
@@ -94,7 +90,7 @@ public class MethodWidget extends MemberWidgetBase {
                 throw new RuntimeException("Error: name already exists.");
             }
         }
-        methodNameWidget.setLabel(methodComponent.getSignatureForLabel());
+        nameLabel.setLabel(methodComponent.getSignatureForLabel());
         refreshLabel();
 
     }
@@ -115,4 +111,16 @@ public class MethodWidget extends MemberWidgetBase {
                 break;
         }
     }
+
+    @Override
+    protected void setSelected(boolean isSelected) {
+        if(isSelected){
+            visibilityLabel.setForeground(SELECT_FONT_COLOR);
+            nameLabel.setForeground(SELECT_FONT_COLOR);
+        } else {
+            visibilityLabel.setForeground(DEFAULT_FONT_COLOR);
+            nameLabel.setForeground(DEFAULT_FONT_COLOR);
+        }
+    }
+    
 }
