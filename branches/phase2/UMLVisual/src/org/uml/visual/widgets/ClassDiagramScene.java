@@ -85,7 +85,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
 
         // To support selecting background scene (deselecting all widgets)
         getActions().addAction(ActionFactory.createSelectAction(new SceneSelectProvider(this), false));
-        //getActions().addAction(this.createSelectAction());
+        //getActions().addAction(createSelectAction());
 
         // To support drag-and-drop from the palette
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider(this)));

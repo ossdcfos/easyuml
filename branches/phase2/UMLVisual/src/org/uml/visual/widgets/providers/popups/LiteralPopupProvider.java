@@ -20,7 +20,7 @@ import org.uml.visual.widgets.members.LiteralWidget;
  *
  * @author Jelena
  */
-public class LiteralPopupProvider implements PopupMenuProvider{
+public class LiteralPopupProvider implements PopupMenuProvider {
 
     private LiteralWidget literalWidget;
     private JPopupMenu menu;
@@ -35,27 +35,27 @@ public class LiteralPopupProvider implements PopupMenuProvider{
     private JCheckBoxMenuItem abstractJCBMI;
     private JCheckBoxMenuItem finalJCBMI;
     private JCheckBoxMenuItem synchronizedJCBMI;
-    
+
     public LiteralPopupProvider(LiteralWidget literalWidget) {
         this.literalWidget = literalWidget;
         menu = new JPopupMenu("Literal Menu");
-        
+
         (deleteField = new JMenuItem("Delete Literal")).addActionListener(removeWidgetListener);
         menu.add(deleteField);
     }
-    
-    
+
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-           literalWidget.getMember().getDeclaringClass().removeMember(literalWidget.getName());
-           literalWidget.removeFromParent();
+            literalWidget.getMember().getDeclaringClass().removeMember(literalWidget.getName());
+            literalWidget.getClassDiagramScene().removeObject(literalWidget.getMember());
+            literalWidget.removeFromParent();
         }
     };
-    
+
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;
     }
-    
+
 }

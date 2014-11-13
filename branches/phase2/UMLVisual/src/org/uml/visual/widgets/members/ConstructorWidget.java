@@ -26,31 +26,31 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
     Constructor constructorComponent;
     private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     LabelWidget visibilityLabel;
-    LabelWidget construktorNameWidget;
+    LabelWidget nameLabel;
     
     public ConstructorWidget(ClassDiagramScene scene, Constructor constructor) {
-        super(scene);
+        super(scene, constructor);
         this.constructorComponent = constructor;
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
         visibilityLabel = new LabelWidget(getScene());
         visibilityLabel.setLabel("+");
         this.addChild(visibilityLabel);
 
-        construktorNameWidget = new LabelWidget(getScene());
-        construktorNameWidget.setLabel(constructorComponent.getDeclaringClass().getName() + "()");
-        this.addChild(construktorNameWidget);
+        nameLabel = new LabelWidget(getScene());
+        nameLabel.setLabel(constructorComponent.getDeclaringClass().getName() + "()");
+        this.addChild(nameLabel);
         //construktorNameWidget.getActions().addAction(nameEditorAction);
-        construktorNameWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConstructorPopupMenuProvider(this)));
+        nameLabel.getActions().addAction(ActionFactory.createPopupMenuAction(new ConstructorPopupMenuProvider(this)));
     }
     
     @Override
     public LabelWidget getNameLabel() {
-        return construktorNameWidget;
+        return nameLabel;
     }
 
     @Override
     public void setName(String newName) {
-        construktorNameWidget.setLabel(newName);
+        nameLabel.setLabel(newName);
     }
 
     @Override
@@ -73,5 +73,16 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
         String newName = evt.getNewValue().toString();
         constructorComponent.setName(newName);
         setName(newName + "()");
+    }
+
+    @Override
+    protected void setSelected(boolean isSelected) {
+        if(isSelected){
+            visibilityLabel.setForeground(SELECT_FONT_COLOR);
+            nameLabel.setForeground(SELECT_FONT_COLOR);
+        } else {
+            visibilityLabel.setForeground(DEFAULT_FONT_COLOR);
+            nameLabel.setForeground(DEFAULT_FONT_COLOR);
+        }
     }
 }

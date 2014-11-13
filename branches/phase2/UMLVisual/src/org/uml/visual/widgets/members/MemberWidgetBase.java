@@ -21,45 +21,32 @@ public abstract class MemberWidgetBase extends LabelWidget implements INameableW
 
     protected static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(1);
     protected static final Border HOVER_BORDER = BorderFactory.createLineBorder(1, Color.GRAY);
-    protected static final Border SELECT_BORDER = BorderFactory.createLineBorder(1, Color.ORANGE);
+    protected static final Border SELECT_BORDER = BorderFactory.createLineBorder(1, new Color(0x0000A1)); //0x0096FF33
 
     protected static final Color DEFAULT_COLOR = new Color(0, 0, 0, 1);
     protected static final Color HOVER_COLOR = new Color(0xD4DCFF);
-    protected static final Color SELECT_COLOR = Color.ORANGE;//new Color(0, 0, 0, 1);
+    protected static final Color SELECT_COLOR = new Color(0x00, 0x00, 0xA1, 0x4D);
 
-    public MemberWidgetBase(ClassDiagramScene scene) {
+    protected static final Color DEFAULT_FONT_COLOR = Color.BLACK;
+    protected static final Color SELECT_FONT_COLOR = new Color(0xFFFFFF);
+
+    public MemberWidgetBase(ClassDiagramScene scene, Member member) {
         super(scene);
+        scene.addObject(member, this);
         setOpaque(true);
         setBackground(DEFAULT_COLOR);
+        setBorder(DEFAULT_BORDER);
         // To support hovering and selecting (in notifyStateChanged), otherwise a Provider is needed
         getActions().addAction(scene.createWidgetHoverAction());
-        //getActions().addAction(scene.createSelectAction());
         getActions().addAction(scene.createSelectAction());
-        getActions().addAction(ActionFactory.createSelectAction(new SelectProvider() {
-            Widget prev = null;
-
-            @Override
-            public boolean isAimingAllowed(Widget widget, Point localLocation, boolean invertSelection) {
-                return false;
-            }
-
-            @Override
-            public boolean isSelectionAllowed(Widget widget, Point localLocation, boolean invertSelection) {
-                return true;
-            }
-
-            @Override
-            public void select(Widget widget, Point localLocation, boolean invertSelection) {
-                if (invertSelection) widget.setBackground(DEFAULT_COLOR);
-                else widget.setBackground(SELECT_COLOR);
-//                if(prev != null && prev instanceof MemberWidgetBase) prev.setBackground(DEFAULT_COLOR);
-//                prev = widget;
-            }
-        }));
     }
 
     public Member getMember() {
         return null;
+    }
+
+    public ClassDiagramScene getClassDiagramScene() {
+        return (ClassDiagramScene) getScene();
     }
 
     abstract public LabelWidget getNameLabel();
@@ -67,43 +54,35 @@ public abstract class MemberWidgetBase extends LabelWidget implements INameableW
     @Override
     public void notifyStateChanged(ObjectState previousState, ObjectState state) {
         // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
-        //super.notifyStateChanged(previousState, state);
+        super.notifyStateChanged(previousState, state);
 
-        if (previousState.equals(state)) return;
+        // in case it has not yet been initialized (adding to the scene calls notifyStateChanged, before the full object has been initialized)
+        if(getParentWidget() == null) return;
 
-//        if(state.isHovered()){
-//            setBackground(HOVER_COLOR);
-//        } else {
-//            setBackground(DEFAULT_COLOR);
-//        }
-//        if (state.isSelected()) {
-//            setBackground(SELECT_COLOR);
-//        }
-//
-//        if (state.isFocused()) {
-//            setBackground(Color.PINK);
-//        }
         boolean selected = state.isFocused();
+        Widget parent = getParentWidget().getParentWidget();
+        parent.setState(parent.getState().deriveWidgetHovered(false));
+
+        if (selected) {
+            setSelected(true);
+            setBorder(SELECT_BORDER);
+            setBackground(SELECT_COLOR);
+            parent.setState(parent.getState().deriveSelected(true));
+        } else {
+            setBorder(DEFAULT_BORDER);
+            setBackground(DEFAULT_COLOR);
+            setSelected(false);
+        }
 
         if (state.isHovered()) {
             if (!selected) {
                 setBorder(HOVER_BORDER);
                 setBackground(HOVER_COLOR);
-            } else {
-                setBorder(SELECT_BORDER);
-                setBackground(SELECT_COLOR);
             }
-            Widget parent = getParentWidget().getParentWidget();
             parent.setState(parent.getState().deriveWidgetHovered(true));
-        } else {
-            if (!selected) {
-                setBorder(DEFAULT_BORDER);
-                setBackground(DEFAULT_COLOR);
-            } else {
-                setBorder(SELECT_BORDER);
-                setBackground(SELECT_COLOR);
-            }
         }
     }
+
+    protected abstract void setSelected(boolean isSelected);
 
 }

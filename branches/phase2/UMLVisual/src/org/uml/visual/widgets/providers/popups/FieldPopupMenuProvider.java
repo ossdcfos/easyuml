@@ -115,7 +115,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider {
             if (fieldWidget.getMember().getDeclaringClass() instanceof ClassComponent) {
                 ((ClassComponent) fieldWidget.getMember().getDeclaringClass()).removeField((Field) fieldWidget.getMember());
             }
-
+            fieldWidget.getClassDiagramScene().removeObject(fieldWidget.getMember());
             fieldWidget.removeFromParent();
         }
     };
@@ -174,7 +174,7 @@ public class FieldPopupMenuProvider implements PopupMenuProvider {
     }
 
     private void setSelectedButtons() {
-        Field field = fieldWidget.getFieldComponent();
+        Field field = (Field)fieldWidget.getMember();
         publicItem.setSelected(false);
         privateItem.setSelected(false);
         packageItem.setSelected(false);
