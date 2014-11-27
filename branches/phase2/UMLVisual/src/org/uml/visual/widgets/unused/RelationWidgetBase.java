@@ -5,7 +5,7 @@
 package org.uml.visual.widgets.unused;
 
 import org.netbeans.api.visual.widget.general.IconNodeWidget;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.RelationBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.INameableWidget;
 
@@ -19,7 +19,7 @@ abstract public class RelationWidgetBase extends IconNodeWidget implements IName
         super(scene); 
     }
     
-    public RelationComponent getRelationComponent () {
+    public RelationBase getRelationComponent () {
         return null;
     }
     

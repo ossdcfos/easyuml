@@ -6,19 +6,20 @@ package componentOriginating;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Field;
-import org.uml.model.members.Method;
-import org.uml.model.relations.AggregationRelationComponent;
+import org.uml.model.members.MethodBase;
+import org.uml.model.relations.AggregationRelation;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.model.relations.HasBaseRelationComponent;
-import org.uml.model.relations.ImplementsRelationComponent;
-import org.uml.model.relations.IsRelationComponent;
-import org.uml.model.relations.RelationComponent;
-import org.uml.model.relations.UseRelationComponent;
+import org.uml.model.relations.HasBaseRelation;
+import org.uml.model.relations.ImplementsRelation;
+import org.uml.model.relations.IsRelation;
+import org.uml.model.relations.RelationBase;
+import org.uml.model.relations.UseRelation;
 import org.uml.reveng.CompilationProcessor;
 import org.uml.reveng.GeneratedDiagramManager;
 
@@ -106,7 +107,7 @@ public class RelationshipResolver {
      * for nested structures(i.e. HashMap<String, Object>)
      * @param paramterName name of the Method for which the relation is being
      * resolved - later the name of the relation
-     * @see Method
+     * @see MethodBase
      */
     public static void relationshipUsesCreator(String methodArgs, String methodClassPath, String addData, String paramterName) {
         fieldNameUses = paramterName;
@@ -375,7 +376,7 @@ public class RelationshipResolver {
      * Creates Has relation components from adjacent static Hash map and adds
      * them to the previously generated Class diagram.
      *
-     * @see HasBaseRelationComponent
+     * @see HasBaseRelation
      * @see ClassDIagram
      */
     private static void populateHasRelation() {
@@ -384,7 +385,7 @@ public class RelationshipResolver {
             HashMap<String, Object> midLevel = firstLevel.getValue();
             for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
                 // TODO needs to support composition
-                HasBaseRelationComponent relation = new AggregationRelationComponent();
+                HasBaseRelation relation = new AggregationRelation();
                 relation.setSource(source);
                 //ClassDiagramComponent targetCandidate = new ClassDiagramComponent();
                 ComponentBase targetCandidate = selectDefinitiveComponent(secondLevel.getKey().toString());
@@ -420,7 +421,7 @@ public class RelationshipResolver {
      * Creates Use(s) relation components from adjacent static Hash map and adds
      * them to the previously generated Class diagram.
      *
-     * @see UseRelationComponent
+     * @see UseRelation
      * @see ClassDIagram
      */
     private static void populateUseRelation() {
@@ -428,7 +429,7 @@ public class RelationshipResolver {
             ComponentBase source = (selectDefinitiveComponent(firstLevel.getKey().toString()));
             HashMap<String, Object> midLevel = firstLevel.getValue();
             for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
-                UseRelationComponent relation = new UseRelationComponent();
+                UseRelation relation = new UseRelation();
                 relation.setSource(source);
                 ComponentBase target = selectDefinitiveComponent(secondLevel.getKey().toString());
                 relation.setTarget(target);
@@ -454,7 +455,7 @@ public class RelationshipResolver {
      * Creates Is relation components from adjacent static Hash map and adds
      * them to the previously generated Class diagram
      *
-     * @see IsRelationComponent
+     * @see IsRelation
      * @see ClassDIagram
      */
     private static void populateIsRelation() {
@@ -462,7 +463,7 @@ public class RelationshipResolver {
             ComponentBase source = selectDefinitiveComponent(firstLevel.getKey().toString());
             HashMap<String, Object> midLevel = firstLevel.getValue();
             for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
-                IsRelationComponent relation = new IsRelationComponent();
+                IsRelation relation = new IsRelation();
                 relation.setSource(source);
                 relation.setTarget(selectDefinitiveComponent(secondLevel.getKey().toString()));
                 ObjectArray addDataContainer = (ObjectArray) secondLevel.getValue();
@@ -479,7 +480,7 @@ public class RelationshipResolver {
      * Creates Implements relation components from adjacent static Hash map and
      * adds them to the previously generated Class diagram
      *
-     * @see ImplementsRelationComponent
+     * @see ImplementsRelation
      * @see ClassDIagram
      */
     private static void populateImplementsRelation() {
@@ -487,7 +488,7 @@ public class RelationshipResolver {
             ComponentBase source = selectDefinitiveComponent(firstLevel.getKey().toString());
             HashMap<String, Object> midLevel = firstLevel.getValue();
             for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
-                ImplementsRelationComponent relation = new ImplementsRelationComponent();
+                ImplementsRelation relation = new ImplementsRelation();
                 relation.setSource(source);
                 relation.setTarget(selectDefinitiveComponent(secondLevel.getKey().toString()));
                 ObjectArray addDataContainer = (ObjectArray) secondLevel.getValue();
@@ -542,12 +543,12 @@ public class RelationshipResolver {
      */
     private static boolean denyDuplicates(ComponentBase source, ComponentBase target, String relationType, CardinalityEnum targetCardinaliy) {
         boolean reappears = false;
-        HashMap<String, RelationComponent> relations = GeneratedDiagramManager.getDefault().getClassDiagram().getRelations();
-        for (Map.Entry<String, RelationComponent> relation : relations.entrySet()) {
+        HashSet<RelationBase> relations = GeneratedDiagramManager.getDefault().getClassDiagram().getRelations();
+        for (RelationBase relation : relations) {
             //System.out.println(relation.getValue().getSource().getName() + "-" + relation.getValue().getTarget().getName());
-            if (relation.getValue().getSource() == source
-                    && relation.getValue().getTarget() == target
-                    && relation.getValue().toString().equals(relationType)) {
+            if (relation.getSource() == source
+                    && relation.getTarget() == target
+                    && relation.toString().equals(relationType)) {
                 //Use is Many2Many by default
                 /*if (relationType.equals("Use")) {
                  UseRelationComponent useTest = (UseRelationComponent) relation;
@@ -556,7 +557,7 @@ public class RelationshipResolver {
                  }
                  } else */
                 if (relationType.equals("Has")) {
-                    HasBaseRelationComponent hasTest = (HasBaseRelationComponent) relation.getValue();
+                    HasBaseRelation hasTest = (HasBaseRelation) relation;
                     if (hasTest.getCardinalityTarget().equals(targetCardinaliy)) {
                         reappears = true;
                         break;

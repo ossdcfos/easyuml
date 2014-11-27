@@ -1,10 +1,10 @@
 package org.uml.visual.dialogs;
 
 import java.util.Map;
-import org.uml.model.ClassComponent;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ComponentBase;
-import org.uml.model.PackageComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.PackageComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
@@ -125,7 +125,7 @@ public class PackageDialog extends javax.swing.JDialog {
             comp.setParentPackage(packageComp);
             packageComp.addComponent(comp);
         } else {
-            PackageComponent packComp = new PackageComponent(pack);
+            PackageComponent packComp = new PackageComponent(classDiagram, pack);
             classDiagram.addPackage(packComp);
             comp.setParentPackage(packComp);
             System.out.println("COMP NAME: " + comp.getName());

@@ -6,8 +6,8 @@ package org.uml.xmlDeserialization;
 
 import java.util.List;
 import org.dom4j.Element;
-import org.uml.model.ComponentBase;
-import org.uml.model.relations.IsRelationComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.relations.IsRelation;
 
 /**
  *
@@ -15,10 +15,10 @@ import org.uml.model.relations.IsRelationComponent;
  */
 public class IsRelationDeserializer implements XmlDeserializer{
 
-    private IsRelationComponent relation;
+    private IsRelation relation;
     private List<ComponentBase> components; 
     
-    public IsRelationDeserializer(IsRelationComponent relation, List<ComponentBase> components) {
+    public IsRelationDeserializer(IsRelation relation, List<ComponentBase> components) {
         this.relation = relation;
         this.components = components;
     }

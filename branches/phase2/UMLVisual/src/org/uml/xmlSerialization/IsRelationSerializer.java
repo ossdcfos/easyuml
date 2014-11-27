@@ -5,9 +5,9 @@
 package org.uml.xmlSerialization;
 
 import org.dom4j.Element;
-import org.uml.model.ComponentBase;
-import org.uml.model.relations.IsRelationComponent;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.relations.IsRelation;
+import org.uml.model.relations.RelationBase;
 
 /**
  *
@@ -15,16 +15,16 @@ import org.uml.model.relations.RelationComponent;
  */
 public class IsRelationSerializer implements RelationSerializer{
  
-    private IsRelationComponent isRelationComponent;
+    private IsRelation isRelationComponent;
     
     /**
      * Sets the isRelationComponent object that is going to be serialized.
      * @param component represents isRelationComponent object to be serialized.
      */
     @Override
-    public void addRelationComponent(RelationComponent relation) {
+    public void addRelationComponent(RelationBase relation) {
         try{
-            isRelationComponent = (IsRelationComponent) relation;
+            isRelationComponent = (IsRelation) relation;
         }catch (ClassCastException e) {
             System.out.println("You have tried to cast invalid type to IsRelationComponent!");
             e.printStackTrace();

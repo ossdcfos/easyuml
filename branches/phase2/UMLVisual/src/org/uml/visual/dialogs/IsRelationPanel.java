@@ -7,9 +7,9 @@ package org.uml.visual.dialogs;
 import java.util.List;
 import javax.swing.JComboBox;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.ComponentWidgetBase;
-import org.uml.visual.widgets.InterfaceWidget;
+import org.uml.visual.widgets.components.ClassWidget;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import org.uml.visual.widgets.components.InterfaceWidget;
 
 /**
  *

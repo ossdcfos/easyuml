@@ -9,23 +9,22 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.ClassComponent;
-import org.uml.model.members.Method;
-import org.uml.model.members.Visibility;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.members.MemberBase;
+import org.uml.model.members.MethodBase;
+import org.uml.model.Visibility;
+import org.uml.visual.widgets.members.MemberWidgetBase;
 import org.uml.visual.widgets.members.MethodWidget;
 
 /**
  *
  * @author "NUGS"
  */
-public class MethodPopupMenuProvider implements PopupMenuProvider {
+public class MethodPopupMenuProvider extends MemberBasePopupProvider {
 
-    private MethodWidget methodWidget;
-    private JPopupMenu menu;
-    private JMenuItem deleteMethod;
     private JMenu visibilitySubmenu;
     private JMenu modifiersSubmenu;
     private ButtonGroup visibilityGroup;
@@ -38,9 +37,8 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
     private JCheckBoxMenuItem finalJCBMI;
     private JCheckBoxMenuItem synchronizedJCBMI;
 
-    public MethodPopupMenuProvider(MethodWidget methodWidget) {
-        this.methodWidget = methodWidget;
-        menu = new JPopupMenu("Class Menu");
+    public MethodPopupMenuProvider(MemberWidgetBase methodWidget) {
+        super(methodWidget);
 
         visibilityGroup = new ButtonGroup();
         visibilitySubmenu = new JMenu("Visibility");
@@ -71,8 +69,7 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
 
         menu.addSeparator();
 
-        (deleteMethod = new JMenuItem("Delete Method")).addActionListener(removeWidgetListener);
-        menu.add(deleteMethod);
+        addDelete();
 
         setSelectedButtons();
 
@@ -82,8 +79,8 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ((Method) methodWidget.getMember()).setVisibility(Visibility.PUBLIC);
-            methodWidget.refreshLabel();
+            ((MethodBase) widget.getMember()).setVisibility(Visibility.PUBLIC);
+            ((MethodWidget)widget).refreshLabel();
         }
     };
 
@@ -91,8 +88,8 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ((Method) methodWidget.getMember()).setVisibility(Visibility.PRIVATE);
-            methodWidget.refreshLabel();
+            ((MethodBase) widget.getMember()).setVisibility(Visibility.PRIVATE);
+            ((MethodWidget)widget).refreshLabel();
         }
     };
 
@@ -100,8 +97,8 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ((Method) methodWidget.getMember()).setVisibility(Visibility.PROTECTED);
-            methodWidget.refreshLabel();
+            ((MethodBase) widget.getMember()).setVisibility(Visibility.PROTECTED);
+            ((MethodWidget)widget).refreshLabel();
         }
     };
 
@@ -109,15 +106,15 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ((Method) methodWidget.getMember()).setVisibility(Visibility.PACKAGE);
-            methodWidget.refreshLabel();
+            ((MethodBase) widget.getMember()).setVisibility(Visibility.PACKAGE);
+            ((MethodWidget)widget).refreshLabel();
         }
     };
     ActionListener staticJCBMIListener = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Method m = (Method) methodWidget.getMember();
+            MethodBase m = (MethodBase) widget.getMember();
             if (staticJCBMI.getState()) {
                 if (!m.hasConcreteModifier("static")) {
                     m.addModifier(Modifier.STATIC);
@@ -127,14 +124,14 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
                     m.deleteModifier(Modifier.STATIC);
                 }
             }
-            methodWidget.getMethodNameWidget().setLabel(((Method) methodWidget.getMember()).getSignatureForLabel());
+            ((MethodWidget)widget).getMethodNameWidget().setLabel(((MethodBase) widget.getMember()).getSignatureForLabel());
         }
     };
     ActionListener abstractJCBMIListener = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Method m = (Method) methodWidget.getMember();
+            MethodBase m = (MethodBase) widget.getMember();
             if (abstractJCBMI.getState()) {
                 if (!m.hasConcreteModifier("abstract")) {
                     m.addModifier(Modifier.ABSTRACT);
@@ -144,14 +141,14 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
                     m.deleteModifier(Modifier.ABSTRACT);
                 }
             }
-            methodWidget.getMethodNameWidget().setLabel(((Method) methodWidget.getMember()).getSignatureForLabel());
+            ((MethodWidget)widget).getMethodNameWidget().setLabel(((MethodBase) widget.getMember()).getSignatureForLabel());
         }
     };
     ActionListener finalJCBMIListener = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Method m = (Method) methodWidget.getMember();
+            MethodBase m = (MethodBase) widget.getMember();
             if (finalJCBMI.getState()) {
                 if (!m.hasConcreteModifier("final")) {
                     m.addModifier(Modifier.FINAL);
@@ -161,14 +158,14 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
                     m.deleteModifier(Modifier.FINAL);
                 }
             }
-            methodWidget.getMethodNameWidget().setLabel(((Method) methodWidget.getMember()).getSignatureForLabel());
+            ((MethodWidget)widget).getMethodNameWidget().setLabel(((MethodBase) widget.getMember()).getSignatureForLabel());
         }
     };
     ActionListener synchronizedJCBMIListener = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Method m = (Method) methodWidget.getMember();
+            MethodBase m = (MethodBase) widget.getMember();
             if (synchronizedJCBMI.getState()) {
                 if (!m.hasConcreteModifier("synchronized")) {
                     m.addModifier(Modifier.SYNCHRONIZED);
@@ -178,28 +175,12 @@ public class MethodPopupMenuProvider implements PopupMenuProvider {
                     m.deleteModifier(Modifier.SYNCHRONIZED);
                 }
             }
-            methodWidget.getMethodNameWidget().setLabel(((Method) methodWidget.getMember()).getSignatureForLabel());
+            ((MethodWidget)widget).getMethodNameWidget().setLabel(((MethodBase) widget.getMember()).getSignatureForLabel());
         }
     };
-    ActionListener removeWidgetListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            methodWidget.getMember().getDeclaringClass().removeMember(methodWidget.getName());
-            if (methodWidget.getMember().getDeclaringClass() instanceof ClassComponent) {
-                ((ClassComponent) methodWidget.getMember().getDeclaringClass()).removeMethod((Method) methodWidget.getMember());
-            }
-            methodWidget.getClassDiagramScene().removeObject(methodWidget.getMember());
-            methodWidget.removeFromParent();
-        }
-    };
-
-    @Override
-    public JPopupMenu getPopupMenu(Widget widget, Point point) {
-        return menu;
-    }
 
     private void setSelectedButtons() {
-        Method method = (Method) methodWidget.getMember();
+        MethodBase method = (MethodBase) widget.getMember();
         publicItem.setSelected(false);
         privateItem.setSelected(false);
         packageItem.setSelected(false);

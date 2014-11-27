@@ -5,25 +5,10 @@
 package org.uml.xmlDeserialization;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Scanner;
 import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
-import org.uml.model.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.members.Field;
-import org.uml.model.members.Method;
-import org.uml.model.members.Visibility;
-import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
-import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 
 /**
  *

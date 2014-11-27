@@ -1,7 +1,9 @@
-package org.uml.model;
+package org.uml.model.components;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.uml.model.ClassDiagram;
+import org.uml.model.members.MemberBase;
 
 /**
  * UML class diagram packages, used to describe packages
@@ -18,21 +20,22 @@ public class PackageComponent extends ComponentBase {
     private HashMap<String, ComponentBase> classDiagramComponents;
 
     /**
-     * Constructor without parameters which sets PackageComponent's name to its
-     * default value.
+     * Default constructor only specifying parent diagram. Sets the name to default value.
+     * @param parentDiagram
      */
-    public PackageComponent() {
-        this("UntitledPackage");
+    public PackageComponent(ClassDiagram parentDiagram) {
+        this(parentDiagram, "UntitledPackage");
     }
 
     /**
      * Constructor with parameter which sets PackageComponent's name and
      * instantiates classDiagramComponents collection.
      *
+     * @param parentDiagram
      * @param name of PackageComponent
      */
-    public PackageComponent(String name) {
-        super(name);
+    public PackageComponent(ClassDiagram parentDiagram, String name) {
+        super(parentDiagram, name);
         classDiagramComponents = new HashMap<>();
     }
 
@@ -78,4 +81,11 @@ public class PackageComponent extends ComponentBase {
             counter++;
         }
     }
+
+    @Override
+    public void removeMemberFromContainer(MemberBase member) {
+        // TODO: fix this when redoing the model!
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import org.dom4j.Element;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.MethodArgument;
-import org.uml.model.members.Visibility;
+import org.uml.model.Visibility;
 
 /**
  *
@@ -33,7 +33,6 @@ public class ConstructorDeserializer implements XmlDeserializer{
         String returnType = node.attributeValue("returnType");
         if (name != null) constructor.setName(name);
         if (visibility != null) constructor.setVisibility(Visibility.valueOf(visibility));
-        if (returnType != null) constructor.setReturnType(returnType);
         if (!node.elements().isEmpty()) {
             HashMap<String, MethodArgument> arguments = new HashMap<>();
             MethodArgumentsDeserializer mad = new MethodArgumentsDeserializer(arguments);

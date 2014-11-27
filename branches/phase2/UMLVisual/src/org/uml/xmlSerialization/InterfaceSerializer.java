@@ -5,8 +5,8 @@
 package org.uml.xmlSerialization;
 
 import org.dom4j.Element;
-import org.uml.model.ComponentBase;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.InterfaceComponent;
 
 /**
  *
@@ -38,7 +38,7 @@ public class InterfaceSerializer implements ClassDiagramComponentSerializer{
     public void serialize(Element node) {
         if (interfaceComponent.getParentPackage() != null) node.addAttribute("package", interfaceComponent.getParentPackage().getName());
         if (interfaceComponent.getName() != null) node.addAttribute("name", interfaceComponent.getName());
-        if (interfaceComponent.getVisibility() != null) node.addAttribute("visibility", interfaceComponent.getVisibility().toString());
+        if (interfaceComponent.getVisibility() != null) node.addAttribute("visibility", interfaceComponent.getVisibility().name().toLowerCase());
         Element methods = node.addElement("Methods");
         XmlSerializer serializer = new MethodSerializer(interfaceComponent.getMethods());
         serializer.serialize(methods);

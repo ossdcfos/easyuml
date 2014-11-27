@@ -1,11 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.xmlSerialization;
 
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import org.dom4j.Element;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
@@ -16,9 +12,9 @@ import org.uml.model.members.MethodArgument;
  */
 public class MethodSerializer implements XmlSerializer{
 
-    private HashMap<String, Method> methods;
+    private LinkedHashMap<String, Method> methods;
 
-    public MethodSerializer(HashMap<String, Method> methods) {
+    public MethodSerializer(LinkedHashMap<String, Method> methods) {
         this.methods = methods;
     }
     
@@ -33,29 +29,19 @@ public class MethodSerializer implements XmlSerializer{
         for (Method method : methods.values()) {
             Element methodNode = node.addElement("Method");
             if (method.getName() != null) methodNode.addAttribute("name", method.getName());
-            if (method.getVisibility()!= null) methodNode.addAttribute("visibility", method.getVisibility().toString());
-            int[] modifiers = method.getModifiers();
-            if (modifiers != null) {
-                for (int i = 0; i < modifiers.length; i++) {
-                    if (modifiers[i] > 0 ) {
-                        String modType = null;
-                        switch(modifiers[i]) {
-                            case Modifier.STATIC : 
-                                modType = "isStatic";
-                                break;
-                            case Modifier.FINAL :
-                                modType = "isFinal";
-                                break;
-                            case Modifier.ABSTRACT :
-                                modType = "isAbstract";
-                                break;
-                            case Modifier.SYNCHRONIZED :
-                                modType = "isSynchronized";
-                                break;
-                        }
-                        methodNode.addAttribute(modType, "true");
-                    }
-                }
+            if (method.getVisibility()!= null) methodNode.addAttribute("visibility", method.getVisibility().name().toLowerCase());
+            int modifiers = method.getModifiers();
+            if((modifiers | Modifier.ABSTRACT) != 0){
+                methodNode.addAttribute("isAbstract", "true");
+            }
+            if((modifiers | Modifier.STATIC) != 0){
+                methodNode.addAttribute("isStatic", "true");
+            }
+            if((modifiers | Modifier.FINAL) != 0){
+                methodNode.addAttribute("isFinal", "true");
+            }
+            if((modifiers | Modifier.SYNCHRONIZED) != 0){
+                methodNode.addAttribute("isSynchronized", "true");
             }
             if (method.getReturnType() != null) methodNode.addAttribute("returnType", method.getReturnType());
             if (method.getArguments() != null) {

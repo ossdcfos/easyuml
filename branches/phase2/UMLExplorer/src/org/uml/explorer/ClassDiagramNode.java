@@ -15,13 +15,15 @@ import org.uml.model.ClassDiagram;
 public class ClassDiagramNode extends AbstractNode {
 
     private ClassDiagram classDiagram;
+    private static String iconFolderPath = "org/uml/explorer/icons/";
 
     public ClassDiagramNode(ClassDiagram classDiagram) {
         this(classDiagram, new InstanceContent());
     }
 
     private ClassDiagramNode(ClassDiagram classDiagram, InstanceContent content) {
-        super(Children.create(new ClassDiagramChildrenFactory(classDiagram), true), new AbstractLookup(content));        
+        // synchronous so that selection of members doesn't miss (if everything was not yet generated)
+        super(Children.create(new ClassDiagramChildrenFactory(classDiagram), false), new AbstractLookup(content));        
         content.add(this);
 
         this.classDiagram = classDiagram;
@@ -63,12 +65,12 @@ public class ClassDiagramNode extends AbstractNode {
     
     @Override
     public Image getIcon(int type) {
-        return ImageUtilities.loadImage("org/uml/explorer/icons/classDiagramIcon.png");
+        return ImageUtilities.loadImage(iconFolderPath+"classDiagramIcon.png");
     }
 
     @Override
     public Image getOpenedIcon(int type) {
-        return ImageUtilities.loadImage("org/uml/explorer/icons/classDiagramIcon.png");
+        return ImageUtilities.loadImage(iconFolderPath+"classDiagramIcon.png");
     }
 
 }

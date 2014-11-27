@@ -1,9 +1,9 @@
 package org.uml.model.relations;
 
 import java.util.Objects;
-import org.uml.model.ClassComponent;
-import org.uml.model.ComponentBase;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.InterfaceComponent;
 
 /**
  * Use(s) relation in UML class diagrams. Describes relation
@@ -14,12 +14,12 @@ import org.uml.model.InterfaceComponent;
  * class.
  *
  * @author "NUGS"
- * @see RelationComponent
+ * @see RelationBase
  * @see HasRelationComponent
  * @see IsRelationComponent
  * @see ImplementsRelationComponent
  */
-public class UseRelationComponent extends RelationComponent {
+public class UseRelation extends RelationBase {
 
     private CardinalityEnum cardinalitySource;
     private CardinalityEnum cardinalityTarget;
@@ -70,7 +70,7 @@ public class UseRelationComponent extends RelationComponent {
     @Override
     public boolean equals(Object obj) {
         if(!super.equals(obj)) return false;
-        UseRelationComponent other = (UseRelationComponent) obj;
+        UseRelation other = (UseRelation) obj;
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }

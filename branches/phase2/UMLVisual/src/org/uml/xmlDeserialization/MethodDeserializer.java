@@ -9,10 +9,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 import org.dom4j.Element;
-import org.uml.model.ClassComponent;
-import org.uml.model.members.Method;
+import org.uml.model.members.MethodBase;
 import org.uml.model.members.MethodArgument;
-import org.uml.model.members.Visibility;
+import org.uml.model.Visibility;
 
 /**
  *
@@ -20,9 +19,9 @@ import org.uml.model.members.Visibility;
  */
 public class MethodDeserializer implements XmlDeserializer{
 
-    private Method method;
+    private MethodBase method;
 
-    public MethodDeserializer(Method method) {
+    public MethodDeserializer(MethodBase method) {
         this.method = method;
     }
     
@@ -40,13 +39,13 @@ public class MethodDeserializer implements XmlDeserializer{
         String isAbstract = node.attributeValue("isAbstract");
         String isSynchronized = node.attributeValue("isSynchronized");
         if (name != null) method.setName(name);
-        if (visibility != null) method.setVisibility(Visibility.stringToVisibility(visibility));
+        if (visibility != null) method.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         if (type != null) method.setReturnType(type);
         if (isStatic != null) method.addModifier(Modifier.STATIC);
         if (isFinal != null) method.addModifier(Modifier.FINAL);
         if (isAbstract != null) method.addModifier(Modifier.ABSTRACT);
         if (isSynchronized != null) method.addModifier(Modifier.SYNCHRONIZED);
-        HashMap<String, MethodArgument> arguments = new HashMap<String, MethodArgument>();
+        HashMap<String, MethodArgument> arguments = new HashMap<>();
         Iterator<?> argumentIterator = node.elementIterator("Argument");
         while (argumentIterator != null && argumentIterator.hasNext()) {
             Element argumentElement = (Element) argumentIterator.next();

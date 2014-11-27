@@ -5,6 +5,7 @@
 package org.uml.xmlSerialization;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import org.dom4j.Element;
 import org.uml.model.members.Literal;
 
@@ -14,9 +15,9 @@ import org.uml.model.members.Literal;
  */
 public class LiteralSerializer implements XmlSerializer{
 
-    private HashMap<String, Literal> literal;
+    private LinkedHashMap<String, Literal> literal;
 
-    public LiteralSerializer(HashMap<String, Literal> literal) {
+    public LiteralSerializer(LinkedHashMap<String, Literal> literal) {
         this.literal = literal;
     }
     

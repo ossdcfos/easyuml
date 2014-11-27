@@ -5,8 +5,8 @@
 package org.uml.xmlSerialization;
 
 import org.dom4j.Element;
-import org.uml.model.ComponentBase;
-import org.uml.model.EnumComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.EnumComponent;
 
 /**
  *
@@ -38,23 +38,23 @@ public class EnumSerializer implements ClassDiagramComponentSerializer{
     public void serialize(Element node) {
         if (enumComponent.getParentPackage() != null) node.addAttribute("package", enumComponent.getParentPackage().getName());
         if (enumComponent.getName() != null) node.addAttribute("name", enumComponent.getName());
-        if (enumComponent.getVisibility() != null) node.addAttribute("visibility", enumComponent.getVisibility().toString());
+        if (enumComponent.getVisibility() != null) node.addAttribute("visibility", enumComponent.getVisibility().name().toLowerCase());
         
         Element literals = node.addElement("Literals");
         XmlSerializer serializer = new LiteralSerializer(enumComponent.getLiterals());
         serializer.serialize(literals);
         
-        Element constructors = node.addElement("Constructors");
-        serializer = new ConstructorSerializer(enumComponent.getConstructors());
-        serializer.serialize(constructors);
-        
-        Element fields = node.addElement("Fields");
-        serializer = new FieldSerializer(enumComponent.getFields());
-        serializer.serialize(fields);
-        
-        Element methods = node.addElement("Methods");
-        serializer = new MethodSerializer(enumComponent.getMethods());
-        serializer.serialize(methods);
+//        Element constructors = node.addElement("Constructors");
+//        serializer = new ConstructorSerializer(enumComponent.getConstructors());
+//        serializer.serialize(constructors);
+//        
+//        Element fields = node.addElement("Fields");
+//        serializer = new FieldSerializer(enumComponent.getFields());
+//        serializer.serialize(fields);
+//        
+//        Element methods = node.addElement("Methods");
+//        serializer = new MethodSerializer(enumComponent.getMethods());
+//        serializer.serialize(methods);
     }
     
 }

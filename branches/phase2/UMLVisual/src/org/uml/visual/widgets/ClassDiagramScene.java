@@ -1,13 +1,21 @@
 package org.uml.visual.widgets;
 
-import org.uml.model.EnumComponent;
+import org.uml.visual.widgets.components.ClassWidget;
+import org.uml.visual.widgets.components.EnumWidget;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import org.uml.visual.widgets.components.InterfaceWidget;
+import org.uml.visual.widgets.components.PackageWidget;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.InterfaceComponent;
+import org.uml.model.components.PackageComponent;
+import org.uml.model.components.EnumComponent;
 import org.uml.visual.widgets.anchors.RhombusAnchorShape;
-import org.uml.model.relations.UseRelationComponent;
-import org.uml.model.relations.RelationComponent;
-import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.UseRelation;
+import org.uml.model.relations.RelationBase;
+import org.uml.model.relations.HasBaseRelation;
 import org.uml.visual.widgets.providers.popups.ConnectionPopupMenuProvider;
 import java.awt.BasicStroke;
-import java.awt.Rectangle;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.anchor.*;
@@ -18,8 +26,8 @@ import org.netbeans.api.visual.widget.*;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.*;
 import org.uml.model.*;
-import org.uml.model.relations.ImplementsRelationComponent;
-import org.uml.model.relations.IsRelationComponent;
+import org.uml.model.relations.ImplementsRelation;
+import org.uml.model.relations.IsRelation;
 import org.uml.visual.UMLTopComponent;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
 import org.uml.visual.widgets.providers.*;
@@ -33,7 +41,7 @@ import org.uml.visual.widgets.providers.unused.ScenePopupMenuProvider;
  *
  * @author NUGS
  */
-public class ClassDiagramScene extends GraphScene<ComponentBase, RelationComponent> {
+public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
 
     private LayerWidget mainLayer;
     private LayerWidget connectionLayer;
@@ -50,19 +58,10 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
         classDiagram.addDeleteListener(new IComponentDeleteListener() {
             @Override
             public void componentDeleted(ComponentBase component) {
-                ComponentWidgetBase classWidget = (ComponentWidgetBase) findWidget(component);
-
                 removeNodeWithEdges(component);
                 
                 classDiagram.removeRelationsForAComponent(component);
-//                for (Map.Entry<String, RelationComponent> entry : classDiagram.getRelations().entrySet()) {
-//                    RelationComponent relation = entry.getValue();
-//                    if (relation.getSource().getName().equals(classWidget.getName()) || relation.getTarget().getName().equals(classWidget.getName())) {
-//                        classDiagram.removeRelation(relation.getName());
-//                        removeEdge(relation);
-//                    }
-//                }
-//                removeNode(component);
+                
                 repaint();
                 validate();
             }
@@ -103,30 +102,13 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
             w.setPreferredBounds(comp.getBounds());
         }
 
-        for (RelationComponent rel : umlClassDiagram.getRelations().values()) {
+        for (RelationBase rel : umlClassDiagram.getRelations()) {
             addRelationToScene(rel, rel.getSource(), rel.getTarget());
-//            ConnectionWidget w = (ConnectionWidget) addEdge(rel);
-//            this.setEdgeSource(rel, rel.getSource());
-//            this.setEdgeTarget(rel, rel.getTarget());
         }
 
         // ne treba ovde, vec tamo gde se pravi scena
         //GraphLayoutFactory.createOrthogonalGraphLayout(this, true);
 //        addObjectSceneListener(new ObjectSceneListener() {
-//            @Override
-//            public void objectAdded(ObjectSceneEvent event, Object addedObject) {
-//                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//
-//            @Override
-//            public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
-//                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//
-//            @Override
-//            public void objectStateChanged(ObjectSceneEvent event, Object changedObject, ObjectState previousState, ObjectState newState) {
-//                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
 //
 //            @Override
 //            public void selectionChanged(ObjectSceneEvent event, Set<Object> previousSelection, Set<Object> newSelection) {
@@ -145,16 +127,6 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
 //                    content.add(o);
 //                    //setSelectedObjects(newSelection);
 //                }
-//            }
-//
-//            @Override
-//            public void highlightingChanged(ObjectSceneEvent event, Set<Object> previousHighlighting, Set<Object> newHighlighting) {
-//                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//
-//            @Override
-//            public void hoverChanged(ObjectSceneEvent event, Object previousHoveredObject, Object newHoveredObject) {
-//                // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //            }
 //
 //            @Override
@@ -215,7 +187,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
 
     // adding of a relation
     @Override
-    protected Widget attachEdgeWidget(RelationComponent e) {
+    protected Widget attachEdgeWidget(RelationBase e) {
         if (getObjects().contains(e)) {
             System.out.println("Vec postoji!");
             return null;
@@ -224,12 +196,12 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
         LabelWidget name = new LabelWidget(this, e.getName());
         name.setOpaque(true);
 
-        if (!classDiagram.getRelations().containsValue(e)) { // need to check, if loading existing diagram...
+        if (!classDiagram.getRelations().contains(e)) { // need to check, if loading existing diagram...
             classDiagram.addRelation(e);
         }
 
         ConnectionWidget widget = new ConnectionWidget(this);
-        if (e instanceof ImplementsRelationComponent) {
+        if (e instanceof ImplementsRelation) {
             final float dash1[] = {10.0f};
             final BasicStroke dashed
                     = new BasicStroke(1.0f,
@@ -240,12 +212,12 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
             widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
             name.setLabel("<<implements>>");
             //e.setName("<<implements>>");
-        } else if (e instanceof IsRelationComponent) {
+        } else if (e instanceof IsRelation) {
             widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);
             name.setLabel("is");
             //e.setName("is");
-        } else if (e instanceof HasBaseRelationComponent) {
-            HasBaseRelationComponent hasRelation = (HasBaseRelationComponent) e;
+        } else if (e instanceof HasBaseRelation) {
+            HasBaseRelation hasRelation = (HasBaseRelation) e;
 
             if (hasRelation.isComposition())
                 widget.setSourceAnchorShape(new RhombusAnchorShape(45, 10, true));
@@ -258,7 +230,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
             widget.addChild(cardinalityTarget);
             widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 1f);
         } else {
-            UseRelationComponent useRelation = (UseRelationComponent) e;
+            UseRelation useRelation = (UseRelation) e;
 
             widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
 
@@ -292,7 +264,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
     }
 
     @Override
-    protected void attachEdgeSourceAnchor(RelationComponent edge, ComponentBase oldSourceNode, ComponentBase sourceNode) {
+    protected void attachEdgeSourceAnchor(RelationBase edge, ComponentBase oldSourceNode, ComponentBase sourceNode) {
         ConnectionWidget edgeWidget = (ConnectionWidget) findWidget(edge);
         if (edgeWidget != null) {
             Widget sourceNodeWidget = findWidget(sourceNode);
@@ -302,7 +274,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
     }
 
     @Override
-    protected void attachEdgeTargetAnchor(RelationComponent edge, ComponentBase oldSourceNode, ComponentBase targetNode) {
+    protected void attachEdgeTargetAnchor(RelationBase edge, ComponentBase oldSourceNode, ComponentBase targetNode) {
         ConnectionWidget edgeWidget = (ConnectionWidget) findWidget(edge);
         if (edgeWidget != null) {
             Widget targetNodeWidget = findWidget(targetNode);
@@ -311,7 +283,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationCompone
         }
     }
 
-    public final void addRelationToScene(RelationComponent relation, ComponentBase source, ComponentBase target) {
+    public final void addRelationToScene(RelationBase relation, ComponentBase source, ComponentBase target) {
         if (!getObjects().contains(relation)) {
             addEdge(relation);
             setEdgeSource(relation, source);

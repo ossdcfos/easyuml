@@ -1,15 +1,12 @@
 package org.uml.visual.widgets.members;
 
 import java.awt.Color;
-import java.awt.Point;
-import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.members.Member;
+import org.uml.model.members.MemberBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.INameableWidget;
 
@@ -19,6 +16,8 @@ import org.uml.visual.widgets.INameableWidget;
  */
 public abstract class MemberWidgetBase extends LabelWidget implements INameableWidget {
 
+    MemberBase component;
+    
     protected static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(1);
     protected static final Border HOVER_BORDER = BorderFactory.createLineBorder(1, Color.GRAY);
     protected static final Border SELECT_BORDER = BorderFactory.createLineBorder(1, new Color(0x0000A1)); //0x0096FF33
@@ -30,7 +29,7 @@ public abstract class MemberWidgetBase extends LabelWidget implements INameableW
     protected static final Color DEFAULT_FONT_COLOR = Color.BLACK;
     protected static final Color SELECT_FONT_COLOR = new Color(0xFFFFFF);
 
-    public MemberWidgetBase(ClassDiagramScene scene, Member member) {
+    public MemberWidgetBase(ClassDiagramScene scene, MemberBase member) {
         super(scene);
         scene.addObject(member, this);
         setOpaque(true);
@@ -41,7 +40,7 @@ public abstract class MemberWidgetBase extends LabelWidget implements INameableW
         getActions().addAction(scene.createSelectAction());
     }
 
-    public Member getMember() {
+    public MemberBase getMember() {
         return null;
     }
 

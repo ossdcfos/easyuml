@@ -7,9 +7,9 @@ package org.uml.xmlDeserialization;
 import java.awt.Point;
 import java.util.Iterator;
 import org.dom4j.Element;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.InterfaceComponent;
+import org.uml.model.Visibility;
 import org.uml.model.members.Method;
-import org.uml.model.members.Visibility;
 
 /**
  *
@@ -36,7 +36,7 @@ public class InterfaceDeserializer implements XmlDeserializer{
         String visibility = node.attributeValue("visibility");
         Point position = new Point((int) Double.parseDouble(node.attributeValue("xPosition")), (int) Double.parseDouble(node.attributeValue("yPosition")));
         if (interfaceName != null && !interfaceName.equals("")) interfaceComponent.setName(interfaceName);
-        if (visibility != null && !visibility.equals("")) interfaceComponent.setVisibility(Visibility.valueOf(visibility));
+        if (visibility != null && !visibility.equals("")) interfaceComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         interfaceComponent.setPosition(position);
         
         Iterator<?> methodIterator = node.element("Methods").elementIterator("Method");
@@ -46,8 +46,6 @@ public class InterfaceDeserializer implements XmlDeserializer{
             MethodDeserializer md = new MethodDeserializer(method);
             md.deserialize(methodElement);
             interfaceComponent.addMethod(method);
-            interfaceComponent.addMember(method);
-            method.setDeclaringClass(interfaceComponent);
         }
         
     }

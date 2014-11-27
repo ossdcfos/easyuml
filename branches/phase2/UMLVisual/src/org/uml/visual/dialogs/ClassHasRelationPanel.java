@@ -5,7 +5,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.visual.widgets.ComponentWidgetBase;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
 
 /**
  *

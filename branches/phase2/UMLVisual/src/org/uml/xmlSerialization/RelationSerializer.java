@@ -4,7 +4,7 @@
  */
 package org.uml.xmlSerialization;
 
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.RelationBase;
 
 /**
  *
@@ -12,5 +12,5 @@ import org.uml.model.relations.RelationComponent;
  */
 public interface RelationSerializer extends XmlSerializer{
     
-    public void addRelationComponent(RelationComponent relation);
+    public void addRelationComponent(RelationBase relation);
 }

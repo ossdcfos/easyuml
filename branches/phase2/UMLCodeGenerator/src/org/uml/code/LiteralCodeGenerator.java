@@ -5,7 +5,7 @@
 package org.uml.code;
 
 import java.util.HashMap;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Literal;
 
 /**

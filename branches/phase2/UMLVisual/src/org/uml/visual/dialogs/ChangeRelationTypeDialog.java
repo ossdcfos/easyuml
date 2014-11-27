@@ -13,7 +13,7 @@ import java.util.jar.JarFile;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.openide.util.Exceptions;
 import org.uml.model.ClassDiagram;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.RelationBase;
 
 /**
  *
@@ -25,7 +25,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
      * Creates new form ChangeRelationTypeDialog
      */
     
-    RelationComponent oldRelation;
+    RelationBase oldRelation;
     ClassDiagram classDiagram;
     ConnectionWidget widget;
     
@@ -34,7 +34,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
         initComponents();
     }
     
-    public ChangeRelationTypeDialog(java.awt.Frame parent, RelationComponent oldRelation, ClassDiagram classDiagram,ConnectionWidget widget, boolean modal) {
+    public ChangeRelationTypeDialog(java.awt.Frame parent, RelationBase oldRelation, ClassDiagram classDiagram,ConnectionWidget widget, boolean modal) {
         super(parent, modal);
         initComponents();
         this.oldRelation = oldRelation;
@@ -53,7 +53,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         lblRelationType = new javax.swing.JLabel();
-        cbxRelation = new javax.swing.JComboBox<RelationComponent>();
+        cbxRelation = new javax.swing.JComboBox<RelationBase>();
         btnOK = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
 
@@ -115,11 +115,11 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
-        RelationComponent relation = (RelationComponent) cbxRelation.getSelectedItem();
+        RelationBase relation = (RelationBase) cbxRelation.getSelectedItem();
         relation.setName(oldRelation.getName());
         relation.setSource(oldRelation.getSource());
         relation.setTarget(oldRelation.getTarget());
-        classDiagram.removeRelation(oldRelation.getName());
+        classDiagram.removeRelation(oldRelation);
         //classDiagram.addRelation(relation);
         oldRelation = relation;
         classDiagram.addRelation(oldRelation);
@@ -180,7 +180,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnOK;
-    private javax.swing.JComboBox<RelationComponent> cbxRelation;
+    private javax.swing.JComboBox<RelationBase> cbxRelation;
     private javax.swing.JLabel lblRelationType;
     // End of variables declaration//GEN-END:variables
 
@@ -201,7 +201,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
                         fullUrl= fullUrl.replace(".class", "");
                         fullUrl= fullUrl.replace("/", ".");
                         Class<?> cls = Class.forName(fullUrl);
-                        Class<? extends RelationComponent> forName = cls.asSubclass(RelationComponent.class);
+                        Class<? extends RelationBase> forName = cls.asSubclass(RelationBase.class);
                         cbxRelation.addItem(forName.newInstance());
                     } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
                         Exceptions.printStackTrace(ex);

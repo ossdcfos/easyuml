@@ -2,42 +2,30 @@ package org.uml.visual;
 
 import com.timboudreau.vl.jung.ObjectSceneAdapter;
 import java.awt.BorderLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Collection;
 import javax.swing.JScrollPane;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
+import org.dom4j.*;
+import org.dom4j.io.*;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.api.visual.model.ObjectSceneEvent;
 import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.widget.EventProcessingType;
-import org.netbeans.api.visual.widget.Widget;
 import org.netbeans.spi.actions.AbstractSavable;
 import org.netbeans.spi.palette.PaletteController;
 import org.openide.*;
 import org.openide.NotifyDescriptor.Confirmation;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
-import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
+import org.openide.util.*;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
-import org.uml.explorer.ClassDiagramComponentNode;
-import org.uml.explorer.ExplorerTopComponent;
+import org.openide.util.lookup.*;
+import org.openide.windows.WindowManager;
+import org.uml.explorer.ComponentNode;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
@@ -60,18 +48,22 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
         preferredID = "UMLTopComponent")
 @Messages({
     "CTL_UMLAction=UML Designer",
-    "CTL_UMLTopComponent=UML Class Diagramv Window",
+    "CTL_UMLTopComponent=UML Class Diagram Window",
     "HINT_UMLTopComponent=This is a UML Class Diagram window"
 })
-public final class UMLTopComponent extends TopComponent {
+public final class UMLTopComponent extends TopComponent implements LookupListener {
+
+//    public static String tcID = "";
 
     private ClassDiagram classDiagram;
     private ClassDiagramScene classDiagramScene;
     private JScrollPane classDiagramPanel;
     private PaletteController palette;
     private FileObject fileObject;
-    private InstanceContent ic;
+    private InstanceContent content = new InstanceContent();
     private boolean initialized = false;
+
+    Lookup.Result<ComponentNode> result;
 
     public UMLTopComponent() {
         this(new ClassDiagram(), null);
@@ -98,8 +90,6 @@ public final class UMLTopComponent extends TopComponent {
 
         classDiagramScene.validate();
 
-        ic = new InstanceContent();
-
         Lookup fixedLookup = Lookups.fixed(
                 classDiagramScene,
                 classDiagramScene.getLookup(),
@@ -108,7 +98,7 @@ public final class UMLTopComponent extends TopComponent {
                 new UMLNavigatorLookupHint()
         );
 
-        AbstractLookup abstrLookup = new AbstractLookup(ic);
+        AbstractLookup abstrLookup = new AbstractLookup(content);
 
         ProxyLookup jointLookup = new ProxyLookup(fixedLookup, abstrLookup);
 
@@ -117,6 +107,13 @@ public final class UMLTopComponent extends TopComponent {
         fileObject = fo;
 
         classDiagramScene.addObjectSceneListener(new ObjectSceneAdapter() {
+
+            @Override
+            public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
+                if(previousFocusedObject != null) content.remove(previousFocusedObject);
+                if(newFocusedObject != null) content.add(newFocusedObject);
+            }
+            
             @Override
             public void objectAdded(ObjectSceneEvent event, Object addedObject) {
                 modify();
@@ -126,60 +123,25 @@ public final class UMLTopComponent extends TopComponent {
             public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
                 modify();
             }
-        }, ObjectSceneEventType.OBJECT_ADDED, ObjectSceneEventType.OBJECT_REMOVED);
+        }, ObjectSceneEventType.OBJECT_ADDED, ObjectSceneEventType.OBJECT_REMOVED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED);
 
         initialized = true;
+        
         //classDiagramScene.getMainLayer().bringToFront();
         // pomereno iz konstruktora class diagram scene
         //GraphLayout graphLayout = GraphLayoutFactory.createOrthogonalGraphLayout(classDiagramScene, true);
         //graphLayout.layoutGraph(classDiagramScene);
-        ExplorerManager em = ExplorerTopComponent.getStaticExplorerManager();
-        em.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("selectedNodes")) {
-//                    for (Object o : classDiagramScene.getObjects()) {
-//                        if (o instanceof ClassDiagramComponent) {
-//                            ClassDiagramComponent component = (ClassDiagramComponent) o;
-////                            if (classDiagramScene.isNode(component)) {
-//                            Widget w = classDiagramScene.findWidget(component);
-//                            w.setState(w.getState().deriveWidgetFocused(false));
-////                            }
-//                        }
-//                    }
-                    Node[] oldNodes = (Node[]) evt.getOldValue();
-                    Node[] nodes = (Node[]) evt.getNewValue();
-                    for (Node n : oldNodes) {
-                        if (n instanceof ClassDiagramComponentNode) {
-                            ClassDiagramComponentNode cdcn = (ClassDiagramComponentNode) n;
-                            ComponentBase component = cdcn.getComponent();
-                            if (classDiagramScene.isNode(component)) {
-                                Widget w = classDiagramScene.findWidget(component);
-                                w.setState(w.getState().deriveWidgetFocused(false));
-                            }
-                        }
-                    }
-                    for (Node n : nodes) {
-                        if (n instanceof ClassDiagramComponentNode) {
-                            ClassDiagramComponentNode cdcn = (ClassDiagramComponentNode) n;
-                            ComponentBase component = cdcn.getComponent();
-                            if (classDiagramScene.isNode(component)) {
-                                Widget w = classDiagramScene.findWidget(component);
-                                w.setState(w.getState().deriveWidgetFocused(true));
-                            }
-                        }
-                    }
-                    classDiagramScene.repaint();
-                    classDiagramScene.validate();
-                }
-            }
-        });
+
+        result = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
+        result.addLookupListener(this);
     }
 
     @Override
     public void componentActivated() {
         super.componentActivated();
         classDiagramScene.getView().requestFocusInWindow();
+//        tcID = WindowManager.getDefault().findTopComponentID(this);
+//        System.out.println(tcID);
     }
 
     /**
@@ -201,6 +163,7 @@ public final class UMLTopComponent extends TopComponent {
 
     @Override
     public void componentOpened() {
+        WindowManager.getDefault().findTopComponent("ExplorerTopComponent").open();
     }
 
     @Override
@@ -218,22 +181,7 @@ public final class UMLTopComponent extends TopComponent {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
-
-//    Project selectedProject;
-//
-//    @Override
-//    public void resultChanged(LookupEvent le) {
-//        Lookup.Result localResult = (Result)le.getSource();
-//        Collection<Object> coll = localResult.allInstances();
-//        if (!coll.isEmpty()){
-//            for (Object selectedItem : coll){
-//                if (selectedItem instanceof Project) selectedProject = (Project) selectedItem;
-//            }
-//        }
-//        
-//         FileObject folder = selectedProject.getProjectDirectory();
-//         String path = folder.getPath();
-//    }
+    
     public ClassDiagramScene getScene() {
         return classDiagramScene;
     }
@@ -242,10 +190,25 @@ public final class UMLTopComponent extends TopComponent {
         // in other case, when we are doing reverse engineering, modify is called before the lookup is
         // associated with TopComponent, so there is an exception when we associate it later, because it already exists
         if (initialized) {
-            if (getLookup().lookup(UMLTopComponentSavable.class) == null && ic != null) {
-                ic.add(new UMLTopComponentSavable(this, ic));
+            if (getLookup().lookup(UMLTopComponentSavable.class) == null && content != null) {
+                content.add(new UMLTopComponentSavable(this, content));
+            }
+
+        }
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        Collection<? extends ComponentNode> coll = result.allInstances();
+        for (ComponentNode node : coll) {
+            ComponentBase component = node.getComponent();
+            if (classDiagramScene.isNode(component)) {
+                classDiagramScene.setFocusedObject(component);
+                break;
             }
         }
+        getScene().validate();
+        getScene().repaint();
     }
 
     class UMLTopComponentSavable extends AbstractSavable {
@@ -327,4 +290,20 @@ public final class UMLTopComponent extends TopComponent {
             }
         }
     }
+
+//    Project selectedProject;
+//
+//    @Override
+//    public void resultChanged(LookupEvent le) {
+//        Lookup.Result localResult = (Result)le.getSource();
+//        Collection<Object> coll = localResult.allInstances();
+//        if (!coll.isEmpty()){
+//            for (Object selectedItem : coll){
+//                if (selectedItem instanceof Project) selectedProject = (Project) selectedItem;
+//            }
+//        }
+//        
+//         FileObject folder = selectedProject.getProjectDirectory();
+//         String path = folder.getPath();
+//    }
 }

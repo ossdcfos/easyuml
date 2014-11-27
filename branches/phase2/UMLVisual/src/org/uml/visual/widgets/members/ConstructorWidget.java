@@ -13,7 +13,7 @@ import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.uml.model.members.Constructor;
-import org.uml.model.members.Member;
+import org.uml.model.members.MemberBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.NameEditorAction;
 
@@ -37,10 +37,11 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
         this.addChild(visibilityLabel);
 
         nameLabel = new LabelWidget(getScene());
-        nameLabel.setLabel(constructorComponent.getDeclaringClass().getName() + "()");
+        nameLabel.setLabel(constructorComponent.getSignatureForLabel());
         this.addChild(nameLabel);
         //construktorNameWidget.getActions().addAction(nameEditorAction);
-        nameLabel.getActions().addAction(ActionFactory.createPopupMenuAction(new ConstructorPopupMenuProvider(this)));
+        
+        getActions().addAction(ActionFactory.createPopupMenuAction(new ConstructorPopupMenuProvider(this)));
     }
     
     @Override
@@ -59,7 +60,7 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
     }
 
     @Override
-    public Member getMember() {
+    public MemberBase getMember() {
         return constructorComponent;
     }
 

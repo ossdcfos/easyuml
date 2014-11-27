@@ -8,7 +8,7 @@ import org.netbeans.api.visual.action.TextFieldInplaceEditor;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagram;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.RelationBase;
 
 /**
  *
@@ -16,10 +16,10 @@ import org.uml.model.relations.RelationComponent;
  */
 public class RelationLabelTextFieldEditorAction implements TextFieldInplaceEditor{
 
-    RelationComponent relationComponent;
+    RelationBase relationComponent;
     ClassDiagram classDiagram;
     
-    public RelationLabelTextFieldEditorAction(RelationComponent relationComponent, ClassDiagram classDiagram) {
+    public RelationLabelTextFieldEditorAction(RelationBase relationComponent, ClassDiagram classDiagram) {
         this.relationComponent = relationComponent;
         this.classDiagram = classDiagram;
     }
@@ -39,13 +39,9 @@ public class RelationLabelTextFieldEditorAction implements TextFieldInplaceEdito
     @Override
     public void setText(Widget widget, String string) {
         ((LabelWidget) widget).setLabel(string);
-        classDiagram.removeRelation(relationComponent.getName());
+        classDiagram.removeRelation(relationComponent);
         relationComponent.setName(string);
         classDiagram.addRelation(relationComponent);
-        
-        
-            }
-    
-    
+    }
     
 }

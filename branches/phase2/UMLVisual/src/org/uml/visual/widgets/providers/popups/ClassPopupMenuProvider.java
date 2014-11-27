@@ -1,39 +1,20 @@
 package org.uml.visual.widgets.providers.popups;
 
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.HashMap;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.PopupMenuProvider;
-import org.netbeans.api.visual.action.WidgetAction;
-import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Widget;
+import javax.swing.*;
+import org.netbeans.api.visual.action.*;
+import org.netbeans.api.visual.widget.*;
 import org.openide.windows.WindowManager;
-import org.uml.model.ClassComponent;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.members.Constructor;
-import org.uml.model.members.Field;
-import org.uml.model.members.Member;
-import org.uml.model.members.Method;
-import org.uml.model.members.MethodArgument;
-import org.uml.model.members.Visibility;
-import static org.uml.model.members.Visibility.PACKAGE;
-import static org.uml.model.members.Visibility.PRIVATE;
-import static org.uml.model.members.Visibility.PROTECTED;
-import static org.uml.model.members.Visibility.PUBLIC;
+import org.uml.model.members.*;
+import org.uml.model.Visibility;
+import static org.uml.model.Visibility.*;
 import org.uml.visual.dialogs.PackageDialog;
-import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.members.ConstructorWidget;
-import org.uml.visual.widgets.members.FieldWidget;
-import org.uml.visual.widgets.members.MethodWidget;
+import org.uml.visual.widgets.components.ClassWidget;
+import org.uml.visual.widgets.members.*;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
@@ -271,7 +252,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         }
     }
 
-    private int getCounter(Member member) {
+    private int getCounter(MemberBase member) {
         int brojac = 1;
         String name = member.getName();
         String broj = name.substring(name.length() - 1);

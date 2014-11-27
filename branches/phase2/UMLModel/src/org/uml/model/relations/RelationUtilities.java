@@ -13,13 +13,13 @@ import java.util.List;
  * @author Boris
  */
 public class RelationUtilities {
-    public static List<RelationComponent> allRelations(){
-        List<RelationComponent> list = new LinkedList<>();
-        list.add(new IsRelationComponent());
-        list.add(new AggregationRelationComponent());
-        list.add(new CompositionRelationComponent());
-        list.add(new UseRelationComponent());
-        list.add(new ImplementsRelationComponent());
+    public static List<RelationBase> allRelations(){
+        List<RelationBase> list = new LinkedList<>();
+        list.add(new IsRelation());
+        list.add(new AggregationRelation());
+        list.add(new CompositionRelation());
+        list.add(new UseRelation());
+        list.add(new ImplementsRelation());
         return list;
     }
     

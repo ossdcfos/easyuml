@@ -11,10 +11,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
-import org.uml.model.relations.HasBaseRelationComponent;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.HasBaseRelation;
+import org.uml.model.relations.RelationBase;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ComponentWidgetBase;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
 
 /**
  *
@@ -52,7 +52,7 @@ public class ChooseRelationDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        comboBoxRelationship = new javax.swing.JComboBox<RelationComponent>();
+        comboBoxRelationship = new javax.swing.JComboBox<RelationBase>();
         jLabel1 = new javax.swing.JLabel();
         buttonOK = new javax.swing.JButton();
         buttonCancel = new javax.swing.JButton();
@@ -135,13 +135,13 @@ public class ChooseRelationDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void comboBoxRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRelationshipActionPerformed
-        if (!(comboBoxRelationship.getSelectedItem() instanceof HasBaseRelationComponent)) {
+        if (!(comboBoxRelationship.getSelectedItem() instanceof HasBaseRelation)) {
             textFieldName.setEnabled(false);
         }
     }//GEN-LAST:event_comboBoxRelationshipActionPerformed
 
     private void buttonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOKActionPerformed
-       RelationComponent relation = (RelationComponent) comboBoxRelationship.getSelectedItem();
+       RelationBase relation = (RelationBase) comboBoxRelationship.getSelectedItem();
        relation.setName(textFieldName.getText());     
        if((sourceWidget instanceof ComponentWidgetBase)&&(targetWidget instanceof ComponentWidgetBase)) {
             ClassDiagramScene scene= (ClassDiagramScene)sourceWidget.getScene();
@@ -198,7 +198,7 @@ public class ChooseRelationDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonOK;
-    private javax.swing.JComboBox<RelationComponent> comboBoxRelationship;
+    private javax.swing.JComboBox<RelationBase> comboBoxRelationship;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField textFieldName;
@@ -222,7 +222,7 @@ public class ChooseRelationDialog extends javax.swing.JDialog {
                         fullUrl= fullUrl.replace(".class", "");
                         fullUrl= fullUrl.replace("/", ".");
                         Class<?> cls = Class.forName(fullUrl);
-                        Class<? extends RelationComponent> forName = cls.asSubclass(RelationComponent.class);
+                        Class<? extends RelationBase> forName = cls.asSubclass(RelationBase.class);
                        // Class<? extends RelationComponent> forName= (Class<? extends RelationComponent>) Class.forName(fullUrl);
                         comboBoxRelationship.addItem(forName.newInstance());
                     } catch (        InstantiationException | IllegalAccessException | ClassNotFoundException ex) {

@@ -4,9 +4,8 @@
  */
 package org.uml.code;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.uml.model.ComponentBase;
+import java.util.LinkedHashMap;
+import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Field;
 
 /**
@@ -16,19 +15,19 @@ import org.uml.model.members.Field;
  */
 public class FieldCodeGenerator implements CodeGenerator {
 
-    HashMap<String, Field> fields = new HashMap<String, Field>();
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
 
     /**
      * Constructor that sets this object's fields HasMap to the given value.
      *
      * @param fields which code needs to be generated
      */
-    public FieldCodeGenerator(HashMap<String, Field> fields) {
+    public FieldCodeGenerator(LinkedHashMap<String, Field> fields) {
         this.fields = fields;
     }
 
     /**
-     * Generates code for previously set HasMap of fields. Utilises Field
+     * Generates code for previously set HashMap of fields. Utilises Field
      * component's getSignature method to properly generate code.
      *
      * @return code of the generated fields
@@ -38,9 +37,7 @@ public class FieldCodeGenerator implements CodeGenerator {
     public String generateCode() {
         String fieldsString = "";
 
-        for (Map.Entry<String, Field> en : fields.entrySet()) {
-
-            Field field = en.getValue();
+        for (Field field : fields.values()) {
             fieldsString += field.getSignature();
         }
         return fieldsString;

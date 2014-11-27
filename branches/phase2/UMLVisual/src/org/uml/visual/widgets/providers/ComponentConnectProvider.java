@@ -4,12 +4,15 @@
  */
 package org.uml.visual.widgets.providers;
 
-import org.uml.model.relations.ImplementsRelationComponent;
-import org.uml.model.relations.IsRelationComponent;
-import org.uml.model.relations.UseRelationComponent;
-import org.uml.model.relations.RelationComponent;
+import org.uml.visual.widgets.components.ClassWidget;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import org.uml.visual.widgets.components.InterfaceWidget;
+import org.uml.model.relations.ImplementsRelation;
+import org.uml.model.relations.IsRelation;
+import org.uml.model.relations.UseRelation;
+import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.model.relations.HasBaseRelationComponent;
+import org.uml.model.relations.HasBaseRelation;
 import java.awt.Point;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.widget.*;
@@ -47,13 +50,13 @@ public class ComponentConnectProvider implements ConnectProvider {
         pi = PaletteSupport.getPalette().getSelectedItem().lookup(PaletteItem.class);
         return (sourceWidget instanceof ClassWidget
                 || (sourceWidget instanceof InterfaceWidget
-                && pi != null && (pi.getDropClass() == IsRelationComponent.class || pi.getDropClass() == UseRelationComponent.class)));
+                && pi != null && (pi.getDropClass() == IsRelation.class || pi.getDropClass() == UseRelation.class)));
     }
 
     @Override
     public ConnectorState isTargetWidget(Widget sourceWidget, Widget targetWidget) {
         pi = PaletteSupport.getPalette().getSelectedItem().lookup(PaletteItem.class);
-        if (pi == null || !RelationComponent.class.isAssignableFrom(pi.getDropClass())
+        if (pi == null || !RelationBase.class.isAssignableFrom(pi.getDropClass())
                 || !(sourceWidget instanceof ComponentWidgetBase) || !(targetWidget instanceof ComponentWidgetBase)) {
             return ConnectorState.REJECT;
         }
@@ -61,9 +64,9 @@ public class ComponentConnectProvider implements ConnectProvider {
         ComponentWidgetBase source = (ComponentWidgetBase) sourceWidget;
         ComponentWidgetBase target = (ComponentWidgetBase) targetWidget;
 
-        RelationComponent relation;
+        RelationBase relation;
         try {
-            relation = (RelationComponent) pi.getDropClass().newInstance();
+            relation = (RelationBase) pi.getDropClass().newInstance();
             if (relation.canConnect(source.getComponent(), target.getComponent())) {
                 return ConnectorState.ACCEPT;
             } else {
@@ -84,19 +87,19 @@ public class ComponentConnectProvider implements ConnectProvider {
         Class<?> targetClass = target.getClass();
 
         try {
-            RelationComponent relation = (RelationComponent) pi.getDropClass().newInstance();
+            RelationBase relation = (RelationBase) pi.getDropClass().newInstance();
 
-            if (relation instanceof IsRelationComponent) {
+            if (relation instanceof IsRelation) {
                 if (sourceClass == ClassWidget.class && targetClass == ClassWidget.class
                         || sourceClass == InterfaceWidget.class && targetClass == InterfaceWidget.class) {
                     connect(relation, source, target);
                 }
-            } else if (relation instanceof HasBaseRelationComponent) {
+            } else if (relation instanceof HasBaseRelation) {
                 ClassHasRelationPanel panel = new ClassHasRelationPanel(source);
                 panel.getComboBoxTarget().setSelectedItem(target);
                 dd = new DialogDescriptor(panel, "Has relation");
                 if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    HasBaseRelationComponent r = (HasBaseRelationComponent) relation;
+                    HasBaseRelation r = (HasBaseRelation) relation;
                     r.setName(panel.getRelationName());
                     r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
                     ComponentWidgetBase selectedTarget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
@@ -112,19 +115,19 @@ public class ComponentConnectProvider implements ConnectProvider {
                     }
                     connect(r, source, selectedTarget);
                 }
-            } else if (relation instanceof UseRelationComponent) {
+            } else if (relation instanceof UseRelation) {
                 ClassUseRelationPanel panel = new ClassUseRelationPanel(source);
                 panel.getComboBoxTarget().setSelectedItem(target);
                 dd = new DialogDescriptor(panel, "Use relation");
                 if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    UseRelationComponent r = (UseRelationComponent) relation;
+                    UseRelation r = (UseRelation) relation;
                     r.setName(panel.getRelationName());
                     r.setCardinalitySource((CardinalityEnum) panel.getComboBoxCardinalitySource().getSelectedItem());
                     r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
                     ComponentWidgetBase selectedTarget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
                     connect(r, source, selectedTarget);
                 }
-            } else if (relation instanceof ImplementsRelationComponent) {
+            } else if (relation instanceof ImplementsRelation) {
                 connect(relation, source, target);
             }
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -132,7 +135,7 @@ public class ComponentConnectProvider implements ConnectProvider {
         }
     }
 
-    private void connect(RelationComponent relation, ComponentWidgetBase source, ComponentWidgetBase target) {
+    private void connect(RelationBase relation, ComponentWidgetBase source, ComponentWidgetBase target) {
         relation.setSource(source.getComponent());
         relation.setTarget(target.getComponent());
         

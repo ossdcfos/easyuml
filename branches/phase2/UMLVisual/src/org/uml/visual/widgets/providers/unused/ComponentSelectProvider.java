@@ -8,7 +8,7 @@ import java.awt.Point;
 import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ComponentWidgetBase;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
 
 /**
  *

@@ -12,13 +12,14 @@ import static javax.lang.model.element.ElementKind.ENUM_CONSTANT;
 import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.ElementKind.INTERFACE;
 import static javax.lang.model.element.ElementKind.METHOD;
-import org.uml.model.ClassComponent;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
-import org.uml.model.EnumComponent;
+import org.uml.model.components.EnumComponent;
 import org.uml.model.members.Field;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.InterfaceComponent;
 import org.uml.model.members.Literal;
 import org.uml.model.members.Method;
+import org.uml.model.members.MethodBase;
 import org.uml.reveng.CompilationProcessor;
 import org.uml.reveng.GeneratedDiagramManager;
 
@@ -86,11 +87,10 @@ public class ComponentCreation {
         String projectPath = elem.toString();
         String className = elem.getSimpleName().toString();
         String packages = projectPath.split(className)[0].substring(0, projectPath.length() - className.length() - 1);
-        ClassComponent createdClass = new ClassComponent();
+        ClassComponent createdClass = new ClassComponent(CompilationProcessor.generatedDiagram);
         createdClass.setName(className);
         MemberBuilding.setModifiers(modifierElemnts, createdClass);
-        MemberBuilding.packageSelector(createdClass, packages);
-        createdClass.setParentDiagram(CompilationProcessor.generatedDiagram);
+        MemberBuilding.packageSelector(createdClass, packages);        
         createdClass.setPosition(GeneratedDiagramManager.getDefault().getComponentPosition());
         return createdClass;
     }
@@ -106,13 +106,12 @@ public class ComponentCreation {
      */
     private static InterfaceComponent interfaceBuilder(Element elem, Object[] modifierElemnts) {
         String projectPath = elem.toString();
-        InterfaceComponent createdInterface = new InterfaceComponent();
+        InterfaceComponent createdInterface = new InterfaceComponent(CompilationProcessor.generatedDiagram);
         String interfaceName = elem.getSimpleName().toString();
         String packages = projectPath.split(interfaceName)[0].substring(0, projectPath.length() - interfaceName.length() - 1);
         createdInterface.setName(interfaceName);
         MemberBuilding.setModifiers(modifierElemnts, elem);
         MemberBuilding.packageSelector(createdInterface, packages);
-        createdInterface.setParentDiagram(CompilationProcessor.generatedDiagram);
         createdInterface.setPosition(GeneratedDiagramManager.getDefault().getComponentPosition());
         return createdInterface;
     }
@@ -130,11 +129,10 @@ public class ComponentCreation {
         String projectPath = elem.toString();
         String enumName = elem.getSimpleName().toString();
         String packages = projectPath.split(enumName)[0].substring(0, projectPath.length() - enumName.length() - 1);
-        EnumComponent createdEnum = new EnumComponent();
+        EnumComponent createdEnum = new EnumComponent(CompilationProcessor.generatedDiagram);
         createdEnum.setName(enumName);
         MemberBuilding.setModifiers(modifierElemnts, elem);
         MemberBuilding.packageSelector(createdEnum, packages);
-        createdEnum.setParentDiagram(CompilationProcessor.generatedDiagram);
         createdEnum.setPosition(GeneratedDiagramManager.getDefault().getComponentPosition());
         return createdEnum;
     }
@@ -192,33 +190,33 @@ public class ComponentCreation {
                             Literal genliteral = MemberBuilding.literalBuilder(el, modifierElemnts);
                             CompilationProcessor.genEnum.addLiteral(genliteral);
                             break;
-                        case FIELD:
-                            Field genField = MemberBuilding.fieldBuilder(el, modifierElemnts);
-                            CompilationProcessor.genEnum.addField(genField);
-                            break;
-                        case METHOD:
-                            Method genMethod = (Method) MemberBuilding.methodAndConstructorBuilder(el, modifierElemnts, true);
-                            try {
-                                CompilationProcessor.genEnum.addMethod(genMethod);
-                            } catch (RuntimeException rtex) {
-                                genMethod.setName(genMethod.getName() + "/*" + methodCounter + "*/");
-                                CompilationProcessor.genEnum.addMethod(genMethod);
-                                methodCounter++;
-                            }
-                            break;
-                        case CONSTRUCTOR:
-                            Object newConstructor = MemberBuilding.methodAndConstructorBuilder(el, modifierElemnts, false);
-                            if (newConstructor instanceof String) {
-                                continue;
-                            }
-                            Constructor genConstructor = (Constructor) newConstructor;
-                            try {
-                                CompilationProcessor.genEnum.addConstructor(genConstructor);
-                            } catch (RuntimeException rtex) {
-                                genConstructor.setName(genConstructor.getName() + "/*" + construstorCounter + "*/");
-                                CompilationProcessor.genEnum.addConstructor(genConstructor);
-                                construstorCounter++;
-                            }
+//                        case FIELD:
+//                            Field genField = MemberBuilding.fieldBuilder(el, modifierElemnts);
+//                            CompilationProcessor.genEnum.addField(genField);
+//                            break;
+//                        case METHOD:
+//                            Method genMethod = (Method) MemberBuilding.methodAndConstructorBuilder(el, modifierElemnts, true);
+//                            try {
+//                                CompilationProcessor.genEnum.addMethod(genMethod);
+//                            } catch (RuntimeException rtex) {
+//                                genMethod.setName(genMethod.getName() + "/*" + methodCounter + "*/");
+//                                CompilationProcessor.genEnum.addMethod(genMethod);
+//                                methodCounter++;
+//                            }
+//                            break;
+//                        case CONSTRUCTOR:
+//                            Object newConstructor = MemberBuilding.methodAndConstructorBuilder(el, modifierElemnts, false);
+//                            if (newConstructor instanceof String) {
+//                                continue;
+//                            }
+//                            Constructor genConstructor = (Constructor) newConstructor;
+//                            try {
+//                                CompilationProcessor.genEnum.addConstructor(genConstructor);
+//                            } catch (RuntimeException rtex) {
+//                                genConstructor.setName(genConstructor.getName() + "/*" + construstorCounter + "*/");
+//                                CompilationProcessor.genEnum.addConstructor(genConstructor);
+//                                construstorCounter++;
+//                            }
                     }
                     break;
                 case INTERFACE:

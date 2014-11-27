@@ -1,4 +1,4 @@
-package org.uml.visual.widgets;
+package org.uml.visual.widgets.components;
 
 import org.uml.visual.widgets.members.MemberWidgetBase;
 import java.awt.Color;
@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -17,8 +19,11 @@ import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Lookup;
-import org.uml.model.ComponentBase;
+import org.openide.util.WeakListeners;
+import org.uml.model.components.ComponentBase;
+import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.INameableWidget;
+import org.uml.visual.widgets.TranslucentCompositeBorder;
 import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
@@ -28,7 +33,7 @@ import org.uml.visual.widgets.providers.ComponentConnectProvider;
  * @author "NUGS"
  */
 // doesn't have to be ImageWidget
-abstract public class ComponentWidgetBase extends Widget implements INameableWidget, Lookup.Provider {
+abstract public class ComponentWidgetBase extends Widget implements INameableWidget, PropertyChangeListener {
 
     protected ComponentBase component;
     protected LabelWidget nameWidget;
@@ -46,15 +51,19 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
     public static final Color SELECTED_COLOR = new Color(0xFAFAFA);
 
     public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_SIZE), BorderFactory.createLineBorder());
-    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_SIZE), BorderFactory.createDashedBorder(new Color(0x000047), 1, 1, true));
+//    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createRoundedBorder(RESIZE_SIZE, RESIZE_SIZE, DEFAULT_COLOR, Color.BLACK));
+//    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createRoundedBorder(RESIZE_SIZE, RESIZE_SIZE, HOVER_COLOR, new Color(0x000047)));
+    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_SIZE), BorderFactory.createLineBorder(1, new Color(0x0000BB)));
     // +1, because dashed line falls into the widget (thickness of resize border is 
     public static final Border RESIZE_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(RESIZE_SIZE), BorderFactory.createEmptyBorder(1));
 
     public static final Border EMPTY_BORDER_4 = BorderFactory.createEmptyBorder(4);
     
-    public ComponentWidgetBase(ClassDiagramScene scene) {
+    public ComponentWidgetBase(ClassDiagramScene scene, ComponentBase component) {
         super(scene);
-
+        this.component = component;
+        this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
+        
         // Layout
         setBorder(DEFAULT_BORDER);
         setMinimumSize(MIN_DIMENSION);
@@ -161,19 +170,14 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
 
     @Override
     public void setName(String newName) {
-        if (getNameLabel().getLabel().equals(newName)) {
+        if(getName().equals(newName)){
             return;
-        }
-
-        String oldName = component.getName();
-        if (!component.getParentDiagram().nameExists(newName)) {
-            this.nameWidget.setLabel(newName);
-            component.setName(newName);
-            component.getParentDiagram().componentNameChanged(component, oldName);
+        } else if (component.getParentDiagram().nameExists(newName)) {
+            JOptionPane.showMessageDialog(getScene().getView(), "Name \""+newName+"\" already exists!");
+//            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
+//            //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
         } else {
-            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-            //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
-            JOptionPane.showMessageDialog(this.getScene().getView(), "Greska, ime vec postoji.");
+            component.changeName(newName);
         }
     }
 
@@ -200,6 +204,19 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
     private void changedNotify() {
         getClassDiagramScene().getUmlTopComponent().modify();
     }
+
+    
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent evt){
+        if("name".equals(evt.getPropertyName())){
+            String newName = (String)evt.getNewValue();
+            nameWidget.setLabel(newName);
+        }
+        getScene().validate();
+    }
+    
+    
 
     @Override
     // To achieve resize cursors and move cursor

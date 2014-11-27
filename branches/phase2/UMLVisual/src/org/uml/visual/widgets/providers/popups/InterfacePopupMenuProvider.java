@@ -21,7 +21,7 @@ import org.uml.model.ClassDiagram;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
 import org.uml.visual.dialogs.PackageDialog;
-import org.uml.visual.widgets.InterfaceWidget;
+import org.uml.visual.widgets.components.InterfaceWidget;
 import org.uml.visual.widgets.members.MethodWidget;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;

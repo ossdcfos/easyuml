@@ -28,30 +28,31 @@ package org.uml.jung;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.ComponentBase;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.relations.RelationBase;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ComponentWidgetBase;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
 
 /**
  *
  * We had to use SparseMultiGraph since it is that suupports multiple relations
  * @author Ilija The Graph Master
  */
-public class UMLSparseMultigraph extends SparseMultigraph<ComponentWidgetBase, RelationComponent> {
+public class UMLSparseMultigraph extends SparseMultigraph<ComponentWidgetBase, RelationBase> {
 
     /**
      * Creates and return s JUNG SparseMultigraph for given ClassDiagramScene
      * @param classDiagramScene
      * @return 
      */
-    public static Graph<ComponentWidgetBase, RelationComponent> create(ClassDiagramScene classDiagramScene) {
+    public static Graph<ComponentWidgetBase, RelationBase> create(ClassDiagramScene classDiagramScene) {
 
-        Graph<ComponentWidgetBase, RelationComponent> graph = new edu.uci.ics.jung.graph.SparseMultigraph<>();
+        Graph<ComponentWidgetBase, RelationBase> graph = new edu.uci.ics.jung.graph.SparseMultigraph<>();
 
         LayerWidget mainLayer = classDiagramScene.getMainLayer();
         List<Widget> mainLayerChildren = mainLayer.getChildren();
@@ -70,14 +71,13 @@ public class UMLSparseMultigraph extends SparseMultigraph<ComponentWidgetBase, R
 
         //now we need to make edges
 
-        HashMap<String, RelationComponent> relations = classDiagramScene.getClassDiagram().getRelations();
+        HashSet<RelationBase> relations = classDiagramScene.getClassDiagram().getRelations();
 
         for (Map.Entry<ComponentBase, ComponentWidgetBase> component : components.entrySet()) {
             ComponentBase classDiagramComponent = component.getKey();
             ComponentWidgetBase componentWidgetBase = component.getValue();
 
-            for (Map.Entry<String, RelationComponent> relation : relations.entrySet()) {
-                RelationComponent relationComponent = relation.getValue();
+            for (RelationBase relationComponent : relations) {
                 if (relationComponent.getSource().equals(classDiagramComponent)) {
 
                     ComponentWidgetBase target = null;

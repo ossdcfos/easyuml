@@ -17,19 +17,19 @@ import org.openide.nodes.NodeTransfer;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.model.relations.HasBaseRelationComponent;
-import org.uml.model.relations.ImplementsRelationComponent;
-import org.uml.model.relations.IsRelationComponent;
-import org.uml.model.relations.RelationComponent;
-import org.uml.model.relations.UseRelationComponent;
+import org.uml.model.relations.HasBaseRelation;
+import org.uml.model.relations.ImplementsRelation;
+import org.uml.model.relations.IsRelation;
+import org.uml.model.relations.RelationBase;
+import org.uml.model.relations.UseRelation;
 import org.uml.visual.dialogs.ClassHasRelationPanel;
 import org.uml.visual.dialogs.ImplementsRelationPanel;
 import org.uml.visual.dialogs.IsRelationPanel;
 import org.uml.visual.dialogs.ClassUseRelationPanel;
 import org.uml.visual.palette.PaletteItemNode;
-import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.ComponentWidgetBase;
-import org.uml.visual.widgets.InterfaceWidget;
+import org.uml.visual.widgets.components.ClassWidget;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import org.uml.visual.widgets.components.InterfaceWidget;
 
 /**
  *
@@ -74,44 +74,44 @@ public class ComponentWidgetAcceptProvider implements AcceptProvider {
         try {
             DialogDescriptor dd = null;
             String msg = "Choose target";
-            Class<? extends RelationComponent> relationClass = droppedClass.asSubclass(RelationComponent.class);
+            Class<? extends RelationBase> relationClass = droppedClass.asSubclass(RelationBase.class);
             //Class<? extends RelationComponent> relationClass = (Class<? extends RelationComponent>) drClass;
-            RelationComponent relation = relationClass.newInstance();
+            RelationBase relation = relationClass.newInstance();
             ComponentWidgetBase w = (ComponentWidgetBase) widget;
             relation.setSource(w.getComponent());
-            if (relation instanceof IsRelationComponent) {
+            if (relation instanceof IsRelation) {
                 IsRelationPanel panel = new IsRelationPanel((ComponentWidgetBase) widget);
                 dd = new DialogDescriptor(panel, msg);
                 if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
                     ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
                     createConnection(relation, w, compWidget);
                 }
-            } else if (relation instanceof HasBaseRelationComponent) {
+            } else if (relation instanceof HasBaseRelation) {
                 ClassHasRelationPanel panel = new ClassHasRelationPanel(w);
                 dd = new DialogDescriptor(panel, msg);
                 if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    HasBaseRelationComponent r = (HasBaseRelationComponent) relation;
+                    HasBaseRelation r = (HasBaseRelation) relation;
                     r.setName(panel.getRelationName());
                     r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
                     ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
                     createConnection(relation, w, compWidget);
                 }
-            } else if (relation instanceof UseRelationComponent) {
+            } else if (relation instanceof UseRelation) {
                 ClassUseRelationPanel panel = new ClassUseRelationPanel(w);
                 dd = new DialogDescriptor(panel, msg);
                 if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    UseRelationComponent r = (UseRelationComponent) relation;
+                    UseRelation r = (UseRelation) relation;
                     r.setName(panel.getRelationName());
                     r.setCardinalitySource((CardinalityEnum) panel.getComboBoxCardinalitySource().getSelectedItem());
                     r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
                     ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
                     createConnection(relation, w, compWidget);
                 }
-            } else if (relation instanceof ImplementsRelationComponent && !(widget instanceof InterfaceWidget)) {
+            } else if (relation instanceof ImplementsRelation && !(widget instanceof InterfaceWidget)) {
                 ImplementsRelationPanel panel = new ImplementsRelationPanel((ClassWidget) w);
                 dd = new DialogDescriptor(panel, msg);
                 if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    ImplementsRelationComponent r = (ImplementsRelationComponent) relation;
+                    ImplementsRelation r = (ImplementsRelation) relation;
                     ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
                     createConnection(relation, w, compWidget);
                 }
@@ -126,14 +126,14 @@ public class ComponentWidgetAcceptProvider implements AcceptProvider {
     }
 
     private boolean canAccept(Widget widget, Class<?> droppedClass) {
-        if (RelationComponent.class.isAssignableFrom(droppedClass)) {
+        if (RelationBase.class.isAssignableFrom(droppedClass)) {
             if (!(widget instanceof InterfaceWidget)) return true;
-            else return !droppedClass.equals(ImplementsRelationComponent.class);
+            else return !droppedClass.equals(ImplementsRelation.class);
         }
         return false;
     }
 
-    private void createConnection(RelationComponent relation, ComponentWidgetBase source, ComponentWidgetBase target) {
+    private void createConnection(RelationBase relation, ComponentWidgetBase source, ComponentWidgetBase target) {
         if (target == null) {
             return;
         }

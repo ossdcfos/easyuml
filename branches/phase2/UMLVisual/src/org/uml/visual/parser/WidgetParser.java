@@ -5,10 +5,10 @@ import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import org.uml.model.members.Field;
-import org.uml.model.members.Member;
-import org.uml.model.members.Method;
+import org.uml.model.members.MemberBase;
+import org.uml.model.members.MethodBase;
 import org.uml.model.members.MethodArgument;
-import org.uml.model.members.Visibility;
+import org.uml.model.Visibility;
 
 public class WidgetParser {
 
@@ -25,7 +25,7 @@ public class WidgetParser {
 	Pattern argumentBlock = Pattern.compile("\\(.*\\)");
 	String  stringToParse = null;
 	int[] niz = new int[3];
-        Method m;
+        MethodBase m;
         Field f;
         
         /**
@@ -153,7 +153,8 @@ public class WidgetParser {
          * Sets object m's visibility field based on the input parameter.
          * @param visibility represents value to put into object m's visibility field.
          */
-        public void setVisibility(Member m, String visibility) {
+        public void setVisibility(MemberBase m, String visibility) {
+//            m.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
             if(visibility.equals("private")) {
                 m.setVisibility(Visibility.PRIVATE);
                 return;
@@ -382,7 +383,7 @@ public class WidgetParser {
          * @param m represents Method object passed from MethodWidget
          * @param methodWidgetText represents string typed in the class diagram
          */
-        public void fillMethodComponents(Method m, String methodWidgetText) {
+        public void fillMethodComponents(MethodBase m, String methodWidgetText) {
             stringToParse = methodWidgetText;
             this.m = m;
             setMethodModifiers(getAllMethodModifiers());

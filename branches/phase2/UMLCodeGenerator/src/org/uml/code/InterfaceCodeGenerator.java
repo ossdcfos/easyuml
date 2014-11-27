@@ -4,8 +4,8 @@
  */
 package org.uml.code;
 
-import org.uml.model.ComponentBase;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.InterfaceComponent;
 
 /**
  * Interface's code generating class. Implements all necessary methods that are

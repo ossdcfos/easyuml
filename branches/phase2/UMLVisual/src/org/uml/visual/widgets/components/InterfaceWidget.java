@@ -1,4 +1,4 @@
-package org.uml.visual.widgets;
+package org.uml.visual.widgets.components;
 
 import org.uml.visual.widgets.members.MethodWidget;
 import java.awt.Font;
@@ -8,7 +8,9 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.InterfaceComponent;
+import org.uml.model.members.MethodBase;
+import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.providers.ComponentWidgetAcceptProvider;
 import org.uml.visual.widgets.providers.popups.InterfacePopupMenuProvider;
 
@@ -16,13 +18,12 @@ import org.uml.visual.widgets.providers.popups.InterfacePopupMenuProvider;
  *
  * @author hrza
  */
-public class InterfaceWidget extends ComponentWidgetBase implements INameableWidget {
+public class InterfaceWidget extends ComponentWidgetBase {
 
     private final Widget methodsContainer;
 
     public InterfaceWidget(ClassDiagramScene scene, InterfaceComponent interfaceComponent) {
-        super(scene);
-        this.component = interfaceComponent;
+        super(scene, interfaceComponent);
 
         Widget headerWidget = new Widget(scene);
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
@@ -51,6 +52,12 @@ public class InterfaceWidget extends ComponentWidgetBase implements INameableWid
 
         getActions().addAction(ActionFactory.createAcceptAction(new ComponentWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new InterfacePopupMenuProvider(this)));
+        
+        
+        for (MethodBase methodComp : interfaceComponent.getMethods().values()) {
+            MethodWidget mw = new MethodWidget(getClassDiagramScene(), methodComp);
+            addMember(methodsContainer, mw);
+        }
     }
 
     public Widget createMethodWidget(String methodName) {

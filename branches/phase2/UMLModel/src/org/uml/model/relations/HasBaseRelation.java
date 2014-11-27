@@ -1,20 +1,20 @@
 package org.uml.model.relations;
 
 import java.util.Objects;
-import org.uml.model.ClassComponent;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.ComponentBase;
 
 /**
  * Has relation in UML class diagrams. Describes relation used usually when an
  * object has another object as its field.
  *
  * @author "NUGS"
- * @see RelationComponent
+ * @see RelationBase
  * @see IsRelationComponent
  * @see UseRelationComponent
  * @see ImplementsRelationComponent
  */
-public abstract class HasBaseRelationComponent extends RelationComponent {
+public abstract class HasBaseRelation extends RelationBase {
     //Usually 0..*
 
     private CardinalityEnum cardinalitySource;
@@ -27,12 +27,12 @@ public abstract class HasBaseRelationComponent extends RelationComponent {
     private boolean composition;
     
     // aggregation by default
-    public HasBaseRelationComponent(){
+    public HasBaseRelation(){
         this(false);
     }
     
     // if not composition, than it is aggregation
-    protected HasBaseRelationComponent(boolean composition){
+    protected HasBaseRelation(boolean composition){
         this.composition = composition;
     }
     
@@ -142,7 +142,7 @@ public abstract class HasBaseRelationComponent extends RelationComponent {
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (!super.equals(obj)) return false;
-        HasBaseRelationComponent other = (HasBaseRelationComponent) obj;
+        HasBaseRelation other = (HasBaseRelation) obj;
         if (!Objects.equals(this.name, other.name)) return false;
         if (getClass() != obj.getClass()) return false;
         if (this.composition != other.composition) return false;

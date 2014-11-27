@@ -7,8 +7,8 @@ package org.uml.xmlDeserialization;
 import java.util.List;
 import org.dom4j.Element;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.model.ComponentBase;
-import org.uml.model.relations.UseRelationComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.relations.UseRelation;
 
 /**
  *
@@ -16,10 +16,10 @@ import org.uml.model.relations.UseRelationComponent;
  */
 public class UseRelationDeserializer implements XmlDeserializer{
 
-    private UseRelationComponent relation;
+    private UseRelation relation;
     private List<ComponentBase> components;
 
-    public UseRelationDeserializer(UseRelationComponent relation, List<ComponentBase> components) {
+    public UseRelationDeserializer(UseRelation relation, List<ComponentBase> components) {
         this.relation = relation;
         this.components = components;
     }

@@ -1,5 +1,7 @@
 package org.uml.model;
 
+import org.uml.model.components.ComponentBase;
+
 /**
  *
  * @author Boris

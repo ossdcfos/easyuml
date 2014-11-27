@@ -10,16 +10,16 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.model.relations.HasBaseRelationComponent;
-import org.uml.model.relations.ImplementsRelationComponent;
-import org.uml.model.relations.IsRelationComponent;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.HasBaseRelation;
+import org.uml.model.relations.ImplementsRelation;
+import org.uml.model.relations.IsRelation;
+import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.RelationUtilities;
-import org.uml.model.relations.UseRelationComponent;
+import org.uml.model.relations.UseRelation;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.ComponentWidgetBase;
-import org.uml.visual.widgets.InterfaceWidget;
+import org.uml.visual.widgets.components.ClassWidget;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import org.uml.visual.widgets.components.InterfaceWidget;
 
 /**
  *
@@ -58,7 +58,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
         btnOk = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         lblRelationType = new javax.swing.JLabel();
-        cbxRelations = new javax.swing.JComboBox<RelationComponent>();
+        cbxRelations = new javax.swing.JComboBox<RelationBase>();
         lblName = new javax.swing.JLabel();
         txfName = new javax.swing.JTextField();
         cbxCardinalityTarget = new javax.swing.JComboBox<CardinalityEnum>();
@@ -203,7 +203,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
             return;
         }
 
-        RelationComponent relation = (RelationComponent) cbxRelations.getSelectedItem();
+        RelationBase relation = (RelationBase) cbxRelations.getSelectedItem();
 
         //if (cbxClassesSource.getSelectedItem() instanceof ComponentWidgetBase && cbxClassesTarget.getSelectedItem() instanceof ComponentWidgetBase) {
         ComponentWidgetBase source = (ComponentWidgetBase) cbxClassesSource.getSelectedItem();
@@ -211,8 +211,8 @@ public class AddRelationDialog extends javax.swing.JDialog {
         relation.setSource(source.getComponent());
         relation.setTarget(target.getComponent());
 
-        if (relation instanceof HasBaseRelationComponent) {
-            HasBaseRelationComponent hasRelation = (HasBaseRelationComponent) relation;
+        if (relation instanceof HasBaseRelation) {
+            HasBaseRelation hasRelation = (HasBaseRelation) relation;
             if (txfName.getText() != null && !txfName.getText().equals("")) {
                 hasRelation.setName(txfName.getText());
             }
@@ -228,8 +228,8 @@ public class AddRelationDialog extends javax.swing.JDialog {
                 }
                 hasRelation.setCollectionType(collectionType);
             }
-        } else if (relation instanceof UseRelationComponent) {
-            UseRelationComponent useRelation = (UseRelationComponent) relation;
+        } else if (relation instanceof UseRelation) {
+            UseRelation useRelation = (UseRelation) relation;
             if (txfName.getText() != null && !txfName.getText().equals("")) {
                 useRelation.setName(txfName.getText());
             }
@@ -249,7 +249,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void cbxRelationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxRelationsActionPerformed
-        RelationComponent rc = (RelationComponent) cbxRelations.getSelectedItem();
+        RelationBase rc = (RelationBase) cbxRelations.getSelectedItem();
 
         txfName.setEnabled(false);
         clearAndDisableComboBoxes();
@@ -259,11 +259,11 @@ public class AddRelationDialog extends javax.swing.JDialog {
 
         fillSourceAndTargetComboBoxes(rc);
 
-        if (rc instanceof HasBaseRelationComponent) {
+        if (rc instanceof HasBaseRelation) {
             txfName.setEnabled(true);
             fillCardinalityComboBox(cbxCardinalityTarget);
             fillCollectionsComboBox();
-        } else if (rc instanceof UseRelationComponent) {
+        } else if (rc instanceof UseRelation) {
             txfName.setEnabled(true);
             fillCardinalityComboBox(cbxCardinalitySource);
             fillCardinalityComboBox(cbxCardinalityTarget);
@@ -275,7 +275,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
         ComponentWidgetBase src = (ComponentWidgetBase) cbxClassesSource.getSelectedItem();
         ComponentWidgetBase trg = (ComponentWidgetBase) cbxClassesTarget.getSelectedItem();
 
-        if (src != null && trg != null && src.equals(trg) && cbxRelations.getSelectedItem().getClass() != HasBaseRelationComponent.class) {
+        if (src != null && trg != null && src.equals(trg) && cbxRelations.getSelectedItem().getClass() != HasBaseRelation.class) {
             cbxClassesTarget.setSelectedItem(null);
 //            cbxClassesTarget.removeAllItems();
 //
@@ -288,7 +288,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
         ComponentWidgetBase src = (ComponentWidgetBase) cbxClassesSource.getSelectedItem();
         ComponentWidgetBase trg = (ComponentWidgetBase) cbxClassesTarget.getSelectedItem();
 
-        if (src != null && trg != null && src.equals(trg) && cbxRelations.getSelectedItem().getClass() != HasBaseRelationComponent.class) {
+        if (src != null && trg != null && src.equals(trg) && cbxRelations.getSelectedItem().getClass() != HasBaseRelation.class) {
             cbxClassesSource.setSelectedItem(null);
         }
     }//GEN-LAST:event_cbxClassesTargetActionPerformed
@@ -327,31 +327,31 @@ public class AddRelationDialog extends javax.swing.JDialog {
 //            }
 //        });
 //    }
-    public JComboBox<RelationComponent> getRelationComponents() {
+    public JComboBox<RelationBase> getRelationComponents() {
         return cbxRelations;
     }
 
     // nepotrebno ako je deselektovano na pocetku sve iz combo boxeva
-    private void reinitTargetComboBoxExcept(RelationComponent rc, ComponentWidgetBase src) {
+    private void reinitTargetComboBoxExcept(RelationBase rc, ComponentWidgetBase src) {
         List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
 
-        if (rc instanceof IsRelationComponent) {
+        if (rc instanceof IsRelation) {
             for (Widget widget : widgets) {
                 if (!widget.equals(src) && widget instanceof ClassWidget) {
                     cbxClassesTarget.addItem(widget);
                 }
             }
-        } else if (rc instanceof HasBaseRelationComponent) {
+        } else if (rc instanceof HasBaseRelation) {
             for (Widget widget : widgets) {
                 cbxClassesTarget.addItem(widget);
             }
-        } else if (rc instanceof UseRelationComponent) {
+        } else if (rc instanceof UseRelation) {
             for (Widget widget : widgets) {
                 if (!widget.equals(src)) {
                     cbxClassesTarget.addItem(widget);
                 }
             }
-        } else if (rc instanceof ImplementsRelationComponent) {
+        } else if (rc instanceof ImplementsRelation) {
             for (Widget widget : widgets) {
                 if (widget instanceof InterfaceWidget) {
                     cbxClassesTarget.addItem(widget);
@@ -361,10 +361,10 @@ public class AddRelationDialog extends javax.swing.JDialog {
         cbxClassesTarget.setSelectedItem(null);
     }
 
-    private void fillSourceAndTargetComboBoxes(RelationComponent rc) {
+    private void fillSourceAndTargetComboBoxes(RelationBase rc) {
         List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
 
-        if (rc instanceof IsRelationComponent) {
+        if (rc instanceof IsRelation) {
             for (Widget widget : widgets) {
                 if (widget instanceof ClassWidget) {
                     cbxClassesSource.addItem(widget);
@@ -372,14 +372,14 @@ public class AddRelationDialog extends javax.swing.JDialog {
                     cbxClassesTarget.addItem(widget);
                 }
             }
-        } else if (rc instanceof HasBaseRelationComponent) {
+        } else if (rc instanceof HasBaseRelation) {
             for (Widget widget : widgets) {
                 if (widget instanceof ClassWidget) {
                     cbxClassesSource.addItem(widget);
                 }
                 cbxClassesTarget.addItem(widget);
             }
-        } else if (rc instanceof UseRelationComponent) {
+        } else if (rc instanceof UseRelation) {
             for (Widget widget : widgets) {
                 if (widget instanceof ClassWidget || widget instanceof InterfaceWidget) {
                     cbxClassesSource.addItem(widget);
@@ -387,7 +387,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
                 //if(!widget.equals(cbxClassesSource.getItemAt(0)))
                 cbxClassesTarget.addItem(widget);
             }
-        } else if (rc instanceof ImplementsRelationComponent) {
+        } else if (rc instanceof ImplementsRelation) {
             for (Widget widget : widgets) {
                 if (widget instanceof ClassWidget) {
                     cbxClassesSource.addItem(widget);
@@ -403,7 +403,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
     }
 
     private void fillRelationsComboBox() {
-        for (RelationComponent rc : RelationUtilities.allRelations()) {
+        for (RelationBase rc : RelationUtilities.allRelations()) {
             cbxRelations.addItem(rc);
         }
         cbxRelations.setSelectedItem(null);
@@ -448,7 +448,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox<Widget> cbxClassesSource;
     private javax.swing.JComboBox<Widget> cbxClassesTarget;
     private javax.swing.JComboBox<String> cbxCollectionType;
-    private javax.swing.JComboBox<RelationComponent> cbxRelations;
+    private javax.swing.JComboBox<RelationBase> cbxRelations;
     private javax.swing.JLabel lblCardinalitySource;
     private javax.swing.JLabel lblCardinalityTarget;
     private javax.swing.JLabel lblCollectionType;
