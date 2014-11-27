@@ -36,10 +36,10 @@ import java.util.HashMap;
 import java.util.List;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.ComponentBase;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.relations.RelationBase;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ComponentWidgetBase;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
 
 /**
  *
@@ -65,7 +65,7 @@ public class JUNGEngine {
 //                classDiagramScene = (ClassDiagramScene) o;
 //            }
 //        }
-        Graph<ComponentWidgetBase, RelationComponent> graph = null;
+        Graph<ComponentWidgetBase, RelationBase> graph = null;
         if (scene != null) {
             graph = UMLSparseMultigraph.create(scene);
         }
@@ -91,11 +91,11 @@ public class JUNGEngine {
 //        System.out.println(g.toString());
 
         if (graph != null) {
-            Layout<ComponentWidgetBase, RelationComponent> layout = new CircleLayout<>(graph);
+            Layout<ComponentWidgetBase, RelationBase> layout = new CircleLayout<>(graph);
 //            Layout<ComponentWidgetBase, RelationComponent> layout = new SpringLayout<>(graph); // ovaj layout isto moze da radi
 
             layout.setSize(new Dimension(700, 700));
-            BasicVisualizationServer<ComponentWidgetBase, RelationComponent> vv = new BasicVisualizationServer<>(layout);
+            BasicVisualizationServer<ComponentWidgetBase, RelationBase> vv = new BasicVisualizationServer<>(layout);
 //            vv.setPreferredSize(new Dimension(1350, 1350));
 
 
@@ -117,7 +117,7 @@ public class JUNGEngine {
         this.scene = scene;
     }
 
-    private void applyLayoutOnExistingWidget(Layout<ComponentWidgetBase, RelationComponent> layout) {
+    private void applyLayoutOnExistingWidget(Layout<ComponentWidgetBase, RelationBase> layout) {
         LayerWidget mainLayer = scene.getMainLayer();
         List<Widget> mainLayerChildren = mainLayer.getChildren();
         HashMap<ComponentBase, ComponentWidgetBase> components = new HashMap<>();

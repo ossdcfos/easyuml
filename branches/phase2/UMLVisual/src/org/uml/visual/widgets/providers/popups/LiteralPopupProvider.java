@@ -1,61 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets.providers.popups;
 
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import org.netbeans.api.visual.action.PopupMenuProvider;
-import org.netbeans.api.visual.widget.Widget;
-import org.uml.visual.widgets.members.FieldWidget;
-import org.uml.visual.widgets.members.LiteralWidget;
+import org.uml.visual.widgets.members.MemberWidgetBase;
 
 /**
  *
- * @author Jelena
+ * @author Boris
  */
-public class LiteralPopupProvider implements PopupMenuProvider {
+public class LiteralPopupProvider extends MemberBasePopupProvider {
 
-    private LiteralWidget literalWidget;
-    private JPopupMenu menu;
-    private JMenuItem deleteField;
-    //private JMenu visibilitySubmenu;
-    //private JMenu modifiersSubmenu;
-    private JMenuItem privateItem;
-    private JMenuItem publicItem;
-    private JMenuItem protectedItem;
-    private JMenuItem packageItem;
-    private JCheckBoxMenuItem staticJCBMI;
-    private JCheckBoxMenuItem abstractJCBMI;
-    private JCheckBoxMenuItem finalJCBMI;
-    private JCheckBoxMenuItem synchronizedJCBMI;
-
-    public LiteralPopupProvider(LiteralWidget literalWidget) {
-        this.literalWidget = literalWidget;
-        menu = new JPopupMenu("Literal Menu");
-
-        (deleteField = new JMenuItem("Delete Literal")).addActionListener(removeWidgetListener);
-        menu.add(deleteField);
-    }
-
-    ActionListener removeWidgetListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            literalWidget.getMember().getDeclaringClass().removeMember(literalWidget.getName());
-            literalWidget.getClassDiagramScene().removeObject(literalWidget.getMember());
-            literalWidget.removeFromParent();
-        }
-    };
-
-    @Override
-    public JPopupMenu getPopupMenu(Widget widget, Point point) {
-        return menu;
+    public LiteralPopupProvider(MemberWidgetBase literalWidget) {
+        super(literalWidget);
     }
 
 }

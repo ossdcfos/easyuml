@@ -6,7 +6,7 @@ package org.uml.xmlDeserialization;
 
 import org.dom4j.Element;
 import org.uml.model.members.Field;
-import org.uml.model.members.Visibility;
+import org.uml.model.Visibility;
 
 /**
  *
@@ -33,7 +33,7 @@ public class FieldDeserializer implements XmlDeserializer{
         String isFinal = node.attributeValue("isFinal");
         String isSynchronized = node.attributeValue("isSynchronized");
         if (name != null) field.setName(name);
-        if (visibility != null) field.setVisibility(Visibility.stringToVisibility(visibility));
+        if (visibility != null) field.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         if (type != null) field.setType(type);
         if (isStatic != null) field.setStatic(Boolean.parseBoolean(isStatic));
         if (isFinal != null) field.setFinal(Boolean.parseBoolean(isFinal));

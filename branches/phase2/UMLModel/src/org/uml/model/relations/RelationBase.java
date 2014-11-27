@@ -3,7 +3,7 @@ package org.uml.model.relations;
 import java.io.Serializable;
 import java.util.Objects;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 
 /**
  * Relation between two UML Class Diagram components. 
@@ -17,7 +17,7 @@ import org.uml.model.ComponentBase;
  * @see ClassDiagram
  * @see ComponentBase
  */
-public abstract class RelationComponent implements Serializable {
+public abstract class RelationBase implements Serializable {
 
     ComponentBase source;
     ComponentBase target;
@@ -26,7 +26,7 @@ public abstract class RelationComponent implements Serializable {
     /**
      * Default constructor without parameters used to create Relation object.
      */
-    public RelationComponent() {
+    public RelationBase() {
     }
 
     /**
@@ -38,7 +38,7 @@ public abstract class RelationComponent implements Serializable {
      * @param name of the Relation
      * @see ComponentBase
      */
-    public RelationComponent(ComponentBase source, ComponentBase target, String name) {
+    public RelationBase(ComponentBase source, ComponentBase target, String name) {
         this.source = source;
         this.target = target;
         this.name = name;
@@ -85,7 +85,7 @@ public abstract class RelationComponent implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final RelationComponent other = (RelationComponent) obj;
+        final RelationBase other = (RelationBase) obj;
         if (!Objects.equals(this.source, other.source)) {
             return false;
         }

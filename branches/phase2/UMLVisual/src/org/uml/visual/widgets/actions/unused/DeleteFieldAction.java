@@ -7,7 +7,7 @@ package org.uml.visual.widgets.actions.unused;
 import java.awt.Point;
 import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.visual.widgets.ClassWidget;
+import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.members.FieldWidget;
 
 /**

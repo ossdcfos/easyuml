@@ -1,14 +1,16 @@
 package org.uml.model.members;
 
-import org.uml.model.ClassComponent;
-import org.uml.model.EnumComponent;
+import java.lang.reflect.Modifier;
+import org.uml.model.Visibility;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.EnumComponent;
 
 /**
  * Represents a class field (variables inside a class). 
  * It extends Member class and it is one of four possible Members.
  *
  * @author Uros
- * @see Member
+ * @see MemberBase
  * @see Literal
  * @see Method
  * @see Constructor
@@ -16,14 +18,11 @@ import org.uml.model.EnumComponent;
  * @see EnumComponent
  *
  */
-public class Field extends Member {
+public class Field extends MemberBase {
     // sta ako je niz? da li treba koristiti Type?
 
     private String type;
-    //these two should go to Member class, and provide nice API 
-    private boolean isStatic;
-    private boolean isFinal;
-    private boolean isSynchronized;
+    //these two should go to Member class, and provide nice API
 
     /**
      * Constructor that sets the name, type and visibility of the Field.
@@ -44,7 +43,7 @@ public class Field extends Member {
      * @return true if field is static, false if it isn't
      */
     public boolean isStatic() {
-        return isStatic;
+        return Modifier.isStatic(modifiers);
     }
 
     /**
@@ -53,7 +52,13 @@ public class Field extends Member {
      * @param isStatic - set true if the field is static, false if it isn't
      */
     public void setStatic(boolean isStatic) {
-        this.isStatic = isStatic;
+        int oldModifiers = modifiers;
+        if(isStatic) {
+            modifiers |= Modifier.STATIC;
+        } else {
+            modifiers &= ~Modifier.STATIC;
+        }
+        fire("isStatic", Modifier.isStatic(oldModifiers), isStatic());
     }
 
     /**
@@ -62,7 +67,7 @@ public class Field extends Member {
      * @return true if field is final, false if it isn't
      */
     public boolean isFinal() {
-        return isFinal;
+        return Modifier.isFinal(modifiers);
     }
 
     /**
@@ -71,7 +76,13 @@ public class Field extends Member {
      * @param isFinal - set true if the field is final, false if it isn't
      */
     public void setFinal(boolean isFinal) {
-        this.isFinal = isFinal;
+        int oldModifiers = modifiers;
+        if(isFinal) {
+            modifiers |= Modifier.FINAL;
+        } else {
+            modifiers &= ~Modifier.FINAL;
+        }
+        fire("isFinal", Modifier.isFinal(oldModifiers), isFinal());
     }
 
     /**
@@ -81,7 +92,7 @@ public class Field extends Member {
      * @return true if field is synchronized, false if it isn't
      */
     public boolean isSynchronized() {
-        return isSynchronized;
+        return Modifier.isSynchronized(modifiers);
     }
 
     /**
@@ -91,7 +102,13 @@ public class Field extends Member {
      * it isn't
      */
     public void setSynchronized(boolean isSynchronized) {
-        this.isSynchronized = isSynchronized;
+        int oldModifiers = modifiers;
+        if(isSynchronized) {
+            modifiers |= Modifier.SYNCHRONIZED;
+        } else {
+            modifiers &= ~Modifier.SYNCHRONIZED;
+        }
+        fire("isSynchronized", Modifier.isSynchronized(oldModifiers), isSynchronized());
     }
 
     /**
@@ -102,18 +119,17 @@ public class Field extends Member {
      * @param modifier name to be set
      */
     public void setModifier(String modifier) {
-        if ("static".equals(modifier)) {
-            isStatic = true;
-            return;
+        switch(modifier){
+            case "static":
+                setStatic(true);
+                break;
+            case "final":
+                setFinal(true);
+                break;
+            case "synchronized":
+                setSynchronized(true);
+                break;
         }
-        if ("final".equals(modifier)) {
-            isFinal = true;
-            return;
-        }
-        if ("synchronized".equals(modifier)) {
-            isSynchronized = true;
-        }
-
     }
 
     /**
@@ -153,19 +169,11 @@ public class Field extends Member {
      * @return specially formed String representation of the Field
      */
     public String getSignatureForLabel() {
-        String result = "";
-        if (isStatic) {
-            result = result.concat("static ");
-        }
-        if (isFinal) {
-            result = result.concat("final ");
-        }
-        if (isSynchronized) {
-            result = result.concat("synchronized ");
-        }
-        result = result.concat(type + " ");
-        result = result.concat(getName());
-        return result;
+        StringBuilder result = new StringBuilder();
+        result.append(Modifier.toString(modifiers)).append(" ");
+        result = result.append(type).append(" ");
+        result = result.append(getName());
+        return result.toString();
     }
 
     /**
@@ -178,23 +186,12 @@ public class Field extends Member {
      * @return specially formed Field's String representation
      */
     public String getSignature() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         if (visibility != null && !visibility.equals(Visibility.PACKAGE)) {
-            result = result.concat(getVisibility().toString() + " ");
+            result = result.append(getVisibility().toString()).append(" ");
         }
-        if (isStatic) {
-            result = result.concat("static ");
-        }
-        if (isFinal) {
-            result = result.concat("final ");
-        }
-        if (isSynchronized) {
-            result = result.concat("synchronized ");
-        }
-        //potrebno je implementirati Type za filed
-        //result = result.concat(type + " ");
-        result = result.concat(type + " ");
-        result = result.concat(getName() + ";\n");
-        return result;
+        result.append(getSignatureForLabel());
+        return result.toString();
     }
+    
 }

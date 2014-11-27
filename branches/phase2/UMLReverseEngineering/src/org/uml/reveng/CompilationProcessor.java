@@ -17,11 +17,11 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import org.uml.model.ClassComponent;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ComponentBase;
-import org.uml.model.EnumComponent;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.EnumComponent;
+import org.uml.model.components.InterfaceComponent;
 
 /**
  * This class plays the most important role during the compilation process. It

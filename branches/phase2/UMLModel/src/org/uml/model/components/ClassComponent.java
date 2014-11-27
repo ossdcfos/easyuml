@@ -1,11 +1,13 @@
-package org.uml.model;
+package org.uml.model.components;
 
-import java.awt.Dimension;
-import org.uml.model.members.Method;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import org.uml.model.members.MethodBase;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.LinkedHashMap;
+import org.uml.model.ClassDiagram;
+import org.uml.model.members.MemberBase;
+import org.uml.model.members.Method;
 
 /**
  * A class component in UML Class diagram. 
@@ -18,17 +20,19 @@ import java.util.Random;
  */
 public class ClassComponent extends ComponentBase {
 
-    private HashMap<String, Field> fields;
-    private HashMap<String, Constructor> constructors;
-    private HashMap<String, Method> methods;
+    @XStreamAsAttribute
+    private LinkedHashMap<String, Field> fields;
+    private LinkedHashMap<String, Constructor> constructors;
+    private LinkedHashMap<String, Method> methods;
     private boolean isAbstract;
 
     /**
-     * Default constructor without parameters. Sets name to default value,
+     * Default constructor only specifying parent diagram. Sets name to default value.
      * 
+     * @param parentDiagram
      */
-    public ClassComponent() {
-        this("UntitledClass");
+    public ClassComponent(ClassDiagram parentDiagram) {
+        this(parentDiagram, "UntitledClass");
     }
 
     /**
@@ -38,14 +42,15 @@ public class ClassComponent extends ComponentBase {
      * 
      * <p> Only sets the name of Class. </p>
      *
+     * @param parentDiagram
      * @param name to be set
      */
-    public ClassComponent(String name) {
-        super(name);
+    public ClassComponent(ClassDiagram parentDiagram, String name) {
+        super(parentDiagram, name);
         //setParentPackage(null);
-        fields = new HashMap<>();
-        constructors = new HashMap<>();
-        methods = new HashMap<>();
+        fields = new LinkedHashMap<>();
+        constructors = new LinkedHashMap<>();
+        methods = new LinkedHashMap<>();
         isAbstract = false;
     }
 
@@ -54,7 +59,7 @@ public class ClassComponent extends ComponentBase {
      *
      * @return HashMap of fields contained
      */
-    public HashMap<String, Field> getFields() {
+    public LinkedHashMap<String, Field> getFields() {
         return fields;
     }
 
@@ -63,7 +68,7 @@ public class ClassComponent extends ComponentBase {
      *
      * @return HashMap of methods contained
      */
-    public HashMap<String, Method> getMethods() {
+    public LinkedHashMap<String, Method> getMethods() {
         return methods;
     }
 
@@ -72,7 +77,7 @@ public class ClassComponent extends ComponentBase {
      *
      * @return HashMap of this clas's constructors
      */
-    public HashMap<String, Constructor> getConstructors() {
+    public LinkedHashMap<String, Constructor> getConstructors() {
         return constructors;
     }
     
@@ -84,20 +89,7 @@ public class ClassComponent extends ComponentBase {
     public void addField(Field field) {
         addMember(field);
         field.setDeclaringClass(this);
-        Random r = new Random();
-        int Low = 0;
-        int High = 100;
-        int R = r.nextInt(High - Low) + Low;
-        fields.put(Integer.toString(R), field);
-    }
-
-    /**
-     * Removes the field given form this clas's collection of fields
-     *
-     * @param field to be removed
-     */
-    public void removeField(Field field) {
-        fields.values().remove(field);
+        fields.put(field.toString(), field);
     }
 
     /**
@@ -108,20 +100,7 @@ public class ClassComponent extends ComponentBase {
     public void addMethod(Method method) {
         addMember(method);
         method.setDeclaringClass(this);
-        Random r = new Random();
-        int Low = 0;
-        int High = 100;
-        int R = r.nextInt(High - Low) + Low;
-        methods.put(Integer.toString(R), method);
-    }
-
-    /**
-     * Removes the method from ClassComponent's collection of methods.
-     *
-     * @param method of the method which will be removed.
-     */
-    public void removeMethod(Method method) {
-        methods.values().remove(method);
+        methods.put(method.toString(), method);
     }
 
     /**
@@ -132,17 +111,7 @@ public class ClassComponent extends ComponentBase {
     public void addConstructor(Constructor constructor) {
         addMember(constructor);
         constructor.setDeclaringClass(this);
-        constructors.put(this.getName(), constructor);
-    }
-
-    /**
-     * Removes the Constructor from a ClassComponent's collection of
-     * constructors.
-     *
-     * @param constructor of constructor which will be removed.
-     */
-    public void removeConstructor(Constructor constructor) {
-        constructors.values().remove(constructor);
+        constructors.put(constructor.toString(), constructor);
     }
 
     /**
@@ -160,7 +129,17 @@ public class ClassComponent extends ComponentBase {
      * @param isAbstract - true if the class is abstract, if not - false
      */
     public void setAbstract(boolean isAbstract) {
+        boolean oldValue = this.isAbstract;
         this.isAbstract = isAbstract;
+        fire("isAbstract", oldValue, this.isAbstract);
+    }
+
+    @Override
+    public void removeMemberFromContainer(MemberBase member) {
+        if(member instanceof Field) fields.values().remove((Field)member);
+        else if (member instanceof MethodBase) methods.values().remove((MethodBase)member);
+        else if (member instanceof Constructor) constructors.values().remove((Constructor)member);
+        else throw new RuntimeException("Removing unsupported member: "+member.toString());
     }
     
 }

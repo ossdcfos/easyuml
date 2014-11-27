@@ -15,7 +15,7 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.windows.WindowManager;
 import org.uml.model.ClassDiagram;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.RelationBase;
 import org.uml.visual.dialogs.ChangeRelationTypeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 
@@ -27,13 +27,13 @@ public class ConnectionPopupMenuProvider implements PopupMenuProvider {
 
     private ConnectionWidget widget;
     ClassDiagramScene cdScene;
-    RelationComponent relationComponent;
+    RelationBase relationComponent;
     LabelWidget name;
     private JPopupMenu menu;
     private JMenuItem setName;
     private JMenuItem removeRelation;
 
-    public ConnectionPopupMenuProvider(ConnectionWidget widget, RelationComponent relationComponent) {
+    public ConnectionPopupMenuProvider(ConnectionWidget widget, RelationBase relationComponent) {
         this.widget = widget;
         this.cdScene = (ClassDiagramScene)widget.getScene();
        

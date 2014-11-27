@@ -1,12 +1,14 @@
 package org.uml.model;
 
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.components.PackageComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.relations.RelationBase;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * UML Class Diagrams which can contain class, interface and enum components,
@@ -15,18 +17,15 @@ import java.util.Map;
  * @author Uros
  * @version 1.0
  * @see ComponentBase
- * @see RelationComponent
+ * @see RelationBase
  */
 public class ClassDiagram implements Serializable {
 
     private String name;
     private HashMap<String, ComponentBase> components; // contains classes, interfaces or enums
-    private HashMap<String, RelationComponent> relations;
-    //compoments counter:
-    int compCounter = 1;
+    private HashSet<RelationBase> relations;
     private HashMap<String, PackageComponent> packages;
-    int relationsCounter = 0;
-    private List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
+    private transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
 
     /**
      * Standard ClassDiagram constructor without arguments.
@@ -37,7 +36,7 @@ public class ClassDiagram implements Serializable {
     public ClassDiagram() {
         name = "UML Class Diagram";
         this.components = new HashMap<>();
-        this.relations = new HashMap<>();
+        this.relations = new HashSet<>();
         this.packages = new HashMap<>();
     }
 
@@ -54,11 +53,12 @@ public class ClassDiagram implements Serializable {
      * @param component to be added to collection
      */
     public void addComponent(ComponentBase component) {
-        if (nameExists(component.getName())) {
-            component.setName(component.getName() + compCounter);
+        String componentName = component.getName();
+        int suffix = 1;
+        while (nameExists(component.getName())) {
+            component.setName(componentName + suffix);
+            suffix++;
         }
-        compCounter++;
-        component.setParentDiagram(this);
         components.put(component.getName(), component);
     }
 
@@ -71,13 +71,8 @@ public class ClassDiagram implements Serializable {
      * @param relationComponent that will be added to the collection of
      * relations
      */
-    public void addRelation(RelationComponent relationComponent) {
-        if (relations.containsKey(relationComponent.getName())) {
-            relations.put(relationComponent.getName() + relationsCounter, relationComponent);
-            relationsCounter++;
-        } else {
-            relations.put(relationComponent.getName(), relationComponent);
-        }
+    public void addRelation(RelationBase relationComponent) {
+        relations.add(relationComponent);
         System.out.println(relations.toString());
     }
 
@@ -96,21 +91,20 @@ public class ClassDiagram implements Serializable {
     /**
      * Removes the given relation from this diagram's collection of relations.
      *
-     * @param name of the relation to be removed
+     * @param relation relation to be removed
      */
-    public void removeRelation(String name) {
-        relations.remove(name);
+    public void removeRelation(RelationBase relation) {
+        relations.remove(relation);
     }
 
     public void removeRelationsForAComponent(ComponentBase component) {
-        List<RelationComponent> toRemove = new LinkedList<>();
-        for (Map.Entry<String, RelationComponent> entry : relations.entrySet()) {
-            RelationComponent relation = entry.getValue();
+        List<RelationBase> toRemove = new LinkedList<>();
+        for (RelationBase relation : relations) {
             if (relation.getSource().getName().equals(component.getName()) || relation.getTarget().getName().equals(component.getName())) {
                 toRemove.add(relation);
             }
         }
-        for(RelationComponent rc : toRemove){
+        for (RelationBase rc : toRemove) {
             relations.remove(rc.getName());
         }
     }
@@ -129,7 +123,7 @@ public class ClassDiagram implements Serializable {
      *
      * @return collection of relations
      */
-    public HashMap<String, RelationComponent> getRelations() {
+    public HashSet<RelationBase> getRelations() {
         return relations;
     }
 
@@ -138,7 +132,7 @@ public class ClassDiagram implements Serializable {
      *
      * @param relations to be set
      */
-    public void setRelations(HashMap<String, RelationComponent> relations) {
+    public void setRelations(HashSet<RelationBase> relations) {
         this.relations = relations;
     }
 
@@ -160,9 +154,11 @@ public class ClassDiagram implements Serializable {
      * @param comp - component whose name will be changed
      * @param oldName - old component's name
      */
-    public void componentNameChanged(ComponentBase comp, String oldName) {
-        components.remove(oldName);
-        addComponent(comp);
+    public void notifyComponentNameChanged(ComponentBase comp, String oldName) {
+        if (components.containsKey(oldName)) {
+            components.remove(oldName);
+            addComponent(comp);
+        }
     }
 
     /**

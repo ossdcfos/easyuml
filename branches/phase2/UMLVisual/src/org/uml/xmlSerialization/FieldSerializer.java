@@ -1,10 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.xmlSerialization;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import org.dom4j.Element;
 import org.uml.model.members.Field;
 
@@ -14,9 +10,9 @@ import org.uml.model.members.Field;
  */
 public class FieldSerializer implements XmlSerializer{
 
-    private HashMap<String, Field> fields;
+    private LinkedHashMap<String, Field> fields;
 
-    public FieldSerializer(HashMap<String, Field> fields) {
+    public FieldSerializer(LinkedHashMap<String, Field> fields) {
         this.fields = fields;
     }
     
@@ -28,14 +24,14 @@ public class FieldSerializer implements XmlSerializer{
      */
     @Override
     public void serialize(Element node) {
-        for (Field field : fields.values()) {
-           Element fieldNode = node.addElement("Field");
-           if (field.getName() != null) fieldNode.addAttribute("name", field.getName());
-           if (field.getVisibility() != null) fieldNode.addAttribute("visibility", field.getVisibility().toString());
-           if (field.getType() != null) fieldNode.addAttribute("type", field.getType());
-           if (field.isStatic()) fieldNode.addAttribute("isStatic", Boolean.toString(field.isStatic()));
-           if (field.isFinal()) fieldNode.addAttribute("isFinal", Boolean.toString(field.isFinal()));
-           if (field.isSynchronized()) fieldNode.addAttribute("isSynchronized", Boolean.toString(field.isSynchronized()));
+        for (Field field : fields.values()){
+            Element fieldNode = node.addElement("Field");
+            if (field.getName() != null) fieldNode.addAttribute("name", field.getName());
+            if (field.getVisibility() != null) fieldNode.addAttribute("visibility", field.getVisibility().name().toLowerCase());
+            if (field.getType() != null) fieldNode.addAttribute("type", field.getType());
+            if (field.isStatic()) fieldNode.addAttribute("isStatic", Boolean.toString(field.isStatic()));
+            if (field.isFinal()) fieldNode.addAttribute("isFinal", Boolean.toString(field.isFinal()));
+            if (field.isSynchronized()) fieldNode.addAttribute("isSynchronized", Boolean.toString(field.isSynchronized()));
         }
     }
     

@@ -12,7 +12,7 @@ import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagram;
-import org.uml.visual.widgets.PackageWidget;
+import org.uml.visual.widgets.components.PackageWidget;
 
 /**
  *

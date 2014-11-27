@@ -1,26 +1,57 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.xmlDeserialization;
 
-import java.awt.Dimension;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import org.dom4j.Element;
-import org.uml.model.ClassComponent;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
-import org.uml.model.members.Literal;
+import org.uml.model.components.PackageComponent;
+import org.uml.model.Visibility;
 import org.uml.model.members.Method;
-import org.uml.model.PackageComponent;
-import org.uml.model.members.Visibility;
 
 /**
  *
  * @author Stefan
  */
+class MapToAttributesConverter implements Converter {
+
+    public MapToAttributesConverter() {
+    }
+
+    @Override
+    public boolean canConvert(Class type) {
+        return Map.class.isAssignableFrom(type);
+    }
+
+    @Override
+    public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext mc) {
+        Map<String, Field> map = (Map<String, Field>) o;
+        for (Map.Entry<String, Field> entry : map.entrySet()) {
+            
+        }
+    }
+
+    @Override
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext uc) {
+        Map<String, String> map = new HashMap<String, String>();
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String key = reader.getAttributeName(i);
+            String value = reader.getAttribute(key);
+            map.put(key, value);
+        }
+        return map;
+    }
+}
+
 public class ClassDeserializer implements XmlDeserializer {
 
     private ClassComponent classComponent;
@@ -52,7 +83,7 @@ public class ClassDeserializer implements XmlDeserializer {
         classComponent.setPosition(new Point(xPos, yPos));
         classComponent.setBounds(new Rectangle(xOff, yOff, width, height));
         if (packageName != null) {
-            classComponent.setParentPackage(new PackageComponent(packageName));
+            classComponent.setParentPackage(new PackageComponent(classComponent.getParentDiagram(), packageName));
         }
         if (className != null) {
             classComponent.setName(className);
@@ -61,7 +92,7 @@ public class ClassDeserializer implements XmlDeserializer {
             classComponent.setAbstract(Boolean.parseBoolean(isAbstract));
         }
         if (visibility != null) {
-            classComponent.setVisibility(Visibility.stringToVisibility(visibility));
+            classComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         }
         
         Iterator<?> constructorIterator = node.element("Constructors").elementIterator("Constructor");
@@ -71,7 +102,6 @@ public class ClassDeserializer implements XmlDeserializer {
             ConstructorDeserializer cd = new ConstructorDeserializer(constructor);
             cd.deserialize(constructorElement);
             classComponent.addConstructor(constructor);
-            constructor.setDeclaringClass(classComponent);
         }
         
         Iterator<?> fieldIterator = node.element("Fields").elementIterator("Field");
@@ -81,7 +111,6 @@ public class ClassDeserializer implements XmlDeserializer {
             FieldDeserializer fd = new FieldDeserializer(field);
             fd.deserialize(fieldElement);
             classComponent.addField(field);
-            field.setDeclaringClass(classComponent);
         }
 
         Iterator<?> methodIterator = node.element("Methods").elementIterator("Method");
@@ -91,7 +120,6 @@ public class ClassDeserializer implements XmlDeserializer {
             MethodDeserializer md = new MethodDeserializer(method);
             md.deserialize(methodElement);
             classComponent.addMethod(method);
-            method.setDeclaringClass(classComponent);
         }
 
     }

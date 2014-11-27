@@ -5,15 +5,16 @@
 package org.uml.code;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import org.uml.model.ClassComponent;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ComponentBase;
-import org.uml.model.InterfaceComponent;
-import org.uml.model.PackageComponent;
-import org.uml.model.EnumComponent;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.InterfaceComponent;
+import org.uml.model.components.PackageComponent;
+import org.uml.model.components.EnumComponent;
+import org.uml.model.relations.RelationBase;
 
 /**
  * Main class for the start of code generating. Every component is being
@@ -102,9 +103,9 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
      * @param relations among components that need to be searched
      * @return List<RelationComponent> where component given is source
      */
-    public List<RelationComponent> getRelevantRelations(ComponentBase component, HashMap<String, RelationComponent> relations) {
-        List<RelationComponent> relevantRelations = new LinkedList<RelationComponent>();
-        for (RelationComponent rc : relations.values()) {
+    public List<RelationBase> getRelevantRelations(ComponentBase component, HashSet<RelationBase> relations) {
+        List<RelationBase> relevantRelations = new LinkedList<>();
+        for (RelationBase rc : relations) {
             if (rc.getSource().equals(component)) {
                 relevantRelations.add(rc);
             }

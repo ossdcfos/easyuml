@@ -1,11 +1,13 @@
-package org.uml.visual.widgets;
+package org.uml.visual.widgets.components;
 
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.PackageComponent;
+import org.uml.model.components.PackageComponent;
+import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.INameableWidget;
 import org.uml.visual.widgets.providers.popups.PackagePopupMenuProvider;
 
 /**
@@ -15,8 +17,7 @@ import org.uml.visual.widgets.providers.popups.PackagePopupMenuProvider;
 public class PackageWidget extends ComponentWidgetBase implements INameableWidget {
 
     public PackageWidget(ClassDiagramScene scene, PackageComponent packageComponent) {
-        super(scene);
-        this.component = packageComponent;
+        super(scene, packageComponent);
 
         Widget emptyWidget = new Widget(scene);
         emptyWidget.setLayout(LayoutFactory.createAbsoluteLayout());

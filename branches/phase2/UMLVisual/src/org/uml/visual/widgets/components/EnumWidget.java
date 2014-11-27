@@ -1,4 +1,4 @@
-package org.uml.visual.widgets;
+package org.uml.visual.widgets.components;
 
 import org.uml.visual.widgets.members.LiteralWidget;
 import org.uml.visual.widgets.members.ConstructorWidget;
@@ -11,25 +11,25 @@ import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.members.Constructor;
-import org.uml.model.EnumComponent;
+import org.uml.model.components.EnumComponent;
 import org.uml.model.members.Field;
 import org.uml.model.members.Literal;
-import org.uml.model.members.Method;
+import org.uml.model.members.MethodBase;
+import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.providers.popups.EnumPopupMenuProvider;
 
 /**
  *
  * @author "NUGS"
  */
-public class EnumWidget extends ComponentWidgetBase implements INameableWidget {
+public class EnumWidget extends ComponentWidgetBase {
 
     private final Widget literalsContainer;
-    private final Widget fieldsContainer;
-    private final Widget methodsContainer;
+//    private final Widget fieldsContainer;
+//    private final Widget methodsContainer;
 
     public EnumWidget(ClassDiagramScene scene, EnumComponent enumComponent) {
-        super(scene);
-        this.component = enumComponent;
+        super(scene, enumComponent);
 
         Widget headerWidget = new Widget(scene);
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
@@ -54,27 +54,27 @@ public class EnumWidget extends ComponentWidgetBase implements INameableWidget {
         literalsContainer.addChild(literalName);
         addChild(literalsContainer);
 
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-
-        fieldsContainer = new Widget(scene);
-        fieldsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
-        fieldsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
-        fieldsContainer.setOpaque(false);
-        fieldsContainer.setBorder(EMPTY_BORDER_4);
-        LabelWidget memberName = new LabelWidget(scene);
-        fieldsContainer.addChild(memberName);
-        addChild(fieldsContainer);
-
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-
-        methodsContainer = new Widget(scene);
-        methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
-        methodsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
-        methodsContainer.setOpaque(false);
-        methodsContainer.setBorder(EMPTY_BORDER_4);
-        LabelWidget operationName = new LabelWidget(scene);
-        methodsContainer.addChild(operationName);
-        addChild(methodsContainer);
+//        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+//
+//        fieldsContainer = new Widget(scene);
+//        fieldsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
+//        fieldsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
+//        fieldsContainer.setOpaque(false);
+//        fieldsContainer.setBorder(EMPTY_BORDER_4);
+//        LabelWidget memberName = new LabelWidget(scene);
+//        fieldsContainer.addChild(memberName);
+//        addChild(fieldsContainer);
+//
+//        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+//
+//        methodsContainer = new Widget(scene);
+//        methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
+//        methodsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
+//        methodsContainer.setOpaque(false);
+//        methodsContainer.setBorder(EMPTY_BORDER_4);
+//        LabelWidget operationName = new LabelWidget(scene);
+//        methodsContainer.addChild(operationName);
+//        addChild(methodsContainer);
 
         this.nameWidget.setLabel(component.getName());
 
@@ -85,21 +85,20 @@ public class EnumWidget extends ComponentWidgetBase implements INameableWidget {
             this.addLiteralWidget(w);
         }
 
-        for (Constructor c : getComponent().getConstructors().values()) {
-            ConstructorWidget w = new ConstructorWidget(scene, c);
-            this.addConstructorWidget(w);
-        }
-
-        for (Field fieldComp : getComponent().getFields().values()) {
-
-            FieldWidget w = new FieldWidget(this.getClassDiagramScene(), fieldComp);
-            this.addFieldWidget(w);
-        }
-
-        for (Method methodComp : getComponent().getMethods().values()) {
-            MethodWidget mw = new MethodWidget(this.getClassDiagramScene(), methodComp);
-            this.addMethodWidget(mw);
-        }
+//        for (Constructor c : getComponent().getConstructors().values()) {
+//            ConstructorWidget w = new ConstructorWidget(scene, c);
+//            this.addConstructorWidget(w);
+//        }
+//
+//        for (Field fieldComp : getComponent().getFields().values()) {
+//            FieldWidget w = new FieldWidget(this.getClassDiagramScene(), fieldComp);
+//            this.addFieldWidget(w);
+//        }
+//
+//        for (MethodBase methodComp : getComponent().getMethods().values()) {
+//            MethodWidget mw = new MethodWidget(this.getClassDiagramScene(), methodComp);
+//            this.addMethodWidget(mw);
+//        }
 
         // scene.validate();
     }
@@ -168,17 +167,17 @@ public class EnumWidget extends ComponentWidgetBase implements INameableWidget {
         return widget;
     }
 
-    public final void addFieldWidget(FieldWidget fieldWidget) {
-        addMember(fieldsContainer, fieldWidget);
-    }
-
-    public final void addMethodWidget(MethodWidget operationWidget) {
-        addMember(methodsContainer, operationWidget);
-    }
-
-    public final void addConstructorWidget(ConstructorWidget operationWidget) {
-        addMember(methodsContainer, operationWidget);
-    }
+//    public final void addFieldWidget(FieldWidget fieldWidget) {
+//        addMember(fieldsContainer, fieldWidget);
+//    }
+//
+//    public final void addMethodWidget(MethodWidget operationWidget) {
+//        addMember(methodsContainer, operationWidget);
+//    }
+//
+//    public final void addConstructorWidget(ConstructorWidget operationWidget) {
+//        addMember(methodsContainer, operationWidget);
+//    }
 
     public final void addLiteralWidget(LiteralWidget literalWidget) {
         addMember(literalsContainer, literalWidget);

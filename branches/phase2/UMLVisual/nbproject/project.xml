@@ -60,6 +60,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.openide.actions</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.35.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.awt</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -155,6 +163,14 @@
                         <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.xstream</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -171,32 +187,31 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
+                <package>org.apache.commons.collections15.multimap</package>
                 <package>org.uml.jung</package>
                 <package>org.uml.visual</package>
+                <package>org.uml.visual.dialogs</package>
+                <package>org.uml.visual.dialogs.unused</package>
                 <package>org.uml.visual.palette</package>
+                <package>org.uml.visual.palette.unused</package>
+                <package>org.uml.visual.parser</package>
                 <package>org.uml.visual.widgets</package>
+                <package>org.uml.visual.widgets.actions</package>
+                <package>org.uml.visual.widgets.actions.unused</package>
+                <package>org.uml.visual.widgets.anchors</package>
+                <package>org.uml.visual.widgets.components</package>
+                <package>org.uml.visual.widgets.members</package>
+                <package>org.uml.visual.widgets.providers</package>
+                <package>org.uml.visual.widgets.providers.popups</package>
+                <package>org.uml.visual.widgets.providers.unused</package>
+                <package>org.uml.visual.widgets.unused</package>
                 <package>org.uml.xmlDeserialization</package>
                 <package>org.uml.xmlSerialization</package>
+                <package>org.uml.xmltesting.serialization</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/vl-jung-1.0.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/vl-jung-1.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jung-api-2.0.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jung-api-2.0.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jung-algorithms-2.0.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jung-algorithms-2.0.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jung-visualization-2.0.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jung-visualization-2.0.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jung-graph-impl-2.0.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jung-graph-impl-2.0.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/collections-generic-4.01.jar</runtime-relative-path>
@@ -205,6 +220,22 @@
             <class-path-extension>
                 <runtime-relative-path>ext/vl-jung-extensions-1.0.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/vl-jung-extensions-1.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jung-algorithms-2.0.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jung-algorithms-2.0.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jung-graph-impl-2.0.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jung-graph-impl-2.0.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jung-visualization-2.0.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jung-visualization-2.0.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jung-api-2.0.1.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jung-api-2.0.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

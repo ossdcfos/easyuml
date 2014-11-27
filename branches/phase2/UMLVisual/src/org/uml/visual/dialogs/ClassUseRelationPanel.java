@@ -4,9 +4,9 @@ import java.util.List;
 import javax.swing.JComboBox;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.ComponentWidgetBase;
-import org.uml.visual.widgets.EnumWidget;
+import org.uml.visual.widgets.components.ClassWidget;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import org.uml.visual.widgets.components.EnumWidget;
 
 /**
  *

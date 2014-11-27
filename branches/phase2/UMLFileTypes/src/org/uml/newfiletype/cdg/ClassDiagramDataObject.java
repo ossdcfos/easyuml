@@ -165,7 +165,7 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
                 ClassDiagramDeserializer cdd = new ClassDiagramDeserializer(classDiag);
                 cdd.deserialize(root);
 
-                //System.out.println("Deserialized");
+                System.out.println("Deserialized");
             }
         } catch (IOException | DocumentException ex) {
             System.err.println(ex.getMessage());

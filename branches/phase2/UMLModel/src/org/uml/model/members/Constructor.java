@@ -1,24 +1,26 @@
 package org.uml.model.members;
 
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.Objects;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.EnumComponent;
+import org.uml.model.Visibility;
 
 /**
- * Constructors from UML Class diagrams. Used to represent class
- * constructors (both with and without parameters).
+ * Constructors from UML Class diagrams. Used to represent class constructors
+ * (both with and without parameters).
  *
  * @author zoran
- * @see Member
+ * @see MemberBase
  * @see Literal
  * @see Field
- * @see Method
+ * @see MethodBase
  * @see ClassComponent
  * @see EnumComponent
  */
-public class Constructor extends Member {
-
-    private String returnType;
-    private HashMap<String, MethodArgument> arguments;
-
+public class Constructor extends MethodBase {
+    
     /**
      * Constructor with parameter for setting constructor's name. Only sets the
      * name parameter.
@@ -26,10 +28,10 @@ public class Constructor extends Member {
      * Calls super constructor.
      *
      * @param name
-     * @see Member
+     * @see MemberBase
      */
     public Constructor(String name) {
-        super(name);
+        super(name, null, new HashMap<String, MethodArgument>());
     }
 
     /**
@@ -38,48 +40,10 @@ public class Constructor extends Member {
      * constructor.
      *
      * @param name of the Constructor
-     * @param returnType of Constructor
      * @param arguments - collection of arguments
      */
-    public Constructor(String name, String returnType, HashMap<String, MethodArgument> arguments) {
-        super(name);
-        this.returnType = returnType;
-        this.arguments = arguments;
+    public Constructor(String name, HashMap<String, MethodArgument> arguments) {
+        super(name, null, arguments);
     }
-
-    /**
-     * Returns the return type of the constructor
-     *
-     * @return String representation of constructor's return type
-     */
-    public String getReturnType() {
-        return returnType;
-    }
-
-    /**
-     * Sets the return type of this constructor
-     *
-     * @param returnType of the constructor
-     */
-    public void setReturnType(String returnType) {
-        this.returnType = returnType;
-    }
-
-    /**
-     * Returns all arguments that this constructor uses
-     *
-     * @return HashMap of constructor's arguments
-     */
-    public HashMap<String, MethodArgument> getArguments() {
-        return arguments;
-    }
-
-    /**
-     * Sets arguments to this constructor
-     *
-     * @param arguments that the constructor uses
-     */
-    public void setArguments(HashMap<String, MethodArgument> arguments) {
-        this.arguments = arguments;
-    }
+    
 }

@@ -6,7 +6,7 @@ package org.uml.code;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Constructor;
 
 /**
@@ -38,18 +38,12 @@ public class ConstructorCodeGenerator implements CodeGenerator {
      */
     @Override
     public String generateCode() {
-        String code = "";
+        StringBuilder constructorString = new StringBuilder();
         for (Map.Entry<String, Constructor> entry : constructors.entrySet()) {
-
-            String string = entry.getKey();
             Constructor constructor = entry.getValue();
-            code += "public " + constructor.getName() + "(";
-            if (constructor.getArguments() != null) {
-                code += constructor.getArguments();
-            }
-            code += ") {}";
+            constructorString.append(constructor.getSignature());
         }
-        return code;
+        return constructorString.toString();
     }
 
     //this method must be implemented because of the CodeGenerator interface, although it is never used

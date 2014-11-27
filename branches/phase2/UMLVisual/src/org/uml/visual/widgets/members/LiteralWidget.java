@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets.members;
 
 import org.netbeans.api.visual.action.ActionFactory;
@@ -10,7 +6,7 @@ import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.openide.util.Exceptions;
 import org.uml.model.members.Literal;
-import org.uml.model.members.Member;
+import org.uml.model.members.MemberBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.popups.LiteralPopupProvider;
@@ -38,7 +34,8 @@ public class LiteralWidget extends MemberWidgetBase{
         nameLabel.setLabel(literal.getName());
         this.addChild(nameLabel);
         nameLabel.getActions().addAction(nameEditorAction);
-        nameLabel.getActions().addAction(ActionFactory.createPopupMenuAction(new LiteralPopupProvider(this)));
+        
+        getActions().addAction(ActionFactory.createPopupMenuAction(new LiteralPopupProvider(this)));
 
     }
     
@@ -69,7 +66,7 @@ public class LiteralWidget extends MemberWidgetBase{
     }
 
     @Override
-    public Member getMember() {
+    public MemberBase getMember() {
         return literalComponent;
     }
 

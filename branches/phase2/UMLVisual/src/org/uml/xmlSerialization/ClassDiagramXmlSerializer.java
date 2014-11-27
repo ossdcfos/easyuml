@@ -1,23 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.xmlSerialization;
 
 import java.util.HashMap;
 import org.dom4j.Element;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.ClassComponent;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ComponentBase;
-import org.uml.model.EnumComponent;
-import org.uml.model.relations.HasBaseRelationComponent;
-import org.uml.model.relations.ImplementsRelationComponent;
-import org.uml.model.InterfaceComponent;
-import org.uml.model.relations.IsRelationComponent;
-import org.uml.model.relations.RelationComponent;
-import org.uml.model.relations.UseRelationComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.components.EnumComponent;
+import org.uml.model.relations.HasBaseRelation;
+import org.uml.model.relations.ImplementsRelation;
+import org.uml.model.components.InterfaceComponent;
+import org.uml.model.relations.AggregationRelation;
+import org.uml.model.relations.CompositionRelation;
+import org.uml.model.relations.IsRelation;
+import org.uml.model.relations.RelationBase;
+import org.uml.model.relations.UseRelation;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.xmltesting.serialization.ClassDiagramXmlSerializerDeserializer;
 
 /**
  *
@@ -37,10 +36,11 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
         componentSerializers.put(ClassComponent.class, new ClassSerializer());
         componentSerializers.put(InterfaceComponent.class, new InterfaceSerializer());
         componentSerializers.put(EnumComponent.class, new EnumSerializer());
-        relationSerializers.put(UseRelationComponent.class, new UseRelationSerializer());
-        relationSerializers.put(IsRelationComponent.class, new IsRelationSerializer());
-        relationSerializers.put(HasBaseRelationComponent.class, new HasRelationSerializer());
-        relationSerializers.put(ImplementsRelationComponent.class, new ImplementsRelationSerializer());
+        relationSerializers.put(UseRelation.class, new UseRelationSerializer());
+        relationSerializers.put(IsRelation.class, new IsRelationSerializer());
+        relationSerializers.put(AggregationRelation.class, new HasRelationSerializer());
+        relationSerializers.put(CompositionRelation.class, new HasRelationSerializer());
+        relationSerializers.put(ImplementsRelation.class, new ImplementsRelationSerializer());
     }
 
     public static ClassDiagramXmlSerializer getInstance() {
@@ -64,6 +64,7 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
      */
     @Override
     public void serialize(Element node) {
+        System.out.println(new ClassDiagramXmlSerializerDeserializer(classDiagramScene).serialize(classDiagram));
         if (classDiagram.getName() != null) {
             node.addAttribute("name", classDiagram.getName());
         }
@@ -104,29 +105,29 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
             }
         }
         Element classDiagramRelations = node.addElement("ClassDiagramRelations");
-        for (RelationComponent component : classDiagram.getRelations().values()) {
-            if (component instanceof UseRelationComponent) {
+        for (RelationBase component : classDiagram.getRelations()) {
+            if (component instanceof UseRelation) {
                 Element componentNode = classDiagramRelations.addElement("UseRelation");
                 
                 RelationSerializer serializer = relationSerializers.get(component.getClass());
                 serializer.addRelationComponent(component);
                 serializer.serialize(componentNode);
             }
-            if (component instanceof HasBaseRelationComponent) {
+            if (component instanceof HasBaseRelation) {
                 Element componentNode = classDiagramRelations.addElement("HasRelation");
                 
                 RelationSerializer serializer = relationSerializers.get(component.getClass());
                 serializer.addRelationComponent(component);
                 serializer.serialize(componentNode);
             }
-            if (component instanceof IsRelationComponent) {
+            if (component instanceof IsRelation) {
                 Element componentNode = classDiagramRelations.addElement("IsRelation");
                 
                 RelationSerializer serializer = relationSerializers.get(component.getClass());
                 serializer.addRelationComponent(component);
                 serializer.serialize(componentNode);
             }
-            if (component instanceof ImplementsRelationComponent) {
+            if (component instanceof ImplementsRelation) {
                 Element componentNode = classDiagramRelations.addElement("ImplementsRelation");
                 
                 RelationSerializer serializer = relationSerializers.get(component.getClass());

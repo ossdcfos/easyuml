@@ -22,15 +22,15 @@ import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.windows.WindowManager;
 import org.uml.jung.JUNGEngine;
-import org.uml.model.ClassComponent;
-import org.uml.model.EnumComponent;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.EnumComponent;
+import org.uml.model.components.InterfaceComponent;
 import org.uml.visual.dialogs.AddRelationDialog;
 import org.uml.visual.dialogs.GenerateCodeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.ClassWidget;
-import org.uml.visual.widgets.EnumWidget;
-import org.uml.visual.widgets.InterfaceWidget;
+import org.uml.visual.widgets.components.ClassWidget;
+import org.uml.visual.widgets.components.EnumWidget;
+import org.uml.visual.widgets.components.InterfaceWidget;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
@@ -71,7 +71,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             public void actionPerformed(ActionEvent e) {
                 // add neww class component and widget to scene
                 // here we should just add new class component to model, and the scene should be updated elsewhere
-                ClassWidget widget = (ClassWidget) scene.addNode(new ClassComponent());
+                ClassWidget widget = (ClassWidget) scene.addNode(new ClassComponent(scene.getClassDiagram()));
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));
@@ -85,7 +85,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createInterfaceItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                InterfaceWidget widget = (InterfaceWidget) scene.addNode(new InterfaceComponent());
+                InterfaceWidget widget = (InterfaceWidget) scene.addNode(new InterfaceComponent(scene.getClassDiagram()));
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));
@@ -98,7 +98,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createEnumItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EnumWidget widget = (EnumWidget) scene.addNode(new EnumComponent());
+                EnumWidget widget = (EnumWidget) scene.addNode(new EnumComponent(scene.getClassDiagram()));
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));

@@ -2,15 +2,15 @@ package org.uml.code;
 
 import java.util.List;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.model.ClassComponent;
-import org.uml.model.ComponentBase;
-import org.uml.model.relations.HasBaseRelationComponent;
-import org.uml.model.relations.ImplementsRelationComponent;
-import org.uml.model.InterfaceComponent;
-import org.uml.model.relations.IsRelationComponent;
-import org.uml.model.PackageComponent;
-import org.uml.model.relations.RelationComponent;
-import org.uml.model.relations.UseRelationComponent;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.relations.HasBaseRelation;
+import org.uml.model.relations.ImplementsRelation;
+import org.uml.model.components.InterfaceComponent;
+import org.uml.model.relations.IsRelation;
+import org.uml.model.components.PackageComponent;
+import org.uml.model.relations.RelationBase;
+import org.uml.model.relations.UseRelation;
 
 /**
  * Class component's code generating class. Implements all necessary methods
@@ -21,7 +21,7 @@ import org.uml.model.relations.UseRelationComponent;
 public class ClassCodeGenerator implements CodeGenerator {
 
     ClassComponent classComponent;
-    List<RelationComponent> relevantRelations;
+    List<RelationBase> relevantRelations;
 
     /**
      * Parameterless constructor. Does not instantiate any field.
@@ -46,7 +46,7 @@ public class ClassCodeGenerator implements CodeGenerator {
      * @param relevantRelations List of relations with this object's
      * ClassComponent as a source
      */
-    public void setRelevantRelations(List<RelationComponent> relevantRelations) {
+    public void setRelevantRelations(List<RelationBase> relevantRelations) {
         this.relevantRelations = relevantRelations;
     }
 
@@ -121,10 +121,10 @@ public class ClassCodeGenerator implements CodeGenerator {
      * @param relations where search should be conducted
      * @return(s) name of the extended class
      */
-    public String getClassThatIsExtended(List<RelationComponent> relations) {
+    public String getClassThatIsExtended(List<RelationBase> relations) {
         String extendedClassName = null;
         for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof IsRelationComponent) {
+            if (relations.get(i) instanceof IsRelation) {
                 extendedClassName = ((ClassComponent) relations.get(i).getTarget()).getName();
             }
         }
@@ -138,10 +138,10 @@ public class ClassCodeGenerator implements CodeGenerator {
      * @param relations where search should be conducted
      * @return name(s) of the implemented class
      */
-    public String getClassesThatAreImplemented(List<RelationComponent> relations) {
+    public String getClassesThatAreImplemented(List<RelationBase> relations) {
         String implementedClasses = "";
         for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof ImplementsRelationComponent) {
+            if (relations.get(i) instanceof ImplementsRelation) {
                 implementedClasses += relations.get(i).getTarget().getName() + ", ";
             }
         }
@@ -157,10 +157,10 @@ public class ClassCodeGenerator implements CodeGenerator {
      * @param relations where search should be conducted
      * @return name(s) of the implemented methods
      */
-    public String getMethodsFromInterfaces(List<RelationComponent> relations) {
+    public String getMethodsFromInterfaces(List<RelationBase> relations) {
         String methods = "";
         for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof ImplementsRelationComponent) {
+            if (relations.get(i) instanceof ImplementsRelation) {
                 MethodCodeGenerator generator = new MethodCodeGenerator(((InterfaceComponent) relations.get(i).getTarget()).getMethods());
                 methods += generator.generateCode();
             }
@@ -175,10 +175,10 @@ public class ClassCodeGenerator implements CodeGenerator {
      * @param relations where search should be conducted
      * @return name(s) of the implemented fields
      */
-    public String getFieldsFromUseRelations(List<RelationComponent> relations) {
+    public String getFieldsFromUseRelations(List<RelationBase> relations) {
         String fields = "";
         for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof UseRelationComponent) {
+            if (relations.get(i) instanceof UseRelation) {
                 String fieldType = relations.get(i).getTarget().getName();
                 String fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1, fieldType.length());
                 fields += "private " + fieldType + " " + fieldName + ";\n";
@@ -194,11 +194,11 @@ public class ClassCodeGenerator implements CodeGenerator {
      * @param relations where search should be conducted
      * @return name(s) of the implemented fields
      */
-    public String getFieldsFromHasRelations(List<RelationComponent> relations) {
+    public String getFieldsFromHasRelations(List<RelationBase> relations) {
         String fields = "";
         for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof HasBaseRelationComponent) {
-                HasBaseRelationComponent hasRelation = (HasBaseRelationComponent) relations.get(i);
+            if (relations.get(i) instanceof HasBaseRelation) {
+                HasBaseRelation hasRelation = (HasBaseRelation) relations.get(i);
                 String fieldType = hasRelation.getTarget().getName();
                 String fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1, fieldType.length());
                 if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {

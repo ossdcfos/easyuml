@@ -31,8 +31,7 @@ public class ConstructorSerializer implements XmlSerializer{
         for (Constructor constructor : constructors.values()) {
             Element constructorNode = node.addElement("Constructor");
             if (constructor.getName() != null) constructorNode.addAttribute("name", constructor.getName());
-            if (constructor.getVisibility()!= null) constructorNode.addAttribute("visibility", constructor.getVisibility().toString());
-            if (constructor.getReturnType() != null) constructorNode.addAttribute("returnType", constructor.getReturnType());
+            if (constructor.getVisibility()!= null) constructorNode.addAttribute("visibility", constructor.getVisibility().name().toLowerCase());
             if (constructor.getArguments() != null) {
                 for (MethodArgument argument : constructor.getArguments().values()) {
                     Element argumentNode = constructorNode.addElement("argument")

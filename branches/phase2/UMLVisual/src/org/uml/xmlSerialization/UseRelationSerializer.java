@@ -6,9 +6,9 @@ package org.uml.xmlSerialization;
 
 import org.dom4j.Element;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.model.ComponentBase;
-import org.uml.model.relations.RelationComponent;
-import org.uml.model.relations.UseRelationComponent;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.relations.RelationBase;
+import org.uml.model.relations.UseRelation;
 
 /**
  *
@@ -16,12 +16,12 @@ import org.uml.model.relations.UseRelationComponent;
  */
 public class UseRelationSerializer implements RelationSerializer{
 
-    private UseRelationComponent useRelationComponent;
+    private UseRelation useRelationComponent;
     
     @Override
-    public void addRelationComponent(RelationComponent relation) {
+    public void addRelationComponent(RelationBase relation) {
         try{
-            useRelationComponent = (UseRelationComponent) relation;
+            useRelationComponent = (UseRelation) relation;
         }catch (ClassCastException e) {
             System.out.println("You have tried to cast invalid type to UseRelationComponent!");
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package org.uml.visual.widgets;
+package org.uml.visual.widgets.components;
 
 import org.uml.visual.widgets.members.ConstructorWidget;
 import org.uml.visual.widgets.members.MethodWidget;
@@ -11,13 +11,12 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
-import org.uml.model.ClassComponent;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
-import org.uml.model.members.Method;
-import org.uml.model.members.Visibility;
+import org.uml.model.members.MethodBase;
+import org.uml.model.Visibility;
+import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.providers.popups.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ComponentWidgetAcceptProvider;
 
@@ -25,22 +24,17 @@ import org.uml.visual.widgets.providers.ComponentWidgetAcceptProvider;
  *
  * @author NUGS
  */
-public class ClassWidget extends ComponentWidgetBase implements INameableWidget {
-    
+public class ClassWidget extends ComponentWidgetBase {
+
+    private Widget headerWidget;
     private final Widget fieldsContainer;
     private final Widget methodsContainer;
-    
-    private final Lookup lookup;
 
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
-        super(scene);
-        this.component = classComponent;
-        
-        lookup = Lookups.fixed(classComponent, this);
-        //lookup = Lookups.singleton(classComponent);
+        super(scene, classComponent);
 
         // Header
-        Widget headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
+        headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         headerWidget.setBorder(EMPTY_BORDER_4);
         if (classComponent.isAbstract()) {
@@ -49,13 +43,13 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
             abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
             headerWidget.addChild(abstractLabel);
         }
-        
+
         nameWidget.setLabel(component.getName());
         headerWidget.addChild(nameWidget);
         addChild(headerWidget);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-        
+
         // Fields
         fieldsContainer = new Widget(scene);
         fieldsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
@@ -67,7 +61,7 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
         addChild(fieldsContainer);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-        
+
         // Methods
         methodsContainer = new Widget(scene);
         methodsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
@@ -78,11 +72,10 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
         methodsContainer.addChild(methodName);
         addChild(methodsContainer);
 
-        
         // Actions
         getActions().addAction(ActionFactory.createAcceptAction(new ComponentWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
-        
+
         // Fill the widget when loading an existing diagram
         for (Constructor c : classComponent.getConstructors().values()) {
             ConstructorWidget w = new ConstructorWidget(scene, c);
@@ -94,16 +87,11 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
             addMember(fieldsContainer, w);
         }
 
-        for (Method methodComp : classComponent.getMethods().values()) {
+        for (MethodBase methodComp : classComponent.getMethods().values()) {
             MethodWidget mw = new MethodWidget(getClassDiagramScene(), methodComp);
             addMember(methodsContainer, mw);
         }
         //this.getScene().validate();
-    }
-
-    @Override
-    public Lookup getLookup() {
-        return lookup;
     }
 
     public Widget createFieldWidget(String fieldName) {
@@ -111,7 +99,7 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
 
         Widget fieldWidget = new Widget(scene);
         fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-        
+
         //fieldWidget.addChild(createAtributeModifierPicker(scene));
         LabelWidget visibilityLabel = new LabelWidget(scene);
         visibilityLabel.setLabel("+");
@@ -120,7 +108,7 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
         LabelWidget labelWidget = new LabelWidget(scene);
         labelWidget.setLabel(fieldName);
         labelWidget.getActions().addAction(nameEditorAction);
-        
+
         //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
         //dodato polje u classElement
         fieldWidget.addChild(labelWidget);
@@ -130,7 +118,7 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
 
     public Widget createMethodWidget(String methodName) {
         Scene scene = getScene();
-        
+
         Widget methodWidget = new Widget(scene);
         methodWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
@@ -147,7 +135,7 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
 
         return methodWidget;
     }
-    
+
     public final void addFieldWidget(FieldWidget fieldWidget) {
         addMember(fieldsContainer, fieldWidget);
     }
@@ -168,12 +156,6 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
         removeMember(methodsContainer, methodWidget);
     }
 
-//    @Override
-//    public void notifyStateChanged(ObjectState previousState, ObjectState newState) {
-//        super.notifyStateChanged(previousState, newState);
-//        setBorder(newState.isSelected() ? (newState.isHovered() ? RESIZE_BORDER : DEFAULT_BORDER) : DEFAULT_BORDER);
-//    }
-    
     @Override
     public ClassComponent getComponent() {
         return (ClassComponent) component;
@@ -182,7 +164,6 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
     @Override
     public void setName(String newName) {
         String oldName = component.getName();
-        
         super.setName(newName);
 
         for (Widget w : methodsContainer.getChildren()) {
@@ -207,6 +188,27 @@ public class ClassWidget extends ComponentWidgetBase implements INameableWidget 
                 getComponent().setAbstract(true);
             }
         }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+        if ("isAbstract".equals(evt.getPropertyName())) {
+            boolean isAbstract = (Boolean) evt.getNewValue();
+            updateAbstractLabel(isAbstract);
+        }
+    }
+
+    private void updateAbstractLabel(boolean isAbstract) {
+        if (isAbstract) {
+            LabelWidget abstractLabel = new LabelWidget(headerWidget.getScene(), "<<abstract>>");
+            abstractLabel.setFont(headerWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
+            abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
+            headerWidget.addChild(0, abstractLabel);
+        } else {
+            headerWidget.removeChild(headerWidget.getChildren().get(0));
+        }
+        getScene().validate();
     }
 
 }

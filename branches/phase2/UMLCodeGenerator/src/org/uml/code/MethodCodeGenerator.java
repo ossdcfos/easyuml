@@ -6,8 +6,9 @@ package org.uml.code;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Method;
+import org.uml.model.members.MethodBase;
 
 /**
  * Method's code generating class.
@@ -32,16 +33,15 @@ public class MethodCodeGenerator implements CodeGenerator {
      * Utilises Method's getSignature method to properly generate code.
      *
      * @return code of the generated methods.
-     * @see Method
+     * @see MethodBase
      */
     @Override
     public String generateCode() {
-        String methodsString = "";
-        for (Map.Entry<String, Method> entry : methods.entrySet()) {
-            Method method = entry.getValue();
-            methodsString += method.getSignature();
+        StringBuilder methodsString = new StringBuilder();
+        for (Method method : methods.values()) {
+            methodsString.append(method.getSignature());
         }
-        return methodsString;
+        return methodsString.toString();
     }
     //this method must be implemented because of the CodeGenerator interface, although it is never used
     @Override
@@ -55,8 +55,7 @@ public class MethodCodeGenerator implements CodeGenerator {
      */
     String generateCodeMethodsForInterfaces() {
         String methodsString = "";
-        for (Map.Entry<String, Method> entry : methods.entrySet()) {
-            Method method = entry.getValue();
+        for (Method method : methods.values()) {
             methodsString += method.getSignatureForInterfaces();
         }
         return methodsString;

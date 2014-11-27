@@ -8,8 +8,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import org.uml.model.relations.CardinalityEnum;
-import org.uml.model.relations.HasBaseRelationComponent;
-import org.uml.model.relations.RelationComponent;
+import org.uml.model.relations.HasBaseRelation;
+import org.uml.model.relations.RelationBase;
 
 /**
  *
@@ -34,7 +34,7 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cbxRelationship = new javax.swing.JComboBox<RelationComponent>();
+        cbxRelationship = new javax.swing.JComboBox<RelationBase>();
         lblRelationType = new javax.swing.JLabel();
         lblName = new javax.swing.JLabel();
         txfName = new javax.swing.JTextField();
@@ -114,8 +114,8 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cbxRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxRelationshipActionPerformed
-        RelationComponent relation = (RelationComponent) cbxRelationship.getSelectedItem();
-        if (!(relation instanceof HasBaseRelationComponent)) {
+        RelationBase relation = (RelationBase) cbxRelationship.getSelectedItem();
+        if (!(relation instanceof HasBaseRelation)) {
             txfName.setEnabled(false);
             cbxCollectionType.setEnabled(false);
         } else {
@@ -128,11 +128,11 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
         return txfName.getText();
     }
 
-    public RelationComponent getRelationComponent() {
-        return (RelationComponent) cbxRelationship.getSelectedItem();
+    public RelationBase getRelationComponent() {
+        return (RelationBase) cbxRelationship.getSelectedItem();
     }
 
-    public JComboBox<RelationComponent> getRelationComponentsComboBox() {
+    public JComboBox<RelationBase> getRelationComponentsComboBox() {
         return cbxRelationship;
     }
 
@@ -156,7 +156,7 @@ public class ChooseRelationPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<CardinalityEnum> cbxCardinalitySource;
     private javax.swing.JComboBox<CardinalityEnum> cbxCardinalityTarget;
     private javax.swing.JComboBox<String> cbxCollectionType;
-    private javax.swing.JComboBox<RelationComponent> cbxRelationship;
+    private javax.swing.JComboBox<RelationBase> cbxRelationship;
     private javax.swing.JLabel lblCardinalitySource;
     private javax.swing.JLabel lblCardinalityTarget;
     private javax.swing.JLabel lblCollectionType;

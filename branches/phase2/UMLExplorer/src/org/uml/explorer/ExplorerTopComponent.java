@@ -1,15 +1,19 @@
 package org.uml.explorer;
 
 import java.awt.BorderLayout;
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import javax.swing.tree.TreeSelectionModel;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
+import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Result;
 import org.openide.util.LookupEvent;
@@ -18,7 +22,8 @@ import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
+import org.uml.model.members.MemberBase;
 
 /**
  * Top component which displays something. See:
@@ -38,7 +43,7 @@ import org.uml.model.ComponentBase;
         preferredID = "ExplorerTopComponent",
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "explorer", openAtStartup = true)
+@TopComponent.Registration(mode = "navigator", openAtStartup = false)
 @ActionID(category = "Window", id = "org.uml.explorer.ExplorerTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
@@ -51,40 +56,31 @@ import org.uml.model.ComponentBase;
 })
 public final class ExplorerTopComponent extends TopComponent implements ExplorerManager.Provider, LookupListener {
 
-    // was transient, why?
-    private static ExplorerManager explorerManager = new ExplorerManager();
+    private ExplorerManager explorerManager = new ExplorerManager();
     private ClassDiagramNode cNode;
     private BeanTreeView explorerTree;
 
-    private HashMap<Object, Node> objectsToNodes = new HashMap<>(); // mapping of object to corresponding node
-
     Result<ClassDiagram> resultCD;
     Result<ComponentBase> resultCDC;
-    private boolean recursiveCall = false;
+    Result<MemberBase> resultM;
 
     public ExplorerTopComponent() {
         initComponents();
-
         setName(Bundle.CTL_ExplorerTopComponent());
         setToolTipText(Bundle.HINT_ExplorerTopComponent());
 
         explorerTree = new BeanTreeView();
+        explorerTree.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         add(explorerTree, BorderLayout.CENTER);
 
         getActionMap().put("delete", ExplorerUtils.actionDelete(explorerManager, true));
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
-        
-//        explorerManager.setRootContext(new AbstractNode(new CategoryChildren()));
-//        explorerManager.getRootContext().setDisplayName("UML class diagram");  
+
         ((BeanTreeView) explorerTree).setRootVisible(false);
     }
 
     @Override
     public ExplorerManager getExplorerManager() {
-        return explorerManager;
-    }
-
-    public static ExplorerManager getStaticExplorerManager() {
         return explorerManager;
     }
 
@@ -110,13 +106,26 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
 
         resultCDC = Utilities.actionsGlobalContext().lookupResult(ComponentBase.class);
         resultCDC.addLookupListener(this);
-//        resultChanged(new LookupEvent(resultCdc));
+
+        resultM = Utilities.actionsGlobalContext().lookupResult(MemberBase.class);
+        resultM.addLookupListener(this);
+    }
+
+    @Override
+    protected void componentActivated() {
+        super.componentActivated();
+    }
+
+    @Override
+    protected void componentShowing() {
+        super.componentShowing();
     }
 
     @Override
     public void componentClosed() {
         resultCD.removeLookupListener(this);
         resultCDC.removeLookupListener(this);
+        resultM.removeLookupListener(this);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -138,79 +147,56 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
             for (Object selectedItem : instances) {
                 if (selectedItem instanceof ClassDiagram) {
                     ClassDiagram selectedComponent = (ClassDiagram) selectedItem;
-                    //this.setName(selectedComponent.getName() + " -  Explorer");
-                    //if (cNode == null || !selectedComponent.equals(cNode.getClassDiagram())) {
-                    cNode = new ClassDiagramNode(selectedComponent);
-//                    recursiveCall = true;
-                    explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
-
-//                    for (Node node : explorerManager.getRootContext().getChildren().getNodes())
-//                        if (node instanceof ClassDiagramComponentNode)
-//                            objectsToNodes.put(((ClassDiagramComponentNode) node).getComponent(), node);
-//                        explorerManager.setExploredContextAndSelection(cNode, new Node[]{cNode});
-                    explorerTree.setRootVisible(true);
-                    //}
+                    if (cNode == null || selectedComponent != cNode.getClassDiagram()) {
+                        cNode = new ClassDiagramNode(selectedComponent);
+                        explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
+                        explorerTree.setRootVisible(true);
+                    }
+                    
+                // TODO refactor
+                } else if (selectedItem instanceof ComponentBase) {
+                    Children children = explorerManager.getRootContext().getChildren();
+                    ArrayList<Node> nodes = new ArrayList<>();
+                    for (Node n : children.getNodes()) {
+                        if (n instanceof ComponentNode) {
+                            ComponentNode cdcn = (ComponentNode) n;
+                            if (cdcn.getComponent() == selectedItem) {
+                                nodes.add(n);
+                                break;
+                            }
+                        }
+                    }
+                    try {
+                        explorerManager.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
+                    } catch (PropertyVetoException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                } else if (selectedItem instanceof MemberBase) {
+                    Children children = explorerManager.getRootContext().getChildren();
+                    ArrayList<Node> nodes = new ArrayList<>();
+                    boolean over = false;
+                    for (Node n : children.getNodes()) {
+                        for (Node nc : n.getChildren().getNodes()) {
+                            if (nc instanceof MemberNode) {
+                                MemberNode mn = (MemberNode) nc;
+                                if (mn.getMember() == selectedItem) {
+                                    nodes.add(nc);
+                                    over = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (over) break;
+                    }
+                    try {
+                        explorerManager.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
+                    } catch (PropertyVetoException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
-//                else if (selectedItem instanceof ClassDiagramComponent) {
-////                    ClassDiagramComponent selectedClassComponent = (ClassDiagramComponent) selectedItem;
-////                    this.setName(selectedClassComponent.getName() + " -  Explorer");
-////                    ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(selectedClassComponent);
-////
-////                    ((BeanTreeView) jScrollPane1).setRootVisible(true);
-////                    recursiveCall = true;
-////                    explorerManager.setRootContext(classComponentNode); //this one calls resultChanged recursivly, since global lookup is changed
-////                    try {
-////                        explorerManager.setExploredContextAndSelection(classComponentNode, new Node[]{classComponentNode});
-////                        System.out.println("Promenio");
-////                    } catch (PropertyVetoException ex) {
-////                        Exceptions.printStackTrace(ex);
-////                    }
-//                    Node[] nodes = new Node[1];
-//                    nodes[0] = objectsToNodes.get(selectedItem);
-//                    if (nodes[0] != null) {
-//                        try {
-//                            recursiveCall = true;
-//                            explorerManager.setSelectedNodes(nodes);
-//                        } catch (PropertyVetoException ex) {
-//                            Exceptions.printStackTrace(ex);
-//                        }
-//                    }
-//                } else if (!recursiveCall) {
-//                    explorerManager.setRootContext(Node.EMPTY);
-//                    BeanTreeView btw = (BeanTreeView) jScrollPaneTree;
-//                    btw.setRootVisible(false);
-//                    this.setName("Explorer");
-//                } else {
-//                    recursiveCall = false;
-//                }
             }
         } else {
-            //explorerManager.setRootContext(new AbstractNode(null));
-            //explorerTree.removeAll();
-            //explorerTree.setRootVisible(false);
         }
-//        else if (cNode != null) {
-//            try {
-//                explorerManager.setExploredContextAndSelection(cNode, new Node[]{cNode});
-//            } catch (PropertyVetoException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
-//        }
     }
 
 }
-//else if (selectedItem instanceof ClassWidget) {
-//                    System.out.println("Klas vidzet");
-//                    ClassWidget selectedClassWidget = (ClassWidget) selectedItem;
-//                    this.setName(selectedClassWidget.getName() + " -  Explorer");
-//                    ClassDiagramComponentNode classComponentNode = new ClassDiagramComponentNode(selectedClassWidget.getComponent());
-//
-//                    ((BeanTreeView) jScrollPane1).setRootVisible(true);
-//                    recursiveCall = true;
-//                    explorerManager.setRootContext(classComponentNode); //this one calls resultChanged recursivly, since global lookup is changed
-//                    try {
-//                        explorerManager.setExploredContextAndSelection(classComponentNode, new Node[]{classComponentNode});
-//                    } catch (PropertyVetoException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
-//                }

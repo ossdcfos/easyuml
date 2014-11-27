@@ -1,6 +1,6 @@
 package org.uml.code;
 
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 
 /**
  * The definition of key methods interface used for generating the code out of

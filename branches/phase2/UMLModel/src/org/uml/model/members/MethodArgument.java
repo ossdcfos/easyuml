@@ -40,11 +40,10 @@ public class MethodArgument {
     /**
      * Returns string representing that MethodArgument.
      *
-     * @return string in format: "MethodArgument{" + "type=" + type + ", name="
-     * + name + '}'
+     * @return string
      */
     @Override
     public String toString() {
-        return "MethodArgument{" + "type=" + type + ", name=" + name + '}';
+        return type + " " + name;
     }
 }

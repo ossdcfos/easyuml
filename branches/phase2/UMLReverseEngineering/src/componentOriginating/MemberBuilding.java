@@ -3,18 +3,19 @@ package componentOriginating;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import javax.lang.model.element.Element;
-import org.uml.model.ClassComponent;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
-import org.uml.model.InterfaceComponent;
+import org.uml.model.components.InterfaceComponent;
 import org.uml.model.members.Literal;
-import org.uml.model.members.Method;
+import org.uml.model.members.MethodBase;
 import org.uml.model.members.MethodArgument;
-import org.uml.model.PackageComponent;
-import org.uml.model.members.Visibility;
+import org.uml.model.components.PackageComponent;
+import org.uml.model.Visibility;
 import org.uml.reveng.CompilationProcessor;
 import org.apache.commons.lang.StringUtils;
+import org.uml.model.members.Method;
 
 /**
  * Creates Class diagram component's (Class, Enum od Interface) members (fields,
@@ -41,9 +42,8 @@ public class MemberBuilding {
             CompilationProcessor.generatedDiagram.addPackage(tempPack);
             cdc.setParentPackage(tempPack);
         } else {
-            PackageComponent cpckg = new PackageComponent(packageName);
+            PackageComponent cpckg = new PackageComponent(CompilationProcessor.generatedDiagram, packageName);
             cpckg.addComponent(cdc);
-            cpckg.setParentDiagram(CompilationProcessor.generatedDiagram);
             CompilationProcessor.generatedDiagram.addPackage(cpckg);
             cdc.setParentPackage(cpckg);
         }
@@ -65,7 +65,7 @@ public class MemberBuilding {
         Element superE = element.getEnclosingElement();
         String fieldClassPath = superE.getEnclosingElement() + "." + superE.getSimpleName();
         RelationshipResolver.relationshipHasCreator(type, fieldClassPath, "", fName);
-        Field createdField = new Field(fName, typeShort, Visibility.stringToVisibility("public"));
+        Field createdField = new Field(fName, typeShort, Visibility.PUBLIC);
         setModifiers(modifierElemnts, createdField);
         return createdField;
     }
@@ -76,7 +76,7 @@ public class MemberBuilding {
      *
      * @param type - full type of argument (i.e. java.util.HashMap)
      * @return shortened type of argument (i.e. HashMap)
-     * @see Method
+     * @see MethodBase
      * @see MethodArgument
      */
     private static String getShorterArguments(String type) {
@@ -98,7 +98,7 @@ public class MemberBuilding {
      * created
      * @param modifierElemnts visibility and other modifiers (public, static...)
      * @return fully built Method or Constructor component
-     * @see Method
+     * @see MethodBase
      * @see Constructor
      */
     public static Object methodAndConstructorBuilder(Element element, Object[] modifierElemnts, boolean isMethod) {
@@ -122,7 +122,7 @@ public class MemberBuilding {
             return createdMethod;
         } else {
             String className = element.getEnclosingElement().getSimpleName().toString();
-            Constructor createdConstructor = new Constructor(className, returnType, generatedArgumens);
+            Constructor createdConstructor = new Constructor(className, generatedArgumens);
             setModifiers(modifierElemnts, createdConstructor);
             return createdConstructor;
         }
@@ -152,7 +152,7 @@ public class MemberBuilding {
      */
     public static void setModifiers(Object[] modifierElemnts, Object elementToProcess) {
         Field fElement = null;
-        Method mElement = null;
+        MethodBase mElement = null;
         Constructor coElement = null;
         ClassComponent clElement = null;
         InterfaceComponent iElement = null;
@@ -160,8 +160,8 @@ public class MemberBuilding {
         if (elementToProcess instanceof Field) {
             fElement = (Field) elementToProcess;
         }
-        if (elementToProcess instanceof Method) {
-            mElement = (Method) elementToProcess;
+        if (elementToProcess instanceof MethodBase) {
+            mElement = (MethodBase) elementToProcess;
         }
         if (elementToProcess instanceof Constructor) {
             coElement = (Constructor) elementToProcess;
@@ -228,30 +228,29 @@ public class MemberBuilding {
                 }
             }
         }
+        Visibility vis = Visibility.valueOf(visibility.toUpperCase());
         if (fElement != null) {
-            Visibility vis = Visibility.stringToVisibility(visibility);
             Visibility visibility1 = fElement.getVisibility();
             visibility1 = vis;
             fElement.setVisibility(vis);
-            fElement.setModifier(modifierInt);
+            fElement.setModifiers(modifierInt);
         }
         if (mElement != null) {
-            Visibility vis = Visibility.stringToVisibility(visibility);
             mElement.setVisibility(vis);
         }
         if (coElement != null) {
             //coElement.setVisibility(Visibility.stringToVisibility(visibility));
-            coElement.setModifier(modifierInt);
+            coElement.setModifiers(modifierInt);
         }
         if (lElement != null) {
-            lElement.setVisibility(Visibility.stringToVisibility(visibility));
-            lElement.setModifier(modifierInt);
+            lElement.setVisibility(vis);
+            lElement.setModifiers(modifierInt);
         }
         if (iElement != null) {
-            iElement.setVisibility(Visibility.stringToVisibility(visibility));
+            iElement.setVisibility(vis);
         }
         if (clElement != null) {
-            clElement.setVisibility(Visibility.stringToVisibility(visibility));
+            clElement.setVisibility(vis);
         }
     }
 

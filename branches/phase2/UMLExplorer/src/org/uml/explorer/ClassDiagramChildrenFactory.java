@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.explorer;
 
 import java.beans.PropertyChangeEvent;
@@ -16,7 +11,7 @@ import org.openide.nodes.NodeListener;
 import org.openide.nodes.NodeMemberEvent;
 import org.openide.nodes.NodeReorderEvent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 
 /**
  *
@@ -46,7 +41,7 @@ public class ClassDiagramChildrenFactory extends ChildFactory<ComponentBase> imp
 
     @Override
     protected Node createNodeForKey(ComponentBase key) {
-        Node node = new ClassDiagramComponentNode(key);
+        Node node = new ComponentNode(key);
         node.addNodeListener(this);
         return node;
     }

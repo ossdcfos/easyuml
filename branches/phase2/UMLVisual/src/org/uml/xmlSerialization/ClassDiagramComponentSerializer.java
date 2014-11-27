@@ -4,7 +4,7 @@
  */
 package org.uml.xmlSerialization;
 
-import org.uml.model.ComponentBase;
+import org.uml.model.components.ComponentBase;
 
 /**
  *
