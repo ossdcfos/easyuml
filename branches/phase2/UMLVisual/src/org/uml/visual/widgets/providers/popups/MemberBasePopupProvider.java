@@ -43,7 +43,7 @@ public abstract class MemberBasePopupProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             MemberBase member = widget.getMember();
-            member.getDeclaringClass().removeMember(widget.getName());
+            member.getDeclaringClass().removeComponent(widget.getName());
             member.getDeclaringClass().removeMemberFromContainer(member);
             widget.getClassDiagramScene().removeObject(member);
             widget.removeFromParent();

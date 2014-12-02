@@ -7,5 +7,5 @@ import org.uml.model.components.ComponentBase;
  * @author Boris
  */
 public interface IComponentDeleteListener {
-    public void componentDeleted(ComponentBase component);
+    public void componentDeleted(INameable component);
 }

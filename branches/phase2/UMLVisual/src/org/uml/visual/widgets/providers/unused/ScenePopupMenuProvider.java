@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.visual.widgets.providers.unused;
 
 import java.awt.Graphics2D;
@@ -71,7 +67,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             public void actionPerformed(ActionEvent e) {
                 // add neww class component and widget to scene
                 // here we should just add new class component to model, and the scene should be updated elsewhere
-                ClassWidget widget = (ClassWidget) scene.addNode(new ClassComponent(scene.getClassDiagram()));
+                ClassWidget widget = (ClassWidget) scene.addNode(new ClassComponent());
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));
@@ -85,7 +81,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createInterfaceItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                InterfaceWidget widget = (InterfaceWidget) scene.addNode(new InterfaceComponent(scene.getClassDiagram()));
+                InterfaceWidget widget = (InterfaceWidget) scene.addNode(new InterfaceComponent());
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));
@@ -98,7 +94,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         createEnumItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EnumWidget widget = (EnumWidget) scene.addNode(new EnumComponent(scene.getClassDiagram()));
+                EnumWidget widget = (EnumWidget) scene.addNode(new EnumComponent());
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));

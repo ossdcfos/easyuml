@@ -87,7 +87,7 @@ public class ComponentCreation {
         String projectPath = elem.toString();
         String className = elem.getSimpleName().toString();
         String packages = projectPath.split(className)[0].substring(0, projectPath.length() - className.length() - 1);
-        ClassComponent createdClass = new ClassComponent(CompilationProcessor.generatedDiagram);
+        ClassComponent createdClass = new ClassComponent();
         createdClass.setName(className);
         MemberBuilding.setModifiers(modifierElemnts, createdClass);
         MemberBuilding.packageSelector(createdClass, packages);        
@@ -106,7 +106,7 @@ public class ComponentCreation {
      */
     private static InterfaceComponent interfaceBuilder(Element elem, Object[] modifierElemnts) {
         String projectPath = elem.toString();
-        InterfaceComponent createdInterface = new InterfaceComponent(CompilationProcessor.generatedDiagram);
+        InterfaceComponent createdInterface = new InterfaceComponent();
         String interfaceName = elem.getSimpleName().toString();
         String packages = projectPath.split(interfaceName)[0].substring(0, projectPath.length() - interfaceName.length() - 1);
         createdInterface.setName(interfaceName);
@@ -129,7 +129,7 @@ public class ComponentCreation {
         String projectPath = elem.toString();
         String enumName = elem.getSimpleName().toString();
         String packages = projectPath.split(enumName)[0].substring(0, projectPath.length() - enumName.length() - 1);
-        EnumComponent createdEnum = new EnumComponent(CompilationProcessor.generatedDiagram);
+        EnumComponent createdEnum = new EnumComponent();
         createdEnum.setName(enumName);
         MemberBuilding.setModifiers(modifierElemnts, elem);
         MemberBuilding.packageSelector(createdEnum, packages);

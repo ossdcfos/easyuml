@@ -42,7 +42,7 @@ class MapToAttributesConverter implements Converter {
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext uc) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String key = reader.getAttributeName(i);
             String value = reader.getAttribute(key);
@@ -82,9 +82,9 @@ public class ClassDeserializer implements XmlDeserializer {
         
         classComponent.setPosition(new Point(xPos, yPos));
         classComponent.setBounds(new Rectangle(xOff, yOff, width, height));
-        if (packageName != null) {
-            classComponent.setParentPackage(new PackageComponent(classComponent.getParentDiagram(), packageName));
-        }
+//        if (packageName != null) {
+//            classComponent.setParentPackage(new PackageComponent(classComponent.getParentDiagram(), packageName));
+//        }
         if (className != null) {
             classComponent.setName(className);
         }

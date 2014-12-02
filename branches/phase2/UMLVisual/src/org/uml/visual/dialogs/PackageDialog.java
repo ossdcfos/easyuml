@@ -106,71 +106,71 @@ public class PackageDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        System.out.println("INSTANCA COMPA JE TIPA: "+comp.getClass().getName());
-        //first to remove info from package that it contains component
-        PackageComponent p = comp.getParentPackage();
-        if (p != null && p.getComponents().containsKey(comp.getName())) {
-            p.removeComponent(comp);
-        }
-        //now to see if that package is empty (in that case, we have to remove it from ClassDiagram instance)
-        if (p != null && p.getComponents().isEmpty()) {
-            classDiagram.removePackage(p);
-            p = null;
-        }
-
-        //now we set information about package on Component's instance
-        String pack = txtPackageName.getText().trim();
-        if (classDiagram.getPackages().containsKey(pack)) {
-            PackageComponent packageComp = classDiagram.getPackages().get(pack);
-            comp.setParentPackage(packageComp);
-            packageComp.addComponent(comp);
-        } else {
-            PackageComponent packComp = new PackageComponent(classDiagram, pack);
-            classDiagram.addPackage(packComp);
-            comp.setParentPackage(packComp);
-            System.out.println("COMP NAME: " + comp.getName());
-            packComp.addComponent(comp);
-        }
-
-        System.out.println("Test to see all packages on classDiagram");
-
-        for (Map.Entry<String, PackageComponent> entry : classDiagram.getPackages().entrySet()) {
-            String name = entry.getKey();
-            PackageComponent value = entry.getValue();
-            value.printAllComponentsOnStdOut();
-        }
-
-        System.out.println("-------------------------------------------------------------------");
-
-
-//        for (ClassDiagramComponent cdc : classDiagram.getComponents()){
-//            System.out.println("Name: "+cdc.getName()+"\t Package: "+ cdc.getParentPackage().getName());
+//        System.out.println("INSTANCA COMPA JE TIPA: "+comp.getClass().getName());
+//        //first to remove info from package that it contains component
+//        PackageComponent p = comp.getParentPackage();
+//        if (p != null && p.getComponents().containsKey(comp.getName())) {
+//            p.removeComponent(comp);
 //        }
-        for (Map.Entry<String, ComponentBase> entry : classDiagram.getComponents().entrySet()) {
-            String name = entry.getKey();
-            ComponentBase cdc = entry.getValue();
-            if (cdc.getParentPackage() != null) {
-                System.out.println("Name: " + cdc.getName() + "\t Package: " + cdc.getParentPackage().getName());
-            }
-
-        }
-//        System.out.println("////////////////////////////////////////////////////////////");
-//        System.out.println("Now for packages");
+//        //now to see if that package is empty (in that case, we have to remove it from ClassDiagram instance)
+//        if (p != null && p.getComponents().isEmpty()) {
+//            classDiagram.removePackage(p);
+//            p = null;
+//        }
+//
+//        //now we set information about package on Component's instance
+//        String pack = txtPackageName.getText().trim();
+//        if (classDiagram.getPackages().containsKey(pack)) {
+//            PackageComponent packageComp = classDiagram.getPackages().get(pack);
+//            comp.setParentPackage(packageComp);
+//            packageComp.addComponent(comp);
+//        } else {
+//            PackageComponent packComp = new PackageComponent(classDiagram, pack);
+//            classDiagram.addPackage(packComp);
+//            comp.setParentPackage(packComp);
+//            System.out.println("COMP NAME: " + comp.getName());
+//            packComp.addComponent(comp);
+//        }
+//
+//        System.out.println("Test to see all packages on classDiagram");
+//
 //        for (Map.Entry<String, PackageComponent> entry : classDiagram.getPackages().entrySet()) {
 //            String name = entry.getKey();
-//            PackageComponent packageComponent = entry.getValue();
-//            String components = "";
-//            
-//            
-//            System.out.println("Name: "+name+" \t Components: " );
+//            PackageComponent value = entry.getValue();
+//            value.printAllComponentsOnStdOut();
 //        }
-
-//        comp.setParentPackage(new PackageComponent(pack));
-        this.dispose();
+//
+//        System.out.println("-------------------------------------------------------------------");
+//
+//
+////        for (ClassDiagramComponent cdc : classDiagram.getComponents()){
+////            System.out.println("Name: "+cdc.getName()+"\t Package: "+ cdc.getParentPackage().getName());
+////        }
+//        for (Map.Entry<String, ComponentBase> entry : classDiagram.getComponents().entrySet()) {
+//            String name = entry.getKey();
+//            ComponentBase cdc = entry.getValue();
+//            if (cdc.getParentPackage() != null) {
+//                System.out.println("Name: " + cdc.getName() + "\t Package: " + cdc.getParentPackage().getName());
+//            }
+//
+//        }
+////        System.out.println("////////////////////////////////////////////////////////////");
+////        System.out.println("Now for packages");
+////        for (Map.Entry<String, PackageComponent> entry : classDiagram.getPackages().entrySet()) {
+////            String name = entry.getKey();
+////            PackageComponent packageComponent = entry.getValue();
+////            String components = "";
+////            
+////            
+////            System.out.println("Name: "+name+" \t Components: " );
+////        }
+//
+////        comp.setParentPackage(new PackageComponent(pack));
+//        this.dispose();
     }//GEN-LAST:event_btnOkActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.dispose();
+//        this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOk;

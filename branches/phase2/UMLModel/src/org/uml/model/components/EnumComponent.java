@@ -26,8 +26,8 @@ public class EnumComponent extends ComponentBase {
      * Default constructor only specifying parent diagram. Sets name to default value.
      * @param parentDiagram
      */
-    public EnumComponent(ClassDiagram parentDiagram) {
-        this(parentDiagram, "UntitledEnum");
+    public EnumComponent() {
+        this("UntitledEnum");
     }
 
     /**
@@ -39,8 +39,8 @@ public class EnumComponent extends ComponentBase {
      * @param name of EnumComponent
      * @see ComponentBase
      */
-    public EnumComponent(ClassDiagram parentDiagram, String name) {
-        super(parentDiagram, name);
+    public EnumComponent(String name) {
+        super(name);
 //        fields = new LinkedHashMap<>();
 //        methods = new LinkedHashMap<>();
 //        constructors = new LinkedHashMap<>();

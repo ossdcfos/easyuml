@@ -57,8 +57,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
         
         classDiagram.addDeleteListener(new IComponentDeleteListener() {
             @Override
-            public void componentDeleted(ComponentBase component) {
-                removeNodeWithEdges(component);
+            public void componentDeleted(INameable component) {
+                removeNodeWithEdges((ComponentBase)component);
                 
                 classDiagram.removeRelationsForAComponent(component);
                 

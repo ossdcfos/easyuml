@@ -1,5 +1,6 @@
 package componentOriginating;
 
+import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import javax.lang.model.element.Element;
@@ -13,7 +14,6 @@ import org.uml.model.members.MethodBase;
 import org.uml.model.members.MethodArgument;
 import org.uml.model.components.PackageComponent;
 import org.uml.model.Visibility;
-import org.uml.reveng.CompilationProcessor;
 import org.apache.commons.lang.StringUtils;
 import org.uml.model.members.Method;
 
@@ -35,18 +35,18 @@ public class MemberBuilding {
      * @see PackageComponent
      */
     public static void packageSelector(ComponentBase cdc, String packageName) {
-        if (CompilationProcessor.generatedDiagram.getPackages().containsKey(packageName)) {
-            PackageComponent tempPack = CompilationProcessor.generatedDiagram.getPackages().get(packageName);
-            CompilationProcessor.generatedDiagram.getPackages().remove(packageName);
-            tempPack.addComponent(cdc);
-            CompilationProcessor.generatedDiagram.addPackage(tempPack);
-            cdc.setParentPackage(tempPack);
-        } else {
-            PackageComponent cpckg = new PackageComponent(CompilationProcessor.generatedDiagram, packageName);
-            cpckg.addComponent(cdc);
-            CompilationProcessor.generatedDiagram.addPackage(cpckg);
-            cdc.setParentPackage(cpckg);
-        }
+//        if (CompilationProcessor.generatedDiagram.getPackages().containsKey(packageName)) {
+//            PackageComponent tempPack = CompilationProcessor.generatedDiagram.getPackages().get(packageName);
+//            CompilationProcessor.generatedDiagram.getPackages().remove(packageName);
+//            tempPack.addComponent(cdc);
+//            CompilationProcessor.generatedDiagram.addPackage(tempPack);
+//            cdc.setParentPackage(tempPack);
+//        } else {
+//            PackageComponent cpckg = new PackageComponent(CompilationProcessor.generatedDiagram, packageName);
+//            cpckg.addComponent(cdc);
+//            CompilationProcessor.generatedDiagram.addPackage(cpckg);
+//            cdc.setParentPackage(cpckg);
+//        }
     }
 
     /**

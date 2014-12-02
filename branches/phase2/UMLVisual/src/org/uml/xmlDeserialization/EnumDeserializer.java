@@ -42,9 +42,9 @@ public class EnumDeserializer implements XmlDeserializer{
         int xPos = (int) Double.parseDouble(node.attributeValue("xPosition"));
         int yPos = (int) Double.parseDouble(node.attributeValue("yPosition"));
         enumComponent.setPosition(new Point(xPos, yPos));
-        if (packageName != null) {
-            enumComponent.setParentPackage(new PackageComponent(enumComponent.getParentDiagram(), packageName));
-        }
+//        if (packageName != null) {
+//            enumComponent.setParentPackage(new PackageComponent(enumComponent.getParentDiagram(), packageName));
+//        }
         if (className != null) {
             enumComponent.setName(className);
         }

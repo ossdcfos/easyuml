@@ -16,7 +16,7 @@ import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.UseRelation;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.xmltesting.serialization.ClassDiagramXmlSerializerDeserializer;
+//import org.uml.xmltesting.serialization.ClassDiagramXmlSerializerDeserializer;
 
 /**
  *
@@ -64,7 +64,7 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
      */
     @Override
     public void serialize(Element node) {
-        System.out.println(new ClassDiagramXmlSerializerDeserializer(classDiagramScene).serialize(classDiagram));
+//        System.out.println(new ClassDiagramXmlSerializerDeserializer(classDiagramScene).serialize(classDiagram));
         if (classDiagram.getName() != null) {
             node.addAttribute("name", classDiagram.getName());
         }

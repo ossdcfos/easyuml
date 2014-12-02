@@ -103,7 +103,7 @@ public class AddClassDialog extends javax.swing.JDialog {
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         int numberOf = Integer.parseInt(txtClassNumber.getText().trim());
         for (int i = 0; i < numberOf; i++) {
-            ClassWidget widget = new ClassWidget(scene, new ClassComponent(scene.getClassDiagram()));
+            ClassWidget widget = new ClassWidget(scene, new ClassComponent());
             //scene.addWidget(widget); // not just to class to model also
         }
         this.dispose();
