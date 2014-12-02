@@ -63,6 +63,7 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
         super(scene);
         this.component = component;
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
+        this.component.setParentDiagram(scene.getClassDiagram());
         
         // Layout
         setBorder(DEFAULT_BORDER);

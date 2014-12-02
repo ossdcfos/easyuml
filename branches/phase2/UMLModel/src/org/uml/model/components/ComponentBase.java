@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 import org.uml.model.ClassDiagram;
+import org.uml.model.ContainerBase;
 import org.uml.model.Visibility;
 import org.uml.model.relations.RelationBase;
 
@@ -20,16 +21,14 @@ import org.uml.model.relations.RelationBase;
  * @see ClassComponent
  * @see RelationBase
  */
-public abstract class ComponentBase implements Serializable {
+public abstract class ComponentBase extends ContainerBase<MemberBase> implements Serializable {
 
     private transient ClassDiagram parentDiagram;
-    private String name;
-
+    
     private Point position; // this should be removed in future
     private Rectangle bounds;
 
     private Visibility visibility;
-    private transient HashMap<String, MemberBase> members; // index of all fields, methods and constructors
     private PackageComponent parentPackage;
     private transient List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
 
@@ -51,23 +50,14 @@ public abstract class ComponentBase implements Serializable {
      * Default constructor. Initializes members of the ComponentBase. Members
      * can be fields, methods, constructors and literals.
      *
-     * @param parentDiagram
      * @param name of component
      * @see Field
      * @see Method
      * @see Constructor
      * @see Literal
      */
-    public ComponentBase(ClassDiagram parentDiagram, String name) {
-        this.parentDiagram = parentDiagram;
-        this.name = name;
-
-//        if (parentDiagram.nameExists(this.name)) {
-//            this.name = this.name + parentDiagram.compCounter;
-//        }
-//        parentDiagram.compCounter++;
-//        parentDiagram.getComponents().put(this.name, this);
-        members = new HashMap<>();
+    public ComponentBase(String name) {
+        super(name);
         visibility = Visibility.PUBLIC;
     }
 
@@ -88,31 +78,10 @@ public abstract class ComponentBase implements Serializable {
             throw new RuntimeException("Error while entering member name: name already exists. Member name: " + member.getName());
         }
 //        members.put(member.toString(), member);
-        members.put(member.getName(), member);
-    }
-
-    /**
-     * Removes the member with the given name from this ClassDiagramComponent's
-     * collection of components.
-     *
-     * @param signature of component that will be removed
-     */
-    public void removeMember(String signature) {
-        members.remove(signature);
+        components.put(member.getName(), member);
     }
 
     public abstract void removeMemberFromContainer(MemberBase member);
-
-    /**
-     * Checks if a member already exists in the
-     * collection of components (members).
-     *
-     * @param signature of Member that is to be checked
-     * @return true if already exists, false if it doesn't
-     */
-    public boolean nameExists(String signature) {
-        return members.containsKey(signature);
-    }
 
     /**
      * Removes a member from ClassDiagramComponent's collection of members and
@@ -123,7 +92,7 @@ public abstract class ComponentBase implements Serializable {
      * @see MemberBase
      */
     public void notifyMemberNameChanged(MemberBase member, String oldName) {
-        members.remove(oldName);
+        removeComponent(oldName);
         addMember(member);
     }
 
@@ -133,28 +102,7 @@ public abstract class ComponentBase implements Serializable {
      * @return all members of this ClassDiagramComponent
      */
     public HashMap<String, MemberBase> getMembers() {
-        return members;
-    }
-
-    /**
-     * Returns the name of this ClassDiagramComponent.
-     *
-     * @return name of this ClassDiagramComponent
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of ClassDiagramComponent.
-     *
-     * @param newName to be set to ClassDiagramComponent
-     */
-    public void setName(String newName) {
-//        String oldName = name;
-        name = newName;
-//        parentDiagram.notifyComponentNameChanged(this, oldName);
-//        fire("name", oldName, newName);
+        return new HashMap(components);
     }
 
     // used from Property sheet
@@ -162,12 +110,10 @@ public abstract class ComponentBase implements Serializable {
 //        if (parentDiagram.nameExists(newName)) {
 //            throw new RuntimeException("Name of component " + newName + " already exists!");
 //        } else {
-            
             String oldName = name;
             name = newName;
             parentDiagram.notifyComponentNameChanged(this, oldName);
             fire("name", oldName, newName);
-            
 //        }
         //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
         //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
@@ -185,16 +131,17 @@ public abstract class ComponentBase implements Serializable {
         return parentDiagram;
     }
 
-//    /**
-//     * Sets parentDiagram of this ClassDiagramComponent. Parent diagram is a
-//     * ClassDiagram object that contains this ClassDiagramComponent.
-//     *
-//     * @param parentDiagram
-//     * @see ClassDiagram
-//     */
-//    public void setParentDiagram(ClassDiagram parentDiagram) {
-//        this.parentDiagram = parentDiagram;
-//    }
+    /**
+     * Sets parentDiagram of this ClassDiagramComponent. Parent diagram is a
+     * ClassDiagram object that contains this ClassDiagramComponent.
+     *
+     * @param parentDiagram
+     * @see ClassDiagram
+     */
+    public void setParentDiagram(ClassDiagram parentDiagram) {
+        this.parentDiagram = parentDiagram;
+    }
+    
     /**
      * Returns position that this ClassDiagramComponent has on the scene
      *

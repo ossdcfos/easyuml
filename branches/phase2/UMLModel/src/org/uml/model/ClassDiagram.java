@@ -4,7 +4,6 @@ import org.uml.model.components.PackageComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.RelationBase;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -19,13 +18,10 @@ import java.util.List;
  * @see ComponentBase
  * @see RelationBase
  */
-public class ClassDiagram implements Serializable {
+public class ClassDiagram extends ContainerBase<ComponentBase> implements Serializable {
 
-    private String name;
-    private HashMap<String, ComponentBase> components; // contains classes, interfaces or enums
     private HashSet<RelationBase> relations;
-    private HashMap<String, PackageComponent> packages;
-    private transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
+//    private HashMap<String, PackageComponent> packages;
 
     /**
      * Standard ClassDiagram constructor without arguments.
@@ -34,32 +30,15 @@ public class ClassDiagram implements Serializable {
      * packages hash maps.
      */
     public ClassDiagram() {
-        name = "UML Class Diagram";
-        this.components = new HashMap<>();
+        super("UML Class Diagram");
         this.relations = new HashSet<>();
-        this.packages = new HashMap<>();
+//        this.packages = new HashMap<>();
     }
 
-    public void addDeleteListener(IComponentDeleteListener icdl) {
-        deleteListeners.add(icdl);
-    }
-
-    /**
-     * Adds new ClassDiagramComponent into collection of existing components. If
-     * component with that name already exists in this collection, new one will
-     * be added with it's name concatenated with current component counter
-     * number.
-     *
-     * @param component to be added to collection
-     */
-    public void addComponent(ComponentBase component) {
-        String componentName = component.getName();
-        int suffix = 1;
-        while (nameExists(component.getName())) {
-            component.setName(componentName + suffix);
-            suffix++;
-        }
-        components.put(component.getName(), component);
+    @Override
+    public void addComponent(INameable component) {
+        super.addComponent(component);
+        ((ComponentBase)component).setParentDiagram(this);
     }
 
     /**
@@ -73,19 +52,6 @@ public class ClassDiagram implements Serializable {
      */
     public void addRelation(RelationBase relationComponent) {
         relations.add(relationComponent);
-        System.out.println(relations.toString());
-    }
-
-    /**
-     * Removes the given component from this diagram's collection of components.
-     *
-     * @param name of the component to be removed
-     */
-    public void removeComponent(String name) {
-        for (IComponentDeleteListener icdl : deleteListeners) {
-            icdl.componentDeleted(components.get(name));
-        }
-        components.remove(name);
     }
 
     /**
@@ -97,7 +63,7 @@ public class ClassDiagram implements Serializable {
         relations.remove(relation);
     }
 
-    public void removeRelationsForAComponent(ComponentBase component) {
+    public void removeRelationsForAComponent(INameable component) {
         List<RelationBase> toRemove = new LinkedList<>();
         for (RelationBase relation : relations) {
             if (relation.getSource().getName().equals(component.getName()) || relation.getTarget().getName().equals(component.getName())) {
@@ -105,7 +71,7 @@ public class ClassDiagram implements Serializable {
             }
         }
         for (RelationBase rc : toRemove) {
-            relations.remove(rc.getName());
+            relations.remove(rc);
         }
     }
 
@@ -115,7 +81,7 @@ public class ClassDiagram implements Serializable {
      * @return collection of components
      */
     public HashMap<String, ComponentBase> getComponents() {
-        return components;
+        return new HashMap(components);
     }
 
     /**
@@ -137,17 +103,6 @@ public class ClassDiagram implements Serializable {
     }
 
     /**
-     * Checks if component with provided name exists in collection of
-     * components.
-     *
-     * @param name of the component
-     * @return if that component exists in collection
-     */
-    public boolean nameExists(String name) {
-        return components.containsKey(name);
-    }
-
-    /**
      * Removes component from collection of components and adds same component
      * with new name into that collection.
      *
@@ -161,48 +116,30 @@ public class ClassDiagram implements Serializable {
         }
     }
 
-    /**
-     * Returns name of this ClassDiagram
-     *
-     * @return name of the UML Class Diagram
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of this ClassDiagram
-     *
-     * @param name of UML Class Diagram
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Adds the PackageComponent into package collection.
-     *
-     * @param pc package to be added
-     */
-    public void addPackage(PackageComponent pc) {
-        packages.put(pc.getName(), pc);
-    }
-
-    /**
-     * Removes the package from package collection.
-     *
-     * @param pc package to be removed
-     */
-    public void removePackage(PackageComponent pc) {
-        packages.remove(pc.getName());
-    }
-
-    /**
-     * Gets the packages collection of this ClassDiagram.
-     *
-     * @return packages collection
-     */
-    public HashMap<String, PackageComponent> getPackages() {
-        return packages;
-    }
+//    /**
+//     * Adds the PackageComponent into package collection.
+//     *
+//     * @param pc package to be added
+//     */
+//    public void addPackage(PackageComponent pc) {
+//        packages.put(pc.getName(), pc);
+//    }
+//
+//    /**
+//     * Removes the package from package collection.
+//     *
+//     * @param pc package to be removed
+//     */
+//    public void removePackage(PackageComponent pc) {
+//        packages.remove(pc.getName());
+//    }
+//
+//    /**
+//     * Gets the packages collection of this ClassDiagram.
+//     *
+//     * @return packages collection
+//     */
+//    public HashMap<String, PackageComponent> getPackages() {
+//        return packages;
+//    }
 }

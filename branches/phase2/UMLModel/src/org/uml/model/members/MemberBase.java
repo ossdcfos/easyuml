@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import org.uml.model.INameable;
 import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
 
@@ -19,7 +20,7 @@ import org.uml.model.components.ComponentBase;
  * @see ComponentBase
  *
  */
-public abstract class MemberBase {
+public abstract class MemberBase implements INameable {
 
     private String name;
     
@@ -58,10 +59,12 @@ public abstract class MemberBase {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }
     
+    @Override
     public void setName(String newName) {
         name = newName;
     }

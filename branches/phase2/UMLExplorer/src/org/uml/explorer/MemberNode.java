@@ -61,7 +61,7 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
     @Override
     public void destroy() throws IOException {
         ComponentBase parent = member.getDeclaringClass();
-        parent.removeMember(member.getName());
+        parent.removeComponent(member.getName());
         parent.removeMemberFromContainer(member);
         fireNodeDestroyed();
     }

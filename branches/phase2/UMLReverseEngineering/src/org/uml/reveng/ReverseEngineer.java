@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.reveng;
 
 import java.awt.event.ActionEvent;
@@ -77,11 +73,11 @@ public final class ReverseEngineer implements ActionListener {
         //Get project's root direstory
         FileObject projectFile = context.getProjectDirectory();
         //Get root direstory's path
-        String projectSoutcePath = projectFile.getPath();
+        String projectSourcePath = projectFile.getPath();
         //Get default file system separator
         String separator = getSystemSeparator();
         //Start the compilation of files found inside specified path and default file system separator
-        Compilation.initiateCompilation(projectSoutcePath, separator);
+        Compilation.initiateCompilation(projectSourcePath, separator);
         //Get the generated CLass diagram from Generated diagram manager singleton object
         ClassDiagram generatedDiagram = GeneratedDiagramManager.getDefault().getClassDiagram();
         //If the flag for no .class files generated is raised, inform the user

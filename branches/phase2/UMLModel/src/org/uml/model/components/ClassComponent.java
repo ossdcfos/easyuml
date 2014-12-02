@@ -5,7 +5,6 @@ import org.uml.model.members.MethodBase;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
 import java.util.LinkedHashMap;
-import org.uml.model.ClassDiagram;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 
@@ -31,8 +30,8 @@ public class ClassComponent extends ComponentBase {
      * 
      * @param parentDiagram
      */
-    public ClassComponent(ClassDiagram parentDiagram) {
-        this(parentDiagram, "UntitledClass");
+    public ClassComponent() {
+        this("UntitledClass");
     }
 
     /**
@@ -45,8 +44,8 @@ public class ClassComponent extends ComponentBase {
      * @param parentDiagram
      * @param name to be set
      */
-    public ClassComponent(ClassDiagram parentDiagram, String name) {
-        super(parentDiagram, name);
+    public ClassComponent(String name) {
+        super(name);
         //setParentPackage(null);
         fields = new LinkedHashMap<>();
         constructors = new LinkedHashMap<>();

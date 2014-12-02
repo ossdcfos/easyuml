@@ -24,8 +24,8 @@ public class InterfaceComponent extends ComponentBase {
      * Default constructor only specifying parent diagram. Sets name to default value.
      * @param parentDiagram
      */
-    public InterfaceComponent(ClassDiagram parentDiagram) {
-        this(parentDiagram, "UntitledInterface");
+    public InterfaceComponent() {
+        this("UntitledInterface");
     }
 
     /**
@@ -35,8 +35,8 @@ public class InterfaceComponent extends ComponentBase {
      * @param name of InterfaceComponent
      * @see ComponentBase
      */
-    public InterfaceComponent(ClassDiagram parentDiagram, String name) {
-        super(parentDiagram, name);
+    public InterfaceComponent(String name) {
+        super(name);
         methods = new LinkedHashMap<>();
     }
 

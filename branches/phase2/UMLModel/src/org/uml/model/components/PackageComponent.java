@@ -2,7 +2,6 @@ package org.uml.model.components;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.uml.model.ClassDiagram;
 import org.uml.model.members.MemberBase;
 
 /**
@@ -23,8 +22,8 @@ public class PackageComponent extends ComponentBase {
      * Default constructor only specifying parent diagram. Sets the name to default value.
      * @param parentDiagram
      */
-    public PackageComponent(ClassDiagram parentDiagram) {
-        this(parentDiagram, "UntitledPackage");
+    public PackageComponent() {
+        this("UntitledPackage");
     }
 
     /**
@@ -34,8 +33,8 @@ public class PackageComponent extends ComponentBase {
      * @param parentDiagram
      * @param name of PackageComponent
      */
-    public PackageComponent(ClassDiagram parentDiagram, String name) {
-        super(parentDiagram, name);
+    public PackageComponent(String name) {
+        super(name);
         classDiagramComponents = new HashMap<>();
     }
 
