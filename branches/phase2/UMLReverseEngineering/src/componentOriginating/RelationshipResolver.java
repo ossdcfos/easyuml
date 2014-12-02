@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package componentOriginating;
 
 import java.util.ArrayList;
@@ -70,7 +66,7 @@ public class RelationshipResolver {
      * @see Field
      */
     public static void relationshipHasCreator(String testEl, String fieldClassPath, String additionalData, String fieldName) {
-        GeneratedDiagramManager.getDefault().getHasRelationships().clear();
+        GeneratedDiagramManager.getInstance().getHasRelationships().clear();
         fieldNameHas = fieldName;
         if (testEl.contains(",")) {
             String[] arguments = testEl.split(",");
@@ -111,7 +107,7 @@ public class RelationshipResolver {
      */
     public static void relationshipUsesCreator(String methodArgs, String methodClassPath, String addData, String paramterName) {
         fieldNameUses = paramterName;
-        GeneratedDiagramManager.getDefault().getUsesRelationships().clear();
+        GeneratedDiagramManager.getInstance().getUsesRelationships().clear();
         if (methodArgs.contains(",")) {
             String[] arguments = methodArgs.split(",");
             for (int i = 0; i < arguments.length; i++) {
@@ -393,7 +389,7 @@ public class RelationshipResolver {
                 Object addData = addDataContainer.getObject();
                 String name = addDataContainer.getField();
                 relation.setName(name);
-                GeneratedDiagramManager.getDefault().incrementRelationCounter();
+                GeneratedDiagramManager.getInstance().incrementRelationCounter();
                 if (addData instanceof String) {
                     relation.setCollectionType(addData.toString());
                     relation.setCardinalityTarget(CardinalityEnum.Zero2Many);
@@ -411,7 +407,7 @@ public class RelationshipResolver {
                     if (source == targetCandidate) {
                         continue;
                     }
-                    GeneratedDiagramManager.getDefault().getClassDiagram().addRelation(relation);
+                    GeneratedDiagramManager.getInstance().getClassDiagram().addRelation(relation);
                 }
             }
         }
@@ -438,14 +434,14 @@ public class RelationshipResolver {
                 String name = addDataContainer.getField();
 
                 relation.setName(name);//GeneratedDiagramManager.getDefault().getRelationCounter() + "");
-                GeneratedDiagramManager.getDefault().incrementRelationCounter();
+                GeneratedDiagramManager.getInstance().incrementRelationCounter();
                 relation.setCardinalitySource(CardinalityEnum.Zero2Many);
                 relation.setCardinalityTarget(CardinalityEnum.Zero2Many);
                 if (!denyDuplicates(source, target, relation.toString(), null)) {
                     if (source == target) {
                         continue;
                     }
-                    GeneratedDiagramManager.getDefault().getClassDiagram().addRelation(relation);
+                    GeneratedDiagramManager.getInstance().getClassDiagram().addRelation(relation);
                 }
             }
         }
@@ -459,7 +455,7 @@ public class RelationshipResolver {
      * @see ClassDIagram
      */
     private static void populateIsRelation() {
-        for (Map.Entry<String, HashMap<String, Object>> firstLevel : GeneratedDiagramManager.getDefault().getIsRelationships().entrySet()) {
+        for (Map.Entry<String, HashMap<String, Object>> firstLevel : GeneratedDiagramManager.getInstance().getIsRelationships().entrySet()) {
             ComponentBase source = selectDefinitiveComponent(firstLevel.getKey().toString());
             HashMap<String, Object> midLevel = firstLevel.getValue();
             for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
@@ -470,8 +466,8 @@ public class RelationshipResolver {
                 String name = addDataContainer.getField();
                 relation.setName(name);
                 //relation.setName(GeneratedDiagramManager.getDefault().getRelationCounter() + "");
-                GeneratedDiagramManager.getDefault().incrementRelationCounter();
-                GeneratedDiagramManager.getDefault().getClassDiagram().addRelation(relation);
+                GeneratedDiagramManager.getInstance().incrementRelationCounter();
+                GeneratedDiagramManager.getInstance().getClassDiagram().addRelation(relation);
             }
         }
     }
@@ -484,7 +480,7 @@ public class RelationshipResolver {
      * @see ClassDIagram
      */
     private static void populateImplementsRelation() {
-        for (Map.Entry<String, HashMap<String, Object>> firstLevel : GeneratedDiagramManager.getDefault().getImplementsRelationships().entrySet()) {
+        for (Map.Entry<String, HashMap<String, Object>> firstLevel : GeneratedDiagramManager.getInstance().getImplementsRelationships().entrySet()) {
             ComponentBase source = selectDefinitiveComponent(firstLevel.getKey().toString());
             HashMap<String, Object> midLevel = firstLevel.getValue();
             for (Map.Entry<String, Object> secondLevel : midLevel.entrySet()) {
@@ -495,8 +491,8 @@ public class RelationshipResolver {
                 String name = addDataContainer.getField();
                 relation.setName(name);
                 //relation.setName(GeneratedDiagramManager.getDefault().getRelationCounter() + "");
-                GeneratedDiagramManager.getDefault().incrementRelationCounter();
-                GeneratedDiagramManager.getDefault().getClassDiagram().addRelation(relation);
+                GeneratedDiagramManager.getInstance().incrementRelationCounter();
+                GeneratedDiagramManager.getInstance().getClassDiagram().addRelation(relation);
             }
         }
     }
@@ -543,7 +539,7 @@ public class RelationshipResolver {
      */
     private static boolean denyDuplicates(ComponentBase source, ComponentBase target, String relationType, CardinalityEnum targetCardinaliy) {
         boolean reappears = false;
-        HashSet<RelationBase> relations = GeneratedDiagramManager.getDefault().getClassDiagram().getRelations();
+        HashSet<RelationBase> relations = GeneratedDiagramManager.getInstance().getClassDiagram().getRelations();
         for (RelationBase relation : relations) {
             //System.out.println(relation.getValue().getSource().getName() + "-" + relation.getValue().getTarget().getName());
             if (relation.getSource() == source

@@ -75,10 +75,10 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
                 Widget w = classDiagramScene.findWidget(component);
                 componentNode.addAttribute("xPosition", String.valueOf(w.getPreferredLocation().getX()));
                 componentNode.addAttribute("yPosition", String.valueOf(w.getPreferredLocation().getY()));
-                componentNode.addAttribute("width", String.valueOf(w.getPreferredBounds().width));
-                componentNode.addAttribute("height", String.valueOf(w.getPreferredBounds().height));
-                componentNode.addAttribute("xOff", String.valueOf(w.getPreferredBounds().x));
-                componentNode.addAttribute("yOff", String.valueOf(w.getPreferredBounds().y));
+//                componentNode.addAttribute("width", String.valueOf(w.getPreferredBounds().width));
+//                componentNode.addAttribute("height", String.valueOf(w.getPreferredBounds().height));
+//                componentNode.addAttribute("xOff", String.valueOf(w.getPreferredBounds().x));
+//                componentNode.addAttribute("yOff", String.valueOf(w.getPreferredBounds().y));
                 
                 ClassDiagramComponentSerializer serializer = componentSerializers.get(component.getClass());
                 serializer.addClassDiagramComponent(component);

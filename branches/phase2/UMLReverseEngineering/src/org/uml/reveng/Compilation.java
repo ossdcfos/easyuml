@@ -1,15 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.reveng;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 
 import java.util.LinkedList;
-import java.util.List;
 import javax.annotation.processing.AbstractProcessor;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -42,16 +38,18 @@ public class Compilation {
         String source = projectSource + separator + "src";
         String extension = "java";
         //Generating an array of filepaths corresponding to found files
-        List<String> listOfFoundFiles = FileSearch.searchTheDirectory(new File(source), extension);
-        String[] listaStr = new String[listOfFoundFiles.size()];
-        for (int i = 0; i < listOfFoundFiles.size(); i++) {
-            listaStr[i] = listOfFoundFiles.get(i).toString();
+//        List<String> listOfFoundFiles = FileSearch.searchTheDirectory(new File(source), extension);
+        Collection<File> files = FileUtils.listFiles(new File(source), new String[]{"java"}, true);
+        String[] listaStr = new String[files.size()];
+        int i = 0;
+        for(File f : files){
+            listaStr[i++] = f.getAbsoluteFile().toString();
         }
         //Creating a list of files to be compiled
         Iterable<? extends JavaFileObject> compilationUnit = fileManager.getJavaFileObjects(listaStr);
         //Creating tempClasses file and emptying one, if it already exists
         String temporaryClassFolderName = "UMLTemp";
-        String path = listOfFoundFiles.get(0).split("src")[0] + temporaryClassFolderName;
+        String path = source.split("src")[0] + temporaryClassFolderName;
         File f = new File(path);
         f.mkdirs();
         try {
@@ -65,7 +63,7 @@ public class Compilation {
         //Creating a compilation task that will compile found files
         CompilationTask task = compiler.getTask(null, fileManager, null, compOptions, null, compilationUnit);
         //Creating a list that will hold annotation processors
-        LinkedList<AbstractProcessor> processors = new LinkedList<AbstractProcessor>();
+        LinkedList<AbstractProcessor> processors = new LinkedList<>();
         //Adding a annotation processor(s) to the the above mentioned list
         processors.add(new CompilationProcessor());
         //Setting annotation prosessor(s) to the compilation task
@@ -73,18 +71,25 @@ public class Compilation {
         //Staritng the compilation
         task.call();
         //Searching for .class files that have been made
-        List<String> listOfFoundClasses = FileSearch.searchTheDirectory(new File(projectSource + separator
-                + temporaryClassFolderName), "class");
+        Collection<File> classFiles = FileUtils.listFiles(new File(projectSource + separator
+                + temporaryClassFolderName), new String[]{"class"}, true);
+        String[] classFilesStrings = new String[classFiles.size()];
+        i = 0;
+        for(File cf : classFiles){
+            classFilesStrings[i++] = cf.getAbsoluteFile().toString();
+        }
+//        List<String> listOfFoundClasses = FileSearch.searchTheDirectory(new File(projectSource + separator
+//                + temporaryClassFolderName), "class");
         //Fill in data about Implements and Extends relations that the compiler couldn't get
-        ClassProcessing.ClassProcessor(listOfFoundClasses, separator, temporaryClassFolderName);
+        ClassProcessing.ClassProcessor(Arrays.asList(classFilesStrings), separator, temporaryClassFolderName);
         //Debug diagram
-        GeneratedDiagramManager genDiag = GeneratedDiagramManager.getDefault();
+        GeneratedDiagramManager genDiag = GeneratedDiagramManager.getInstance();
         //Raises the flag if there are no .class files generated during th compilation process -
         //if it has failed (usually if the project selected has errors)
         if (f.listFiles().length == 0) {
-            GeneratedDiagramManager.getDefault().setZeroClassesGenerated(true);
+            GeneratedDiagramManager.getInstance().setZeroClassesGenerated(true);
         } else {
-            GeneratedDiagramManager.getDefault().setZeroClassesGenerated(false);
+            GeneratedDiagramManager.getInstance().setZeroClassesGenerated(false);
         }
         //Delete the folder containing compiled .class files
         try {

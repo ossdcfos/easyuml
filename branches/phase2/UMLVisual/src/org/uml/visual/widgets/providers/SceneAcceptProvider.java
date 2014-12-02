@@ -78,8 +78,8 @@ public class SceneAcceptProvider implements AcceptProvider {
         try {
 
             if (ComponentBase.class.isAssignableFrom(droppedComponentClass)) {
-                Constructor<?> cons = droppedComponentClass.getConstructor(ClassDiagram.class);
-                Object cobj = cons.newInstance(classDiagramScene.getClassDiagram());
+                Constructor<?> cons = droppedComponentClass.getConstructor();
+                Object cobj = cons.newInstance();
                 ComponentBase component = (ComponentBase) cobj;
 
                 Widget w = classDiagramScene.addNode(component);
