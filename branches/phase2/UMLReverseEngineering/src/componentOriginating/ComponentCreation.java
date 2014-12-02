@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package componentOriginating;
 
 import javax.lang.model.element.Element;
@@ -19,7 +15,6 @@ import org.uml.model.members.Field;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.members.Literal;
 import org.uml.model.members.Method;
-import org.uml.model.members.MethodBase;
 import org.uml.reveng.CompilationProcessor;
 import org.uml.reveng.GeneratedDiagramManager;
 
@@ -91,7 +86,7 @@ public class ComponentCreation {
         createdClass.setName(className);
         MemberBuilding.setModifiers(modifierElemnts, createdClass);
         MemberBuilding.packageSelector(createdClass, packages);        
-        createdClass.setPosition(GeneratedDiagramManager.getDefault().getComponentPosition());
+        createdClass.setPosition(GeneratedDiagramManager.getInstance().getComponentPosition());
         return createdClass;
     }
 
@@ -112,7 +107,7 @@ public class ComponentCreation {
         createdInterface.setName(interfaceName);
         MemberBuilding.setModifiers(modifierElemnts, elem);
         MemberBuilding.packageSelector(createdInterface, packages);
-        createdInterface.setPosition(GeneratedDiagramManager.getDefault().getComponentPosition());
+        createdInterface.setPosition(GeneratedDiagramManager.getInstance().getComponentPosition());
         return createdInterface;
     }
 
@@ -133,7 +128,7 @@ public class ComponentCreation {
         createdEnum.setName(enumName);
         MemberBuilding.setModifiers(modifierElemnts, elem);
         MemberBuilding.packageSelector(createdEnum, packages);
-        createdEnum.setPosition(GeneratedDiagramManager.getDefault().getComponentPosition());
+        createdEnum.setPosition(GeneratedDiagramManager.getInstance().getComponentPosition());
         return createdEnum;
     }
 
@@ -148,7 +143,7 @@ public class ComponentCreation {
     public static void populateTopElementComponent(Element tlc) {
         int methodCounter = 1;
         int construstorCounter = 1;
-        GeneratedDiagramManager.getDefault().resetRelationCounter();
+        GeneratedDiagramManager.getInstance().resetRelationCounter();
         for (Element el : tlc.getEnclosedElements()) {
             Object[] modifierElemnts = el.getModifiers().toArray();
             switch (tlc.getKind()) {

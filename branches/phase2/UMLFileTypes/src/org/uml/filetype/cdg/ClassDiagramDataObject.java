@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.uml.newfiletype.cdg;
+package org.uml.filetype.cdg;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -48,7 +43,7 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 )
 @DataObject.Registration(
         mimeType = "text/x-cdg",
-        iconBase = "org/uml/newfiletype/cdg/classdiagramicon.png",
+        iconBase = "org/uml/filetype/cdg/classdiagramicon.png",
         displayName = "#LBL_ClassDiagram_LOADER",
         position = 300
 )
@@ -146,7 +141,7 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
         topComponent.requestActive();
 
         ClassDiagramScene scene = topComponent.getScene();
-        ClassDiagramManager.getDefault().addScene(scene);
+        ClassDiagramManager.getInstance().addScene(scene);
     }
 
     private ClassDiagram readFromFile(FileObject fileObject) {
@@ -191,9 +186,11 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
 
                 ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
                 ClassDiagram diagram = topComponent.getLookup().lookup(ClassDiagram.class);
+//                ClassDiagramScene cdScene = topComponent.getLookup().lookup(ClassDiagramScene.class);
+                
                 diagram.setName(fo.getName());
                 serializer.setClassDiagram(diagram);
-                serializer.setClassDiagramScene(ClassDiagramManager.getDefault().getSceneForDiagram(diagram));
+                serializer.setClassDiagramScene(ClassDiagramManager.getInstance().getSceneForDiagram(diagram));
                 Document document = DocumentHelper.createDocument();
                 // document.setXMLEncoding("UTF-8");
                 Element root = document.addElement("ClassDiagram");

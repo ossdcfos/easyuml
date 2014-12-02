@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.reveng.classProcessing;
 
 import componentOriginating.RelationshipResolver;
@@ -67,7 +63,7 @@ public class ClassProcessing {
                     try {
                         Class<?> cla = Class.forName(clasI.getName());
                     } catch (ClassNotFoundException ex) {
-                        RelationshipResolver.putIntoRelHashMap(GeneratedDiagramManager.getDefault().getImplementsRelationships(), nameWithPackage, clasI.getName(), "", "");
+                        RelationshipResolver.putIntoRelHashMap(GeneratedDiagramManager.getInstance().getImplementsRelationships(), nameWithPackage, clasI.getName(), "", "");
                     }
                 }
                 //Extends - IS
@@ -76,7 +72,7 @@ public class ClassProcessing {
                     try {
                         Class<?> cla = Class.forName(superclass.getName());
                     } catch (ClassNotFoundException ex) {
-                        RelationshipResolver.putIntoRelHashMap(GeneratedDiagramManager.getDefault().getIsRelationships(), nameWithPackage, superclass.getName(), "", "<<extends>>");
+                        RelationshipResolver.putIntoRelHashMap(GeneratedDiagramManager.getInstance().getIsRelationships(), nameWithPackage, superclass.getName(), "", "<<extends>>");
                     }
                 }
                 System.out.println(cls);

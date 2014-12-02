@@ -1,11 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.reveng;
 
 import java.awt.Point;
-import java.io.File;
 import java.util.HashMap;
 import org.uml.model.ClassDiagram;
 
@@ -44,10 +39,10 @@ public class GeneratedDiagramManager {
      */
     private GeneratedDiagramManager() {
         classDiagram = new ClassDiagram();
-        hasRelationships = new HashMap<String, HashMap<String, Object>>();
-        usesRelationships = new HashMap<String, HashMap<String, Object>>();
-        isRelationships = new HashMap<String, HashMap<String, Object>>();
-        implementsRelationships = new HashMap<String, HashMap<String, Object>>();
+        hasRelationships = new HashMap<>();
+        usesRelationships = new HashMap<>();
+        isRelationships = new HashMap<>();
+        implementsRelationships = new HashMap<>();
         relationCounter = 0;
         componentPosition = new Point(50, 50);
     }
@@ -64,7 +59,7 @@ public class GeneratedDiagramManager {
      *
      * @return instance of GeneratedDiagramManager
      */
-    public static GeneratedDiagramManager getDefault() {
+    public static GeneratedDiagramManager getInstance() {
         if (instance == null) {
             instance = new GeneratedDiagramManager();
         }

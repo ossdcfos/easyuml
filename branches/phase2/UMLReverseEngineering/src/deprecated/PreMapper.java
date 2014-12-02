@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package deprecated;
 
 import java.io.BufferedInputStream;
@@ -11,12 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import org.openide.util.Exceptions;
 
 /**
  * Used for manually parsing generated files, may be required one day for getting method paramers's names.

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.classDiagramManager;
 
 import java.util.HashMap;
@@ -18,10 +14,10 @@ public class ClassDiagramManager {
     private HashMap<ClassDiagram, ClassDiagramScene> diagramSceneMapping;
     
     private ClassDiagramManager() {
-        diagramSceneMapping = new HashMap<ClassDiagram, ClassDiagramScene>();
+        diagramSceneMapping = new HashMap<>();
     }
     
-    public static ClassDiagramManager getDefault() {
+    public static ClassDiagramManager getInstance() {
         if (instance == null) {
             instance = new ClassDiagramManager();
         }

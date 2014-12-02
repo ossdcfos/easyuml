@@ -72,21 +72,21 @@ public final class ReverseEngineer implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
         //Get project's root direstory
         FileObject projectFile = context.getProjectDirectory();
-        //Get root direstory's path
+        //Get root directory's path
         String projectSourcePath = projectFile.getPath();
         //Get default file system separator
         String separator = getSystemSeparator();
         //Start the compilation of files found inside specified path and default file system separator
         Compilation.initiateCompilation(projectSourcePath, separator);
         //Get the generated CLass diagram from Generated diagram manager singleton object
-        ClassDiagram generatedDiagram = GeneratedDiagramManager.getDefault().getClassDiagram();
+        ClassDiagram generatedDiagram = GeneratedDiagramManager.getInstance().getClassDiagram();
         //If the flag for no .class files generated is raised, inform the user
-        if (GeneratedDiagramManager.getDefault().isZeroClassesGenerated()) {
+        if (GeneratedDiagramManager.getInstance().isZeroClassesGenerated()) {
             Confirmation msg = new NotifyDescriptor.Confirmation("Compilation had not generated classes - diagram not generated",
                     NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.ERROR_MESSAGE);
             Object result = DialogDisplayer.getDefault().notify(msg);
         } else {
-            //If .class files fave been genreated
+            //If .class files fave been generated
             //Make top component
             UMLTopComponent tc;
             //Initialise it with generated Class diagram
@@ -101,7 +101,7 @@ public final class ReverseEngineer implements ActionListener {
             //Apply it's layout to diagram (scene)
             je.applyJUNGLayout();
             //Reset static Generated diagram manager's content
-            GeneratedDiagramManager.getDefault().clearContent();
+            GeneratedDiagramManager.getInstance().clearContent();
         }
     }
 

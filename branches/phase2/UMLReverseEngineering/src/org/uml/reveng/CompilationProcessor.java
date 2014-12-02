@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.reveng;
 
 import componentOriginating.ComponentCreation;
@@ -74,11 +70,11 @@ public class CompilationProcessor extends AbstractProcessor {
             ComponentCreation.populateTopElementComponent(e);
         }
         //When all classes are processed, fill in the adjecent Hash Maps
-        GeneratedDiagramManager.getDefault().setClassDiagram(generatedDiagram);
-        GeneratedDiagramManager.getDefault().setUsesRelationships(useRelationships);
-        GeneratedDiagramManager.getDefault().setHasRelationships(hasRelationships);
-        GeneratedDiagramManager.getDefault().setIsRelationships(isRelationships);
-        GeneratedDiagramManager.getDefault().setImplementsRelationships(implementsRelationships);
+        GeneratedDiagramManager.getInstance().setClassDiagram(generatedDiagram);
+        GeneratedDiagramManager.getInstance().setUsesRelationships(useRelationships);
+        GeneratedDiagramManager.getInstance().setHasRelationships(hasRelationships);
+        GeneratedDiagramManager.getInstance().setIsRelationships(isRelationships);
+        GeneratedDiagramManager.getInstance().setImplementsRelationships(implementsRelationships);
         //Create Has and Use(s) relation components based on preocessed elements
         RelationshipResolver.resolveRelationsHasAndUses();
         return true;

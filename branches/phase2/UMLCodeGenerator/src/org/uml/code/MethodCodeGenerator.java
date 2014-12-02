@@ -1,11 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.uml.code;
 
 import java.util.HashMap;
-import java.util.Map;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodBase;
