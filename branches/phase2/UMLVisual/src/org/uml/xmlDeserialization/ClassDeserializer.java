@@ -1,10 +1,10 @@
 package org.uml.xmlDeserialization;
 
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+//import com.thoughtworks.xstream.converters.Converter;
+//import com.thoughtworks.xstream.converters.MarshallingContext;
+//import com.thoughtworks.xstream.converters.UnmarshallingContext;
+//import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+//import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.HashMap;
@@ -22,35 +22,35 @@ import org.uml.model.members.Method;
  *
  * @author Stefan
  */
-class MapToAttributesConverter implements Converter {
-
-    public MapToAttributesConverter() {
-    }
-
-    @Override
-    public boolean canConvert(Class type) {
-        return Map.class.isAssignableFrom(type);
-    }
-
-    @Override
-    public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext mc) {
-        Map<String, Field> map = (Map<String, Field>) o;
-        for (Map.Entry<String, Field> entry : map.entrySet()) {
-            
-        }
-    }
-
-    @Override
-    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext uc) {
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < reader.getAttributeCount(); i++) {
-            String key = reader.getAttributeName(i);
-            String value = reader.getAttribute(key);
-            map.put(key, value);
-        }
-        return map;
-    }
-}
+//class MapToAttributesConverter implements Converter {
+//
+//    public MapToAttributesConverter() {
+//    }
+//
+//    @Override
+//    public boolean canConvert(Class type) {
+//        return Map.class.isAssignableFrom(type);
+//    }
+//
+//    @Override
+//    public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext mc) {
+//        Map<String, Field> map = (Map<String, Field>) o;
+//        for (Map.Entry<String, Field> entry : map.entrySet()) {
+//            
+//        }
+//    }
+//
+//    @Override
+//    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext uc) {
+//        Map<String, String> map = new HashMap<>();
+//        for (int i = 0; i < reader.getAttributeCount(); i++) {
+//            String key = reader.getAttributeName(i);
+//            String value = reader.getAttribute(key);
+//            map.put(key, value);
+//        }
+//        return map;
+//    }
+//}
 
 public class ClassDeserializer implements XmlDeserializer {
 

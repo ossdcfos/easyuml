@@ -1,6 +1,6 @@
 package org.uml.model.components;
 
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import org.uml.model.members.MethodBase;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
@@ -19,7 +19,7 @@ import org.uml.model.members.Method;
  */
 public class ClassComponent extends ComponentBase {
 
-    @XStreamAsAttribute
+//    @XStreamAsAttribute
     private LinkedHashMap<String, Field> fields;
     private LinkedHashMap<String, Constructor> constructors;
     private LinkedHashMap<String, Method> methods;
