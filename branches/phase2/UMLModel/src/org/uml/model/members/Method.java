@@ -1,5 +1,6 @@
 package org.uml.model.members;
 
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import org.uml.model.Visibility;
 
@@ -36,6 +37,20 @@ public class Method extends MethodBase {
         result.append(getSignatureForLabel());
         result.append(";\n");
         return result.toString();
+    }
+    
+    public boolean isAbstract() {
+        return Modifier.isAbstract(modifiers);
+    }
+    
+    public void setAbstract(boolean isAbstract) {
+        int oldModifiers = modifiers;
+        if(isAbstract) {
+            modifiers |= Modifier.ABSTRACT;
+        } else {
+            modifiers &= ~Modifier.ABSTRACT;
+        }
+        fire("isAbstract", Modifier.isAbstract(oldModifiers), isAbstract());
     }
     
 }

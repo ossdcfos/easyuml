@@ -34,7 +34,7 @@ public abstract class MemberBase implements INameable {
     //private String modifiers; //modifiers are implemented as Strings, it is possible to later be changed to enum
     private transient ComponentBase declaringClass;
     protected Visibility visibility;
-    private transient List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
+    private transient List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         listeners.add(pcl);
@@ -81,8 +81,49 @@ public abstract class MemberBase implements INameable {
         return modifiers;
     }
 
-    public void setModifiers(int modifier) {
-        this.modifiers = modifier;
+//    public void setModifiers(int modifier) {
+//        this.modifiers = modifier;
+//    }
+
+    /**
+     * Adds numerical representation of java Modifier enum's constants into
+     * modifiers array.
+     * <p>
+     * Modifiers array can hold up to four modifier constants. Modifiers are
+     * thoroughly explained in Member class.
+     *
+     * @param modifier to be added to modifiers array
+     * @see java.lang.reflect.Modifier
+     * @see MemberBase
+     */
+    public void addModifier(int modifier) {
+        modifiers |= modifier;
+    }
+
+    /**
+     * Removes given modifier integer from modifiers array.
+     * <p>
+     * Modifiers are thoroughly explained in Member class.
+     *
+     * @param modifier to be removed
+     * @see Modifier
+     */
+    public void deleteModifier(int modifier) {
+        modifiers &= ~modifier;
+    }
+
+//    /**
+//     * Returns String representation of modifiers array, concatenated with one
+//     * blank space in between (" ").
+//     *
+//     * @return concatenated String representation of modifiers array
+//     */
+//    public String getModifiersAsString() {
+//        return Modifier.toString(modifiers);
+//    }
+
+    public void resetModifiers() {
+        modifiers = 0;
     }
 
     public ComponentBase getDeclaringClass() {

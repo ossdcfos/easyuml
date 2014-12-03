@@ -124,10 +124,10 @@ public class GeneratedDiagramManager {
      *
      * @return Point object that consists of X and Y position on scene
      */
-    public Point getComponentPosition() {
+    public Point getNextComponentPosition() {
         Point oldPoint = new Point();
         if (componentPosition.getX() > 1000) {
-            componentPosition.move(50, (int) componentPosition.getY() + 800);
+            componentPosition.move(50, (int) componentPosition.getY() + 400);
         }
         oldPoint.x = (int) componentPosition.getX();
         oldPoint.y = (int) componentPosition.getY();
