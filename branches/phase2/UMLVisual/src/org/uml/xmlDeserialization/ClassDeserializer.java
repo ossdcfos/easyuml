@@ -51,7 +51,6 @@ import org.uml.model.members.Method;
 //        return map;
 //    }
 //}
-
 public class ClassDeserializer implements XmlDeserializer {
 
     private ClassComponent classComponent;
@@ -69,19 +68,25 @@ public class ClassDeserializer implements XmlDeserializer {
      */
     @Override
     public void deserialize(Element node) {
-        String packageName = node.attributeValue("package");
+//        String packageName = node.attributeValue("package");
         String className = node.attributeValue("name");
         String isAbstract = node.attributeValue("isAbstract");
         String visibility = node.attributeValue("visibility");
         int xPos = (int) Double.parseDouble(node.attributeValue("xPosition"));
         int yPos = (int) Double.parseDouble(node.attributeValue("yPosition"));
-        int width = Integer.parseInt(node.attributeValue("width"));
-        int height = Integer.parseInt(node.attributeValue("height"));
-        int xOff = Integer.parseInt(node.attributeValue("xOff"));
-        int yOff = Integer.parseInt(node.attributeValue("yOff"));
-        
+        String widthString = node.attributeValue("width");
+        String heightString = node.attributeValue("height");
+        String xOffString = node.attributeValue("xOff");
+        String yOffString = node.attributeValue("yOff");
+
         classComponent.setPosition(new Point(xPos, yPos));
-        classComponent.setBounds(new Rectangle(xOff, yOff, width, height));
+        if (widthString != null) {
+            int width = Integer.parseInt(widthString);
+            int height = Integer.parseInt(heightString);
+            int xOff = Integer.parseInt(xOffString);
+            int yOff = Integer.parseInt(yOffString);
+            classComponent.setBounds(new Rectangle(xOff, yOff, width, height));
+        }
 //        if (packageName != null) {
 //            classComponent.setParentPackage(new PackageComponent(classComponent.getParentDiagram(), packageName));
 //        }
@@ -94,7 +99,7 @@ public class ClassDeserializer implements XmlDeserializer {
         if (visibility != null) {
             classComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         }
-        
+
         Iterator<?> constructorIterator = node.element("Constructors").elementIterator("Constructor");
         while (constructorIterator != null && constructorIterator.hasNext()) {
             Element constructorElement = (Element) constructorIterator.next();
@@ -103,7 +108,7 @@ public class ClassDeserializer implements XmlDeserializer {
             cd.deserialize(constructorElement);
             classComponent.addConstructor(constructor);
         }
-        
+
         Iterator<?> fieldIterator = node.element("Fields").elementIterator("Field");
         while (fieldIterator != null && fieldIterator.hasNext()) {
             Element fieldElement = (Element) fieldIterator.next();
