@@ -68,46 +68,79 @@ public abstract class MethodBase extends MemberBase {
     public void setArguments(HashMap<String, MethodArgument> arguments) {
         this.arguments = arguments;
     }
-
-    /**
-     * Adds numerical representation of java Modifier enum's constants into
-     * modifiers array.
-     * <p>
-     * Modifiers array can hold up to four modifier constants. Modifiers are
-     * thoroughly explained in Member class.
+    
+        /**
+     * Returns true if the field has static modifier, false if it is not static
      *
-     * @param modifier to be added to modifiers array
-     * @see java.lang.reflect.Modifier
-     * @see MemberBase
+     * @return true if field is static, false if it isn't
      */
-    public void addModifier(int modifier) {
-        modifiers |= modifier;
+    public boolean isStatic() {
+        return Modifier.isStatic(modifiers);
     }
 
     /**
-     * Removes given modifier integer from modifiers array.
-     * <p>
-     * Modifiers are thoroughly explained in Member class.
+     * Set this field's static modifier to true or false
      *
-     * @param modifier to be removed
-     * @see Modifier
+     * @param isStatic - set true if the field is static, false if it isn't
      */
-    public void deleteModifier(int modifier) {
-        modifiers &= ~modifier;
+    public void setStatic(boolean isStatic) {
+        int oldModifiers = modifiers;
+        if(isStatic) {
+            modifiers |= Modifier.STATIC;
+        } else {
+            modifiers &= ~Modifier.STATIC;
+        }
+        fire("isStatic", Modifier.isStatic(oldModifiers), isStatic());
     }
 
     /**
-     * Returns String representation of modifiers array, concatenated with one
-     * blank space in between (" ").
+     * Returns true if the field has final modifier, false if it is not final
      *
-     * @return concatenated String representation of modifiers array
+     * @return true if field is final, false if it isn't
      */
-    public String getModifiersAsString() {
-        return Modifier.toString(modifiers);
+    public boolean isFinal() {
+        return Modifier.isFinal(modifiers);
     }
 
-    public void resetModifiers() {
-        modifiers = 0;
+    /**
+     * Set this field's final modifier to true or false
+     *
+     * @param isFinal - set true if the field is final, false if it isn't
+     */
+    public void setFinal(boolean isFinal) {
+        int oldModifiers = modifiers;
+        if(isFinal) {
+            modifiers |= Modifier.FINAL;
+        } else {
+            modifiers &= ~Modifier.FINAL;
+        }
+        fire("isFinal", Modifier.isFinal(oldModifiers), isFinal());
+    }
+
+    /**
+     * Returns true if the field has synchronized modifier, false if it is not
+     * synchronized
+     *
+     * @return true if field is synchronized, false if it isn't
+     */
+    public boolean isSynchronized() {
+        return Modifier.isSynchronized(modifiers);
+    }
+
+    /**
+     * Set this field's final synchronized to true or false
+     *
+     * @param isSynchronized - set true if the field is synchronized, false if
+     * it isn't
+     */
+    public void setSynchronized(boolean isSynchronized) {
+        int oldModifiers = modifiers;
+        if(isSynchronized) {
+            modifiers |= Modifier.SYNCHRONIZED;
+        } else {
+            modifiers &= ~Modifier.SYNCHRONIZED;
+        }
+        fire("isSynchronized", Modifier.isSynchronized(oldModifiers), isSynchronized());
     }
 
     /**

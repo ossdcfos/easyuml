@@ -33,7 +33,7 @@ public class CompilationProcessor extends AbstractProcessor {
 
     public static ClassDiagram generatedDiagram = new ClassDiagram();
 
-    public static List<ComponentBase> allFoundClasses = new ArrayList<>();
+//    public static List<ComponentBase> allFoundClasses = new ArrayList<>();
 
     public static HashMap<String, HashMap<String, Object>> hasRelationships = new HashMap<>();
     public static HashMap<String, HashMap<String, Object>> useRelationships = new HashMap<>();
@@ -57,7 +57,7 @@ public class CompilationProcessor extends AbstractProcessor {
         //For each element (class) found inside compilation task
         for (Element e : roundEnvironment.getRootElements()) {
             //Creates a Top level component (Class, Enum or Interface component)
-            ComponentCreation.createTopElementComponent(e);
+            ComponentCreation.createComponent(e);
             /*System.out.println(
              e.getKind() + " "
              + e.getModifiers() + " "
@@ -67,7 +67,7 @@ public class CompilationProcessor extends AbstractProcessor {
              + e.toString() + " "
              + e.getEnclosingElement().getSimpleName());*/
             //Populates it based on data it contains
-            ComponentCreation.populateTopElementComponent(e);
+            ComponentCreation.populateComponent(e);
         }
         //When all classes are processed, fill in the adjecent Hash Maps
         GeneratedDiagramManager.getInstance().setClassDiagram(generatedDiagram);
@@ -76,7 +76,7 @@ public class CompilationProcessor extends AbstractProcessor {
         GeneratedDiagramManager.getInstance().setIsRelationships(isRelationships);
         GeneratedDiagramManager.getInstance().setImplementsRelationships(implementsRelationships);
         //Create Has and Use(s) relation components based on preocessed elements
-        RelationshipResolver.resolveRelationsHasAndUses();
+//        RelationshipResolver.resolveRelationsHasAndUses();
         return true;
     }
 }

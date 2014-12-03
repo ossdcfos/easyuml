@@ -75,7 +75,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         if (nameExists(member.toString())) {
             //member.setName(member.getName() + memberCounter);
             //JOptionPane.showMessageDialog(null, "You have entered name that already exists, please enter new one.");
-            throw new RuntimeException("Error while entering member name: name already exists. Member name: " + member.getName());
+            throw new RuntimeException("Error while inserting member name: name already exists. Member name: " + member.getName());
         }
 //        members.put(member.toString(), member);
         components.put(member.getName(), member);
