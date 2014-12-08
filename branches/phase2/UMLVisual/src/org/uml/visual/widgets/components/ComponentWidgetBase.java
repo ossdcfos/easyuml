@@ -12,7 +12,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.MoveProvider;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -25,7 +24,6 @@ import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.INameableWidget;
 import org.uml.visual.widgets.TranslucentCompositeBorder;
 import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
-import org.uml.visual.widgets.actions.unused.ModifyingAlignWithMoveAndResizeAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
 
