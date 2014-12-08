@@ -1,14 +1,18 @@
 package org.uml.visual.widgets.members;
 
 import java.awt.Color;
+import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.members.MemberBase;
+import org.uml.visual.UMLTopComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.INameableWidget;
+import org.uml.visual.widgets.actions.NameEditorAction;
 
 /**
  *
@@ -17,6 +21,7 @@ import org.uml.visual.widgets.INameableWidget;
 public abstract class MemberWidgetBase extends LabelWidget implements INameableWidget {
 
     MemberBase component;
+    protected WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     
     protected static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(1);
     protected static final Border HOVER_BORDER = BorderFactory.createLineBorder(1, Color.GRAY);

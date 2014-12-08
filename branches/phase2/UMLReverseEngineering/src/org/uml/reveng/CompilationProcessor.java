@@ -1,10 +1,7 @@
 package org.uml.reveng;
 
 import componentOriginating.ComponentCreation;
-import componentOriginating.RelationshipResolver;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -15,7 +12,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
 
@@ -31,18 +27,18 @@ import org.uml.model.components.InterfaceComponent;
 @SupportedAnnotationTypes("*")
 public class CompilationProcessor extends AbstractProcessor {
 
-    public static ClassDiagram generatedDiagram = new ClassDiagram();
+    public static ClassDiagram generatedDiagram;
 
 //    public static List<ComponentBase> allFoundClasses = new ArrayList<>();
 
-    public static HashMap<String, HashMap<String, Object>> hasRelationships = new HashMap<>();
-    public static HashMap<String, HashMap<String, Object>> useRelationships = new HashMap<>();
-    public static HashMap<String, HashMap<String, Object>> isRelationships = new HashMap<>();
-    public static HashMap<String, HashMap<String, Object>> implementsRelationships = new HashMap<>();
+//    public static HashMap<String, HashMap<String, Object>> hasRelationships = new HashMap<>();
+//    public static HashMap<String, HashMap<String, Object>> useRelationships = new HashMap<>();
+//    public static HashMap<String, HashMap<String, Object>> isRelationships = new HashMap<>();
+//    public static HashMap<String, HashMap<String, Object>> implementsRelationships = new HashMap<>();
 
     public static ClassComponent genClass = null;
-    public static InterfaceComponent genInterface = null;
-    public static EnumComponent genEnum = null;
+//    public static InterfaceComponent genInterface = null;
+//    public static EnumComponent genEnum = null;
 
     /**
      * Inherited method that handles every file that is being compiled. Also
@@ -67,14 +63,14 @@ public class CompilationProcessor extends AbstractProcessor {
              + e.toString() + " "
              + e.getEnclosingElement().getSimpleName());*/
             //Populates it based on data it contains
-            ComponentCreation.populateComponent(e);
+//            ComponentCreation.populateComponent(e);
         }
         //When all classes are processed, fill in the adjecent Hash Maps
         GeneratedDiagramManager.getInstance().setClassDiagram(generatedDiagram);
-        GeneratedDiagramManager.getInstance().setUsesRelationships(useRelationships);
-        GeneratedDiagramManager.getInstance().setHasRelationships(hasRelationships);
-        GeneratedDiagramManager.getInstance().setIsRelationships(isRelationships);
-        GeneratedDiagramManager.getInstance().setImplementsRelationships(implementsRelationships);
+//        GeneratedDiagramManager.getInstance().setUsesRelationships(useRelationships);
+//        GeneratedDiagramManager.getInstance().setHasRelationships(hasRelationships);
+//        GeneratedDiagramManager.getInstance().setIsRelationships(isRelationships);
+//        GeneratedDiagramManager.getInstance().setImplementsRelationships(implementsRelationships);
         //Create Has and Use(s) relation components based on preocessed elements
 //        RelationshipResolver.resolveRelationsHasAndUses();
         return true;

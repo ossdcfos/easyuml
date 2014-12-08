@@ -99,20 +99,47 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
             visibilityProp.setName("Visibility");
             propertiesSet.put(visibilityProp);
 
-            if (member instanceof Field) {
-                Field field = (Field) member;
+            if (member instanceof Field || member instanceof Method) {
 
-                Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(field, boolean.class, "isStatic", "setStatic");
-                isStaticProp.setName("static");
-                propertiesSet.put(isStaticProp);
+                if (member instanceof Field) {
+                    Field field = (Field) member;
+                    
+                    Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(field, boolean.class, "isStatic", "setStatic");
+                    isStaticProp.setName("static");
+                    propertiesSet.put(isStaticProp);
 
-                Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(field, boolean.class, "isFinal", "setFinal");
-                isFinalProp.setName("final");
-                propertiesSet.put(isFinalProp);
+                    Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(field, boolean.class, "isFinal", "setFinal");
+                    isFinalProp.setName("final");
+                    propertiesSet.put(isFinalProp);
+                    
+                    Property<Boolean> isTransientProp = new PropertySupport.Reflection<>(field, boolean.class, "isTransient", "setTransient");
+                    isTransientProp.setName("transient");
+                    propertiesSet.put(isTransientProp);
 
-                Property<Boolean> isSynchronizedProp = new PropertySupport.Reflection<>(field, boolean.class, "isSynchronized", "setSynchronized");
-                isSynchronizedProp.setName("synchronized");
-                propertiesSet.put(isSynchronizedProp);
+                    Property<Boolean> isVolatileProp = new PropertySupport.Reflection<>(field, boolean.class, "isVolatile", "setVolatile");
+                    isVolatileProp.setName("volatile");
+                    propertiesSet.put(isVolatileProp);
+                }
+
+                if (member instanceof Method) {
+                    Method method = (Method) member;
+                    
+                    Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(method, boolean.class, "isStatic", "setStatic");
+                    isStaticProp.setName("static");
+                    propertiesSet.put(isStaticProp);
+
+                    Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(method, boolean.class, "isFinal", "setFinal");
+                    isFinalProp.setName("final");
+                    propertiesSet.put(isFinalProp);
+                    
+                    Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(method, boolean.class, "isAbstract", "setAbstract");
+                    isAbstractProp.setName("abstract");
+                    propertiesSet.put(isAbstractProp);
+
+                    Property<Boolean> isSynchronizedProp = new PropertySupport.Reflection<>(method, boolean.class, "isSynchronized", "setSynchronized");
+                    isSynchronizedProp.setName("synchronized");
+                    propertiesSet.put(isSynchronizedProp);
+                }
             }
 
 //            PackageComponent pack = component.getParentPackage();
@@ -133,10 +160,10 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
      * @param newName to be set to ClassDiagramComponent
      */
     public void changeName(String newName) {
-        if(getName().equals(newName)){
+        if (getName().equals(newName)) {
             return;
         } else if (member.getDeclaringClass().nameExists(newName)) {
-            JOptionPane.showMessageDialog(null, "Name \""+newName+"\" already exists!");
+            JOptionPane.showMessageDialog(null, "Name \"" + newName + "\" already exists!");
 //            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
 //            //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
         } else {
@@ -146,8 +173,8 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if("name".equals(evt.getPropertyName())){
-            String newName = (String)evt.getNewValue();
+        if ("name".equals(evt.getPropertyName())) {
+            String newName = (String) evt.getNewValue();
             setName(newName);
             this.fireDisplayNameChange(null, newName);
         }

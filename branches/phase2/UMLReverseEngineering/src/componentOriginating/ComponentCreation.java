@@ -80,7 +80,7 @@ public class ComponentCreation {
      * @see ClassComponent
      */
     private static ClassComponent classBuilder(Element elem, Object[] modifierElemnts) {
-        String projectPath = elem.toString();
+//        String projectPath = elem.toString();
         String className = elem.getSimpleName().toString();
 //        String packages = projectPath.split(className)[0].substring(0, projectPath.length() - className.length() - 1);
         ClassComponent createdClass = new ClassComponent();
@@ -142,9 +142,9 @@ public class ComponentCreation {
      * @param tlc element based on which the component is created
      */
     public static void populateComponent(Element tlc) {
-        int methodCounter = 1;
-        int construstorCounter = 1;
-        GeneratedDiagramManager.getInstance().resetRelationCounter();
+//        int methodCounter = 1;
+//        int construstorCounter = 1;
+//        GeneratedDiagramManager.getInstance().resetRelationCounter();
         for (Element el : tlc.getEnclosedElements()) {
             Object[] modifierElemnts = el.getModifiers().toArray();
             switch (tlc.getKind()) {

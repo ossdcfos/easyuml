@@ -68,7 +68,7 @@ public class MemberBuilding {
 //        Element superE = element.getEnclosingElement();
 //        String fieldClassPath = superE.getEnclosingElement() + "." + superE.getSimpleName();
 //        RelationshipResolver.relationshipHasCreator(type, fieldClassPath, "", fieldName);
-        Field createdField = new Field(fieldName, typeShort, Visibility.PUBLIC);
+        Field createdField = new Field(fieldName, typeShort, Visibility.PACKAGE);
         setModifiers(createdField, modifierElemnts);
         return createdField;
     }
@@ -162,21 +162,19 @@ public class MemberBuilding {
             component = (ComponentBase) elementToProcess;
         }
         //String visibility = "package"; Package returns "" and diagram can not be recreated from .cdg file when written as so
-        String visibility = "public";
-        int modifierInt = Modifier.PUBLIC; //Java does not currently support modifier int for packages, public is used instead
+        String visibility = "package";
+        //Java does not currently support modifier int for packages, public is used instead
         for (Object modifier : modifierElements) {
+            int modifierInt;
             String modString = modifier.toString().toLowerCase();
             if (modString.equals(Modifier.toString(Modifier.PUBLIC))) {
                 visibility = modString;
-                modifierInt = Modifier.PUBLIC;
             }
             if (modString.equals(Modifier.toString(Modifier.PRIVATE))) {
                 visibility = modString;
-                modifierInt = Modifier.PRIVATE;
             }
             if (modString.equals(Modifier.toString(Modifier.PROTECTED))) {
                 visibility = modString;
-                modifierInt = Modifier.PROTECTED;
             }
             Visibility vis = Visibility.valueOf(visibility.toUpperCase());
             if (member != null) member.setVisibility(vis);
@@ -186,24 +184,28 @@ public class MemberBuilding {
                 modifierInt = Modifier.STATIC;
                 if (member instanceof Field) {
                     ((Field) member).setStatic(true);
-                } else if (member instanceof MethodBase) {
-                    ((MethodBase) member).setStatic(true);
+                } else if (member instanceof Method) {
+                    ((Method) member).setStatic(true);
                 }
             }
             if (modString.equals(Modifier.toString(Modifier.FINAL))) {
                 modifierInt = Modifier.FINAL;
                 if (member instanceof Field) {
                     ((Field) member).setFinal(true);
-                } else if (member instanceof MethodBase) {
-                    ((MethodBase) member).setFinal(true);
+                } else if (member instanceof Method) {
+                    ((Method) member).setFinal(true);
                 }
             }
             if (modString.equals(Modifier.toString(Modifier.SYNCHRONIZED))) {
                 modifierInt = Modifier.SYNCHRONIZED;
+                if (member instanceof Method) {
+                    ((Method) member).setSynchronized(true);
+                }
+            }
+            if (modString.equals(Modifier.toString(Modifier.TRANSIENT))) {
+                modifierInt = Modifier.TRANSIENT;
                 if (member instanceof Field) {
-                    ((Field) member).setSynchronized(true);
-                } else if (member instanceof MethodBase) {
-                    ((MethodBase) member).setSynchronized(true);
+                    ((Field) member).setTransient(true);
                 }
             }
             if (modString.equals(Modifier.toString(Modifier.ABSTRACT))) {

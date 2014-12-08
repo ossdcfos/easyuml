@@ -27,13 +27,15 @@ public class FieldDeserializer implements XmlDeserializer{
         String type = node.attributeValue("type");
         String isStatic = node.attributeValue("isStatic");
         String isFinal = node.attributeValue("isFinal");
-        String isSynchronized = node.attributeValue("isSynchronized");
+        String isTransient = node.attributeValue("isTransient");
+        String isVolatile = node.attributeValue("isVolatile");
         if (name != null) field.setName(name);
         if (visibility != null) field.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         if (type != null) field.setType(type);
         if (isStatic != null) field.setStatic(Boolean.parseBoolean(isStatic));
         if (isFinal != null) field.setFinal(Boolean.parseBoolean(isFinal));
-        if (isSynchronized != null) field.setSynchronized(Boolean.parseBoolean(isSynchronized));
+        if (isTransient != null) field.setTransient(Boolean.parseBoolean(isTransient));
+        if (isVolatile != null) field.setTransient(Boolean.parseBoolean(isVolatile));
     }
     
 }

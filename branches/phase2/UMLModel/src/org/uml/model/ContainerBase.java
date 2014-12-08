@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class ContainerBase<T extends INameable> implements INameable {
     
     protected String name;
-    protected HashMap<String, INameable> components; // contains classes, interfaces or enums
+    protected HashMap<String, T> components; // contains classes, interfaces or enums
     protected transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
 
     public ContainerBase(String name) {
@@ -32,7 +32,7 @@ public abstract class ContainerBase<T extends INameable> implements INameable {
      *
      * @param component to be added to collection
      */
-    public void addComponent(INameable component) {
+    public void addComponent(T component) {
         String componentName = component.getName();
         int suffix = 1;
         while (nameExists(component.getName())) {

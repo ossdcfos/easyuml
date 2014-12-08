@@ -26,26 +26,27 @@ import org.openide.filesystems.FileObject;
 import org.uml.jung.JUNGEngine;
 import org.openide.NotifyDescriptor.Confirmation;
 import org.openide.awt.ActionReferences;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 
 @ActionID(
         category = "Source",
-        id = "org.uml.reveng.ReverseEngineer")
+        id = "org.uml.reveng.ReverseEngineerAction")
 @ActionRegistration(
-        displayName = "#CTL_ReverseEngineer")
+        displayName = "#CTL_ReverseEngineerAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Source", position = 50),
     @ActionReference(path = "Projects/org-netbeans-modules-java-j2seproject/Actions", position = 1050)
 })
-@Messages("CTL_ReverseEngineer=easyUML Reverse Engineer")
+@Messages("CTL_ReverseEngineerAction=easyUML Reverse Engineer")
 /**
  * Class that responds to Reverse Engineer command from the main window
  * 
  * @author Milan Djoric
  */
-public final class ReverseEngineer implements ActionListener {
+public final class ReverseEngineerAction implements ActionListener {
 
     private final Project context;
     
@@ -53,7 +54,7 @@ public final class ReverseEngineer implements ActionListener {
      * Default constructor
      * @param context in which the command is issued
      */
-    public ReverseEngineer(Project context) {
+    public ReverseEngineerAction(Project context) {
         this.context = context;
     }
 
@@ -90,10 +91,15 @@ public final class ReverseEngineer implements ActionListener {
             //Make top component
             UMLTopComponent tc;
             //Initialise it with generated Class diagram
-            tc = new UMLTopComponent(generatedDiagram, null);
+            tc = new UMLTopComponent(generatedDiagram);
             
             //Save the diagram into project's path
             File savedFile = saveDiagramLocally(projectFile, generatedDiagram, tc, separator);
+            try {
+                tc.setFileObject(FileUtil.createData(savedFile));
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
             //Present the generated diagram to user
             tc.open();
             //Make JUNG object

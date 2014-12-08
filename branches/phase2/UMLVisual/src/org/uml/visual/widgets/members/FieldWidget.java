@@ -1,11 +1,9 @@
 package org.uml.visual.widgets.members;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.openide.util.WeakListeners;
@@ -17,8 +15,7 @@ import static org.uml.model.Visibility.PROTECTED;
 import static org.uml.model.Visibility.PUBLIC;
 import org.uml.visual.parser.WidgetParser;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.popups.FieldPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
 
 /**
  *
@@ -26,7 +23,6 @@ import org.uml.visual.widgets.providers.popups.FieldPopupMenuProvider;
  */
 public class FieldWidget extends MemberWidgetBase implements PropertyChangeListener {
 
-    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     LabelWidget visibilityLabel;
     LabelWidget nameWidget;
     WidgetParser wp;
@@ -51,7 +47,7 @@ public class FieldWidget extends MemberWidgetBase implements PropertyChangeListe
         this.addChild(nameWidget);
         nameWidget.getActions().addAction(nameEditorAction);
 
-        getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(this)));
+        getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
         wp = new WidgetParser();
         refreshVisibilityLabel();
     }

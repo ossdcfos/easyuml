@@ -2,15 +2,13 @@ package org.uml.visual.widgets.members;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import org.uml.visual.widgets.providers.popups.ConstructorPopupMenuProvider;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.MemberBase;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
 
 /**
  *
@@ -19,7 +17,6 @@ import org.uml.visual.widgets.actions.NameEditorAction;
 public class ConstructorWidget extends MemberWidgetBase implements PropertyChangeListener{
 
     Constructor constructorComponent;
-    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     LabelWidget visibilityLabel;
     LabelWidget nameLabel;
     
@@ -36,7 +33,7 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
         this.addChild(nameLabel);
         //construktorNameWidget.getActions().addAction(nameEditorAction);
         
-        getActions().addAction(ActionFactory.createPopupMenuAction(new ConstructorPopupMenuProvider(this)));
+        getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
     }
     
     @Override
