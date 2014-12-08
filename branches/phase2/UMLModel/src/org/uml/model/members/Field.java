@@ -19,10 +19,6 @@ import org.uml.model.components.EnumComponent;
  *
  */
 public class Field extends MemberBase {
-    // sta ako je niz? da li treba koristiti Type?
-
-    private String type;
-    //these two should go to Member class, and provide nice API
 
     /**
      * Constructor that sets the name, type and visibility of the Field.
@@ -86,29 +82,55 @@ public class Field extends MemberBase {
     }
 
     /**
-     * Returns true if the field has synchronized modifier, false if it is not
-     * synchronized
+     * Returns true if the field has transient modifier, false if it is not
+     * transient
      *
-     * @return true if field is synchronized, false if it isn't
+     * @return true if field is transient, false if it isn't
      */
-    public boolean isSynchronized() {
-        return Modifier.isSynchronized(modifiers);
+    public boolean isTransient() {
+        return Modifier.isTransient(modifiers);
     }
 
     /**
-     * Set this field's final synchronized to true or false
+     * Set this field's final transient to true or false
      *
-     * @param isSynchronized - set true if the field is synchronized, false if
+     * @param isTransient - set true if the field is transient, false if
      * it isn't
      */
-    public void setSynchronized(boolean isSynchronized) {
+    public void setTransient(boolean isTransient) {
         int oldModifiers = modifiers;
-        if(isSynchronized) {
-            modifiers |= Modifier.SYNCHRONIZED;
+        if(isTransient) {
+            modifiers |= Modifier.TRANSIENT;
         } else {
-            modifiers &= ~Modifier.SYNCHRONIZED;
+            modifiers &= ~Modifier.TRANSIENT;
         }
-        fire("isSynchronized", Modifier.isSynchronized(oldModifiers), isSynchronized());
+        fire("isTransient", Modifier.isTransient(oldModifiers), isTransient());
+    }
+
+    /**
+     * Returns true if the field has volatile modifier, false if it is not
+     * volatile
+     *
+     * @return true if field is volatile, false if it isn't
+     */
+    public boolean isVolatile() {
+        return Modifier.isVolatile(modifiers);
+    }
+
+    /**
+     * Set this field's final volatile to true or false
+     *
+     * @param isVolatile - set true if the field is volatile, false if
+     * it isn't
+     */
+    public void setVolatile(boolean isVolatile) {
+        int oldModifiers = modifiers;
+        if(isVolatile) {
+            modifiers |= Modifier.VOLATILE;
+        } else {
+            modifiers &= ~Modifier.VOLATILE;
+        }
+        fire("isVolatile", Modifier.isVolatile(oldModifiers), isVolatile());
     }
 
     /**
@@ -126,8 +148,8 @@ public class Field extends MemberBase {
             case "final":
                 setFinal(true);
                 break;
-            case "synchronized":
-                setSynchronized(true);
+            case "transient":
+                setTransient(true);
                 break;
         }
     }
@@ -138,7 +160,7 @@ public class Field extends MemberBase {
     public void resetModifiers() {
         setFinal(false);
         setStatic(false);
-        setSynchronized(false);
+        setTransient(false);
     }
 
     /**

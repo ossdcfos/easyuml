@@ -1,6 +1,5 @@
 package org.uml.model;
 
-import org.uml.model.components.PackageComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.RelationBase;
 import java.io.Serializable;
@@ -36,7 +35,7 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
     }
 
     @Override
-    public void addComponent(INameable component) {
+    public void addComponent(ComponentBase component) {
         super.addComponent(component);
         ((ComponentBase)component).setParentDiagram(this);
     }

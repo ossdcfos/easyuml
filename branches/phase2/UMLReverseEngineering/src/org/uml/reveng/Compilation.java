@@ -14,6 +14,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import org.apache.commons.io.FileUtils;
+import org.uml.model.ClassDiagram;
+import static org.uml.reveng.CompilationProcessor.generatedDiagram;
 
 /**
  * Compilation process that processes all required files starts here.
@@ -70,18 +72,19 @@ public class Compilation {
         LinkedList<AbstractProcessor> processors = new LinkedList<>();
         //Adding a annotation processor(s) to the the above mentioned list
         processors.add(new CompilationProcessor());
+        CompilationProcessor.generatedDiagram = new ClassDiagram();
         //Setting annotation prosessor(s) to the compilation task
         task.setProcessors(processors);
         //Staritng the compilation
         task.call();
         
         //Searching for .class files that have been made
-        Collection<File> classFiles = FileUtils.listFiles(new File(tempClassFolderPath), new String[]{"class"}, true);
-        String[] classFilesStrings = new String[classFiles.size()];
-        i = 0;
-        for(File cf : classFiles){
-            classFilesStrings[i++] = cf.getAbsoluteFile().toString();
-        }
+//        Collection<File> classFiles = FileUtils.listFiles(new File(tempClassFolderPath), new String[]{"class"}, true);
+//        String[] classFilesStrings = new String[classFiles.size()];
+//        i = 0;
+//        for(File cf : classFiles){
+//            classFilesStrings[i++] = cf.getAbsoluteFile().toString();
+//        }
         
 //        // **** SECOND PASS ****
 //        //Fill in data about Implements and Extends relations that the compiler couldn't get

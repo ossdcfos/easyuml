@@ -2,9 +2,11 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="UML">
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin/UMLVisual/src/org/uml/visual/widgets/members/FieldWidget.java</file>
-        </group>
         <group/>
+        <group name="UML">
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin%20phase%203/UMLVisual/src/org/uml/visual/widgets/actions/ModifyingAlignWithMoveAndResizeStrategyProvider.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin%20phase%203/UMLVisual/src/org/uml/visual/widgets/components/ComponentWidgetBase.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin%20phase%203/UMLVisual/src/org/uml/visual/widgets/actions/ModifyingAlignWithMoveAndResizeAction.java</file>
+        </group>
     </open-files>
 </project-private>

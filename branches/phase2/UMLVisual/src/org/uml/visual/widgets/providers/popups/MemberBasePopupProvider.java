@@ -14,13 +14,13 @@ import org.uml.visual.widgets.members.MemberWidgetBase;
  *
  * @author Boris
  */
-public abstract class MemberBasePopupProvider implements PopupMenuProvider {
+public class MemberBasePopupProvider implements PopupMenuProvider {
         
     protected MemberWidgetBase widget;
     protected JPopupMenu menu;
     private JMenuItem deleteMember;
     
-    protected MemberBasePopupProvider(MemberWidgetBase widget){
+    public MemberBasePopupProvider(MemberWidgetBase widget){
         this.widget = widget;
         String name = widget.getMember().getClass().getSimpleName();
         menu = new JPopupMenu(name+" Menu");

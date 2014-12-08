@@ -1,20 +1,13 @@
 package org.uml.visual.widgets.components;
 
 import org.uml.visual.widgets.members.LiteralWidget;
-import org.uml.visual.widgets.members.ConstructorWidget;
-import org.uml.visual.widgets.members.MethodWidget;
-import org.uml.visual.widgets.members.FieldWidget;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.members.Constructor;
 import org.uml.model.components.EnumComponent;
-import org.uml.model.members.Field;
 import org.uml.model.members.Literal;
-import org.uml.model.members.MethodBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.providers.popups.EnumPopupMenuProvider;
 
@@ -113,59 +106,59 @@ public class EnumWidget extends ComponentWidgetBase {
         return component.getName();
     }
 
-    public Widget createLiteralWidget(String literalName) {
-        Scene scene = getScene();
+//    public Widget createLiteralWidget(String literalName) {
+//        Scene scene = getScene();
+//
+//        Widget literalWidget = new Widget(scene);
+//        literalWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+//
+//        LabelWidget labelWidget = new LabelWidget(scene);
+//        labelWidget.setLabel(literalName);
+//        labelWidget.getActions().addAction(nameEditorAction);
+//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(literalWidget)));
+//
+//        literalWidget.addChild(labelWidget);
+//
+//        return literalWidget;
+//    }
 
-        Widget literalWidget = new Widget(scene);
-        literalWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+//    public Widget createFieldWidget(String fieldName) {
+//        Scene scene = getScene();
+//
+//        Widget fieldWidget = new Widget(scene);
+//        fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+//
+//        LabelWidget visibilityLabel = new LabelWidget(scene);
+//        visibilityLabel.setLabel("+");
+//        fieldWidget.addChild(visibilityLabel);
+//
+//        LabelWidget labelWidget = new LabelWidget(scene);
+//        labelWidget.setLabel(fieldName);
+//        labelWidget.getActions().addAction(nameEditorAction);
+//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
+//
+//        fieldWidget.addChild(labelWidget);
+//
+//        return fieldWidget;
+//    }
 
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(literalName);
-        labelWidget.getActions().addAction(nameEditorAction);
-        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(literalWidget)));
-
-        literalWidget.addChild(labelWidget);
-
-        return literalWidget;
-    }
-
-    public Widget createFieldWidget(String fieldName) {
-        Scene scene = getScene();
-
-        Widget fieldWidget = new Widget(scene);
-        fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
-        LabelWidget visibilityLabel = new LabelWidget(scene);
-        visibilityLabel.setLabel("+");
-        fieldWidget.addChild(visibilityLabel);
-
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(fieldName);
-        labelWidget.getActions().addAction(nameEditorAction);
-        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
-
-        fieldWidget.addChild(labelWidget);
-
-        return fieldWidget;
-    }
-
-    public Widget createMethodWidget(String methodName) {
-        Scene scene = getScene();
-        Widget widget = new Widget(scene);
-        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
-        LabelWidget visibilityLabel = new LabelWidget(scene);
-        visibilityLabel.setLabel("+");
-        widget.addChild(visibilityLabel);
-
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(methodName);
-        widget.addChild(labelWidget);
-        labelWidget.getActions().addAction(nameEditorAction);
-        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
-
-        return widget;
-    }
+//    public Widget createMethodWidget(String methodName) {
+//        Scene scene = getScene();
+//        Widget widget = new Widget(scene);
+//        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+//
+//        LabelWidget visibilityLabel = new LabelWidget(scene);
+//        visibilityLabel.setLabel("+");
+//        widget.addChild(visibilityLabel);
+//
+//        LabelWidget labelWidget = new LabelWidget(scene);
+//        labelWidget.setLabel(methodName);
+//        widget.addChild(labelWidget);
+//        labelWidget.getActions().addAction(nameEditorAction);
+//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
+//
+//        return widget;
+//    }
 
 //    public final void addFieldWidget(FieldWidget fieldWidget) {
 //        addMember(fieldsContainer, fieldWidget);

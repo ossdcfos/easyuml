@@ -30,9 +30,9 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
 
     private InterfaceWidget interfaceWidget;
     private JPopupMenu menu;
-    private JMenuItem deleteInterface;
-    private JMenuItem addPackage;
     private JMenuItem addMethod;
+    private JMenuItem editPackage;
+    private JMenuItem deleteInterface;
     WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(interfaceWidget));
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
@@ -42,11 +42,16 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
 
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
+        
         menu.addSeparator();
+        
+        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
+        menu.add(editPackage);
+        
+        menu.addSeparator();
+        
         (deleteInterface = new JMenuItem("Delete Interface")).addActionListener(removeWidgetListener);
         menu.add(deleteInterface);
-        (addPackage = new JMenuItem("Set Package")).addActionListener(addPackageListener);
-        menu.add(addPackage);
     }
     ActionListener addMethodListener = new ActionListener() {
         @Override
@@ -72,7 +77,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
             interfaceWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
-    ActionListener addPackageListener = new ActionListener() {
+    ActionListener editPackageListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
 //            String pack = "";

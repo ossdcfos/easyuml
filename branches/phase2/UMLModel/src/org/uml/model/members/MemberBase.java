@@ -2,6 +2,7 @@ package org.uml.model.members;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +11,7 @@ import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
 
 /**
- * Represents  a class member.
+ * Represents a class member.
  *
  * @author zoran
  * @see Literal
@@ -22,8 +23,10 @@ import org.uml.model.components.ComponentBase;
  */
 public abstract class MemberBase implements INameable {
 
+    // sta ako je niz? da li treba koristiti Type?
+    protected String type;
     private String name;
-    
+
     /*
      * Modifier is a int value representing access and non-access modifier in
      * Java e.g. public is represented as 0x00000001, static as 0x00000008.
@@ -63,7 +66,7 @@ public abstract class MemberBase implements INameable {
     public String getName() {
         return name;
     }
-    
+
     @Override
     public void setName(String newName) {
         name = newName;
@@ -84,7 +87,6 @@ public abstract class MemberBase implements INameable {
 //    public void setModifiers(int modifier) {
 //        this.modifiers = modifier;
 //    }
-
     /**
      * Adds numerical representation of java Modifier enum's constants into
      * modifiers array.
@@ -96,8 +98,15 @@ public abstract class MemberBase implements INameable {
      * @see java.lang.reflect.Modifier
      * @see MemberBase
      */
-    public void addModifier(int modifier) {
-        modifiers |= modifier;
+    public void addModifier(int modifier) //throws Exception 
+    {
+        if ((this instanceof Field && (Modifier.fieldModifiers() & modifier) != 0)
+                || (this instanceof Method && (Modifier.methodModifiers() & modifier) != 0)
+                || (this instanceof Constructor && (Modifier.constructorModifiers()& modifier) != 0)) {
+            modifiers |= modifier;
+        } else {
+            //throw new Exception("Modifier " + Modifier.toString(modifier) + " not allowed for " + this.getClass().getSimpleName() + ".");
+        }
     }
 
     /**
@@ -121,7 +130,6 @@ public abstract class MemberBase implements INameable {
 //    public String getModifiersAsString() {
 //        return Modifier.toString(modifiers);
 //    }
-
     public void resetModifiers() {
         modifiers = 0;
     }
@@ -162,5 +170,4 @@ public abstract class MemberBase implements INameable {
 //            return false;
 //        return true;
 //    }
-    
 }

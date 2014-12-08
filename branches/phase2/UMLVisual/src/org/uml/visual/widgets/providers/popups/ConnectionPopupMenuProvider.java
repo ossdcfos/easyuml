@@ -10,7 +10,6 @@ import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.windows.WindowManager;
-import org.uml.model.ClassDiagram;
 import org.uml.model.relations.RelationBase;
 import org.uml.visual.dialogs.ChangeRelationTypeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;

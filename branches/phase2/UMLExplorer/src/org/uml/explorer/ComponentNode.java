@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import org.openide.actions.DeleteAction;
-import org.openide.actions.RenameAction;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport;
@@ -141,7 +140,6 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
      */
     public void changeName(String newName) {
         if(getName().equals(newName)){
-            return;
         } else if (component.getParentDiagram().nameExists(newName)) {
             JOptionPane.showMessageDialog(null, "Name \""+newName+"\" already exists!");
 //            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());

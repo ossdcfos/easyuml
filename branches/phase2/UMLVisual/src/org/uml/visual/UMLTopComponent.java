@@ -17,7 +17,9 @@ import org.openide.*;
 import org.openide.NotifyDescriptor.Confirmation;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
+import org.openide.nodes.AbstractNode;
 import org.openide.util.*;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
@@ -27,6 +29,7 @@ import org.uml.*;
 import org.uml.explorer.*;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ComponentBase;
+import org.uml.model.members.MemberBase;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
@@ -55,22 +58,22 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 public final class UMLTopComponent extends TopComponent implements LookupListener {
 
 //    public static String tcID = "";
-
     private ClassDiagram classDiagram;
     private ClassDiagramScene classDiagramScene;
     private JScrollPane classDiagramPanel;
     private PaletteController palette;
     private FileObject fileObject;
     private InstanceContent content = new InstanceContent();
-    private boolean initialized = false;
+    private AbstractNode oldNode;
 
     Lookup.Result<ComponentNode> result;
 
     public UMLTopComponent() {
-        this(new ClassDiagram(), null);
+        // should never be called
+        this(new ClassDiagram());
     }
 
-    public UMLTopComponent(ClassDiagram classDiagram, FileObject fo) {
+    public UMLTopComponent(ClassDiagram classDiagram) {
         initComponents();
         setName(classDiagram.getName()); // samo se ime razlikuje, Bundle.CTL_UMLTopComponent(), da li je bitno?
         setToolTipText(Bundle.HINT_UMLTopComponent());
@@ -104,17 +107,26 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         ProxyLookup jointLookup = new ProxyLookup(fixedLookup, abstrLookup);
 
         associateLookup(jointLookup);
-
-        fileObject = fo;
-
+        
         classDiagramScene.addObjectSceneListener(new ObjectSceneAdapter() {
-
             @Override
             public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-                if(previousFocusedObject != null) content.remove(previousFocusedObject);
-                if(newFocusedObject != null) content.add(newFocusedObject);
+                if (previousFocusedObject != null) {
+                    content.remove(previousFocusedObject);
+                    content.remove(oldNode);
+                }
+                if (newFocusedObject != null) {
+                    content.add(newFocusedObject);
+
+                    if (newFocusedObject instanceof ComponentBase) {
+                        oldNode = new ComponentNode((ComponentBase) newFocusedObject);
+                    } else if (newFocusedObject instanceof MemberBase) {
+                        oldNode = new MemberNode((MemberBase) newFocusedObject);
+                    }
+                    content.add(oldNode);
+                }
             }
-            
+
             @Override
             public void objectAdded(ObjectSceneEvent event, Object addedObject) {
                 modify();
@@ -126,15 +138,14 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
             }
         }, ObjectSceneEventType.OBJECT_ADDED, ObjectSceneEventType.OBJECT_REMOVED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED);
 
-        initialized = true;
-        
         //classDiagramScene.getMainLayer().bringToFront();
         // pomereno iz konstruktora class diagram scene
         //GraphLayout graphLayout = GraphLayoutFactory.createOrthogonalGraphLayout(classDiagramScene, true);
         //graphLayout.layoutGraph(classDiagramScene);
-
         result = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
         result.addLookupListener(this);
+//        PropertySheetWindow psw = new PropertySheetWindow();
+//        psw.open();
     }
 
     @Override
@@ -182,7 +193,7 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
-    
+
     public ClassDiagramScene getScene() {
         return classDiagramScene;
     }
@@ -190,11 +201,10 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
     public void modify() {
         // in other case, when we are doing reverse engineering, modify is called before the lookup is
         // associated with TopComponent, so there is an exception when we associate it later, because it already exists
-        if (initialized) {
+        if (fileObject != null) {
             if (getLookup().lookup(UMLTopComponentSavable.class) == null && content != null) {
                 content.add(new UMLTopComponentSavable(this, content));
             }
-
         }
     }
 
@@ -210,6 +220,10 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         }
         getScene().validate();
         getScene().repaint();
+    }
+
+    public void setFileObject(FileObject fileObject) {
+        this.fileObject = fileObject;
     }
 
     class UMLTopComponentSavable extends AbstractSavable {

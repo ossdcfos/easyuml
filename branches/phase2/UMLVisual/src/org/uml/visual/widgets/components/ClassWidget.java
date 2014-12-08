@@ -4,11 +4,13 @@ import org.uml.visual.widgets.members.ConstructorWidget;
 import org.uml.visual.widgets.members.MethodWidget;
 import org.uml.visual.widgets.members.FieldWidget;
 import java.awt.Font;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.ClassComponent;
@@ -16,9 +18,14 @@ import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
 import org.uml.model.members.MethodBase;
 import org.uml.model.Visibility;
+import org.uml.model.members.MemberBase;
+import org.uml.model.members.Method;
+import org.uml.model.members.MethodArgument;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.popups.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ComponentWidgetAcceptProvider;
+import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
  *
@@ -79,7 +86,7 @@ public class ClassWidget extends ComponentWidgetBase {
         // Fill the widget when loading an existing diagram
         for (Constructor c : classComponent.getConstructors().values()) {
             ConstructorWidget w = new ConstructorWidget(scene, c);
-            addConstructorWidget(w);
+            addMember(methodsContainer, w);
         }
 
         for (Field fieldComp : classComponent.getFields().values()) {
@@ -94,62 +101,83 @@ public class ClassWidget extends ComponentWidgetBase {
         //this.getScene().validate();
     }
 
-    public Widget createFieldWidget(String fieldName) {
-        ClassDiagramScene scene = getClassDiagramScene();
+//    public Widget createFieldWidget(String fieldName) {
+//        ClassDiagramScene scene = getClassDiagramScene();
+//
+//        Widget fieldWidget = new Widget(scene);
+//        fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+//
+//        //fieldWidget.addChild(createAtributeModifierPicker(scene));
+//        LabelWidget visibilityLabel = new LabelWidget(scene);
+//        visibilityLabel.setLabel("+");
+//        fieldWidget.addChild(visibilityLabel);
+//
+//        LabelWidget labelWidget = new LabelWidget(scene);
+//        labelWidget.setLabel(fieldName);
+//        labelWidget.getActions().addAction(nameEditorAction);
+//
+//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
+//        //dodato polje u classElement
+//        fieldWidget.addChild(labelWidget);
+//
+//        return fieldWidget;
+//    }
+//    public Widget createMethodWidget(String methodName) {
+//        Scene scene = getScene();
+//
+//        Widget methodWidget = new Widget(scene);
+//        methodWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
+//
+//        //widget.addChild(createMethodModifierPicker(scene));
+//        LabelWidget visibilityLabel = new LabelWidget(scene);
+//        visibilityLabel.setLabel("+");
+//        methodWidget.addChild(visibilityLabel);
+//
+//        LabelWidget labelWidget = new LabelWidget(scene);
+//        labelWidget.setLabel(methodName);
+//        labelWidget.getActions().addAction(nameEditorAction);
+//        methodWidget.addChild(labelWidget);
+//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
+//
+//        return methodWidget;
+//    }
+    public void addFieldWidget() {
 
-        Widget fieldWidget = new Widget(scene);
-        fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
-        //fieldWidget.addChild(createAtributeModifierPicker(scene));
-        LabelWidget visibilityLabel = new LabelWidget(scene);
-        visibilityLabel.setLabel("+");
-        fieldWidget.addChild(visibilityLabel);
-
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(fieldName);
-        labelWidget.getActions().addAction(nameEditorAction);
-
-        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
-        //dodato polje u classElement
-        fieldWidget.addChild(labelWidget);
-
-        return fieldWidget;
-    }
-
-    public Widget createMethodWidget(String methodName) {
-        Scene scene = getScene();
-
-        Widget methodWidget = new Widget(scene);
-        methodWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-
-        //widget.addChild(createMethodModifierPicker(scene));
-        LabelWidget visibilityLabel = new LabelWidget(scene);
-        visibilityLabel.setLabel("+");
-        methodWidget.addChild(visibilityLabel);
-
-        LabelWidget labelWidget = new LabelWidget(scene);
-        labelWidget.setLabel(methodName);
-        labelWidget.getActions().addAction(nameEditorAction);
-        methodWidget.addChild(labelWidget);
-        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
-
-        return methodWidget;
-    }
-
-    public final void addFieldWidget(FieldWidget fieldWidget) {
+        Field field = new Field("untitledField", null, Visibility.PRIVATE);
+        addField(field);
+        FieldWidget fieldWidget = new FieldWidget(getClassDiagramScene(), field);
         addMember(fieldsContainer, fieldWidget);
+        getScene().validate();
+
+        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(fieldWidget));
+        ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(fieldWidget.getNameLabel());
+        MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+        getScene().getView().addMouseListener(mouseListener);
     }
 
     public void removeField(FieldWidget field) {
         removeMember(fieldsContainer, field);
     }
 
-    public final void addMethodWidget(MethodWidget methodWidget) {
+    public void addMethodWidget() {
+        Method method = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
+        addMethod(method);
+        MethodWidget methodWidget = new MethodWidget(getClassDiagramScene(), method);
         addMember(methodsContainer, methodWidget);
+        getScene().validate();
+
+        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(methodWidget));
+        ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(methodWidget.getNameLabel());
+        MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+        getScene().getView().addMouseListener(mouseListener);
     }
 
-    public final void addConstructorWidget(ConstructorWidget constructorWidget) {
+    public final void addConstructorWidget() {
+        Constructor constructor = new Constructor(getName());
+        getComponent().addConstructor(constructor);
+        ConstructorWidget constructorWidget = new ConstructorWidget(getClassDiagramScene(), constructor);
         addMember(methodsContainer, constructorWidget);
+        getScene().validate();
     }
 
     public void removeMethod(MethodWidget methodWidget) {
@@ -209,6 +237,39 @@ public class ClassWidget extends ComponentWidgetBase {
             headerWidget.removeChild(headerWidget.getChildren().get(0));
         }
         getScene().validate();
+    }
+
+    // TODO REMAKE, COPIED FROM ClassPopupMenuProvider
+    private int getCounter(MemberBase member) {
+        int brojac = 1;
+        String name = member.getName();
+        String broj = name.substring(name.length() - 1);
+        if (broj.matches("[0-9]")) {
+            name = name.substring(0, name.length() - 1);
+            member.setName(name);
+            brojac = Integer.parseInt(broj) + 1;
+        }
+        return brojac;
+    }
+
+    private void addField(Field f) {
+        try {
+            getComponent().addField(f);
+        } catch (RuntimeException ex) {
+            int counter = getCounter(f);
+            f.setName(f.getName() + counter);
+            addField(f);
+        }
+    }
+
+    private void addMethod(Method method) {
+        try {
+            getComponent().addMethod(method);
+        } catch (RuntimeException ex) {
+            int counter = getCounter(method);
+            method.setName(method.getName() + counter);
+            addMethod(method);
+        }
     }
 
 }

@@ -85,6 +85,7 @@ public class SceneAcceptProvider implements AcceptProvider {
                 Widget w = classDiagramScene.addNode(component);
                 w.setPreferredLocation(point);
                 component.setPosition(w.getLocation());
+//                classDiagramScene.setFocusedObject(component);
 
 //            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction((NameableWidget) w));
 //            ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase) w).getNameLabel());
@@ -110,6 +111,7 @@ public class SceneAcceptProvider implements AcceptProvider {
             Exceptions.printStackTrace(ex);
         }
 
+        classDiagramScene.getUmlTopComponent().requestActive();
         classDiagramScene.validate();
     }
 

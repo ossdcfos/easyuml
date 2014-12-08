@@ -1,15 +1,12 @@
 package org.uml.visual.widgets.members;
 
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.openide.util.Exceptions;
 import org.uml.model.members.Literal;
 import org.uml.model.members.MemberBase;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.popups.LiteralPopupProvider;
+import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
 
 /**
  *
@@ -18,7 +15,6 @@ import org.uml.visual.widgets.providers.popups.LiteralPopupProvider;
 public class LiteralWidget extends MemberWidgetBase{
 
     Literal literalComponent;
-    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     //LabelWidget visibilityLabel;
     LabelWidget nameLabel;
     
@@ -35,7 +31,7 @@ public class LiteralWidget extends MemberWidgetBase{
         this.addChild(nameLabel);
         nameLabel.getActions().addAction(nameEditorAction);
         
-        getActions().addAction(ActionFactory.createPopupMenuAction(new LiteralPopupProvider(this)));
+        getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
 
     }
     

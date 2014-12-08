@@ -135,7 +135,8 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
         }
 
         if (topComponent == null || !topComponent.isOpened()) {
-            topComponent = new UMLTopComponent(classDiagram, fileObject);
+            topComponent = new UMLTopComponent(classDiagram);
+            topComponent.setFileObject(fileObject);
             topComponent.open();
         }
         topComponent.requestActive();

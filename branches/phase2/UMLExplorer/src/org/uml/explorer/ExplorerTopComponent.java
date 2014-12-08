@@ -142,16 +142,16 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     public void resultChanged(LookupEvent ev) {
         Lookup.Result result = (Lookup.Result) ev.getSource();
         Collection<Object> instances = result.allInstances();
-
+        
         if (!instances.isEmpty()) {
             for (Object selectedItem : instances) {
                 if (selectedItem instanceof ClassDiagram) {
                     ClassDiagram selectedComponent = (ClassDiagram) selectedItem;
-                    if (cNode == null || selectedComponent != cNode.getClassDiagram()) {
+//                    if (cNode == null || selectedComponent != cNode.getClassDiagram()) {
                         cNode = new ClassDiagramNode(selectedComponent);
                         explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
                         explorerTree.setRootVisible(true);
-                    }
+//                    }
                     
                 // TODO refactor
                 } else if (selectedItem instanceof ComponentBase) {
@@ -168,6 +168,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
                     }
                     try {
                         explorerManager.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
+//                        setActivatedNodes(nodes.toArray(new Node[nodes.size()]));
                     } catch (PropertyVetoException ex) {
                         Exceptions.printStackTrace(ex);
                     }
@@ -190,6 +191,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
                     }
                     try {
                         explorerManager.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
+//                        setActivatedNodes(nodes.toArray(new Node[nodes.size()]));
                     } catch (PropertyVetoException ex) {
                         Exceptions.printStackTrace(ex);
                     }
@@ -197,6 +199,9 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
             }
         } else {
         }
+//        open();
+        // ne moze uvek ovo
+//        requestActive();
     }
 
 }

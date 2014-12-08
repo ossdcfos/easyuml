@@ -1,5 +1,6 @@
 package org.uml.visual.widgets;
 
+import com.timboudreau.vl.jung.ObjectSceneAdapter;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.ComponentWidgetBase;
@@ -21,11 +22,17 @@ import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.anchor.*;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.layout.LayoutFactory;
+import org.netbeans.api.visual.model.ObjectSceneEvent;
+import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.*;
+import org.openide.nodes.AbstractNode;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.*;
+import org.uml.explorer.ComponentNode;
+import org.uml.explorer.MemberNode;
 import org.uml.model.*;
+import org.uml.model.members.MemberBase;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.visual.UMLTopComponent;
@@ -46,12 +53,13 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
     private LayerWidget mainLayer;
     private LayerWidget connectionLayer;
     private LayerWidget interractionLayer;
-    final private ClassDiagram classDiagram;
-    final private UMLTopComponent umlTopComponent;
+    private ClassDiagram classDiagram;
+    private UMLTopComponent umlTopComponent;
     private InstanceContent content = new InstanceContent();
     AbstractLookup aLookup = new AbstractLookup(content);
+    private AbstractNode oldNode;
 
-    public ClassDiagramScene(ClassDiagram umlClassDiagram, UMLTopComponent umlTopComponent) {
+    public ClassDiagramScene(ClassDiagram umlClassDiagram, final UMLTopComponent umlTopComponent) {
 
         classDiagram = umlClassDiagram;
         
@@ -128,17 +136,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
 //                    //setSelectedObjects(newSelection);
 //                }
 //            }
-//
-//            @Override
-//            public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-//                if (previousFocusedObject != null) {
-//                    content.remove(previousFocusedObject);
-//                }
-//                if (newFocusedObject != null) {
-//                    content.add(newFocusedObject);
-//                }
-//            }
-//        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED);
+//        }, ObjectSceneEventType.OBJECT_SELECTION_CHANGED);
     }
 
     public UMLTopComponent getUmlTopComponent() {
@@ -228,7 +226,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
 
             LabelWidget cardinalityTarget = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
             widget.addChild(cardinalityTarget);
-            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 1f);
+            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 0.95f);
         } else {
             UseRelation useRelation = (UseRelation) e;
 
@@ -236,11 +234,11 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
 
             LabelWidget cardinalitySource = new LabelWidget(this, useRelation.getCardinalitySource().toString());
             widget.addChild(cardinalitySource);
-            widget.setConstraint(cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_SOURCE, 0f);
+            widget.setConstraint(cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_SOURCE, 0.05f);
 
             LabelWidget cardinalityTarget = new LabelWidget(this, useRelation.getCardinalityTarget().toString());
             widget.addChild(cardinalityTarget);
-            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 1f);
+            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 0.95f);
         }
         widget.addChild(name);
         widget.setConstraint(name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);

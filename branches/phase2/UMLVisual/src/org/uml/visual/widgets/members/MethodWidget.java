@@ -1,16 +1,13 @@
 package org.uml.visual.widgets.members;
 
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.openide.util.Exceptions;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.MethodBase;
 import org.uml.visual.parser.WidgetParser;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.actions.NameEditorAction;
-import org.uml.visual.widgets.providers.popups.MethodPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
 
 /**
  *
@@ -19,7 +16,6 @@ import org.uml.visual.widgets.providers.popups.MethodPopupMenuProvider;
 public class MethodWidget extends MemberWidgetBase {
 
     MethodBase methodComponent;
-    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
     LabelWidget visibilityLabel;
     LabelWidget nameLabel;
     WidgetParser wp;
@@ -37,7 +33,7 @@ public class MethodWidget extends MemberWidgetBase {
         this.addChild(nameLabel);
         nameLabel.getActions().addAction(nameEditorAction);
         
-        getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(this)));
+        getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
         wp = new WidgetParser();
         refreshLabel();
     }

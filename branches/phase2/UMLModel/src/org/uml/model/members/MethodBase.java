@@ -3,8 +3,9 @@ package org.uml.model.members;
 import org.uml.model.Visibility;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import org.uml.model.components.ClassComponent;
+import org.uml.model.components.EnumComponent;
+import org.uml.model.components.InterfaceComponent;
 
 /**
  * Methods used inside Classes, Enumerations and Interfaces.
@@ -20,9 +21,8 @@ import java.util.Objects;
  */
 public abstract class MethodBase extends MemberBase {
 
-    protected String returnType;
     protected HashMap<String, MethodArgument> arguments;
-    
+
     /**
      * Constructor with three parameters used to set name, type of return
      * argument and input arguments(variables) of the Method. Calls the super
@@ -34,7 +34,7 @@ public abstract class MethodBase extends MemberBase {
      */
     public MethodBase(String name, String returnType, HashMap<String, MethodArgument> arguments) {
         super(name);
-        this.returnType = returnType;
+        this.type = returnType;
         this.arguments = arguments;
         this.visibility = Visibility.PUBLIC;
         //this.returnType="void";
@@ -54,11 +54,11 @@ public abstract class MethodBase extends MemberBase {
     }
 
     public String getReturnType() {
-        return returnType;
+        return type;
     }
 
     public void setReturnType(String returnType) {
-        this.returnType = returnType;
+        this.type = returnType;
     }
 
     public HashMap<String, MethodArgument> getArguments() {
@@ -67,80 +67,6 @@ public abstract class MethodBase extends MemberBase {
 
     public void setArguments(HashMap<String, MethodArgument> arguments) {
         this.arguments = arguments;
-    }
-    
-        /**
-     * Returns true if the field has static modifier, false if it is not static
-     *
-     * @return true if field is static, false if it isn't
-     */
-    public boolean isStatic() {
-        return Modifier.isStatic(modifiers);
-    }
-
-    /**
-     * Set this field's static modifier to true or false
-     *
-     * @param isStatic - set true if the field is static, false if it isn't
-     */
-    public void setStatic(boolean isStatic) {
-        int oldModifiers = modifiers;
-        if(isStatic) {
-            modifiers |= Modifier.STATIC;
-        } else {
-            modifiers &= ~Modifier.STATIC;
-        }
-        fire("isStatic", Modifier.isStatic(oldModifiers), isStatic());
-    }
-
-    /**
-     * Returns true if the field has final modifier, false if it is not final
-     *
-     * @return true if field is final, false if it isn't
-     */
-    public boolean isFinal() {
-        return Modifier.isFinal(modifiers);
-    }
-
-    /**
-     * Set this field's final modifier to true or false
-     *
-     * @param isFinal - set true if the field is final, false if it isn't
-     */
-    public void setFinal(boolean isFinal) {
-        int oldModifiers = modifiers;
-        if(isFinal) {
-            modifiers |= Modifier.FINAL;
-        } else {
-            modifiers &= ~Modifier.FINAL;
-        }
-        fire("isFinal", Modifier.isFinal(oldModifiers), isFinal());
-    }
-
-    /**
-     * Returns true if the field has synchronized modifier, false if it is not
-     * synchronized
-     *
-     * @return true if field is synchronized, false if it isn't
-     */
-    public boolean isSynchronized() {
-        return Modifier.isSynchronized(modifiers);
-    }
-
-    /**
-     * Set this field's final synchronized to true or false
-     *
-     * @param isSynchronized - set true if the field is synchronized, false if
-     * it isn't
-     */
-    public void setSynchronized(boolean isSynchronized) {
-        int oldModifiers = modifiers;
-        if(isSynchronized) {
-            modifiers |= Modifier.SYNCHRONIZED;
-        } else {
-            modifiers &= ~Modifier.SYNCHRONIZED;
-        }
-        fire("isSynchronized", Modifier.isSynchronized(oldModifiers), isSynchronized());
     }
 
     /**
@@ -169,7 +95,7 @@ public abstract class MethodBase extends MemberBase {
         StringBuffer result = new StringBuffer();
         result.append(Modifier.toString(modifiers));
 
-        if(returnType != null) result = result.append(returnType).append(" ");
+        if (type != null) result = result.append(type).append(" ");
         result.append(getName()).append("(");
         String args = "";
         if (getArguments() != null) {
@@ -221,10 +147,9 @@ public abstract class MethodBase extends MemberBase {
 //        if (!Objects.equals(this.getSignature(), other.getSignature())) return false;
 //        return true;
 //    }
-
     @Override
     public String toString() {
         return getSignature();
     }
-    
+
 }

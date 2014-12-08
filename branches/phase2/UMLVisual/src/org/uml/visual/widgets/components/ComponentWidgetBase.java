@@ -12,7 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.WidgetAction;
+import org.netbeans.api.visual.action.MoveProvider;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -25,6 +25,7 @@ import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.INameableWidget;
 import org.uml.visual.widgets.TranslucentCompositeBorder;
 import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
+import org.uml.visual.widgets.actions.unused.ModifyingAlignWithMoveAndResizeAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
 
@@ -37,7 +38,6 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
 
     protected ComponentBase component;
     protected LabelWidget nameWidget;
-    protected WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
 
     // attribute name
     protected static final Dimension MIN_DIMENSION = new Dimension(120, 120);
@@ -58,6 +58,11 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
     public static final Border RESIZE_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(RESIZE_SIZE), BorderFactory.createEmptyBorder(1));
 
     public static final Border EMPTY_BORDER_4 = BorderFactory.createEmptyBorder(4);
+
+//    @Override
+//    public Lookup getLookup() {
+//        return Lookups.fixed(this, this.getScene());
+//    }
     
     public ComponentWidgetBase(ClassDiagramScene scene, ComponentBase component) {
         super(scene);
@@ -76,7 +81,7 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
         nameWidget = new LabelWidget(scene);
         nameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         nameWidget.setAlignment(LabelWidget.Alignment.CENTER);
-        nameWidget.getActions().addAction(nameEditorAction);
+        nameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new NameEditorAction(this)));
 
         // **** Actions ****
         // Connect action - CTRL + click
@@ -88,7 +93,31 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createResizeAction());
         // Move drag and align action
+//        getActions().addAction(ActionFactory.createMoveAction(null, new MoveProvider() {
+//
+//            @Override
+//            public void movementStarted(Widget widget) {
+//                System.out.println("start");
+//            }
+//
+//            @Override
+//            public void movementFinished(Widget widget) {
+//                System.out.println("finish");
+//            }
+//
+//            @Override
+//            public Point getOriginalLocation(Widget widget) {
+//                return widget.getPreferredLocation();
+//            }
+//
+//            @Override
+//            public void setNewLocation(Widget widget, Point location) {
+//                widget.setPreferredLocation(location);
+//                getClassDiagramScene().getUmlTopComponent().modify();
+//            }
+//        }));
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
+//        getActions().addAction(ModifyingAlignWithMoveAndResizeAction.createAction(getClassDiagramScene().getUmlTopComponent()));
 //        getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
 
         // TODO: Change detection - check how this works
@@ -213,6 +242,7 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
         if("name".equals(evt.getPropertyName())){
             String newName = (String)evt.getNewValue();
             nameWidget.setLabel(newName);
+            getClassDiagramScene().getUmlTopComponent().modify();
         }
         getScene().validate();
     }
