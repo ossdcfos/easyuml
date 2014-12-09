@@ -1,15 +1,13 @@
 package org.uml.visual.widgets.components;
 
 import org.uml.visual.widgets.members.MethodWidget;
-import java.awt.Font;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.InterfaceComponent;
-import org.uml.model.members.MethodBase;
+import org.uml.model.members.Method;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.providers.ComponentWidgetAcceptProvider;
 import org.uml.visual.widgets.providers.popups.InterfacePopupMenuProvider;
@@ -54,7 +52,7 @@ public class InterfaceWidget extends ComponentWidgetBase {
         getActions().addAction(ActionFactory.createPopupMenuAction(new InterfacePopupMenuProvider(this)));
         
         
-        for (MethodBase methodComp : interfaceComponent.getMethods().values()) {
+        for (Method methodComp : interfaceComponent.getMethods().values()) {
             MethodWidget mw = new MethodWidget(getClassDiagramScene(), methodComp);
             addMember(methodsContainer, mw);
         }
@@ -87,8 +85,13 @@ public class InterfaceWidget extends ComponentWidgetBase {
     public InterfaceComponent getComponent() {
         return (InterfaceComponent) component;
     }
+    @Override
+    public void setSignature(String signature) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
-    public void setAttributes(String attributes) {
+    public String getSignature() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

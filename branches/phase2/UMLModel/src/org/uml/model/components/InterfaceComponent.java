@@ -1,8 +1,6 @@
 package org.uml.model.components;
 
-import org.uml.model.members.MethodBase;
 import java.util.LinkedHashMap;
-import org.uml.model.ClassDiagram;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 
@@ -22,7 +20,6 @@ public class InterfaceComponent extends ComponentBase {
 
     /**
      * Default constructor only specifying parent diagram. Sets name to default value.
-     * @param parentDiagram
      */
     public InterfaceComponent() {
         this("UntitledInterface");
@@ -31,7 +28,6 @@ public class InterfaceComponent extends ComponentBase {
     /**
      * One parameter constructor. Sets the name and instantiates methods.
      *
-     * @param parentDiagram
      * @param name of InterfaceComponent
      * @see ComponentBase
      */
@@ -55,14 +51,14 @@ public class InterfaceComponent extends ComponentBase {
      * @param method which will be added
      */
     public void addMethod(Method method) {
-        method.setDeclaringClass(this);
+        method.setDeclaringComponent(this);
         methods.put(method.toString(), method);
-        addMember(method);
+        addComponent(method);
     }
 
     @Override
     public void removeMemberFromContainer(MemberBase member) {
-        if (member instanceof MethodBase) methods.values().remove((MethodBase)member);
+        if (member instanceof Method) methods.values().remove((Method)member);
         else throw new RuntimeException("Removing unsupported member: "+member.toString());
     }
 }

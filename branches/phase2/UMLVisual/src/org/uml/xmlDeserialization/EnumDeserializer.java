@@ -55,7 +55,7 @@ public class EnumDeserializer implements XmlDeserializer{
             LiteralDeserializer ld = new LiteralDeserializer(literal);
             ld.deserialize(literalElement);
             enumComponent.addLiteral(literal);
-            literal.setDeclaringClass(enumComponent);
+            literal.setDeclaringComponent(enumComponent);
         }
         
 //        Iterator<?> constructorIterator = node.element("Constructors").elementIterator("Constructor");

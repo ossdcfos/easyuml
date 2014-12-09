@@ -2,19 +2,9 @@ package componentOriginating;
 
 import javax.lang.model.element.Element;
 import static javax.lang.model.element.ElementKind.CLASS;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
-import static javax.lang.model.element.ElementKind.ENUM;
-import static javax.lang.model.element.ElementKind.ENUM_CONSTANT;
 import static javax.lang.model.element.ElementKind.FIELD;
-import static javax.lang.model.element.ElementKind.INTERFACE;
-import static javax.lang.model.element.ElementKind.METHOD;
 import org.uml.model.components.ClassComponent;
-import org.uml.model.members.Constructor;
-import org.uml.model.components.EnumComponent;
 import org.uml.model.members.Field;
-import org.uml.model.components.InterfaceComponent;
-import org.uml.model.members.Literal;
-import org.uml.model.members.Method;
 import org.uml.reveng.CompilationProcessor;
 import org.uml.reveng.GeneratedDiagramManager;
 

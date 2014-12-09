@@ -29,14 +29,14 @@ public abstract class MethodBase extends MemberBase {
      * constructor.
      *
      * @param name of the Method being modeled
-     * @param returnType of the Method being modeled
+     * @param type of the Method being modeled
      * @param arguments - collection of input arguments
      */
-    public MethodBase(String name, String returnType, HashMap<String, MethodArgument> arguments) {
+    public MethodBase(String name, String type, HashMap<String, MethodArgument> arguments) {
         super(name);
-        this.type = returnType;
-        this.arguments = arguments;
+        this.type = type;
         this.visibility = Visibility.PUBLIC;
+        this.arguments = arguments;
         //this.returnType="void";
     }
 
@@ -53,14 +53,6 @@ public abstract class MethodBase extends MemberBase {
         arguments = new HashMap<>();
     }
 
-    public String getReturnType() {
-        return type;
-    }
-
-    public void setReturnType(String returnType) {
-        this.type = returnType;
-    }
-
     public HashMap<String, MethodArgument> getArguments() {
         return arguments;
     }
@@ -69,17 +61,58 @@ public abstract class MethodBase extends MemberBase {
         this.arguments = arguments;
     }
 
-    /**
-     * Method used to check if Method object's modifier array contains the
-     * modifier given as an input argument.
-     * <p>
-     * Used to check if Method's access and non-access modifiers.
-     *
-     * @param modifier to be checked
-     * @return true if method has that modifier, negative if it doesn't
-     */
-    public boolean hasConcreteModifier(String modifier) {
-        return Modifier.toString(modifiers).contains(modifier);
+    @Override
+    public String getSignatureWithoutModifiers() {
+        StringBuilder result = new StringBuilder();
+        if (type != null) result = result.append(type).append(" ");
+        result.append(getName()).append("(");
+        String args = "";
+        if (getArguments() != null) {
+            for (MethodArgument argument : getArguments().values()) {
+                args += argument.getType() + " " + argument.getName() + ", ";
+            }
+            if (!args.equals("")) {
+                args = args.substring(0, args.length() - 2);
+            }
+        }
+        result.append(args).append(")");
+        return result.toString();
+    }
+
+    @Override
+    public String deriveNewSignatureWithoutModifiersFromType(String newType){
+        StringBuilder result = new StringBuilder();
+        if (type != null) result = result.append(newType).append(" ");
+        result.append(getName()).append("(");
+        String args = "";
+        if (getArguments() != null) {
+            for (MethodArgument argument : getArguments().values()) {
+                args += argument.getType() + " " + argument.getName() + ", ";
+            }
+            if (!args.equals("")) {
+                args = args.substring(0, args.length() - 2);
+            }
+        }
+        result.append(args).append(")");
+        return result.toString();
+    }
+
+    @Override
+    public String deriveNewSignatureWithoutModifiersFromName(String newName){
+        StringBuilder result = new StringBuilder();
+        if (type != null) result = result.append(type).append(" ");
+        result.append(newName).append("(");
+        String args = "";
+        if (getArguments() != null) {
+            for (MethodArgument argument : getArguments().values()) {
+                args += argument.getType() + " " + argument.getName() + ", ";
+            }
+            if (!args.equals("")) {
+                args = args.substring(0, args.length() - 2);
+            }
+        }
+        result.append(args).append(")");
+        return result.toString();
     }
 
     /**
@@ -92,21 +125,9 @@ public abstract class MethodBase extends MemberBase {
      * @return specially formed String representation of the Method
      */
     public String getSignatureForLabel() {
-        StringBuffer result = new StringBuffer();
-        result.append(Modifier.toString(modifiers));
-
-        if (type != null) result = result.append(type).append(" ");
-        result.append(getName()).append("(");
-        String args = "";
-        if (getArguments() != null) {
-            for (MethodArgument argument : getArguments().values()) {
-                args += argument.getType() + " " + argument.getName() + ", ";
-            }
-        }
-        if (!args.equals("")) {
-            args = args.substring(0, args.length() - 2);
-        }
-        result.append(args).append(")");
+        StringBuilder result = new StringBuilder();
+        if (modifiers != 0) result.append(Modifier.toString(modifiers)).append(" ");
+        result.append(getSignatureWithoutModifiers());
         return result.toString();
     }
 
@@ -121,15 +142,26 @@ public abstract class MethodBase extends MemberBase {
      * @return specially formed Method's String representation
      */
     public String getSignature() {
-        StringBuffer result = new StringBuffer();
-        if (visibility != null && !Visibility.PACKAGE.equals(visibility)) {
+        StringBuilder result = new StringBuilder();
+        if (visibility != null && !Visibility.PACKAGE.equals(visibility))
             result = result.append(getVisibility().toString()).append(" ");
-        }
         result.append(getSignatureForLabel());
         result.append(" {}\n");
         return result.toString();
     }
 
+//    /**
+//     * Method used to check if Method object's modifier array contains the
+//     * modifier given as an input argument.
+//     * <p>
+//     * Used to check if Method's access and non-access modifiers.
+//     *
+//     * @param modifier to be checked
+//     * @return true if method has that modifier, negative if it doesn't
+//     */
+//    public boolean hasConcreteModifier(String modifier) {
+//        return Modifier.toString(modifiers).contains(modifier);
+//    }
 //    @Override
 //    public int hashCode() {
 //        int hash = 3;
@@ -147,9 +179,8 @@ public abstract class MethodBase extends MemberBase {
 //        if (!Objects.equals(this.getSignature(), other.getSignature())) return false;
 //        return true;
 //    }
-    @Override
-    public String toString() {
-        return getSignature();
-    }
-
+//    @Override
+//    public String toString() {
+//        return getSignature();
+//    }
 }

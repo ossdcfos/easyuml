@@ -2,7 +2,6 @@ package org.uml.xmlDeserialization;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 import org.dom4j.Element;
 import org.uml.model.members.MethodArgument;
 
@@ -30,11 +29,8 @@ public class MethodArgumentsDeserializer implements XmlDeserializer{
             String type = argument.attributeValue("type");
             String name = argument.attributeValue("name");
             if (type != null && name != null) {
-                Random r = new Random();
-                int Low = 0;
-                int High = 100;
-                int R = r.nextInt(High - Low) + Low;
-                arguments.put(Integer.toString(R), new MethodArgument(type, name));
+                MethodArgument methodArgument = new MethodArgument(type, name);
+                arguments.put(methodArgument.getName(), methodArgument);
             }
         }
     }

@@ -28,7 +28,7 @@ public class ConstructorDeserializer implements XmlDeserializer{
         String visibility = node.attributeValue("visibility");
         String returnType = node.attributeValue("returnType");
         if (name != null) constructor.setName(name);
-        if (visibility != null) constructor.setVisibility(Visibility.valueOf(visibility));
+        if (visibility != null) constructor.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         if (!node.elements().isEmpty()) {
             HashMap<String, MethodArgument> arguments = new HashMap<>();
             MethodArgumentsDeserializer mad = new MethodArgumentsDeserializer(arguments);

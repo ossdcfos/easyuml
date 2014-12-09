@@ -28,7 +28,6 @@ public class ClassComponent extends ComponentBase {
     /**
      * Default constructor only specifying parent diagram. Sets name to default value.
      * 
-     * @param parentDiagram
      */
     public ClassComponent() {
         this("UntitledClass");
@@ -41,7 +40,6 @@ public class ClassComponent extends ComponentBase {
      * 
      * <p> Only sets the name of Class. </p>
      *
-     * @param parentDiagram
      * @param name to be set
      */
     public ClassComponent(String name) {
@@ -86,8 +84,9 @@ public class ClassComponent extends ComponentBase {
      * @param field that will be added to collection.
      */
     public void addField(Field field) {
-        addMember(field);
-        field.setDeclaringClass(this);
+        addComponent(field);
+//        addMember(field);
+        field.setDeclaringComponent(this);
         fields.put(field.toString(), field);
     }
 
@@ -97,8 +96,9 @@ public class ClassComponent extends ComponentBase {
      * @param method that will be added to collection.
      */
     public void addMethod(Method method) {
-        addMember(method);
-        method.setDeclaringClass(this);
+//        addMember(method);
+        addComponent(method);
+        method.setDeclaringComponent(this);
         methods.put(method.toString(), method);
     }
 
@@ -108,8 +108,9 @@ public class ClassComponent extends ComponentBase {
      * @param constructor which will be added to collection.
      */
     public void addConstructor(Constructor constructor) {
-        addMember(constructor);
-        constructor.setDeclaringClass(this);
+//        addMember(constructor);
+        addComponent(constructor);
+        constructor.setDeclaringComponent(this);
         constructors.put(constructor.toString(), constructor);
     }
 

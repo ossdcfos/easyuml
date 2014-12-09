@@ -1,13 +1,11 @@
 package org.uml.xmlDeserialization;
 
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 import org.dom4j.Element;
-import org.uml.model.members.MethodBase;
 import org.uml.model.members.MethodArgument;
 import org.uml.model.Visibility;
+import org.uml.model.members.Method;
 
 /**
  *
@@ -15,9 +13,9 @@ import org.uml.model.Visibility;
  */
 public class MethodDeserializer implements XmlDeserializer{
 
-    private MethodBase method;
+    private Method method;
 
-    public MethodDeserializer(MethodBase method) {
+    public MethodDeserializer(Method method) {
         this.method = method;
     }
     
@@ -36,11 +34,12 @@ public class MethodDeserializer implements XmlDeserializer{
         String isSynchronized = node.attributeValue("isSynchronized");
         if (name != null) method.setName(name);
         if (visibility != null) method.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
-        if (type != null) method.setReturnType(type);
-        if (isStatic != null) method.addModifier(Modifier.STATIC);
-        if (isFinal != null) method.addModifier(Modifier.FINAL);
-        if (isAbstract != null) method.addModifier(Modifier.ABSTRACT);
-        if (isSynchronized != null) method.addModifier(Modifier.SYNCHRONIZED);
+        if (type != null) method.setType(type);
+        if (isStatic != null) method.setStatic(Boolean.parseBoolean(isStatic));
+        if (isFinal != null) method.setFinal(Boolean.parseBoolean(isFinal));
+        if (isAbstract != null) method.setAbstract(Boolean.parseBoolean(isAbstract));
+        if (isSynchronized != null) method.setSynchronized(Boolean.parseBoolean(isSynchronized));
+        
         HashMap<String, MethodArgument> arguments = new HashMap<>();
         Iterator<?> argumentIterator = node.elementIterator("Argument");
         while (argumentIterator != null && argumentIterator.hasNext()) {
@@ -48,11 +47,8 @@ public class MethodDeserializer implements XmlDeserializer{
             String argumentType = argumentElement.attributeValue("type");
             String argumentName = argumentElement.attributeValue("name");
             if (type != null && name != null) {
-                Random r = new Random();
-                int Low = 0;
-                int High = 100;
-                int R = r.nextInt(High - Low) + Low;
-                arguments.put(Integer.toString(R), new MethodArgument(argumentType, argumentName));
+                MethodArgument methodArgument = new MethodArgument(type, name);
+                arguments.put(methodArgument.getName(), methodArgument);
             }
         }
         method.setArguments(arguments);

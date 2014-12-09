@@ -12,12 +12,12 @@ import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
  *
  * @author Jelena
  */
-public class LiteralWidget extends MemberWidgetBase{
+public class LiteralWidget extends MemberWidgetBase {
 
     Literal literalComponent;
     //LabelWidget visibilityLabel;
     LabelWidget nameLabel;
-    
+
     public LiteralWidget(ClassDiagramScene scene, Literal literal) {
         super(scene, literal);
         this.literalComponent = literal;
@@ -30,36 +30,35 @@ public class LiteralWidget extends MemberWidgetBase{
         nameLabel.setLabel(literal.getName());
         this.addChild(nameLabel);
         nameLabel.getActions().addAction(nameEditorAction);
-        
+
         getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
 
     }
-    
+
     @Override
     public LabelWidget getNameLabel() {
         return nameLabel;
     }
 
-    @Override
-    public void setName(String newName) {
-        if (getName().equals(newName)) {
-            return;
-        }
-        String oldName = literalComponent.getName();
-        if (!literalComponent.getDeclaringClass().nameExists(newName)) {
-            nameLabel.setLabel(newName);
-            literalComponent.setName(newName);
-            literalComponent.getDeclaringClass().notifyMemberNameChanged(literalComponent, oldName);
-        }
-        else {
-            //poruka
-        }
-    }
-
-    @Override
-    public String getName() {
-        return literalComponent.getName();
-    }
+//    @Override
+//    public void setName(String newName) {
+//        if (getName().equals(newName)) {
+//            return;
+//        }
+//        String oldName = literalComponent.getName();
+//        if (!literalComponent.getDeclaringComponent().signatureExists(newName)) {
+//            nameLabel.setLabel(newName);
+//            literalComponent.setName(newName);
+//            literalComponent.getDeclaringComponent().notifyMemberNameChanged(literalComponent, oldName);
+//        } else {
+//            //poruka
+//        }
+//    }
+//
+//    @Override
+//    public String getName() {
+//        return literalComponent.getName();
+//    }
 
     @Override
     public MemberBase getMember() {
@@ -67,17 +66,24 @@ public class LiteralWidget extends MemberWidgetBase{
     }
 
     @Override
-    public void setAttributes(String attributes) {
-        
-    }
-
-    @Override
     protected void setSelected(boolean isSelected) {
-        if(isSelected){
+        if (isSelected) {
             nameLabel.setForeground(SELECT_FONT_COLOR);
         } else {
             nameLabel.setForeground(DEFAULT_FONT_COLOR);
         }
     }
-    
+
+    @Override
+    public void setSignature(String signature) {
+        // TODO Implement this.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getSignature() {
+        // TODO Implement this.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

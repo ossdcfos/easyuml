@@ -46,11 +46,11 @@ public class Method extends MethodBase {
     public void setAbstract(boolean isAbstract) {
         int oldModifiers = modifiers;
         if (isAbstract) {
-            modifiers |= Modifier.ABSTRACT;
+            addModifier(Modifier.ABSTRACT);
         } else {
-            modifiers &= ~Modifier.ABSTRACT;
+            removeModifier(Modifier.ABSTRACT);
         }
-        fire("isAbstract", Modifier.isAbstract(oldModifiers), isAbstract());
+        pcs.firePropertyChange("isAbstract", Modifier.isAbstract(oldModifiers), isAbstract());
     }
 
     /**
@@ -70,11 +70,11 @@ public class Method extends MethodBase {
     public void setStatic(boolean isStatic) {
         int oldModifiers = modifiers;
         if (isStatic) {
-            modifiers |= Modifier.STATIC;
+            addModifier(Modifier.STATIC);
         } else {
-            modifiers &= ~Modifier.STATIC;
+            removeModifier(Modifier.STATIC);
         }
-        fire("isStatic", Modifier.isStatic(oldModifiers), isStatic());
+        pcs.firePropertyChange("isStatic", Modifier.isStatic(oldModifiers), isStatic());
     }
 
     /**
@@ -94,11 +94,11 @@ public class Method extends MethodBase {
     public void setFinal(boolean isFinal) {
         int oldModifiers = modifiers;
         if (isFinal) {
-            modifiers |= Modifier.FINAL;
+            addModifier(Modifier.FINAL);
         } else {
-            modifiers &= ~Modifier.FINAL;
+            removeModifier(Modifier.FINAL);
         }
-        fire("isFinal", Modifier.isFinal(oldModifiers), isFinal());
+        pcs.firePropertyChange("isFinal", Modifier.isFinal(oldModifiers), isFinal());
     }
 
     /**
@@ -120,11 +120,11 @@ public class Method extends MethodBase {
     public void setSynchronized(boolean isSynchronized) {
         int oldModifiers = modifiers;
         if (isSynchronized) {
-            modifiers |= Modifier.SYNCHRONIZED;
+            addModifier(Modifier.SYNCHRONIZED);
         } else {
-            modifiers &= ~Modifier.SYNCHRONIZED;
+            removeModifier(Modifier.SYNCHRONIZED);
         }
-        fire("isSynchronized", Modifier.isSynchronized(oldModifiers), isSynchronized());
+        pcs.firePropertyChange("isSynchronized", Modifier.isSynchronized(oldModifiers), isSynchronized());
     }
 
 }

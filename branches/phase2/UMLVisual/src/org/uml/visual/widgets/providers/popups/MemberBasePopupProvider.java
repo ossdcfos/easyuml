@@ -25,11 +25,6 @@ public class MemberBasePopupProvider implements PopupMenuProvider {
         String name = widget.getMember().getClass().getSimpleName();
         menu = new JPopupMenu(name+" Menu");
         
-        addDelete();
-    }
-    
-    protected final void addDelete(){
-        String name = widget.getMember().getClass().getSimpleName();
         (deleteMember = new JMenuItem("Delete "+name)).addActionListener(removeWidgetListener);
         menu.add(deleteMember);
     }
@@ -38,8 +33,8 @@ public class MemberBasePopupProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             MemberBase member = widget.getMember();
-            member.getDeclaringClass().removeComponent(widget.getName());
-            member.getDeclaringClass().removeMemberFromContainer(member);
+            member.getDeclaringComponent().removeComponent(widget.getMember().toString());
+            member.getDeclaringComponent().removeMemberFromContainer(member);
             widget.getClassDiagramScene().removeObject(member);
             widget.removeFromParent();
         }

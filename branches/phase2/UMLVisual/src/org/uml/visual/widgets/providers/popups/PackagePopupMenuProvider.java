@@ -31,7 +31,7 @@ public class PackagePopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            packageWidget.getComponent().getParentDiagram().removeComponent(packageWidget.getName());
+            packageWidget.getComponent().getParentDiagram().removeComponent(packageWidget.getComponent().getName());
             ClassDiagram classDiagram = packageWidget.getComponent().getParentDiagram();
 
             /*for(Map.Entry<String,RelationComponent> entry : classDiagram.getRelations().entrySet()) {

@@ -1,6 +1,5 @@
 package org.uml.visual.widgets;
 
-import com.timboudreau.vl.jung.ObjectSceneAdapter;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.ComponentWidgetBase;
@@ -22,17 +21,12 @@ import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.anchor.*;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.layout.LayoutFactory;
-import org.netbeans.api.visual.model.ObjectSceneEvent;
-import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.*;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.*;
-import org.uml.explorer.ComponentNode;
-import org.uml.explorer.MemberNode;
 import org.uml.model.*;
-import org.uml.model.members.MemberBase;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.visual.UMLTopComponent;
@@ -57,7 +51,6 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
     private UMLTopComponent umlTopComponent;
     private InstanceContent content = new InstanceContent();
     AbstractLookup aLookup = new AbstractLookup(content);
-    private AbstractNode oldNode;
 
     public ClassDiagramScene(ClassDiagram umlClassDiagram, final UMLTopComponent umlTopComponent) {
 

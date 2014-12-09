@@ -140,7 +140,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
      */
     public void changeName(String newName) {
         if(getName().equals(newName)){
-        } else if (component.getParentDiagram().nameExists(newName)) {
+        } else if (component.getParentDiagram().signatureExists(newName)) {
             JOptionPane.showMessageDialog(null, "Name \""+newName+"\" already exists!");
 //            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
 //            //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());

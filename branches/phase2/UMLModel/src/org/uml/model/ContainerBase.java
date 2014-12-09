@@ -12,12 +12,12 @@ import java.util.List;
 public abstract class ContainerBase<T extends INameable> implements INameable {
     
     protected String name;
-    protected HashMap<String, T> components; // contains classes, interfaces or enums
+    protected HashMap<String, T> containerComponents; // contains classes, interfaces or enums
     protected transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
 
     public ContainerBase(String name) {
         this.name = name;
-        this.components = new HashMap<>();
+        this.containerComponents = new HashMap<>();
     }
 
     public void addDeleteListener(IComponentDeleteListener icdl) {
@@ -35,11 +35,11 @@ public abstract class ContainerBase<T extends INameable> implements INameable {
     public void addComponent(T component) {
         String componentName = component.getName();
         int suffix = 1;
-        while (nameExists(component.getName())) {
+        while (signatureExists(component.toString())) {
             component.setName(componentName + suffix);
             suffix++;
         }
-        components.put(component.getName(), component);
+        containerComponents.put(component.toString(), component);
     }
 
     /**
@@ -49,20 +49,20 @@ public abstract class ContainerBase<T extends INameable> implements INameable {
      */
     public void removeComponent(String name) {
         for (IComponentDeleteListener icdl : deleteListeners) {
-            icdl.componentDeleted(components.get(name));
+            icdl.componentDeleted(containerComponents.get(name));
         }
-        components.remove(name);
+        containerComponents.remove(name);
     }
 
     /**
      * Checks if component with provided name exists in collection of
      * components.
      *
-     * @param name of the component
+     * @param componentString of the component
      * @return if that component exists in collection
      */
-    public boolean nameExists(String name) {
-        return components.containsKey(name);
+    public boolean signatureExists(String componentString) {
+        return containerComponents.containsKey(componentString);
     }
 
     /**

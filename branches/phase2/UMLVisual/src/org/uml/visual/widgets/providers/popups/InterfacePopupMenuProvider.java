@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Random;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
@@ -45,8 +46,8 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
         
         menu.addSeparator();
         
-        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
-        menu.add(editPackage);
+//        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
+//        menu.add(editPackage);
         
         menu.addSeparator();
         
@@ -62,10 +63,11 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
                 interfaceWidget.getComponent().addMethod(m);
 
             } catch (RuntimeException ex) {
-                Random r = new Random();
-                int i = r.nextInt(10000);
-                m.setName(m.getName() + i);
-                interfaceWidget.getComponent().addMethod(m);
+                JOptionPane.showMessageDialog(menu, "Greska u pravljenju metode interfejsa "+m.getName(), "Greska!", JOptionPane.ERROR_MESSAGE);
+//                Random r = new Random();
+//                int i = r.nextInt(10000);
+//                m.setName(m.getName() + i);
+//                interfaceWidget.getComponent().addMethod(m);
             }
             MethodWidget w = new MethodWidget(interfaceWidget.getClassDiagramScene(), m);
             interfaceWidget.addMethodWidget(w);
@@ -77,42 +79,32 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
             interfaceWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
-    ActionListener editPackageListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-//            String pack = "";
-            PackageDialog pd = new PackageDialog(null, true, interfaceWidget.getComponent(), interfaceWidget.getClassDiagramScene().getClassDiagram());
-            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-            pd.setTitle("Package");
-            pd.setVisible(true);
-
-//            classWidget.getComponent().setPack(pack);
-//            Constructor c = new Constructor(classWidget.getName());
-//            classWidget.getComponent().addConstructor(c);
-//            ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
-//            classWidget.addConstructorWidget(w);
-            interfaceWidget.getScene().validate();
-
-//            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
-        }
-    };
+    
+//    ActionListener editPackageListener = new ActionListener() {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+////            String pack = "";
+//            PackageDialog pd = new PackageDialog(null, true, interfaceWidget.getComponent(), interfaceWidget.getClassDiagramScene().getClassDiagram());
+//            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+//            pd.setTitle("Package");
+//            pd.setVisible(true);
+//
+////            classWidget.getComponent().setPack(pack);
+////            Constructor c = new Constructor(classWidget.getName());
+////            classWidget.getComponent().addConstructor(c);
+////            ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
+////            classWidget.addConstructorWidget(w);
+//            interfaceWidget.getScene().validate();
+//
+////            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
+//        }
+//    };
+    
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassDiagram classDiagram = interfaceWidget.getComponent().getParentDiagram();
-            classDiagram.removeComponent(interfaceWidget.getName());
-//            interfaceWidget.removeFromParent();
-//            
-//            for (Map.Entry<String, RelationComponent> entry : classDiagram.getRelations().entrySet()) {
-//                RelationComponent relation = entry.getValue();
-//                if (relation.getSource().getName().equals(interfaceWidget.getName()) || relation.getTarget().getName().equals(interfaceWidget.getName())) {
-//                    classDiagram.removeRelation(relation.getName());
-//                    interfaceWidget.getClassDiagramScene().removeEdge(relation);
-//                }
-//            }
-//            interfaceWidget.getClassDiagramScene().removeNode(interfaceWidget.getComponent());
-//            
-//            interfaceWidget.getScene().validate();
+            classDiagram.removeComponent(interfaceWidget.getComponent().getName());
         }
     };
 

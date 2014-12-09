@@ -1,8 +1,11 @@
 package org.uml.visual.widgets.members;
 
-import java.awt.Color;
+import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
@@ -31,25 +34,21 @@ public class FieldWidget extends MemberWidgetBase implements PropertyChangeListe
         super(scene, field);
         this.component = field;
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
-        //scene.addObject(field, this);
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
         visibilityLabel = new LabelWidget(getScene());
-        visibilityLabel.setLabel("-");
-        visibilityLabel.setBackground(Color.BLUE);
+        updateVisibilityLabel();
         this.addChild(visibilityLabel);
 
-//        getActions().addAction(scene.createSelectAction());
-//        getActions().addAction(scene.createObjectHoverAction());
         nameWidget = new LabelWidget(getScene());
         nameWidget.setLabel(field.getSignatureForLabel());
-        nameWidget.setBackground(Color.MAGENTA);
-        this.addChild(nameWidget);
+        nameWidget.setFont(scene.getDefaultFont());
+        setStatic(field.isStatic());
         nameWidget.getActions().addAction(nameEditorAction);
+        this.addChild(nameWidget);
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
         wp = new WidgetParser();
-        refreshVisibilityLabel();
     }
 
     @Override
@@ -58,73 +57,46 @@ public class FieldWidget extends MemberWidgetBase implements PropertyChangeListe
     }
 
     @Override
-    public void setName(String newName) {
-        if (getName().equals(newName)) {
-            return;
-        }
-        String oldName = component.getName();
-
-        if (!component.getDeclaringClass().nameExists(newName)) {
-            nameWidget.setLabel(newName);
-            component.setName(newName);
-            component.getDeclaringClass().notifyMemberNameChanged(component, oldName);
-        } else {
-            //poruka
-        }
-    }
-
-    @Override
-    public String getName() {
-        return component.getName();
-    }
-
-    @Override
     public MemberBase getMember() {
         return component;
     }
 
-    public LabelWidget getFieldNameWidget() {
-        return nameWidget;
+    @Override
+    public void setSignature(String signature) {
+        String oldSignature = component.getSignatureWithoutModifiers();
+        if (!signature.equals(oldSignature)) {
+            if (component.getDeclaringComponent().signatureExists(signature)) {
+                JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
+            } else {
+                wp.fillFieldComponents((Field) component, signature);
+                component.getDeclaringComponent().notifyMemberSignatureChanged(component, oldSignature);
+            }
+        }
+        nameWidget.setLabel(((Field) component).getSignatureForLabel());
     }
 
     @Override
-    public void setAttributes(String attributes) {
-        String oldName = component.getName();
-        wp.fillFieldComponents((Field)component, attributes);
-        String newName = component.getName();
-        if (newName.equals(oldName)) {
-
-        } else {
-            if (!component.getDeclaringClass().nameExists(newName)) {
-                component.getDeclaringClass().notifyMemberNameChanged(component, oldName);
-            } else {
-                component.setName(oldName);
-                throw new RuntimeException("Error: name already exists.");
-            }
-        }
-
-        nameWidget.setLabel(((Field)component).getSignatureForLabel());
-
-        refreshVisibilityLabel();
+    public String getSignature() {
+        return ((Field) component).getSignatureWithoutModifiers();
     }
 
-    public final void refreshVisibilityLabel() {
-        if (component != null && component.getVisibility() != null) {
-            switch (component.getVisibility()) {
-                case PUBLIC:
-                    visibilityLabel.setLabel("+");
-                    break;
-                case PRIVATE:
-                    visibilityLabel.setLabel("-");
-                    break;
-                case PROTECTED:
-                    visibilityLabel.setLabel("#");
-                    break;
-                case PACKAGE:
-                    visibilityLabel.setLabel("~");
-                    break;
-            }
+    public final void updateVisibilityLabel() {
+//        if (component != null && component.getVisibility() != null) {
+        switch (component.getVisibility()) {
+            case PUBLIC:
+                visibilityLabel.setLabel("+");
+                break;
+            case PRIVATE:
+                visibilityLabel.setLabel("-");
+                break;
+            case PROTECTED:
+                visibilityLabel.setLabel("#");
+                break;
+            case PACKAGE:
+                visibilityLabel.setLabel("~");
+                break;
         }
+//        }
     }
 
     @Override
@@ -138,14 +110,29 @@ public class FieldWidget extends MemberWidgetBase implements PropertyChangeListe
         }
     }
 
+    private void setStatic(boolean isStatic) {
+        Map<TextAttribute, Integer> fontAttributes = new HashMap<>();
+        if (isStatic) {
+            fontAttributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        } else {
+            fontAttributes.put(TextAttribute.UNDERLINE, -1);
+        }
+        nameWidget.setFont(nameWidget.getFont().deriveFont(fontAttributes));
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("isStatic".equals(evt.getPropertyName()) || "isFinal".equals(evt.getPropertyName()) || "isSynchronized".equals(evt.getPropertyName()) || "name".equals(evt.getPropertyName())) {
-            nameWidget.setLabel(((Field)component).getSignatureForLabel());
+        String propName = evt.getPropertyName();
+        if ("isStatic".equals(propName)) {
+            setStatic((boolean) evt.getNewValue());
+        }
+        if ("isFinal".equals(propName) || "isTransient".equals(propName) || "isVolatile".equals(propName) || "name".equals(propName) || "type".equals(propName)) {
+            nameWidget.setLabel(((Field) component).getSignatureForLabel());
         }
         if ("visibility".equals(evt.getPropertyName())) {
-            refreshVisibilityLabel();
+            updateVisibilityLabel();
         }
+        getClassDiagramScene().getUmlTopComponent().modify();
         getScene().validate();
     }
 

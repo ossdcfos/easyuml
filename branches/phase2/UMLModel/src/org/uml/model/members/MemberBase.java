@@ -1,11 +1,8 @@
 package org.uml.model.members;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import org.uml.model.INameable;
 import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
@@ -23,34 +20,27 @@ import org.uml.model.components.ComponentBase;
  */
 public abstract class MemberBase implements INameable {
 
+    protected String name;
     // sta ako je niz? da li treba koristiti Type?
     protected String type;
-    private String name;
 
-    /*
+    protected Visibility visibility;
+    /**
      * Modifier is a int value representing access and non-access modifier in
      * Java e.g. public is represented as 0x00000001, static as 0x00000008.
      * 
      * @see java.lang.reflect.Modifier
      */
     protected int modifiers;
-    //private String modifiers; //modifiers are implemented as Strings, it is possible to later be changed to enum
-    private transient ComponentBase declaringClass;
-    protected Visibility visibility;
-    private transient List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
+    private transient ComponentBase declaringComponent;
+    protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        listeners.add(pcl);
+        pcs.addPropertyChangeListener(pcl);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
-        listeners.remove(pcl);
-    }
-
-    protected void fire(String propertyName, Object old, Object nue) {
-        for (PropertyChangeListener pcl : listeners) {
-            pcl.propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
-        }
+        pcs.removePropertyChangeListener(pcl);
     }
 
     /**
@@ -69,24 +59,33 @@ public abstract class MemberBase implements INameable {
 
     @Override
     public void setName(String newName) {
+//        name = newName;
+        String oldSignature = toString();
+        String oldName = getName();
         name = newName;
+        declaringComponent.notifyMemberSignatureChanged(this, oldSignature);
+        pcs.firePropertyChange("name", oldName, newName);
     }
 
-    // used from Property sheet
-    public void changeName(String newName) {
-        String oldName = name;
-        name = newName;
-        declaringClass.notifyMemberNameChanged(this, oldName);
-        fire("name", oldName, newName);
-    }
-
-    public int getModifiers() {
-        return modifiers;
-    }
-
-//    public void setModifiers(int modifier) {
-//        this.modifiers = modifier;
+//    // used from Property sheet
+//    public void changeName(String newName) {
+//        String oldSignature = toString();
+//        String oldName = getName();
+//        name = newName;
+//        declaringComponent.notifyMemberSignatureChanged(this, oldSignature);
+//        pcs.firePropertyChange("name", oldName, newName);
 //    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String newType) {
+        String oldType = this.type;
+        this.type = newType;
+        pcs.firePropertyChange("type", oldType, newType);
+    }
+    
     /**
      * Adds numerical representation of java Modifier enum's constants into
      * modifiers array.
@@ -117,29 +116,8 @@ public abstract class MemberBase implements INameable {
      * @param modifier to be removed
      * @see Modifier
      */
-    public void deleteModifier(int modifier) {
+    public void removeModifier(int modifier) {
         modifiers &= ~modifier;
-    }
-
-//    /**
-//     * Returns String representation of modifiers array, concatenated with one
-//     * blank space in between (" ").
-//     *
-//     * @return concatenated String representation of modifiers array
-//     */
-//    public String getModifiersAsString() {
-//        return Modifier.toString(modifiers);
-//    }
-    public void resetModifiers() {
-        modifiers = 0;
-    }
-
-    public ComponentBase getDeclaringClass() {
-        return declaringClass;
-    }
-
-    public void setDeclaringClass(ComponentBase declaringClass) {
-        this.declaringClass = declaringClass;
     }
 
     public Visibility getVisibility() {
@@ -149,7 +127,24 @@ public abstract class MemberBase implements INameable {
     public void setVisibility(Visibility visibility) {
         Visibility oldValue = this.visibility;
         this.visibility = visibility;
-        fire("visibility", oldValue, this.visibility);
+        pcs.firePropertyChange("visibility", oldValue, this.visibility);
+    }
+
+    public ComponentBase getDeclaringComponent() {
+        return declaringComponent;
+    }
+
+    public void setDeclaringComponent(ComponentBase declaringComponent) {
+        this.declaringComponent = declaringComponent;
+    }
+    
+    public abstract String getSignatureWithoutModifiers();
+    public abstract String deriveNewSignatureWithoutModifiersFromName(String newName);
+    public abstract String deriveNewSignatureWithoutModifiersFromType(String newType);
+    
+    @Override
+    public String toString(){
+        return getSignatureWithoutModifiers();
     }
 
 //    @Override

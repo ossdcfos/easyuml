@@ -6,8 +6,8 @@ import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 
 /**
- * Represents a class field (variables inside a class). 
- * It extends Member class and it is one of four possible Members.
+ * Represents a class field (variables inside a class). It extends Member class
+ * and it is one of four possible Members.
  *
  * @author Uros
  * @see MemberBase
@@ -49,12 +49,12 @@ public class Field extends MemberBase {
      */
     public void setStatic(boolean isStatic) {
         int oldModifiers = modifiers;
-        if(isStatic) {
-            modifiers |= Modifier.STATIC;
+        if (isStatic) {
+            addModifier(Modifier.STATIC);
         } else {
-            modifiers &= ~Modifier.STATIC;
+            removeModifier(Modifier.STATIC);
         }
-        fire("isStatic", Modifier.isStatic(oldModifiers), isStatic());
+        pcs.firePropertyChange("isStatic", Modifier.isStatic(oldModifiers), isStatic());
     }
 
     /**
@@ -73,12 +73,12 @@ public class Field extends MemberBase {
      */
     public void setFinal(boolean isFinal) {
         int oldModifiers = modifiers;
-        if(isFinal) {
-            modifiers |= Modifier.FINAL;
+        if (isFinal) {
+            addModifier(Modifier.FINAL);
         } else {
-            modifiers &= ~Modifier.FINAL;
+            removeModifier(Modifier.FINAL);
         }
-        fire("isFinal", Modifier.isFinal(oldModifiers), isFinal());
+        pcs.firePropertyChange("isFinal", Modifier.isFinal(oldModifiers), isFinal());
     }
 
     /**
@@ -94,17 +94,17 @@ public class Field extends MemberBase {
     /**
      * Set this field's final transient to true or false
      *
-     * @param isTransient - set true if the field is transient, false if
-     * it isn't
+     * @param isTransient - set true if the field is transient, false if it
+     * isn't
      */
     public void setTransient(boolean isTransient) {
         int oldModifiers = modifiers;
-        if(isTransient) {
-            modifiers |= Modifier.TRANSIENT;
+        if (isTransient) {
+            addModifier(Modifier.TRANSIENT);
         } else {
-            modifiers &= ~Modifier.TRANSIENT;
+            removeModifier(Modifier.TRANSIENT);
         }
-        fire("isTransient", Modifier.isTransient(oldModifiers), isTransient());
+        pcs.firePropertyChange("isTransient", Modifier.isTransient(oldModifiers), isTransient());
     }
 
     /**
@@ -120,65 +120,24 @@ public class Field extends MemberBase {
     /**
      * Set this field's final volatile to true or false
      *
-     * @param isVolatile - set true if the field is volatile, false if
-     * it isn't
+     * @param isVolatile - set true if the field is volatile, false if it isn't
      */
     public void setVolatile(boolean isVolatile) {
         int oldModifiers = modifiers;
-        if(isVolatile) {
-            modifiers |= Modifier.VOLATILE;
+        if (isVolatile) {
+            addModifier(Modifier.VOLATILE);
         } else {
-            modifiers &= ~Modifier.VOLATILE;
+            removeModifier(Modifier.VOLATILE);
         }
-        fire("isVolatile", Modifier.isVolatile(oldModifiers), isVolatile());
+        pcs.firePropertyChange("isVolatile", Modifier.isVolatile(oldModifiers), isVolatile());
     }
 
-    /**
-     * Another way to set static, final or synchronized modifiers. Parses string
-     * provided and sets adjacent bool modifier e.g. "static" sets isStatic to
-     * true.
-     *
-     * @param modifier name to be set
-     */
-    public void setModifier(String modifier) {
-        switch(modifier){
-            case "static":
-                setStatic(true);
-                break;
-            case "final":
-                setFinal(true);
-                break;
-            case "transient":
-                setTransient(true);
-                break;
-        }
-    }
-
-    /**
-     * Sets isFinal, isStatic and isSynchronized variables (modifiers) to false.
-     */
-    public void resetModifiers() {
-        setFinal(false);
-        setStatic(false);
-        setTransient(false);
-    }
-
-    /**
-     * Returns type of the field (variable)
-     *
-     * @return field's type
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Sets field's type
-     *
-     * @param type of this field
-     */
-    public void setType(String type) {
-        this.type = type;
+    @Override
+    public String getSignatureWithoutModifiers() {
+        StringBuilder result = new StringBuilder();
+        result = result.append(type).append(" ");
+        result = result.append(getName());
+        return result.toString();
     }
 
     /**
@@ -186,15 +145,15 @@ public class Field extends MemberBase {
      * <p>
      * By concatenating strings a text is created, which can be used to
      * represent this Field in the UML diagram's class that holds it e.g.
-     * "static int fieldNuberOne".
+     * "static int fieldNumberOne".
      *
      * @return specially formed String representation of the Field
      */
     public String getSignatureForLabel() {
         StringBuilder result = new StringBuilder();
-        result.append(Modifier.toString(modifiers)).append(" ");
-        result = result.append(type).append(" ");
-        result = result.append(getName());
+        // removes static because it is rendered as underline
+        result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
+        result.append(getSignatureWithoutModifiers());
         return result.toString();
     }
 
@@ -207,7 +166,7 @@ public class Field extends MemberBase {
      *
      * @return specially formed Field's String representation
      */
-    public String getSignature() {
+    public String getFullSignature() {
         StringBuilder result = new StringBuilder();
         if (visibility != null && !visibility.equals(Visibility.PACKAGE)) {
             result = result.append(getVisibility().toString()).append(" ");
@@ -215,5 +174,45 @@ public class Field extends MemberBase {
         result.append(getSignatureForLabel());
         return result.toString();
     }
-    
+
+    @Override
+    public String deriveNewSignatureWithoutModifiersFromName(String newName) {
+        StringBuilder result = new StringBuilder();
+        result = result.append(type).append(" ");
+        result = result.append(newName);
+        return result.toString();
+    }
+
+    @Override
+    public String deriveNewSignatureWithoutModifiersFromType(String newType) {
+        StringBuilder result = new StringBuilder();
+        result = result.append(newType).append(" ");
+        result = result.append(getName());
+        return result.toString();
+    }
+
+//    /**
+//     * Another way to set static, final or synchronized modifiers. Parses string
+//     * provided and sets adjacent bool modifier e.g. "static" sets isStatic to
+//     * true.
+//     *
+//     * @param modifier name to be set
+//     */
+//    public void setModifier(String modifier) {
+//        switch (modifier) {
+//            case "static":
+//                setStatic(true);
+//                break;
+//            case "final":
+//                setFinal(true);
+//                break;
+//            case "transient":
+//                setTransient(true);
+//                break;
+//            case "volatile":
+//                setVolatile(true);
+//                break;
+//        }
+//    }
+
 }

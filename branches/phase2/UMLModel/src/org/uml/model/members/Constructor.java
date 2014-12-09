@@ -45,5 +45,15 @@ public class Constructor extends MethodBase {
     public Constructor(String name, HashMap<String, MethodArgument> arguments) {
         super(name, null, arguments);
     }
+
+    @Override
+    public String deriveNewSignatureWithoutModifiersFromName(String newName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String deriveNewSignatureWithoutModifiersFromType(String newType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

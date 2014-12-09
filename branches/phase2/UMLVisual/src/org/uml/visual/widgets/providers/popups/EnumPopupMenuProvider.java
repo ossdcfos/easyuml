@@ -88,7 +88,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            enumWidget.getComponent().getParentDiagram().removeComponent(enumWidget.getName());
+            enumWidget.getComponent().getParentDiagram().removeComponent(enumWidget.getComponent().getName());
             enumWidget.removeFromParent();
         }
     };

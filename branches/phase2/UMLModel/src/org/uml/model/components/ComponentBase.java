@@ -61,26 +61,6 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         visibility = Visibility.PUBLIC;
     }
 
-    /**
-     * Adds a member of ClassDiagramComponent to the members collection. Similar
-     * implementation as in ClassDiagram for addComponent and addRelation.
-     *
-     * @param member to be added to members collection
-     * @see ClassDiagram#addComponent(org.uml.model.ClassDiagramComponent)
-     * @see ClassDiagram#addRelation(org.uml.model.ClassDiagramComponent)
-     * @see MemberBase
-     */
-    public void addMember(MemberBase member) {
-        // TODO throw or inform?
-        if (nameExists(member.toString())) {
-            //member.setName(member.getName() + memberCounter);
-            //JOptionPane.showMessageDialog(null, "You have entered name that already exists, please enter new one.");
-            throw new RuntimeException("Error while inserting member name: name already exists. Member name: " + member.getName());
-        }
-//        members.put(member.toString(), member);
-        components.put(member.getName(), member);
-    }
-
     public abstract void removeMemberFromContainer(MemberBase member);
 
     /**
@@ -88,12 +68,12 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * replaces it with the same member (but with new name).
      *
      * @param member that will be renamed
-     * @param oldName old name of that component
+     * @param oldSignature old name of that component
      * @see MemberBase
      */
-    public void notifyMemberNameChanged(MemberBase member, String oldName) {
-        removeComponent(oldName);
-        addMember(member);
+    public void notifyMemberSignatureChanged(MemberBase member, String oldSignature) {
+        removeComponent(oldSignature);
+        addComponent(member);
     }
 
     /**
@@ -102,22 +82,16 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @return all members of this ClassDiagramComponent
      */
     public HashMap<String, MemberBase> getMembers() {
-        return new HashMap(components);
+        return new HashMap(containerComponents);
     }
 
     // used from Property sheet
     public void changeName(String newName) {
-//        if (parentDiagram.nameExists(newName)) {
-//            throw new RuntimeException("Name of component " + newName + " already exists!");
-//        } else {
-            String oldName = name;
-            name = newName;
-            parentDiagram.notifyComponentNameChanged(this, oldName);
-            fire("name", oldName, newName);
-//        }
-        //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-        //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
-//          JOptionPane.showMessageDialog(null, "Greska, ime vec postoji.");
+        String oldSignature = toString();
+        String oldName = name;
+        name = newName;
+        parentDiagram.notifyComponentNameChanged(this, oldSignature);
+        fire("name", oldName, newName);
     }
 
     /**
