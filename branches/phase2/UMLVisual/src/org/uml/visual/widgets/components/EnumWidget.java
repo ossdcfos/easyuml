@@ -18,8 +18,6 @@ import org.uml.visual.widgets.providers.popups.EnumPopupMenuProvider;
 public class EnumWidget extends ComponentWidgetBase {
 
     private final Widget literalsContainer;
-//    private final Widget fieldsContainer;
-//    private final Widget methodsContainer;
 
     public EnumWidget(ClassDiagramScene scene, EnumComponent enumComponent) {
         super(scene, enumComponent);
@@ -47,28 +45,6 @@ public class EnumWidget extends ComponentWidgetBase {
         literalsContainer.addChild(literalName);
         addChild(literalsContainer);
 
-//        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-//
-//        fieldsContainer = new Widget(scene);
-//        fieldsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
-//        fieldsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
-//        fieldsContainer.setOpaque(false);
-//        fieldsContainer.setBorder(EMPTY_BORDER_4);
-//        LabelWidget memberName = new LabelWidget(scene);
-//        fieldsContainer.addChild(memberName);
-//        addChild(fieldsContainer);
-//
-//        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
-//
-//        methodsContainer = new Widget(scene);
-//        methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
-//        methodsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
-//        methodsContainer.setOpaque(false);
-//        methodsContainer.setBorder(EMPTY_BORDER_4);
-//        LabelWidget operationName = new LabelWidget(scene);
-//        methodsContainer.addChild(operationName);
-//        addChild(methodsContainer);
-
         this.nameWidget.setLabel(component.getName());
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new EnumPopupMenuProvider(this)));
@@ -77,21 +53,6 @@ public class EnumWidget extends ComponentWidgetBase {
             LiteralWidget w = new LiteralWidget(scene, l);
             this.addLiteralWidget(w);
         }
-
-//        for (Constructor c : getComponent().getConstructors().values()) {
-//            ConstructorWidget w = new ConstructorWidget(scene, c);
-//            this.addConstructorWidget(w);
-//        }
-//
-//        for (Field fieldComp : getComponent().getFields().values()) {
-//            FieldWidget w = new FieldWidget(this.getClassDiagramScene(), fieldComp);
-//            this.addFieldWidget(w);
-//        }
-//
-//        for (MethodBase methodComp : getComponent().getMethods().values()) {
-//            MethodWidget mw = new MethodWidget(this.getClassDiagramScene(), methodComp);
-//            this.addMethodWidget(mw);
-//        }
 
         // scene.validate();
     }
@@ -177,7 +138,13 @@ public class EnumWidget extends ComponentWidgetBase {
     }
 
     @Override
-    public void setAttributes(String attributes) {
+    public void setSignature(String signature) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getSignature() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

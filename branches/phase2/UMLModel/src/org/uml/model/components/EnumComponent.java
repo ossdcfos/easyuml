@@ -136,8 +136,8 @@ public class EnumComponent extends ComponentBase {
      * @param literal that will be added to collection
      */
     public void addLiteral(Literal literal) {
-        addMember(literal);
-        literal.setDeclaringClass(this);
+        addComponent(literal);
+        literal.setDeclaringComponent(this);
         literals.put(literal.toString(), literal);
     }
 

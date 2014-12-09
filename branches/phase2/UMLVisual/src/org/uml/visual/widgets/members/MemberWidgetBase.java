@@ -9,16 +9,15 @@ import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.members.MemberBase;
-import org.uml.visual.UMLTopComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.INameableWidget;
+import org.uml.visual.widgets.IUMLWidget;
 import org.uml.visual.widgets.actions.NameEditorAction;
 
 /**
  *
  * @author Jelena
  */
-public abstract class MemberWidgetBase extends LabelWidget implements INameableWidget {
+public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget {
 
     MemberBase component;
     protected WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
@@ -46,7 +45,7 @@ public abstract class MemberWidgetBase extends LabelWidget implements INameableW
     }
 
     public MemberBase getMember() {
-        return null;
+        return component;
     }
 
     public ClassDiagramScene getClassDiagramScene() {

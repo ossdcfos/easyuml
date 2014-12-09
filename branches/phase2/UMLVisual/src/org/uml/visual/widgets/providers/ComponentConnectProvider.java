@@ -17,7 +17,6 @@ import org.openide.util.Exceptions;
 import org.uml.visual.dialogs.*;
 import org.uml.visual.palette.PaletteItem;
 import org.uml.visual.palette.PaletteSupport;
-import org.uml.visual.widgets.*;
 
 /**
  *

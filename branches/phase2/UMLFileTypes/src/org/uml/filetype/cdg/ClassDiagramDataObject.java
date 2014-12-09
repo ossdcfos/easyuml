@@ -151,7 +151,7 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
             SAXReader reader = new SAXReader();
             //System.out.println(fileObject.asLines().get(0));
             classDiag.setName(fileObject.getName());
-            if (fileObject.asLines().get(0).startsWith("<?xml")) {
+            if (fileObject.asLines().isEmpty() && fileObject.asLines().get(0).startsWith("<?xml")) {
                 String path = fileObject.getPath();
 
                 Document document = reader.read(path);

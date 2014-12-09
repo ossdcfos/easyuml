@@ -16,7 +16,6 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
-import org.uml.model.members.MethodBase;
 import org.uml.model.Visibility;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
@@ -94,56 +93,14 @@ public class ClassWidget extends ComponentWidgetBase {
             addMember(fieldsContainer, w);
         }
 
-        for (MethodBase methodComp : classComponent.getMethods().values()) {
+        for (Method methodComp : classComponent.getMethods().values()) {
             MethodWidget mw = new MethodWidget(getClassDiagramScene(), methodComp);
             addMember(methodsContainer, mw);
         }
-        //this.getScene().validate();
     }
-
-//    public Widget createFieldWidget(String fieldName) {
-//        ClassDiagramScene scene = getClassDiagramScene();
-//
-//        Widget fieldWidget = new Widget(scene);
-//        fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-//
-//        //fieldWidget.addChild(createAtributeModifierPicker(scene));
-//        LabelWidget visibilityLabel = new LabelWidget(scene);
-//        visibilityLabel.setLabel("+");
-//        fieldWidget.addChild(visibilityLabel);
-//
-//        LabelWidget labelWidget = new LabelWidget(scene);
-//        labelWidget.setLabel(fieldName);
-//        labelWidget.getActions().addAction(nameEditorAction);
-//
-//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
-//        //dodato polje u classElement
-//        fieldWidget.addChild(labelWidget);
-//
-//        return fieldWidget;
-//    }
-//    public Widget createMethodWidget(String methodName) {
-//        Scene scene = getScene();
-//
-//        Widget methodWidget = new Widget(scene);
-//        methodWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-//
-//        //widget.addChild(createMethodModifierPicker(scene));
-//        LabelWidget visibilityLabel = new LabelWidget(scene);
-//        visibilityLabel.setLabel("+");
-//        methodWidget.addChild(visibilityLabel);
-//
-//        LabelWidget labelWidget = new LabelWidget(scene);
-//        labelWidget.setLabel(methodName);
-//        labelWidget.getActions().addAction(nameEditorAction);
-//        methodWidget.addChild(labelWidget);
-//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new MethodPopupMenuProvider(widget)));
-//
-//        return methodWidget;
-//    }
+    
     public void addFieldWidget() {
-
-        Field field = new Field("untitledField", null, Visibility.PRIVATE);
+        Field field = new Field("untitledField", "Object", Visibility.PRIVATE);
         addField(field);
         FieldWidget fieldWidget = new FieldWidget(getClassDiagramScene(), field);
         addMember(fieldsContainer, fieldWidget);
@@ -160,7 +117,7 @@ public class ClassWidget extends ComponentWidgetBase {
     }
 
     public void addMethodWidget() {
-        Method method = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
+        Method method = new Method("untitledMethod", "void", new HashMap<String, MethodArgument>());
         addMethod(method);
         MethodWidget methodWidget = new MethodWidget(getClassDiagramScene(), method);
         addMember(methodsContainer, methodWidget);
@@ -202,23 +159,6 @@ public class ClassWidget extends ComponentWidgetBase {
     }
 
     @Override
-    public void setAttributes(String attributes) {
-        String[] keyWords = attributes.split(" ");
-        for (String keyWord : keyWords) {
-            if (keyWord.equals("public")) {
-                component.setVisibility(Visibility.PUBLIC);
-            } else if (keyWord.equals("protected")) {
-                component.setVisibility(Visibility.PUBLIC);
-            } else if (keyWord.equals("private")) {
-                component.setVisibility(Visibility.PRIVATE);
-            }
-            if (keyWord.equals("abstract")) {
-                getComponent().setAbstract(true);
-            }
-        }
-    }
-
-    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         super.propertyChange(evt);
         if ("isAbstract".equals(evt.getPropertyName())) {
@@ -253,23 +193,45 @@ public class ClassWidget extends ComponentWidgetBase {
     }
 
     private void addField(Field f) {
-        try {
+//        try {
             getComponent().addField(f);
-        } catch (RuntimeException ex) {
-            int counter = getCounter(f);
-            f.setName(f.getName() + counter);
-            addField(f);
-        }
+//        } catch (RuntimeException ex) {
+//            int counter = getCounter(f);
+//            f.setName(f.getName() + counter);
+//            addField(f);
+//        }
     }
 
     private void addMethod(Method method) {
-        try {
+//        try {
             getComponent().addMethod(method);
-        } catch (RuntimeException ex) {
-            int counter = getCounter(method);
-            method.setName(method.getName() + counter);
-            addMethod(method);
+//        } catch (RuntimeException ex) {
+//            int counter = getCounter(method);
+//            method.setName(method.getName() + counter);
+//            addMethod(method);
+//        }
+    }
+
+    @Override
+    public void setSignature(String signature) {
+        String[] keyWords = signature.split(" ");
+        for (String keyWord : keyWords) {
+            if (keyWord.equals("public")) {
+                component.setVisibility(Visibility.PUBLIC);
+            } else if (keyWord.equals("protected")) {
+                component.setVisibility(Visibility.PUBLIC);
+            } else if (keyWord.equals("private")) {
+                component.setVisibility(Visibility.PRIVATE);
+            }
+            if (keyWord.equals("abstract")) {
+                getComponent().setAbstract(true);
+            }
         }
+    }
+
+    @Override
+    public String getSignature() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

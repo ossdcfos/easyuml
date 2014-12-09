@@ -65,7 +65,7 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
     public void removeRelationsForAComponent(INameable component) {
         List<RelationBase> toRemove = new LinkedList<>();
         for (RelationBase relation : relations) {
-            if (relation.getSource().getName().equals(component.getName()) || relation.getTarget().getName().equals(component.getName())) {
+            if (relation.getSource().equals(component) || relation.getTarget().equals(component)) {
                 toRemove.add(relation);
             }
         }
@@ -80,7 +80,7 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
      * @return collection of components
      */
     public HashMap<String, ComponentBase> getComponents() {
-        return new HashMap(components);
+        return new HashMap(containerComponents);
     }
 
     /**
@@ -106,13 +106,13 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
      * with new name into that collection.
      *
      * @param comp - component whose name will be changed
-     * @param oldName - old component's name
+     * @param oldSignature - old component's name
      */
-    public void notifyComponentNameChanged(ComponentBase comp, String oldName) {
-        if (components.containsKey(oldName)) {
-            components.remove(oldName);
-            addComponent(comp);
-        }
+    public void notifyComponentNameChanged(ComponentBase comp, String oldSignature) {
+//        if (containerComponents.containsKey(oldName)) {
+//            containerComponents.remove(oldName);
+//            addComponent(comp);
+//        }
     }
 
 //    /**

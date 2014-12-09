@@ -21,7 +21,7 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.WeakListeners;
 import org.uml.model.components.ComponentBase;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.INameableWidget;
+import org.uml.visual.widgets.IUMLWidget;
 import org.uml.visual.widgets.TranslucentCompositeBorder;
 import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
 import org.uml.visual.widgets.actions.NameEditorAction;
@@ -32,7 +32,7 @@ import org.uml.visual.widgets.providers.ComponentConnectProvider;
  * @author "NUGS"
  */
 // doesn't have to be ImageWidget
-abstract public class ComponentWidgetBase extends Widget implements INameableWidget, PropertyChangeListener {
+abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, PropertyChangeListener {
 
     protected ComponentBase component;
     protected LabelWidget nameWidget;
@@ -191,16 +191,16 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
         return nameWidget;
     }
 
-    @Override
+//    @Override
     public final String getName() {
         return nameWidget.getLabel();
     }
 
-    @Override
+//    @Override
     public void setName(String newName) {
         if(getName().equals(newName)){
             return;
-        } else if (component.getParentDiagram().nameExists(newName)) {
+        } else if (component.getParentDiagram().signatureExists(newName)) {
             JOptionPane.showMessageDialog(getScene().getView(), "Name \""+newName+"\" already exists!");
 //            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
 //            //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
@@ -232,8 +232,6 @@ abstract public class ComponentWidgetBase extends Widget implements INameableWid
     private void changedNotify() {
         getClassDiagramScene().getUmlTopComponent().modify();
     }
-
-    
     
     @Override
     public void propertyChange(PropertyChangeEvent evt){

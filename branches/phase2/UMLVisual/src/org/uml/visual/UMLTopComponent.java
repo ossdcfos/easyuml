@@ -17,7 +17,6 @@ import org.openide.*;
 import org.openide.NotifyDescriptor.Confirmation;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.*;
@@ -25,7 +24,6 @@ import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.*;
 import org.openide.windows.WindowManager;
-import org.uml.*;
 import org.uml.explorer.*;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ComponentBase;
@@ -144,8 +142,6 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         //graphLayout.layoutGraph(classDiagramScene);
         result = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
         result.addLookupListener(this);
-//        PropertySheetWindow psw = new PropertySheetWindow();
-//        psw.open();
     }
 
     @Override

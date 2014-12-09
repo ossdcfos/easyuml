@@ -5,12 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.widget.*;
-import org.openide.windows.WindowManager;
-import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.Visibility;
-import static org.uml.model.Visibility.*;
-import org.uml.visual.dialogs.PackageDialog;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.actions.NameEditorAction;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
@@ -37,7 +32,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
 
         (addConstructor = new JMenuItem("Add Constructor")).addActionListener(addConstructorListener);
         menu.add(addConstructor);
-        (addField = new JMenuItem("Add Field")).addActionListener(addAtributeListener);
+        (addField = new JMenuItem("Add Field")).addActionListener(addFieldListener);
         menu.add(addField);
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
@@ -53,30 +48,15 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         menu.add(deleteClass);
     }
     
-    /**
-     * Remove Widget Listener
-     *
-     *
-     */
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassDiagram classDiagram = classWidget.getComponent().getParentDiagram();
-            classDiagram.removeComponent(classWidget.getName());
-//            classWidget.removeFromParent();
-//            
-//            for (Map.Entry<String, RelationComponent> entry : classDiagram.getRelations().entrySet()) {
-//                RelationComponent relation = entry.getValue();
-//                if (relation.getSource().getName().equals(classWidget.getName()) || relation.getTarget().getName().equals(classWidget.getName())) {
-//                    classDiagram.removeRelation(relation.getName());
-//                    classWidget.getClassDiagramScene().removeEdge(relation);
-//                }
-//            }
-//            classWidget.getClassDiagramScene().removeNode(classWidget.getComponent());
+            classDiagram.removeComponent(classWidget.getComponent().getName());
         }
     };
     
-    ActionListener addAtributeListener = new ActionListener() {
+    ActionListener addFieldListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             classWidget.addFieldWidget();
@@ -115,7 +95,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
 ////            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
         }
     };
-
+    
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;

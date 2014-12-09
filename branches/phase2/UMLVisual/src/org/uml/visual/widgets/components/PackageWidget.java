@@ -7,14 +7,14 @@ import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.PackageComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.INameableWidget;
+import org.uml.visual.widgets.IUMLWidget;
 import org.uml.visual.widgets.providers.popups.PackagePopupMenuProvider;
 
 /**
  *
  * @author Uros
  */
-public class PackageWidget extends ComponentWidgetBase implements INameableWidget {
+public class PackageWidget extends ComponentWidgetBase implements IUMLWidget {
 
     public PackageWidget(ClassDiagramScene scene, PackageComponent packageComponent) {
         super(scene, packageComponent);
@@ -42,9 +42,14 @@ public class PackageWidget extends ComponentWidgetBase implements INameableWidge
     public PackageComponent getComponent() {
         return (PackageComponent) component;
     }
+    @Override
+    public void setSignature(String signature) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
-    public void setAttributes(String attributes) {
+    public String getSignature() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -20,7 +20,6 @@ import org.openide.nodes.NodeTransfer;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.windows.WindowManager;
-import org.uml.model.ClassDiagram;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.RelationBase;
 import org.uml.visual.dialogs.AddRelationDialog;
