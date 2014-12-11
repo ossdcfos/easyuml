@@ -10,12 +10,11 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.windows.WindowManager;
 import org.uml.model.members.Literal;
-import org.uml.visual.dialogs.PackageDialog;
+import org.uml.visual.dialogs.EditPackageDialog;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.members.LiteralWidget;
-import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.actions.NameEditor;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
@@ -29,7 +28,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem deleteClass;
     private JMenuItem addLiteral;
     private JMenuItem editPackage;
-    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(enumWidget));
+    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(enumWidget));
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
     public EnumPopupMenuProvider(EnumWidget enumWidget) {
@@ -54,13 +53,13 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
     ActionListener addLiteralListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Literal l = new Literal("LITERAL");
-            LiteralWidget w = new LiteralWidget(enumWidget.getClassDiagramScene(), l);
-            enumWidget.getComponent().addLiteral(l);
+            Literal literal = new Literal("LITERAL");
+            LiteralWidget w = new LiteralWidget(enumWidget.getClassDiagramScene(), literal);
+            enumWidget.getComponent().addLiteral(literal);
             enumWidget.addLiteralWidget(w);
             enumWidget.getScene().validate();
 
-            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditor(w));
             ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
             MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
             enumWidget.getScene().getView().addMouseListener(mouseListener);
@@ -70,10 +69,13 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
 //            String pack = "";
-            PackageDialog pd = new PackageDialog(null, true, enumWidget.getComponent(), enumWidget.getClassDiagramScene().getClassDiagram());
-            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-            pd.setTitle("Package");
-            pd.setVisible(true);
+            EditPackageDialog epd = new EditPackageDialog(enumWidget.getComponent());
+            epd.setVisible(true);
+//            EditPackageDialog pd = new EditPackageDialog(null, true, null)
+//            EditPackageDialog pd = new EditPackageDialog(null, true, enumWidget.getComponent(), enumWidget.getClassDiagramScene().getClassDiagram());
+//            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+//            pd.setTitle("Package");
+//            pd.setVisible(true);
 
 //            classWidget.getComponent().setPack(pack);
 //            Constructor c = new Constructor(classWidget.getName());
@@ -88,7 +90,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            enumWidget.getComponent().getParentDiagram().removeComponent(enumWidget.getComponent().getName());
+            enumWidget.getComponent().getParentDiagram().removeComponent(enumWidget.getComponent());
             enumWidget.removeFromParent();
         }
     };

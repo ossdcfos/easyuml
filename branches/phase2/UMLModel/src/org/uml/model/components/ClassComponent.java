@@ -1,10 +1,9 @@
 package org.uml.model.components;
 
 //import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import org.uml.model.members.MethodBase;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 
@@ -20,10 +19,12 @@ import org.uml.model.members.Method;
 public class ClassComponent extends ComponentBase {
 
 //    @XStreamAsAttribute
-    private LinkedHashMap<String, Field> fields;
-    private LinkedHashMap<String, Constructor> constructors;
-    private LinkedHashMap<String, Method> methods;
+    private LinkedHashSet<Field> fields;
+    private LinkedHashSet<Constructor> constructors;
+    private LinkedHashSet<Method> methods;
     private boolean isAbstract;
+    private boolean isStatic;
+    private boolean isFinal;
 
     /**
      * Default constructor only specifying parent diagram. Sets name to default value.
@@ -45,9 +46,9 @@ public class ClassComponent extends ComponentBase {
     public ClassComponent(String name) {
         super(name);
         //setParentPackage(null);
-        fields = new LinkedHashMap<>();
-        constructors = new LinkedHashMap<>();
-        methods = new LinkedHashMap<>();
+        fields = new LinkedHashSet<>();
+        constructors = new LinkedHashSet<>();
+        methods = new LinkedHashSet<>();
         isAbstract = false;
     }
 
@@ -56,7 +57,7 @@ public class ClassComponent extends ComponentBase {
      *
      * @return HashMap of fields contained
      */
-    public LinkedHashMap<String, Field> getFields() {
+    public LinkedHashSet<Field> getFields() {
         return fields;
     }
 
@@ -65,7 +66,7 @@ public class ClassComponent extends ComponentBase {
      *
      * @return HashMap of methods contained
      */
-    public LinkedHashMap<String, Method> getMethods() {
+    public LinkedHashSet<Method> getMethods() {
         return methods;
     }
 
@@ -74,7 +75,7 @@ public class ClassComponent extends ComponentBase {
      *
      * @return HashMap of this clas's constructors
      */
-    public LinkedHashMap<String, Constructor> getConstructors() {
+    public LinkedHashSet<Constructor> getConstructors() {
         return constructors;
     }
     
@@ -87,7 +88,7 @@ public class ClassComponent extends ComponentBase {
         addComponent(field);
 //        addMember(field);
         field.setDeclaringComponent(this);
-        fields.put(field.toString(), field);
+        fields.add(field);
     }
 
     /**
@@ -99,7 +100,7 @@ public class ClassComponent extends ComponentBase {
 //        addMember(method);
         addComponent(method);
         method.setDeclaringComponent(this);
-        methods.put(method.toString(), method);
+        methods.add(method);
     }
 
     /**
@@ -111,7 +112,7 @@ public class ClassComponent extends ComponentBase {
 //        addMember(constructor);
         addComponent(constructor);
         constructor.setDeclaringComponent(this);
-        constructors.put(constructor.toString(), constructor);
+        constructors.add(constructor);
     }
 
     /**
@@ -134,11 +135,31 @@ public class ClassComponent extends ComponentBase {
         fire("isAbstract", oldValue, this.isAbstract);
     }
 
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public void setStatic(boolean isStatic) {
+        boolean oldValue = this.isStatic;
+        this.isStatic = isStatic;
+        fire("isStatic", oldValue, this.isStatic);
+    }
+
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public void setFinal(boolean isFinal) {
+        boolean oldValue = this.isFinal;
+        this.isFinal = isFinal;
+        fire("isFinal", oldValue, this.isFinal);
+    }
+
     @Override
     public void removeMemberFromContainer(MemberBase member) {
-        if(member instanceof Field) fields.values().remove((Field)member);
-        else if (member instanceof MethodBase) methods.values().remove((MethodBase)member);
-        else if (member instanceof Constructor) constructors.values().remove((Constructor)member);
+        if(member instanceof Field) fields.remove((Field)member);
+        else if (member instanceof Method) methods.remove((Method)member);
+        else if (member instanceof Constructor) constructors.remove((Constructor)member);
         else throw new RuntimeException("Removing unsupported member: "+member.toString());
     }
     

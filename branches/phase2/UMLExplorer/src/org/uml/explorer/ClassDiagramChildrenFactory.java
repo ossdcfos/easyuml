@@ -29,10 +29,7 @@ public class ClassDiagramChildrenFactory extends ChildFactory<ComponentBase> imp
     @Override
     protected boolean createKeys(List<ComponentBase> toPopulate) {
         if (classDiagram.getComponents() != null) {
-            Iterator<java.util.Map.Entry<String, ComponentBase>> it = classDiagram.getComponents().entrySet().iterator();
-            while (it.hasNext()) {
-                java.util.Map.Entry<String, ComponentBase> pairs = it.next();
-                ComponentBase component = pairs.getValue();
+            for (ComponentBase component : classDiagram.getComponents()) {
                 toPopulate.add(component);
             }
         }

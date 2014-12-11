@@ -38,7 +38,7 @@ public class ComponentWidgetKeyboardAction extends WidgetAction.Adapter {
                 newX = newX - 20;
             } else if (event.getKeyCode() == KeyEvent.VK_DELETE) {
                 ClassDiagram classDiagram = ((ComponentWidgetBase) widget).getComponent().getParentDiagram();
-                classDiagram.removeComponent(((ComponentWidgetBase) widget).getComponent().getName());
+                classDiagram.removeComponent(((ComponentWidgetBase) widget).getComponent());
             }
             provider.movementStarted(widget);
             provider.setNewLocation(widget, new Point(newX, newY));

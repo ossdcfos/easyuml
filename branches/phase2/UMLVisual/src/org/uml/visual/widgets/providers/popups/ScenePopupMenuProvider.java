@@ -1,4 +1,4 @@
-package org.uml.visual.widgets.providers.unused;
+package org.uml.visual.widgets.providers.popups;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -21,13 +21,13 @@ import org.uml.jung.JUNGEngine;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
-import org.uml.visual.dialogs.AddRelationDialog;
+import org.uml.visual.dialogs.ConnectRelationPanel;
 import org.uml.visual.dialogs.GenerateCodeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.InterfaceWidget;
-import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.actions.NameEditor;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
@@ -37,13 +37,13 @@ import org.uml.visual.widgets.providers.MouseAdapterZaView;
 public class ScenePopupMenuProvider implements PopupMenuProvider {
 
     private final JPopupMenu sceneMenu;
-    private JMenuItem createClassItem;
-    private JMenuItem createInterfaceItem;
-    private JMenuItem createEnumItem;
-    private JMenuItem createRelationshipItem;
-    private JMenuItem generateCode;
-    private JMenuItem exportAsImage;
-    private JMenuItem applyJUNGLayout;
+    private JMenuItem miCreateClass;
+    private JMenuItem miCreateInterface;
+    private JMenuItem miCreateEnum;
+    private JMenuItem miCreateRelationship;
+    private JMenuItem miGenerateCode;
+    private JMenuItem miExportAsImage;
+    private JMenuItem miApplyJUNGLayout;
     private ClassDiagramScene scene;
     private Point popupPoint;
 
@@ -61,61 +61,60 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
     public final void generateMenu() {
 
-        createClassItem = new JMenuItem("Add Class");
-        createClassItem.addActionListener(new ActionListener() {
+        miCreateClass = new JMenuItem("Add Class");
+        miCreateClass.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // add neww class component and widget to scene
+                // add new class component and widget to scene
                 // here we should just add new class component to model, and the scene should be updated elsewhere
                 ClassWidget widget = (ClassWidget) scene.addNode(new ClassComponent());
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
-                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));
+                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(widget));
 
                 // open editor for class name
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
             }
         });
-        createInterfaceItem = new JMenuItem("Add Interface");
-        createInterfaceItem.addActionListener(new ActionListener() {
+        miCreateInterface = new JMenuItem("Add Interface");
+        miCreateInterface.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 InterfaceWidget widget = (InterfaceWidget) scene.addNode(new InterfaceComponent());
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
-                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));
+                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(widget));
 
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
             }
         });
-        createEnumItem = new JMenuItem("Add Enum");
-        createEnumItem.addActionListener(new ActionListener() {
+        miCreateEnum = new JMenuItem("Add Enum");
+        miCreateEnum.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 EnumWidget widget = (EnumWidget) scene.addNode(new EnumComponent());
                 widget.setPreferredLocation(popupPoint);
                 scene.validate();
-                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(widget));
+                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(widget));
 
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
             }
         });
 
-        createRelationshipItem = new JMenuItem("Add Relationship");
-        createRelationshipItem.addActionListener(new ActionListener() {
+        miCreateRelationship = new JMenuItem("Add Relationship");
+        miCreateRelationship.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddRelationDialog dialog = new AddRelationDialog(null, scene, true);
-                dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-                dialog.setVisible(true);
+                ConnectRelationPanel panel = new ConnectRelationPanel(scene);
+                panel.openRelationDialog();
             }
         });
 
-        generateCode = new JMenuItem("Generate code");
-        generateCode.addActionListener(new ActionListener() {
+        miGenerateCode = new JMenuItem("Generate code");
+        miGenerateCode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GenerateCodeDialog dialog = new GenerateCodeDialog(null, true, scene.getClassDiagram());
@@ -125,40 +124,37 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             }
         });
 
-        exportAsImage = new JMenuItem("Export As Image");
+        miExportAsImage = new JMenuItem("Export As Image");
+        miExportAsImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BufferedImage img = new BufferedImage(
+                        scene.getView().getWidth(),
+                        scene.getView().getHeight(),
+                        BufferedImage.TYPE_4BYTE_ABGR);
+                Graphics2D graphics = img.createGraphics();
+                scene.paint(graphics);
+                graphics.dispose();
+                JFileChooser chooser = new JFileChooser();
+                chooser.setFileFilter(new FileNameExtensionFilter(
+                        "Portable Network Graphics (.png)", "png"));
+                if (chooser.showSaveDialog(scene.getView()) == JFileChooser.APPROVE_OPTION) {
+                    File f = chooser.getSelectedFile();
+                    if (!f.getName().toLowerCase().endsWith(".png")) {
+                        f = new File(f.getParentFile(), f.getName() + ".png");
 
-        exportAsImage.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        BufferedImage img = new BufferedImage(
-                                scene.getView().getWidth(),
-                                scene.getView().getHeight(),
-                                BufferedImage.TYPE_4BYTE_ABGR);
-                        Graphics2D graphics = img.createGraphics();
-                        scene.paint(graphics);
-                        graphics.dispose();
-                        JFileChooser chooser = new JFileChooser();
-                        chooser.setFileFilter(new FileNameExtensionFilter(
-                                        "Portable Network Graphics (.png)", "png"));
-                        if (chooser.showSaveDialog(scene.getView()) == JFileChooser.APPROVE_OPTION) {
-                            File f = chooser.getSelectedFile();
-                            if (!f.getName().toLowerCase().endsWith(".png")) {
-                                f = new File(f.getParentFile(), f.getName() + ".png");
-
-                                try {
-                                    ImageIO.write(img, "png", f);
-                                } catch (IOException ex) {
-                                    //Logger.getLogger(getName()).warning(ex.toString());
-                                }
-                            }
+                        try {
+                            ImageIO.write(img, "png", f);
+                        } catch (IOException ex) {
+                            //Logger.getLogger(getName()).warning(ex.toString());
                         }
-
                     }
-                });
+                }
+            }
+        });
 
-        applyJUNGLayout = new JMenuItem("Arrange diagram");
-        applyJUNGLayout.addActionListener(new ActionListener() {
+        miApplyJUNGLayout = new JMenuItem("Arrange diagram");
+        miApplyJUNGLayout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JUNGEngine je = new JUNGEngine(scene);
@@ -166,18 +162,24 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             }
         });
 
-        sceneMenu.add(createClassItem);
+        sceneMenu.add(miCreateClass);
 
-        sceneMenu.add(createInterfaceItem);
+        sceneMenu.add(miCreateInterface);
 
-        sceneMenu.add(createEnumItem);
+        sceneMenu.add(miCreateEnum);
 
-        sceneMenu.add(createRelationshipItem);
+        sceneMenu.addSeparator();
 
-        sceneMenu.add(generateCode);
+        sceneMenu.add(miCreateRelationship);
 
-        sceneMenu.add(exportAsImage);
+        sceneMenu.addSeparator();
 
-        sceneMenu.add(applyJUNGLayout);
+        sceneMenu.add(miGenerateCode);
+
+        sceneMenu.add(miExportAsImage);
+
+        sceneMenu.addSeparator();
+
+        sceneMenu.add(miApplyJUNGLayout);
     }
 }

@@ -9,25 +9,17 @@ import javax.swing.JComponent;
 import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.ConnectorState;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeTransfer;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.uml.model.relations.CardinalityEnum;
 import org.uml.model.relations.HasBaseRelation;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.UseRelation;
-import org.uml.visual.dialogs.ClassHasRelationPanel;
-import org.uml.visual.dialogs.ImplementsRelationPanel;
-import org.uml.visual.dialogs.IsRelationPanel;
-import org.uml.visual.dialogs.ClassUseRelationPanel;
+import org.uml.visual.dialogs.ConnectRelationPanel;
 import org.uml.visual.palette.PaletteItemNode;
-import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.ComponentWidgetBase;
 import org.uml.visual.widgets.components.InterfaceWidget;
 
@@ -72,49 +64,57 @@ public class ComponentWidgetAcceptProvider implements AcceptProvider {
     @Override
     public void accept(Widget widget, Point point, Transferable t) {
         try {
-            DialogDescriptor dd = null;
-            String msg = "Choose target";
+//            DialogDescriptor dd = null;
+//            String msg = "Choose target";
             Class<? extends RelationBase> relationClass = droppedClass.asSubclass(RelationBase.class);
             //Class<? extends RelationComponent> relationClass = (Class<? extends RelationComponent>) drClass;
             RelationBase relation = relationClass.newInstance();
-            ComponentWidgetBase w = (ComponentWidgetBase) widget;
-            relation.setSource(w.getComponent());
+            ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;
+            relation.setSource(componentWidget.getComponent());
             if (relation instanceof IsRelation) {
-                IsRelationPanel panel = new IsRelationPanel((ComponentWidgetBase) widget);
-                dd = new DialogDescriptor(panel, msg);
-                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
-                    createConnection(relation, w, compWidget);
-                }
+                ConnectRelationPanel panel = new ConnectRelationPanel(componentWidget.getClassDiagramScene(), componentWidget, relation);
+                panel.openRelationDialog();
+//                IsRelationPanel panel = new IsRelationPanel((ComponentWidgetBase) widget);
+//                dd = new DialogDescriptor(panel, msg);
+//                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
+//                    ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
+//                    createConnection(relation, w, compWidget);
+//                }
             } else if (relation instanceof HasBaseRelation) {
-                ClassHasRelationPanel panel = new ClassHasRelationPanel(w);
-                dd = new DialogDescriptor(panel, msg);
-                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    HasBaseRelation r = (HasBaseRelation) relation;
-                    r.setName(panel.getRelationName());
-                    r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
-                    ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
-                    createConnection(relation, w, compWidget);
-                }
+                ConnectRelationPanel panel = new ConnectRelationPanel(componentWidget.getClassDiagramScene(), componentWidget, relation);
+                panel.openRelationDialog();
+//                ClassHasRelationPanel panel = new ClassHasRelationPanel(w);
+//                dd = new DialogDescriptor(panel, msg);
+//                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
+//                    HasBaseRelation r = (HasBaseRelation) relation;
+//                    r.setName(panel.getRelationName());
+//                    r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
+//                    ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
+//                    createConnection(relation, w, compWidget);
+//                }
             } else if (relation instanceof UseRelation) {
-                ClassUseRelationPanel panel = new ClassUseRelationPanel(w);
-                dd = new DialogDescriptor(panel, msg);
-                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    UseRelation r = (UseRelation) relation;
-                    r.setName(panel.getRelationName());
-                    r.setCardinalitySource((CardinalityEnum) panel.getComboBoxCardinalitySource().getSelectedItem());
-                    r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
-                    ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
-                    createConnection(relation, w, compWidget);
-                }
+                ConnectRelationPanel panel = new ConnectRelationPanel(componentWidget.getClassDiagramScene(), componentWidget, relation);
+                panel.openRelationDialog();
+//                ClassUseRelationPanel panel = new ClassUseRelationPanel(w);
+//                dd = new DialogDescriptor(panel, msg);
+//                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
+//                    UseRelation r = (UseRelation) relation;
+//                    r.setName(panel.getRelationName());
+//                    r.setCardinalitySource((CardinalityEnum) panel.getComboBoxCardinalitySource().getSelectedItem());
+//                    r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
+//                    ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
+//                    createConnection(relation, w, compWidget);
+//                }
             } else if (relation instanceof ImplementsRelation && !(widget instanceof InterfaceWidget)) {
-                ImplementsRelationPanel panel = new ImplementsRelationPanel((ClassWidget) w);
-                dd = new DialogDescriptor(panel, msg);
-                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    ImplementsRelation r = (ImplementsRelation) relation;
-                    ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
-                    createConnection(relation, w, compWidget);
-                }
+                ConnectRelationPanel panel = new ConnectRelationPanel(componentWidget.getClassDiagramScene(), componentWidget, relation);
+                panel.openRelationDialog();
+//                ImplementsRelationPanel panel = new ImplementsRelationPanel((ClassWidget) w);
+//                dd = new DialogDescriptor(panel, msg);
+//                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
+//                    ImplementsRelation r = (ImplementsRelation) relation;
+//                    ComponentWidgetBase compWidget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
+//                    createConnection(relation, w, compWidget);
+//                }
             }
 
             widget.getScene().validate();

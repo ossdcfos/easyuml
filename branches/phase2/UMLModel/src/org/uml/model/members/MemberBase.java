@@ -3,6 +3,7 @@ package org.uml.model.members;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
+import org.uml.model.IHasSignature;
 import org.uml.model.INameable;
 import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
@@ -18,7 +19,7 @@ import org.uml.model.components.ComponentBase;
  * @see ComponentBase
  *
  */
-public abstract class MemberBase implements INameable {
+public abstract class MemberBase implements INameable, IHasSignature {
 
     protected String name;
     // sta ako je niz? da li treba koristiti Type?
@@ -51,7 +52,8 @@ public abstract class MemberBase implements INameable {
     public MemberBase(String name) {
         this.name = name;
     }
-
+    
+    
     @Override
     public String getName() {
         return name;
@@ -59,22 +61,10 @@ public abstract class MemberBase implements INameable {
 
     @Override
     public void setName(String newName) {
-//        name = newName;
-        String oldSignature = toString();
         String oldName = getName();
         name = newName;
-        declaringComponent.notifyMemberSignatureChanged(this, oldSignature);
         pcs.firePropertyChange("name", oldName, newName);
     }
-
-//    // used from Property sheet
-//    public void changeName(String newName) {
-//        String oldSignature = toString();
-//        String oldName = getName();
-//        name = newName;
-//        declaringComponent.notifyMemberSignatureChanged(this, oldSignature);
-//        pcs.firePropertyChange("name", oldName, newName);
-//    }
 
     public String getType() {
         return type;
@@ -138,31 +128,15 @@ public abstract class MemberBase implements INameable {
         this.declaringComponent = declaringComponent;
     }
     
-    public abstract String getSignatureWithoutModifiers();
-    public abstract String deriveNewSignatureWithoutModifiersFromName(String newName);
-    public abstract String deriveNewSignatureWithoutModifiersFromType(String newType);
+    @Override
+    // signature without modifiers
+    public abstract String getSignature();
+    public abstract String deriveNewSignatureFromName(String newName);
+    public abstract String deriveNewSignatureFromType(String newType);
     
     @Override
     public String toString(){
-        return getSignatureWithoutModifiers();
+        return getSignature();
     }
-
-//    @Override
-//    public int hashCode() {
-//        int hash = 7;
-//        hash = 41 * hash + Objects.hashCode(this.name);
-//        hash = 41 * hash + Objects.hashCode(this.declaringClass);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (obj == null) return false;
-//        if (getClass() != obj.getClass()) return false;
-//        final MemberBase other = (MemberBase) obj;
-//        if (!Objects.equals(this.name, other.name)) return false;
-//        if (!Objects.equals(this.declaringClass, other.declaringClass))
-//            return false;
-//        return true;
-//    }
+    
 }

@@ -62,7 +62,7 @@ public abstract class MethodBase extends MemberBase {
     }
 
     @Override
-    public String getSignatureWithoutModifiers() {
+    public String getSignature() {
         StringBuilder result = new StringBuilder();
         if (type != null) result = result.append(type).append(" ");
         result.append(getName()).append("(");
@@ -80,7 +80,7 @@ public abstract class MethodBase extends MemberBase {
     }
 
     @Override
-    public String deriveNewSignatureWithoutModifiersFromType(String newType){
+    public String deriveNewSignatureFromType(String newType){
         StringBuilder result = new StringBuilder();
         if (type != null) result = result.append(newType).append(" ");
         result.append(getName()).append("(");
@@ -98,7 +98,7 @@ public abstract class MethodBase extends MemberBase {
     }
 
     @Override
-    public String deriveNewSignatureWithoutModifiersFromName(String newName){
+    public String deriveNewSignatureFromName(String newName){
         StringBuilder result = new StringBuilder();
         if (type != null) result = result.append(type).append(" ");
         result.append(newName).append("(");
@@ -127,7 +127,7 @@ public abstract class MethodBase extends MemberBase {
     public String getSignatureForLabel() {
         StringBuilder result = new StringBuilder();
         if (modifiers != 0) result.append(Modifier.toString(modifiers)).append(" ");
-        result.append(getSignatureWithoutModifiers());
+        result.append(getSignature());
         return result.toString();
     }
 
@@ -141,7 +141,7 @@ public abstract class MethodBase extends MemberBase {
      *
      * @return specially formed Method's String representation
      */
-    public String getSignature() {
+    public String getFullSignature() {
         StringBuilder result = new StringBuilder();
         if (visibility != null && !Visibility.PACKAGE.equals(visibility))
             result = result.append(getVisibility().toString()).append(" ");

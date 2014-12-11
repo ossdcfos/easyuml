@@ -1,4 +1,4 @@
-package org.uml.visual.dialogs;
+package org.uml.visual.dialogs.unused;
 
 import java.util.List;
 import javax.swing.JComboBox;

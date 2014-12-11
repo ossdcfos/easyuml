@@ -33,7 +33,7 @@ public class ClassSerializer implements ClassDiagramComponentSerializer{
      */
     @Override
     public void serialize(Element node) {        
-        if (classComponent.getParentPackage() != null) node.addAttribute("package", classComponent.getParentPackage().getName());
+        if (classComponent.getParentPackage() != null) node.addAttribute("package", classComponent.getParentPackage());
         if (classComponent.isAbstract()) node.addAttribute("isAbstract", Boolean.toString(true));
         if (classComponent.getName() != null) node.addAttribute("name", classComponent.getName());
         if (classComponent.getVisibility() != null) node.addAttribute("visibility", classComponent.getVisibility().name().toLowerCase());

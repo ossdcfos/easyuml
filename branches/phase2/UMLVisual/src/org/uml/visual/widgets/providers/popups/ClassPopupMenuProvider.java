@@ -6,8 +6,9 @@ import javax.swing.*;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.widget.*;
 import org.uml.model.ClassDiagram;
+import org.uml.visual.dialogs.EditPackageDialog;
 import org.uml.visual.widgets.components.ClassWidget;
-import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.actions.NameEditor;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
@@ -23,7 +24,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
     private JMenuItem editPackage;
-    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(classWidget));
+    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(classWidget));
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
@@ -52,7 +53,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassDiagram classDiagram = classWidget.getComponent().getParentDiagram();
-            classDiagram.removeComponent(classWidget.getComponent().getName());
+            classDiagram.removeComponent(classWidget.getComponent());
         }
     };
     
@@ -79,6 +80,8 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener editPackageListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            EditPackageDialog epd = new EditPackageDialog(classWidget.getComponent());
+            epd.setVisible(true);
 ////            String pack = "";
 //            PackageDialog pd = new PackageDialog(null, true, classWidget.getComponent(), classWidget.getClassDiagramScene().getClassDiagram());
 //            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());

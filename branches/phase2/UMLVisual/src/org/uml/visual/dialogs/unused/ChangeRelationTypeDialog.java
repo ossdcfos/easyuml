@@ -1,4 +1,4 @@
-package org.uml.visual.dialogs;
+package org.uml.visual.dialogs.unused;
 
 import java.awt.BasicStroke;
 import java.io.File;
@@ -49,7 +49,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         lblRelationType = new javax.swing.JLabel();
-        cbxRelation = new javax.swing.JComboBox<RelationBase>();
+        cbxRelation = new javax.swing.JComboBox<org.uml.model.relations.RelationBase>();
         btnOK = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
 
@@ -176,7 +176,7 @@ public class ChangeRelationTypeDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnOK;
-    private javax.swing.JComboBox<RelationBase> cbxRelation;
+    private javax.swing.JComboBox<org.uml.model.relations.RelationBase> cbxRelation;
     private javax.swing.JLabel lblRelationType;
     // End of variables declaration//GEN-END:variables
 

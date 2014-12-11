@@ -1,10 +1,15 @@
 package org.uml.visual.widgets.members;
 
+import java.beans.PropertyChangeEvent;
+import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.openide.util.WeakListeners;
+import org.uml.model.members.Field;
 import org.uml.model.members.Literal;
 import org.uml.model.members.MemberBase;
+import org.uml.model.members.Method;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
 
@@ -14,76 +19,64 @@ import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
  */
 public class LiteralWidget extends MemberWidgetBase {
 
-    Literal literalComponent;
-    //LabelWidget visibilityLabel;
-    LabelWidget nameLabel;
-
     public LiteralWidget(ClassDiagramScene scene, Literal literal) {
         super(scene, literal);
-        this.literalComponent = literal;
+        this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
-//        visibilityLabel = new LabelWidget(getScene());
-//        visibilityLabel.setLabel("+");
-//        this.addChild(visibilityLabel);
 
-        nameLabel = new LabelWidget(getScene());
-        nameLabel.setLabel(literal.getName());
-        this.addChild(nameLabel);
-        nameLabel.getActions().addAction(nameEditorAction);
+        nameWidget = new LabelWidget(getScene());
+        nameWidget.setLabel(literal.getName());
+        this.addChild(nameWidget);
+        nameWidget.getActions().addAction(nameEditorAction);
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
-
     }
 
     @Override
     public LabelWidget getNameLabel() {
-        return nameLabel;
+        return nameWidget;
     }
-
-//    @Override
-//    public void setName(String newName) {
-//        if (getName().equals(newName)) {
-//            return;
-//        }
-//        String oldName = literalComponent.getName();
-//        if (!literalComponent.getDeclaringComponent().signatureExists(newName)) {
-//            nameLabel.setLabel(newName);
-//            literalComponent.setName(newName);
-//            literalComponent.getDeclaringComponent().notifyMemberNameChanged(literalComponent, oldName);
-//        } else {
-//            //poruka
-//        }
-//    }
-//
-//    @Override
-//    public String getName() {
-//        return literalComponent.getName();
-//    }
 
     @Override
     public MemberBase getMember() {
-        return literalComponent;
+        return component;
     }
 
     @Override
     protected void setSelected(boolean isSelected) {
         if (isSelected) {
-            nameLabel.setForeground(SELECT_FONT_COLOR);
+            nameWidget.setForeground(SELECT_FONT_COLOR);
         } else {
-            nameLabel.setForeground(DEFAULT_FONT_COLOR);
+            nameWidget.setForeground(DEFAULT_FONT_COLOR);
         }
     }
 
     @Override
     public void setSignature(String signature) {
-        // TODO Implement this.
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String oldSignature = component.getSignature();
+        if (!signature.equals(oldSignature)) {
+            if (component.getDeclaringComponent().signatureExists(signature)) {
+                JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
+            } else {
+                component.setName(signature);
+            }
+        }
+        nameWidget.setLabel(((Literal) component).getSignatureForLabel());
     }
 
     @Override
     public String getSignature() {
-        // TODO Implement this.
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return component.getSignature();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propName = evt.getPropertyName();
+        if ("name".equals(propName)) {
+            nameWidget.setLabel(((Literal) component).getSignatureForLabel());
+        }
+        changedNotify();
+        getScene().validate();
     }
 
 }

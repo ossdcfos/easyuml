@@ -14,23 +14,20 @@ import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
  *
  * @author Jelena
  */
-public class ConstructorWidget extends MemberWidgetBase implements PropertyChangeListener {
+public class ConstructorWidget extends MemberWidgetBase {
 
-    Constructor constructorComponent;
     LabelWidget visibilityLabel;
-    LabelWidget nameLabel;
 
     public ConstructorWidget(ClassDiagramScene scene, Constructor constructor) {
         super(scene, constructor);
-        this.constructorComponent = constructor;
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
         visibilityLabel = new LabelWidget(getScene());
         visibilityLabel.setLabel("+");
         this.addChild(visibilityLabel);
 
-        nameLabel = new LabelWidget(getScene());
-        nameLabel.setLabel(constructorComponent.getSignatureForLabel());
-        this.addChild(nameLabel);
+        nameWidget = new LabelWidget(getScene());
+        nameWidget.setLabel(((Constructor)component).getSignatureForLabel());
+        this.addChild(nameWidget);
         //construktorNameWidget.getActions().addAction(nameEditorAction);
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
@@ -38,7 +35,7 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
 
     @Override
     public LabelWidget getNameLabel() {
-        return nameLabel;
+        return nameWidget;
     }
 
 //    @Override
@@ -53,20 +50,20 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
 
     @Override
     public MemberBase getMember() {
-        return constructorComponent;
+        return component;
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("name".equals(evt.getPropertyName())) {
             String newName = evt.getNewValue().toString();
-            constructorComponent.setName(newName);
-            nameLabel.setLabel(newName+"()");
+            component.setName(newName);
+            nameWidget.setLabel(newName+"()");
         }
         if ("visibility".equals(evt.getPropertyName())) {
             refreshVisibilityLabel();
         }
-        getClassDiagramScene().getUmlTopComponent().modify();
+        changedNotify();
         getScene().validate();
     }
 
@@ -74,10 +71,10 @@ public class ConstructorWidget extends MemberWidgetBase implements PropertyChang
     protected void setSelected(boolean isSelected) {
         if (isSelected) {
             visibilityLabel.setForeground(SELECT_FONT_COLOR);
-            nameLabel.setForeground(SELECT_FONT_COLOR);
+            nameWidget.setForeground(SELECT_FONT_COLOR);
         } else {
             visibilityLabel.setForeground(DEFAULT_FONT_COLOR);
-            nameLabel.setForeground(DEFAULT_FONT_COLOR);
+            nameWidget.setForeground(DEFAULT_FONT_COLOR);
         }
     }
 

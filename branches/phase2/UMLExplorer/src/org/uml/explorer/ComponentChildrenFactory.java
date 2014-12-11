@@ -22,10 +22,7 @@ public class ComponentChildrenFactory extends ChildFactory<MemberBase> {
     @Override
     protected boolean createKeys(List<MemberBase> toPopulate) {
         if (component.getMembers() != null) {
-            Iterator<java.util.Map.Entry<String, MemberBase>> it = component.getMembers().entrySet().iterator();
-            while (it.hasNext()) {
-                java.util.Map.Entry<String, MemberBase> pairs = it.next();
-                MemberBase member = pairs.getValue();
+            for (MemberBase member : component.getMembers()) {
                 toPopulate.add(member);
             }
         }

@@ -29,7 +29,7 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
      * field with needed classes.
      */
     public ClassDiagramCodeGenerator() {
-        this.generators = new HashMap<Class<?>, CodeGenerator>();
+        this.generators = new HashMap<>();
         generators.put(ClassComponent.class, new ClassCodeGenerator());
         generators.put(InterfaceComponent.class, new InterfaceCodeGenerator());
         generators.put(EnumComponent.class, new EnumCodeGenerator());
@@ -69,14 +69,15 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
     public String generateCode() {
         StringBuilder sb = new StringBuilder();
 
-        for (ComponentBase comp : classDiagram.getComponents().values()) {
+        for (ComponentBase comp : classDiagram.getComponents()) {
             CodeGenerator codeGen = generators.get(comp.getClass());
             codeGen.setComponent(comp);
             if (comp instanceof ClassComponent) {
                 ((ClassCodeGenerator) codeGen).setRelevantRelations(getRelevantRelations(comp, classDiagram.getRelations()));
             }
             String code = codeGen.generateCode();
-            PackageComponent pc = comp.getParentPackage();
+//            PackageComponent pc = comp.getParentPackage();
+            PackageComponent pc = null;
             String packName;
             if (pc == null) {
                 packName = null;

@@ -1,7 +1,9 @@
 package org.uml.code;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import org.uml.model.components.ComponentBase;
+import org.uml.model.members.Field;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodBase;
 
@@ -12,14 +14,14 @@ import org.uml.model.members.MethodBase;
  */
 public class MethodCodeGenerator implements CodeGenerator {
 
-    HashMap<String, Method> methods = new HashMap<>();
+    LinkedHashSet<Method> methods = new LinkedHashSet<>();
 
     /**
      * Constructor that sets this object's methods HasMap to the given value.
      *
      * @param methods which code needs to be generated
      */
-    public MethodCodeGenerator(HashMap<String, Method> methods) {
+    public MethodCodeGenerator(LinkedHashSet<Method> methods) {
         this.methods = methods;
     }
 
@@ -33,8 +35,8 @@ public class MethodCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         StringBuilder methodsString = new StringBuilder();
-        for (Method method : methods.values()) {
-            methodsString.append(method.getSignature());
+        for (Method method : methods) {
+            methodsString.append(method.getFullSignature());
         }
         return methodsString.toString();
     }
@@ -50,7 +52,7 @@ public class MethodCodeGenerator implements CodeGenerator {
      */
     String generateCodeMethodsForInterfaces() {
         String methodsString = "";
-        for (Method method : methods.values()) {
+        for (Method method : methods) {
             methodsString += method.getSignatureForInterfaces();
         }
         return methodsString;

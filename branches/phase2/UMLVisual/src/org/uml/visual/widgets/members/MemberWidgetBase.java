@@ -1,6 +1,7 @@
 package org.uml.visual.widgets.members;
 
 import java.awt.Color;
+import java.beans.PropertyChangeListener;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
@@ -11,16 +12,17 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.members.MemberBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.IUMLWidget;
-import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.actions.NameEditor;
 
 /**
  *
  * @author Jelena
  */
-public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget {
+public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget, PropertyChangeListener {
 
-    MemberBase component;
-    protected WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(this));
+    protected MemberBase component;
+    protected LabelWidget nameWidget;
+    protected WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditor(this));
     
     protected static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(1);
     protected static final Border HOVER_BORDER = BorderFactory.createLineBorder(1, Color.GRAY);
@@ -35,6 +37,7 @@ public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget
 
     public MemberWidgetBase(ClassDiagramScene scene, MemberBase member) {
         super(scene);
+        this.component = member;
         scene.addObject(member, this);
         setOpaque(true);
         setBackground(DEFAULT_COLOR);
@@ -51,6 +54,15 @@ public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget
     public ClassDiagramScene getClassDiagramScene() {
         return (ClassDiagramScene) getScene();
     }
+    
+    protected void changedNotify() {
+        getClassDiagramScene().getUmlTopComponent().modify();
+    }
+    
+//    @Override
+//    public String getName(){
+//        return component.getName();
+//    }
 
     abstract public LabelWidget getNameLabel();
 

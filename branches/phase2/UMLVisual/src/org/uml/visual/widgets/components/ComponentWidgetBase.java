@@ -12,6 +12,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.MoveStrategy;
+import org.netbeans.api.visual.action.ResizeProvider;
+import org.netbeans.api.visual.action.ResizeStrategy;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -24,7 +27,7 @@ import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.IUMLWidget;
 import org.uml.visual.widgets.TranslucentCompositeBorder;
 import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
-import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.actions.NameEditor;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
 
 /**
@@ -61,7 +64,6 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
 //    public Lookup getLookup() {
 //        return Lookups.fixed(this, this.getScene());
 //    }
-    
     public ComponentWidgetBase(ClassDiagramScene scene, ComponentBase component) {
         super(scene);
         this.component = component;
@@ -79,7 +81,7 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         nameWidget = new LabelWidget(scene);
         nameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         nameWidget.setAlignment(LabelWidget.Alignment.CENTER);
-        nameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new NameEditorAction(this)));
+        nameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new NameEditor(this)));
 
         // **** Actions ****
         // Connect action - CTRL + click
@@ -89,35 +91,9 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         // Hover, select and resize
         getActions().addAction(scene.createWidgetHoverAction());
         getActions().addAction(scene.createSelectAction());
-        getActions().addAction(ActionFactory.createResizeAction());
-        // Move drag and align action
-//        getActions().addAction(ActionFactory.createMoveAction(null, new MoveProvider() {
-//
-//            @Override
-//            public void movementStarted(Widget widget) {
-//                System.out.println("start");
-//            }
-//
-//            @Override
-//            public void movementFinished(Widget widget) {
-//                System.out.println("finish");
-//            }
-//
-//            @Override
-//            public Point getOriginalLocation(Widget widget) {
-//                return widget.getPreferredLocation();
-//            }
-//
-//            @Override
-//            public void setNewLocation(Widget widget, Point location) {
-//                widget.setPreferredLocation(location);
-//                getClassDiagramScene().getUmlTopComponent().modify();
-//            }
-//        }));
-        getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
-//        getActions().addAction(ModifyingAlignWithMoveAndResizeAction.createAction(getClassDiagramScene().getUmlTopComponent()));
-//        getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null));
-
+        getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
+        getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));        
+        
         // TODO: Change detection - check how this works
 //        addDependency(new Dependency() {
 //            @Override
@@ -191,21 +167,17 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         return nameWidget;
     }
 
-//    @Override
     public final String getName() {
         return nameWidget.getLabel();
     }
 
-//    @Override
     public void setName(String newName) {
-        if(getName().equals(newName)){
-            return;
-        } else if (component.getParentDiagram().signatureExists(newName)) {
-            JOptionPane.showMessageDialog(getScene().getView(), "Name \""+newName+"\" already exists!");
-//            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-//            //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
-        } else {
-            component.changeName(newName);
+        if (!getName().equals(newName)) {
+            if (component.getParentDiagram().signatureExists(newName)) {
+                JOptionPane.showMessageDialog(getScene().getView(), "Name \"" + newName + "\" already exists!");
+            } else {
+                component.setName(newName);
+            }
         }
     }
 
@@ -229,21 +201,29 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         changedNotify();
     }
 
-    private void changedNotify() {
+    protected void changedNotify() {
         getClassDiagramScene().getUmlTopComponent().modify();
     }
-    
+
     @Override
-    public void propertyChange(PropertyChangeEvent evt){
-        if("name".equals(evt.getPropertyName())){
-            String newName = (String)evt.getNewValue();
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("name".equals(evt.getPropertyName())) {
+            String newName = (String) evt.getNewValue();
             nameWidget.setLabel(newName);
-            getClassDiagramScene().getUmlTopComponent().modify();
         }
+        changedNotify();
         getScene().validate();
     }
-    
-    
+
+    @Override
+    public void setSignature(String signature) {
+        component.setName(signature);
+    }
+
+    @Override
+    public String getSignature() {
+        return component.getSignature();
+    }
 
     @Override
     // To achieve resize cursors and move cursor
@@ -298,5 +278,5 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
             return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
         }
     }
-    
+
 }

@@ -7,14 +7,11 @@ package org.uml.xmlDeserialization;
 //import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import org.dom4j.Element;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
-import org.uml.model.components.PackageComponent;
 import org.uml.model.Visibility;
 import org.uml.model.members.Method;
 
@@ -68,7 +65,7 @@ public class ClassDeserializer implements XmlDeserializer {
      */
     @Override
     public void deserialize(Element node) {
-//        String packageName = node.attributeValue("package");
+        String packageName = node.attributeValue("package");
         String className = node.attributeValue("name");
         String isAbstract = node.attributeValue("isAbstract");
         String visibility = node.attributeValue("visibility");
@@ -87,9 +84,9 @@ public class ClassDeserializer implements XmlDeserializer {
             int yOff = Integer.parseInt(yOffString);
             classComponent.setBounds(new Rectangle(xOff, yOff, width, height));
         }
-//        if (packageName != null) {
-//            classComponent.setParentPackage(new PackageComponent(classComponent.getParentDiagram(), packageName));
-//        }
+        if (packageName != null) {
+            classComponent.setParentPackage(packageName);
+        }
         if (className != null) {
             classComponent.setName(className);
         }

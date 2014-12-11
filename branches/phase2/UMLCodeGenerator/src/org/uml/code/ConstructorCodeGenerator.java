@@ -1,7 +1,6 @@
 package org.uml.code;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Constructor;
 
@@ -13,7 +12,7 @@ import org.uml.model.members.Constructor;
  */
 public class ConstructorCodeGenerator implements CodeGenerator {
 
-    HashMap<String, Constructor> constructors;
+    LinkedHashSet<Constructor> constructors;
 
     /**
      * Constructor that sets this object's constructors field to the given
@@ -21,7 +20,7 @@ public class ConstructorCodeGenerator implements CodeGenerator {
      *
      * @param constructors to be set
      */
-    public ConstructorCodeGenerator(HashMap<String, Constructor> constructors) {
+    public ConstructorCodeGenerator(LinkedHashSet<Constructor> constructors) {
         this.constructors = constructors;
     }
 
@@ -35,9 +34,8 @@ public class ConstructorCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         StringBuilder constructorString = new StringBuilder();
-        for (Map.Entry<String, Constructor> entry : constructors.entrySet()) {
-            Constructor constructor = entry.getValue();
-            constructorString.append(constructor.getSignature());
+        for (Constructor constructor : constructors) {
+            constructorString.append(constructor.getFullSignature());
         }
         return constructorString.toString();
     }

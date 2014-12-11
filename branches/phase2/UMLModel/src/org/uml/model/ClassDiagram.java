@@ -3,8 +3,8 @@ package org.uml.model;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.RelationBase;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -79,8 +79,8 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
      *
      * @return collection of components
      */
-    public HashMap<String, ComponentBase> getComponents() {
-        return new HashMap(containerComponents);
+    public LinkedHashSet<ComponentBase> getComponents() {
+        return new LinkedHashSet(containerComponents);
     }
 
     /**
@@ -99,20 +99,6 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
      */
     public void setRelations(HashSet<RelationBase> relations) {
         this.relations = relations;
-    }
-
-    /**
-     * Removes component from collection of components and adds same component
-     * with new name into that collection.
-     *
-     * @param comp - component whose name will be changed
-     * @param oldSignature - old component's name
-     */
-    public void notifyComponentNameChanged(ComponentBase comp, String oldSignature) {
-//        if (containerComponents.containsKey(oldName)) {
-//            containerComponents.remove(oldName);
-//            addComponent(comp);
-//        }
     }
 
 //    /**
@@ -140,5 +126,10 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
 //     */
 //    public HashMap<String, PackageComponent> getPackages() {
 //        return packages;
+//    }
+
+//    @Override
+//    public String toString() {
+//        return getName();
 //    }
 }

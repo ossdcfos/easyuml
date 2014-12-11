@@ -1,40 +1,41 @@
 package org.uml.visual.dialogs;
 
-import java.util.Map;
-import org.uml.model.components.ClassComponent;
-import org.uml.model.ClassDiagram;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import org.openide.windows.WindowManager;
 import org.uml.model.components.ComponentBase;
-import org.uml.model.components.PackageComponent;
-import org.uml.visual.widgets.ClassDiagramScene;
 
 /**
  *
  * @author Ilija
  */
-public class PackageDialog extends javax.swing.JDialog {
+public class EditPackageDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form AddClassDialog
      */
-    private ComponentBase comp;
-    private ClassDiagram classDiagram;
+    private ComponentBase component;
 
-    public PackageDialog(java.awt.Frame parent, boolean modal, ComponentBase comp, ClassDiagram cd) {
-        super(parent, modal);
+    public EditPackageDialog(ComponentBase component) {
+        super((Frame) null, true);
         initComponents();
-        this.comp = comp;
-        txtPackageName.setText("");
-        this.classDiagram = cd;
-        if (comp.getParentPackage() != null) {
-            txtPackageName.setText(comp.getParentPackage().getName());
-        }
+        this.component = component;
+        txfPackageName.setText(component.getParentPackage());
+        txfPackageName.selectAll();
+        txfPackageName.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnOk.doClick();
+                }
+            }
+        });
+        setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
     }
-
-    public PackageDialog(java.awt.Frame parent, ClassDiagramScene scene, boolean modal) {
-        super(parent, modal);
-        initComponents();
-    }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,25 +46,25 @@ public class PackageDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        txtPackageName = new javax.swing.JTextField();
+        txfPackageName = new javax.swing.JTextField();
         btnOk = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle(org.openide.util.NbBundle.getMessage(PackageDialog.class, "PackageDialog.title")); // NOI18N
+        setTitle(org.openide.util.NbBundle.getMessage(EditPackageDialog.class, "EditPackageDialog.title")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PackageDialog.class, "PackageDialog.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EditPackageDialog.class, "EditPackageDialog.jLabel1.text")); // NOI18N
 
-        txtPackageName.setText(org.openide.util.NbBundle.getMessage(PackageDialog.class, "PackageDialog.txtPackageName.text")); // NOI18N
+        txfPackageName.setText(org.openide.util.NbBundle.getMessage(EditPackageDialog.class, "EditPackageDialog.txfPackageName.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(btnOk, org.openide.util.NbBundle.getMessage(PackageDialog.class, "PackageDialog.btnOk.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(btnOk, org.openide.util.NbBundle.getMessage(EditPackageDialog.class, "EditPackageDialog.btnOk.text")); // NOI18N
         btnOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOkActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(cancelButton, org.openide.util.NbBundle.getMessage(PackageDialog.class, "PackageDialog.cancelButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cancelButton, org.openide.util.NbBundle.getMessage(EditPackageDialog.class, "EditPackageDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -76,16 +77,15 @@ public class PackageDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cancelButton))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 17, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(txfPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -94,8 +94,8 @@ public class PackageDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                    .addComponent(txfPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOk)
                     .addComponent(cancelButton))
@@ -106,6 +106,22 @@ public class PackageDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
+        component.setParentPackage(txfPackageName.getText());
+        dispose();
+    }//GEN-LAST:event_btnOkActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnOk;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField txfPackageName;
+    // End of variables declaration//GEN-END:variables
+
+    
 //        System.out.println("INSTANCA COMPA JE TIPA: "+comp.getClass().getName());
 //        //first to remove info from package that it contains component
 //        PackageComponent p = comp.getParentPackage();
@@ -167,15 +183,4 @@ public class PackageDialog extends javax.swing.JDialog {
 //
 ////        comp.setParentPackage(new PackageComponent(pack));
 //        this.dispose();
-    }//GEN-LAST:event_btnOkActionPerformed
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-//        this.dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnOk;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField txtPackageName;
-    // End of variables declaration//GEN-END:variables
 }

@@ -1,6 +1,7 @@
 package org.uml.code;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Literal;
 
@@ -11,7 +12,7 @@ import org.uml.model.members.Literal;
  */
 class LiteralCodeGenerator implements CodeGenerator {
 
-    private HashMap<String, Literal> literals;
+    private LinkedHashSet<Literal> literals;
 
     /**
      * A constructor that sets this object's HashMap of literals to the given
@@ -19,7 +20,7 @@ class LiteralCodeGenerator implements CodeGenerator {
      *
      * @param literals which code needs to be generated
      */
-    public LiteralCodeGenerator(HashMap<String, Literal> literals) {
+    public LiteralCodeGenerator(LinkedHashSet<Literal> literals) {
         this.literals = literals;
     }
 
@@ -32,7 +33,7 @@ class LiteralCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         String code = "";
-        for (Literal l : literals.values()) {
+        for (Literal l : literals) {
             code += l.getName() + ", ";
         }
         if (!code.equals("")) {

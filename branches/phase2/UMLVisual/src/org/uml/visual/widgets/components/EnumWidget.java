@@ -49,7 +49,7 @@ public class EnumWidget extends ComponentWidgetBase {
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new EnumPopupMenuProvider(this)));
 
-        for (Literal l : getComponent().getLiterals().values()) {
+        for (Literal l : getComponent().getLiterals()) {
             LiteralWidget w = new LiteralWidget(scene, l);
             this.addLiteralWidget(w);
         }
@@ -135,16 +135,6 @@ public class EnumWidget extends ComponentWidgetBase {
 
     public final void addLiteralWidget(LiteralWidget literalWidget) {
         addMember(literalsContainer, literalWidget);
-    }
-
-    @Override
-    public void setSignature(String signature) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getSignature() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

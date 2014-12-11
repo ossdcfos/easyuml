@@ -14,7 +14,7 @@ import org.uml.visual.widgets.anchors.RhombusAnchorShape;
 import org.uml.model.relations.UseRelation;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.HasBaseRelation;
-import org.uml.visual.widgets.providers.popups.ConnectionPopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.RelationPopupMenuProvider;
 import java.awt.BasicStroke;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
@@ -32,7 +32,7 @@ import org.uml.model.relations.IsRelation;
 import org.uml.visual.UMLTopComponent;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
 import org.uml.visual.widgets.providers.*;
-import org.uml.visual.widgets.providers.unused.ScenePopupMenuProvider;
+import org.uml.visual.widgets.providers.popups.ScenePopupMenuProvider;
 
 /**
  *
@@ -97,7 +97,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
         //getActions().addAction(ActionFactory.createHoverAction(new MemberHoverProvider()));
         // dodaj widget ali ne i componentu ponovo kao u addNode...
 
-        for (ComponentBase comp : umlClassDiagram.getComponents().values()) {
+        for (ComponentBase comp : umlClassDiagram.getComponents()) {
             Widget w = addNode(comp);
             w.setPreferredLocation(convertLocalToScene(comp.getPosition()));
             w.setPreferredBounds(comp.getBounds());
@@ -155,7 +155,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
         ComponentWidgetBase widget = null;
 
         // need to check, if loading existing diagram...
-        if (!classDiagram.getComponents().containsValue(component)) {
+        if (!classDiagram.getComponents().contains(component)) {
             classDiagram.addComponent(component);
         }
 
@@ -239,7 +239,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
 
         widget.setEndPointShape(PointShape.SQUARE_FILLED_BIG);
         widget.setRouter(RouterFactory.createFreeRouter());
-        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new ConnectionPopupMenuProvider(widget, e)));
+        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new RelationPopupMenuProvider(widget, e)));
 
         widget.getActions().addAction(createObjectHoverAction());
         widget.getActions().addAction(createSelectAction());

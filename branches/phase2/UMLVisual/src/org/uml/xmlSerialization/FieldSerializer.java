@@ -1,6 +1,7 @@
 package org.uml.xmlSerialization;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import org.dom4j.Element;
 import org.uml.model.members.Field;
 
@@ -10,9 +11,9 @@ import org.uml.model.members.Field;
  */
 public class FieldSerializer implements XmlSerializer{
 
-    private LinkedHashMap<String, Field> fields;
+    private LinkedHashSet<Field> fields;
 
-    public FieldSerializer(LinkedHashMap<String, Field> fields) {
+    public FieldSerializer(LinkedHashSet<Field> fields) {
         this.fields = fields;
     }
     
@@ -24,7 +25,7 @@ public class FieldSerializer implements XmlSerializer{
      */
     @Override
     public void serialize(Element node) {
-        for (Field field : fields.values()){
+        for (Field field : fields){
             Element fieldNode = node.addElement("Field");
             if (field.getName() != null) fieldNode.addAttribute("name", field.getName());
             if (field.getVisibility() != null) fieldNode.addAttribute("visibility", field.getVisibility().name().toLowerCase());

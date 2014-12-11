@@ -21,10 +21,9 @@ import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
  *
  * @author Jelena
  */
-public class MethodWidget extends MemberWidgetBase implements PropertyChangeListener {
+public class MethodWidget extends MemberWidgetBase {
 
     LabelWidget visibilityLabel;
-    LabelWidget nameWidget;
     WidgetParser wp;
 
     public MethodWidget(ClassDiagramScene scene, Method method) {
@@ -61,13 +60,13 @@ public class MethodWidget extends MemberWidgetBase implements PropertyChangeList
     
     @Override
     public void setSignature(String signature) {
-        String oldSignature = component.getSignatureWithoutModifiers();
+        String oldSignature = component.getSignature();
         if (!signature.equals(oldSignature)) {
             if (component.getDeclaringComponent().signatureExists(signature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
             } else {
                 wp.fillMethodComponents((MethodBase) component, signature);
-                component.getDeclaringComponent().notifyMemberSignatureChanged(component, oldSignature);
+//                component.getDeclaringComponent().notifyMemberSignatureChanged(component, oldSignature);
             }
         }
         nameWidget.setLabel(((MethodBase) component).getSignatureForLabel());
@@ -75,7 +74,7 @@ public class MethodWidget extends MemberWidgetBase implements PropertyChangeList
 
     @Override
     public String getSignature() {
-        return component.getSignatureWithoutModifiers();
+        return component.getSignature();
     }
 
     public final void updateVisibilityLabel() {

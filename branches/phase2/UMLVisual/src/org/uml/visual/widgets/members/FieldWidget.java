@@ -24,15 +24,13 @@ import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
  *
  * @author Jelena
  */
-public class FieldWidget extends MemberWidgetBase implements PropertyChangeListener {
+public class FieldWidget extends MemberWidgetBase {
 
     LabelWidget visibilityLabel;
-    LabelWidget nameWidget;
     WidgetParser wp;
 
     public FieldWidget(ClassDiagramScene scene, Field field) {
         super(scene, field);
-        this.component = field;
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
@@ -63,13 +61,13 @@ public class FieldWidget extends MemberWidgetBase implements PropertyChangeListe
 
     @Override
     public void setSignature(String signature) {
-        String oldSignature = component.getSignatureWithoutModifiers();
+        String oldSignature = component.getSignature();
         if (!signature.equals(oldSignature)) {
             if (component.getDeclaringComponent().signatureExists(signature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
             } else {
                 wp.fillFieldComponents((Field) component, signature);
-                component.getDeclaringComponent().notifyMemberSignatureChanged(component, oldSignature);
+//                component.getDeclaringComponent().notifyMemberSignatureChanged(component, oldSignature);
             }
         }
         nameWidget.setLabel(((Field) component).getSignatureForLabel());
@@ -77,7 +75,7 @@ public class FieldWidget extends MemberWidgetBase implements PropertyChangeListe
 
     @Override
     public String getSignature() {
-        return ((Field) component).getSignatureWithoutModifiers();
+        return component.getSignature();
     }
 
     public final void updateVisibilityLabel() {
@@ -132,7 +130,7 @@ public class FieldWidget extends MemberWidgetBase implements PropertyChangeListe
         if ("visibility".equals(evt.getPropertyName())) {
             updateVisibilityLabel();
         }
-        getClassDiagramScene().getUmlTopComponent().modify();
+        changedNotify();
         getScene().validate();
     }
 

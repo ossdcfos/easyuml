@@ -54,6 +54,7 @@ public class UseRelation extends RelationBase {
     public boolean canConnect(ComponentBase source, ComponentBase target) {
         Class<?> sc = source.getClass();
         Class<?> tc = target.getClass();
+        if(source == target) return false;
         if(sc == ClassComponent.class || sc == InterfaceComponent.class) return true;
         return false;
     }

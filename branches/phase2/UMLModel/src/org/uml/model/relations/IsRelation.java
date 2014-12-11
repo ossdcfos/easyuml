@@ -31,6 +31,7 @@ public class IsRelation extends RelationBase {
     public boolean canConnect(ComponentBase source, ComponentBase target) {
         Class<?> sc = source.getClass();
         Class<?> tc = target.getClass();
+        if(source == target) return false;
         if(sc == ClassComponent.class && tc == ClassComponent.class) return true;
         if(sc == InterfaceComponent.class && tc == InterfaceComponent.class) return true;
         return false;

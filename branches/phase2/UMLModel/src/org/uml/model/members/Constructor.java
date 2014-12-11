@@ -47,12 +47,12 @@ public class Constructor extends MethodBase {
     }
 
     @Override
-    public String deriveNewSignatureWithoutModifiersFromName(String newName) {
+    public String deriveNewSignatureFromName(String newName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String deriveNewSignatureWithoutModifiersFromType(String newType) {
+    public String deriveNewSignatureFromType(String newType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
