@@ -4,10 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.JComponent;
@@ -19,10 +16,9 @@ import org.openide.nodes.Node;
 import org.openide.nodes.NodeTransfer;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.openide.windows.WindowManager;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.RelationBase;
-import org.uml.visual.dialogs.AddRelationDialog;
+import org.uml.visual.dialogs.ConnectRelationPanel;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.palette.*;
 
@@ -33,7 +29,7 @@ import org.uml.visual.palette.*;
 public class SceneAcceptProvider implements AcceptProvider {
 
     private final ClassDiagramScene classDiagramScene;
-    private Point lastPoint = new Point(0, 0);
+//    private Point lastPoint = new Point(0, 0);
 
     public SceneAcceptProvider(ClassDiagramScene classDiagramScene) {
         this.classDiagramScene = classDiagramScene;
@@ -63,10 +59,9 @@ public class SceneAcceptProvider implements AcceptProvider {
 //                dragImage,
 //                AffineTransform.getTranslateInstance(point.getLocation().getX(), point.getLocation().getY()),
 //                null);
-        lastPoint = point;
+//        lastPoint = point;
 
         return ConnectorState.ACCEPT;
-        //return canAccept(droppedClass) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
     }
 
     @Override
@@ -84,29 +79,29 @@ public class SceneAcceptProvider implements AcceptProvider {
                 Widget w = classDiagramScene.addNode(component);
                 w.setPreferredLocation(point);
                 component.setPosition(w.getLocation());
+                
 //                classDiagramScene.setFocusedObject(component);
-
-//            WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction((NameableWidget) w));
-//            ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase) w).getNameLabel());
-//            classDiagramScene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
+//                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction((NameableWidget) w));
+//                ActionFactory.getInplaceEditorController(editorAction).openEditor(((ComponentWidgetBase) w).getNameLabel());
+//                classDiagramScene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
             } else if (RelationBase.class.isAssignableFrom(droppedComponentClass)) {
                 Object cobj = droppedComponentClass.newInstance();
-                RelationBase component = (RelationBase) cobj;
-                AddRelationDialog dialog = new AddRelationDialog(null, classDiagramScene, true);
-                for (int i = 0; i < dialog.getRelationComponents().getItemCount(); i++) {
-                    RelationBase selectedComponent = dialog.getRelationComponents().getItemAt(i);
-                    if (component.getClass() == selectedComponent.getClass()) {
-                        dialog.getRelationComponents().setSelectedIndex(i);
-                        break;
-                    }
-                }
-                dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-                dialog.setVisible(true);
-            } else {
-                throw new RuntimeException("Unknown dropped component: " + droppedComponentClass + "!");
+                RelationBase relation = (RelationBase) cobj;
+                ConnectRelationPanel panel = new ConnectRelationPanel(classDiagramScene, relation);
+                panel.openRelationDialog();
+//                AddRelationDialog dialog = new AddRelationDialog(null, classDiagramScene, true);
+//                for (int i = 0; i < dialog.getRelationComponents().getItemCount(); i++) {
+//                    RelationBase selectedComponent = dialog.getRelationComponents().getItemAt(i);
+//                    if (relation.getClass() == selectedComponent.getClass()) {
+//                        dialog.getRelationComponents().setSelectedIndex(i);
+//                        break;
+//                    }
+//                }
+//                dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+//                dialog.setVisible(true);
             }
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | RuntimeException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.toString());
             Exceptions.printStackTrace(ex);
         }
 
@@ -114,19 +109,19 @@ public class SceneAcceptProvider implements AcceptProvider {
         classDiagramScene.validate();
     }
 
-    private Image getImageFromTransferable(Transferable transferable) {
-        Object o = null;
-        try {
-            o = transferable.getTransferData(DataFlavor.imageFlavor);
-        } catch (IOException | UnsupportedFlavorException ex) {
-            ex.printStackTrace(System.out);
-        }
-        return o instanceof Image ? (Image) o : ImageUtilities.loadImage("org/netbeans/shapesample/palette/shape1.png");
-    }
+//    private Image getImageFromTransferable(Transferable transferable) {
+//        Object o = null;
+//        try {
+//            o = transferable.getTransferData(DataFlavor.imageFlavor);
+//        } catch (IOException | UnsupportedFlavorException ex) {
+//            ex.printStackTrace(System.out);
+//        }
+//        return o instanceof Image ? (Image) o : ImageUtilities.loadImage("org/netbeans/shapesample/palette/shape1.png");
+//    }
 
-    public boolean canAccept(Class<?> droppedClass) {
-        return droppedClass.equals(ComponentBase.class)
-                || droppedClass.getSuperclass().equals(ComponentBase.class)
-                || droppedClass.getSuperclass().equals(RelationBase.class);
-    }
+//    public boolean canAccept(Class<?> droppedClass) {
+//        return droppedClass.equals(ComponentBase.class)
+//                || droppedClass.getSuperclass().equals(ComponentBase.class)
+//                || droppedClass.getSuperclass().equals(RelationBase.class);
+//    }
 }

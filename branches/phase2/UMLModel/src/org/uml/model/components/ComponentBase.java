@@ -2,10 +2,8 @@ package org.uml.model.components;
 
 import org.uml.model.members.*;
 import java.awt.*;
-import java.beans.*;
 import java.io.Serializable;
 import java.util.*;
-import java.util.List;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ContainerBase;
 import org.uml.model.Visibility;
@@ -24,27 +22,13 @@ import org.uml.model.relations.RelationBase;
 public abstract class ComponentBase extends ContainerBase<MemberBase> implements Serializable {
 
     private transient ClassDiagram parentDiagram;
-    
+
+    private String parentPackage;
+//    private PackageComponent parentPackage;
+    private Visibility visibility;
+
     private Point position; // this should be removed in future
     private Rectangle bounds;
-
-    private Visibility visibility;
-    private PackageComponent parentPackage;
-    private transient List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
-
-    public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        listeners.add(pcl);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener pcl) {
-        listeners.remove(pcl);
-    }
-
-    protected void fire(String propertyName, Object old, Object nue) {
-        for (PropertyChangeListener pcl : listeners) {
-            pcl.propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
-        }
-    }
 
     /**
      * Default constructor. Initializes members of the ComponentBase. Members
@@ -58,40 +42,19 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      */
     public ComponentBase(String name) {
         super(name);
+        parentPackage = "default";
         visibility = Visibility.PUBLIC;
     }
 
     public abstract void removeMemberFromContainer(MemberBase member);
 
     /**
-     * Removes a member from ClassDiagramComponent's collection of members and
-     * replaces it with the same member (but with new name).
-     *
-     * @param member that will be renamed
-     * @param oldSignature old name of that component
-     * @see MemberBase
-     */
-    public void notifyMemberSignatureChanged(MemberBase member, String oldSignature) {
-        removeComponent(oldSignature);
-        addComponent(member);
-    }
-
-    /**
      * Returns members that this ClassDiagramComponent has
      *
      * @return all members of this ClassDiagramComponent
      */
-    public HashMap<String, MemberBase> getMembers() {
-        return new HashMap(containerComponents);
-    }
-
-    // used from Property sheet
-    public void changeName(String newName) {
-        String oldSignature = toString();
-        String oldName = name;
-        name = newName;
-        parentDiagram.notifyComponentNameChanged(this, oldSignature);
-        fire("name", oldName, newName);
+    public LinkedHashSet<MemberBase> getMembers() {
+        return new LinkedHashSet(containerComponents);
     }
 
     /**
@@ -115,7 +78,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     public void setParentDiagram(ClassDiagram parentDiagram) {
         this.parentDiagram = parentDiagram;
     }
-    
+
     /**
      * Returns position that this ClassDiagramComponent has on the scene
      *
@@ -134,25 +97,48 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         this.position = position;
     }
 
-    /**
-     * Returns package that contains this ClassDiagramComponent
-     *
-     * @return PackageComponent of this ClassDiagramComponent
-     * @see PackageComponent
-     */
-    public PackageComponent getParentPackage() {
+    public String getParentPackage() {
         return parentPackage;
     }
 
-    /**
-     * Sets the package that contains this ClassDiagramComponent
-     *
-     * @param parentPackage
-     */
-    public void setParentPackage(PackageComponent parentPackage) {
+    public void setParentPackage(String parentPackage) {        
+        String oldParentPackage = this.parentPackage;
         this.parentPackage = parentPackage;
-        //   parentPackage.addMember(this);
+        fire("parentPackage", oldParentPackage, parentPackage);
     }
+    
+    @Override
+    public String getSignature(){
+        return getParentPackage() + " " + getName();
+    }
+    
+    public String deriveNewSignatureFromName(String newName){
+        return getParentPackage() + " " + newName;
+    }
+    
+    public String deriveNewSignatureFromPackage(String newParentPackage){
+        return newParentPackage + " " + getName();
+    }
+    
+//    /**
+//     * Returns package that contains this ClassDiagramComponent
+//     *
+//     * @return PackageComponent of this ClassDiagramComponent
+//     * @see PackageComponent
+//     */
+//    public PackageComponent getParentPackage() {
+//        return parentPackage;
+//    }
+//
+//    /**
+//     * Sets the package that contains this ClassDiagramComponent
+//     *
+//     * @param parentPackage
+//     */
+//    public void setParentPackage(PackageComponent parentPackage) {
+//        this.parentPackage = parentPackage;
+//        //   parentPackage.addMember(this);
+//    }
 
     /**
      * Returns the visibility modifier of this ClassDiagramComponent
@@ -171,7 +157,9 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @see Visibility
      */
     public void setVisibility(Visibility visibility) {
+        Visibility oldVisibility = this.visibility;
         this.visibility = visibility;
+        fire("visibility", oldVisibility, visibility);
     }
 
     public Rectangle getBounds() {
@@ -181,5 +169,10 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     public void setBounds(Rectangle bounds) {
         this.bounds = bounds;
     }
+
+    @Override
+    public String toString() {
+        return getSignature();
+    }   
 
 }

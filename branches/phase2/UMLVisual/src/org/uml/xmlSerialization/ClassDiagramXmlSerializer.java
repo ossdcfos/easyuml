@@ -69,7 +69,7 @@ public class ClassDiagramXmlSerializer implements XmlSerializer {
             node.addAttribute("name", classDiagram.getName());
         }
         Element classDiagramComponents = node.addElement("ClassDiagramComponents");
-        for (ComponentBase component : classDiagram.getComponents().values()) {
+        for (ComponentBase component : classDiagram.getComponents()) {
             if (component instanceof ClassComponent) {
                 Element componentNode = classDiagramComponents.addElement("Class");
                 Widget w = classDiagramScene.findWidget(component);

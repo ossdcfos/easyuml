@@ -22,27 +22,25 @@ public class Literal extends MemberBase {
      */
     public Literal(String name) {
         super(name);
-        this.type = getDeclaringComponent().getName();
         this.visibility = Visibility.PUBLIC;
     }
 
     @Override
-    public String getSignatureWithoutModifiers() {
-        return type+" "+name;
+    public String getSignature() {
+        return name;
+    }
+    
+    public String getSignatureForLabel() {
+        return getSignature();
     }
 
     @Override
-    public String toString() {
-        return getSignatureWithoutModifiers();
+    public String deriveNewSignatureFromName(String newName) {
+        return newName;
     }
 
     @Override
-    public String deriveNewSignatureWithoutModifiersFromName(String newName) {
-        return type+" "+newName;
-    }
-
-    @Override
-    public String deriveNewSignatureWithoutModifiersFromType(String newType) {
+    public String deriveNewSignatureFromType(String newType) {
         //TODO Remove this
         return newType+" "+name;
     }

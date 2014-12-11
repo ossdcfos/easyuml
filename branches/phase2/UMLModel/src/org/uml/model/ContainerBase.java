@@ -1,7 +1,11 @@
 package org.uml.model;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -9,15 +13,31 @@ import java.util.List;
  * @author netlink
  * @param <T>
  */
-public abstract class ContainerBase<T extends INameable> implements INameable {
-    
+public abstract class ContainerBase<T extends INameable & IHasSignature> implements INameable, IHasSignature {
+
     protected String name;
-    protected HashMap<String, T> containerComponents; // contains classes, interfaces or enums
+    protected LinkedHashSet<T> containerComponents; // contains classes, interfaces or enums
     protected transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
+    
+    private transient List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
+
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        listeners.add(pcl);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        listeners.remove(pcl);
+    }
+
+    protected void fire(String propertyName, Object old, Object nue) {
+        for (PropertyChangeListener pcl : listeners) {
+            pcl.propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
+        }
+    }
 
     public ContainerBase(String name) {
         this.name = name;
-        this.containerComponents = new HashMap<>();
+        this.containerComponents = new LinkedHashSet<>();
     }
 
     public void addDeleteListener(IComponentDeleteListener icdl) {
@@ -39,19 +59,19 @@ public abstract class ContainerBase<T extends INameable> implements INameable {
             component.setName(componentName + suffix);
             suffix++;
         }
-        containerComponents.put(component.toString(), component);
+        containerComponents.add(component);
     }
 
     /**
      * Removes the given component from this diagram's collection of components.
      *
-     * @param name of the component to be removed
+     * @param component to be removed
      */
-    public void removeComponent(String name) {
+    public void removeComponent(T component) {
         for (IComponentDeleteListener icdl : deleteListeners) {
-            icdl.componentDeleted(containerComponents.get(name));
+            icdl.componentDeleted(component);
         }
-        containerComponents.remove(name);
+        containerComponents.remove(component);
     }
 
     /**
@@ -62,7 +82,10 @@ public abstract class ContainerBase<T extends INameable> implements INameable {
      * @return if that component exists in collection
      */
     public boolean signatureExists(String componentString) {
-        return containerComponents.containsKey(componentString);
+        for (T component : containerComponents) {
+            if(component.getSignature().equals(componentString)) return true;
+        }
+        return false;
     }
 
     /**
@@ -78,11 +101,19 @@ public abstract class ContainerBase<T extends INameable> implements INameable {
     /**
      * Sets the name of this Container
      *
-     * @param name of Container
+     * @param newName of Container
      */
     @Override
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String newName) {
+        String oldName = name;
+        name = newName;
+        fire("name", oldName, newName);
+    }
+
+    // temporary solution, add package
+    @Override
+    public String getSignature(){
+        return getName();
     }
 
 }

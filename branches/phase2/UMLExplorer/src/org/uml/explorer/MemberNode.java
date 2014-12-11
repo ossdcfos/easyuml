@@ -61,7 +61,7 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
     @Override
     public void destroy() throws IOException {
         ComponentBase parent = member.getDeclaringComponent();
-        parent.removeComponent(member.getName());
+        parent.removeComponent(member);
         parent.removeMemberFromContainer(member);
         fireNodeDestroyed();
     }
@@ -91,62 +91,60 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
         propertiesSet.setDisplayName("Properties");
 
         try {
-            Property<String> nameProp = new PropertySupport.Reflection(this, String.class, "getName", "changeName");
-            nameProp.setName("Name");
-            propertiesSet.put(nameProp);
+            if (member instanceof Field || member instanceof Method || member instanceof Literal) {
+                Property<String> nameProp = new PropertySupport.Reflection(this, String.class, "getMemberName", "setMemberName");
+                nameProp.setName("Name");
+                propertiesSet.put(nameProp);
 
-            Property<String> typeProp = new PropertySupport.Reflection(this, String.class, "getType", "setType");
-            typeProp.setName("Type");
-            propertiesSet.put(typeProp);
+                if (member instanceof Field || member instanceof Method) {
 
-            if (member instanceof Field || member instanceof Method) {
+                    Property<String> typeProp = new PropertySupport.Reflection(this, String.class, "getType", "setType");
+                    typeProp.setName("Type");
+                    propertiesSet.put(typeProp);
 
-                if (member instanceof Field) {
-                    Field field = (Field) member;
-
-                    Property<String> visibilityProp = new PropertySupport.Reflection(field, Visibility.class, "getVisibility", "setVisibility");
+                    Property<String> visibilityProp = new PropertySupport.Reflection(member, Visibility.class, "getVisibility", "setVisibility");
                     visibilityProp.setName("Visibility");
                     propertiesSet.put(visibilityProp);
 
-                    Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(field, boolean.class, "isStatic", "setStatic");
-                    isStaticProp.setName("static");
-                    propertiesSet.put(isStaticProp);
+                    if (member instanceof Field) {
+                        Field field = (Field) member;
 
-                    Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(field, boolean.class, "isFinal", "setFinal");
-                    isFinalProp.setName("final");
-                    propertiesSet.put(isFinalProp);
+                        Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(field, boolean.class, "isStatic", "setStatic");
+                        isStaticProp.setName("static");
+                        propertiesSet.put(isStaticProp);
 
-                    Property<Boolean> isTransientProp = new PropertySupport.Reflection<>(field, boolean.class, "isTransient", "setTransient");
-                    isTransientProp.setName("transient");
-                    propertiesSet.put(isTransientProp);
+                        Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(field, boolean.class, "isFinal", "setFinal");
+                        isFinalProp.setName("final");
+                        propertiesSet.put(isFinalProp);
 
-                    Property<Boolean> isVolatileProp = new PropertySupport.Reflection<>(field, boolean.class, "isVolatile", "setVolatile");
-                    isVolatileProp.setName("volatile");
-                    propertiesSet.put(isVolatileProp);
-                }
+                        Property<Boolean> isTransientProp = new PropertySupport.Reflection<>(field, boolean.class, "isTransient", "setTransient");
+                        isTransientProp.setName("transient");
+                        propertiesSet.put(isTransientProp);
 
-                if (member instanceof Method) {
-                    Method method = (Method) member;
+                        Property<Boolean> isVolatileProp = new PropertySupport.Reflection<>(field, boolean.class, "isVolatile", "setVolatile");
+                        isVolatileProp.setName("volatile");
+                        propertiesSet.put(isVolatileProp);
+                    }
 
-                    Property<String> visibilityProp = new PropertySupport.Reflection(method, Visibility.class, "getVisibility", "setVisibility");
-                    visibilityProp.setName("Visibility");
-                    propertiesSet.put(visibilityProp);
+                    if (member instanceof Method) {
+                        Method method = (Method) member;
 
-                    Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(method, boolean.class, "isStatic", "setStatic");
-                    isStaticProp.setName("static");
-                    propertiesSet.put(isStaticProp);
+                        Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(method, boolean.class, "isStatic", "setStatic");
+                        isStaticProp.setName("static");
+                        propertiesSet.put(isStaticProp);
 
-                    Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(method, boolean.class, "isFinal", "setFinal");
-                    isFinalProp.setName("final");
-                    propertiesSet.put(isFinalProp);
+                        Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(method, boolean.class, "isFinal", "setFinal");
+                        isFinalProp.setName("final");
+                        propertiesSet.put(isFinalProp);
 
-                    Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(method, boolean.class, "isAbstract", "setAbstract");
-                    isAbstractProp.setName("abstract");
-                    propertiesSet.put(isAbstractProp);
+                        Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(method, boolean.class, "isAbstract", "setAbstract");
+                        isAbstractProp.setName("abstract");
+                        propertiesSet.put(isAbstractProp);
 
-                    Property<Boolean> isSynchronizedProp = new PropertySupport.Reflection<>(method, boolean.class, "isSynchronized", "setSynchronized");
-                    isSynchronizedProp.setName("synchronized");
-                    propertiesSet.put(isSynchronizedProp);
+                        Property<Boolean> isSynchronizedProp = new PropertySupport.Reflection<>(method, boolean.class, "isSynchronized", "setSynchronized");
+                        isSynchronizedProp.setName("synchronized");
+                        propertiesSet.put(isSynchronizedProp);
+                    }
                 }
             }
 
@@ -162,19 +160,22 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
         return sheet;
     }
 
+    public String getMemberName() {
+        return member.getName();
+    }
+
     /**
      * Changes the name of the Component.
      *
      * @param newName to be set to ClassDiagramComponent
      */
-    public void changeName(String newName) {
+    public void setMemberName(String newName) {
         if (!member.getName().equals(newName)) {
-            String newSignature = member.deriveNewSignatureWithoutModifiersFromName(newName);
+            String newSignature = member.deriveNewSignatureFromName(newName);
             if (member.getDeclaringComponent().signatureExists(newSignature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + newSignature + "\" already exists!");
             } else {
                 member.setName(newName);
-//                member.changeName(newName);
             }
         }
     }
@@ -185,7 +186,7 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
 
     public void setType(String newType) {
         if (!member.getName().equals(newType)) {
-            String newSignature = member.deriveNewSignatureWithoutModifiersFromType(newType);
+            String newSignature = member.deriveNewSignatureFromType(newType);
             if (member.getDeclaringComponent().signatureExists(newSignature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + newSignature + "\" already exists!");
             } else {
@@ -196,11 +197,10 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        String propName = evt.getPropertyName();
-        if ("name".equals(propName)) {
+        if ("name".equals(evt.getPropertyName())) {
             setName((String) evt.getNewValue());
         }
         firePropertySetsChange(null, this.getPropertySets());
     }
-    
+
 }

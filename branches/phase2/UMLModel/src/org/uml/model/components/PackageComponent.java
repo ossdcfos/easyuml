@@ -1,7 +1,6 @@
 package org.uml.model.components;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
 import org.uml.model.members.MemberBase;
 
 /**
@@ -16,11 +15,10 @@ import org.uml.model.members.MemberBase;
  */
 public class PackageComponent extends ComponentBase {
 
-    private HashMap<String, ComponentBase> classDiagramComponents;
+    private LinkedHashSet<ComponentBase> classDiagramComponents;
 
     /**
      * Default constructor only specifying parent diagram. Sets the name to default value.
-     * @param parentDiagram
      */
     public PackageComponent() {
         this("UntitledPackage");
@@ -30,15 +28,14 @@ public class PackageComponent extends ComponentBase {
      * Constructor with parameter which sets PackageComponent's name and
      * instantiates classDiagramComponents collection.
      *
-     * @param parentDiagram
      * @param name of PackageComponent
      */
     public PackageComponent(String name) {
         super(name);
-        classDiagramComponents = new HashMap<>();
+        classDiagramComponents = new LinkedHashSet<>();
     }
 
-    public HashMap<String, ComponentBase> getComponents() {
+    public LinkedHashSet<ComponentBase> getComponents() {
         return classDiagramComponents;
     }
 
@@ -52,7 +49,7 @@ public class PackageComponent extends ComponentBase {
 //        if (cdc instanceof ClassComponent) {
 //            cdc = (ClassDiagramComponent) cdc;
 //        }
-        classDiagramComponents.put(cdc.getName(), cdc);
+        classDiagramComponents.add(cdc);
     }
 
     /**
@@ -62,7 +59,7 @@ public class PackageComponent extends ComponentBase {
      * @param cdc - classDiagramComponent to be removed
      */
     public void removeComponent(ComponentBase cdc) {
-        classDiagramComponents.remove(cdc.getName());
+        classDiagramComponents.remove(cdc);
     }
 
     /**
@@ -73,10 +70,8 @@ public class PackageComponent extends ComponentBase {
         System.out.println("PackageComponent: " + this.getName());
         System.out.println("Contains these ClassDiagramComponents: ");
         int counter = 1;
-        for (Map.Entry<String, ComponentBase> entry : classDiagramComponents.entrySet()) {
-            String string = entry.getKey();
-            ComponentBase classComponent = entry.getValue();
-            System.out.println("Component no." + counter + ": \t" + classComponent.getName());
+        for (ComponentBase component : classDiagramComponents) {
+            System.out.println("Component no." + counter + ": \t" + component.getName());
             counter++;
         }
     }

@@ -133,7 +133,7 @@ public class Field extends MemberBase {
     }
 
     @Override
-    public String getSignatureWithoutModifiers() {
+    public String getSignature() {
         StringBuilder result = new StringBuilder();
         result = result.append(type).append(" ");
         result = result.append(getName());
@@ -153,7 +153,7 @@ public class Field extends MemberBase {
         StringBuilder result = new StringBuilder();
         // removes static because it is rendered as underline
         result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
-        result.append(getSignatureWithoutModifiers());
+        result.append(getSignature());
         return result.toString();
     }
 
@@ -176,7 +176,7 @@ public class Field extends MemberBase {
     }
 
     @Override
-    public String deriveNewSignatureWithoutModifiersFromName(String newName) {
+    public String deriveNewSignatureFromName(String newName) {
         StringBuilder result = new StringBuilder();
         result = result.append(type).append(" ");
         result = result.append(newName);
@@ -184,7 +184,7 @@ public class Field extends MemberBase {
     }
 
     @Override
-    public String deriveNewSignatureWithoutModifiersFromType(String newType) {
+    public String deriveNewSignatureFromType(String newType) {
         StringBuilder result = new StringBuilder();
         result = result.append(newType).append(" ");
         result = result.append(getName());

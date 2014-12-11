@@ -33,7 +33,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
 //    http://bits.netbeans.org/dev/javadoc/org-openide-nodes/org/openide/nodes/PropertySupport.html
     private ComponentBase component;
     private static String iconFolderPath = "org/uml/explorer/icons/";
-    
+
     public ComponentNode(ComponentBase component) {
         this(component, new InstanceContent());
     }
@@ -70,7 +70,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
 
     @Override
     public void destroy() throws IOException {
-        component.getParentDiagram().removeComponent(component.getName());
+        component.getParentDiagram().removeComponent(component);
         fireNodeDestroyed();
     }
 
@@ -105,17 +105,21 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         propertiesSet.setDisplayName("Properties");
 
         try {
-            Property<String> nameProp = new PropertySupport.Reflection(this, String.class, "getName", "changeName");
+            Property<String> nameProp = new PropertySupport.Reflection(this, String.class, "getName", "setComponentName");
             nameProp.setName("Name");
             propertiesSet.put(nameProp);
+            
+            Property<String> packageProp = new PropertySupport.Reflection(this, String.class, "getParentPackage", "setParentPackage");
+            packageProp.setName("Package");
+            propertiesSet.put(packageProp);
 
             if (component instanceof ClassComponent) {
-                ClassComponent classComponent = (ClassComponent)component;
-                
+                ClassComponent classComponent = (ClassComponent) component;
+
                 Property<String> visibilityProp = new PropertySupport.Reflection(classComponent, Visibility.class, "getVisibility", "setVisibility");
                 visibilityProp.setName("Visibility");
                 propertiesSet.put(visibilityProp);
-                
+
                 Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isAbstract", "setAbstract");
                 isAbstractProp.setName("abstract");
                 propertiesSet.put(isAbstractProp);
@@ -133,29 +137,47 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         return sheet;
     }
 
+    
+    /**
+     * Changes the name of the Component.
+     *
+     * @param parentPackage
+     */
+    public void setParentPackage(String parentPackage) {
+        if (!getParentPackage().equals(parentPackage)) {
+            if (component.getParentDiagram().signatureExists(component.deriveNewSignatureFromPackage(parentPackage))) {
+                JOptionPane.showMessageDialog(null, "Component \"" + component.getName()+ "\" already exists in package "+parentPackage+"!");
+            } else {
+                component.setParentPackage(parentPackage);
+            }
+        }
+    }
+    
+    public String getParentPackage() {
+        return component.getParentPackage();
+    }
+    
     /**
      * Changes the name of the Component.
      *
      * @param newName to be set to ClassDiagramComponent
      */
-    public void changeName(String newName) {
-        if(getName().equals(newName)){
-        } else if (component.getParentDiagram().signatureExists(newName)) {
-            JOptionPane.showMessageDialog(null, "Name \""+newName+"\" already exists!");
-//            //WidgetAction editor = ActionFactory.createInplaceEditorAction(new LabelTextFieldEditorAction());
-//            //ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(getNameLabel());
-        } else {
-            component.changeName(newName);
+    public void setComponentName(String newName) {
+        if (!getName().equals(newName)) {
+            if (component.getParentDiagram().signatureExists(component.deriveNewSignatureFromName(newName))) {
+                JOptionPane.showMessageDialog(null, "Name \"" + newName + "\" already exists!");
+            } else {
+                component.setName(newName);
+            }
         }
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if("name".equals(evt.getPropertyName())){
-            String newName = (String)evt.getNewValue();
-            setName(newName);
-            this.fireDisplayNameChange(null, newName);
+        if ("name".equals(evt.getPropertyName())) {
+            setName((String) evt.getNewValue());
         }
+        firePropertySetsChange(null, this.getPropertySets());
     }
 
 }

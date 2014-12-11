@@ -1,6 +1,6 @@
 package org.uml.xmlSerialization;
 
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import org.dom4j.Element;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
@@ -11,9 +11,9 @@ import org.uml.model.members.MethodArgument;
  */
 public class MethodSerializer implements XmlSerializer {
 
-    private LinkedHashMap<String, Method> methods;
+    private LinkedHashSet<Method> methods;
 
-    public MethodSerializer(LinkedHashMap<String, Method> methods) {
+    public MethodSerializer(LinkedHashSet<Method> methods) {
         this.methods = methods;
     }
 
@@ -28,7 +28,7 @@ public class MethodSerializer implements XmlSerializer {
      */
     @Override
     public void serialize(Element node) {
-        for (Method method : methods.values()) {
+        for (Method method : methods) {
             Element methodNode = node.addElement("Method");
             if (method.getName() != null) methodNode.addAttribute("name", method.getName());
             if (method.getVisibility() != null) methodNode.addAttribute("visibility", method.getVisibility().name().toLowerCase());

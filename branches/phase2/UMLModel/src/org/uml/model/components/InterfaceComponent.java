@@ -1,6 +1,6 @@
 package org.uml.model.components;
 
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 
@@ -16,8 +16,9 @@ import org.uml.model.members.Method;
  */
 public class InterfaceComponent extends ComponentBase {
 
-    private LinkedHashMap<String, Method> methods;
-
+    private LinkedHashSet<Method> methods;
+    private boolean isStatic;
+    
     /**
      * Default constructor only specifying parent diagram. Sets name to default value.
      */
@@ -33,7 +34,7 @@ public class InterfaceComponent extends ComponentBase {
      */
     public InterfaceComponent(String name) {
         super(name);
-        methods = new LinkedHashMap<>();
+        methods = new LinkedHashSet<>();
     }
 
     /**
@@ -41,7 +42,7 @@ public class InterfaceComponent extends ComponentBase {
      *
      * @return HashMap of methods
      */
-    public LinkedHashMap<String, Method> getMethods() {
+    public LinkedHashSet<Method> getMethods() {
         return methods;
     }
 
@@ -52,13 +53,24 @@ public class InterfaceComponent extends ComponentBase {
      */
     public void addMethod(Method method) {
         method.setDeclaringComponent(this);
-        methods.put(method.toString(), method);
+        methods.add(method);
         addComponent(method);
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public void setStatic(boolean isStatic) {
+        boolean oldValue = this.isStatic;
+        this.isStatic = isStatic;
+        fire("isStatic", oldValue, this.isStatic);
     }
 
     @Override
     public void removeMemberFromContainer(MemberBase member) {
-        if (member instanceof Method) methods.values().remove((Method)member);
+        if (member instanceof Method) methods.remove((Method)member);
         else throw new RuntimeException("Removing unsupported member: "+member.toString());
     }
+    
 }

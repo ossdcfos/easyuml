@@ -28,11 +28,19 @@ public class InterfaceDeserializer implements XmlDeserializer{
      */
     @Override
     public void deserialize(Element node) {
+        String packageName = node.attributeValue("package");
         String interfaceName = node.attributeValue("name");
         String visibility = node.attributeValue("visibility");
         Point position = new Point((int) Double.parseDouble(node.attributeValue("xPosition")), (int) Double.parseDouble(node.attributeValue("yPosition")));
-        if (interfaceName != null && !interfaceName.equals("")) interfaceComponent.setName(interfaceName);
-        if (visibility != null && !visibility.equals("")) interfaceComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
+        if (packageName != null) {
+            interfaceComponent.setParentPackage(packageName);
+        }
+        if (interfaceName != null && !interfaceName.equals("")) {
+            interfaceComponent.setName(interfaceName);
+        }
+        if (visibility != null && !visibility.equals("")) {
+            interfaceComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
+        }
         interfaceComponent.setPosition(position);
         
         Iterator<?> methodIterator = node.element("Methods").elementIterator("Method");

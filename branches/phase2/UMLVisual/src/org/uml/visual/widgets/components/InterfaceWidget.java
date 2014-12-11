@@ -52,7 +52,7 @@ public class InterfaceWidget extends ComponentWidgetBase {
         getActions().addAction(ActionFactory.createPopupMenuAction(new InterfacePopupMenuProvider(this)));
         
         
-        for (Method methodComp : interfaceComponent.getMethods().values()) {
+        for (Method methodComp : interfaceComponent.getMethods()) {
             MethodWidget mw = new MethodWidget(getClassDiagramScene(), methodComp);
             addMember(methodsContainer, mw);
         }
@@ -84,14 +84,5 @@ public class InterfaceWidget extends ComponentWidgetBase {
     @Override
     public InterfaceComponent getComponent() {
         return (InterfaceComponent) component;
-    }
-    @Override
-    public void setSignature(String signature) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getSignature() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

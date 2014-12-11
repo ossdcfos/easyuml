@@ -7,7 +7,6 @@ import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.UseRelation;
 import org.uml.model.relations.RelationBase;
-import org.uml.model.relations.CardinalityEnum;
 import org.uml.model.relations.HasBaseRelation;
 import java.awt.Point;
 import org.netbeans.api.visual.action.*;
@@ -25,7 +24,6 @@ import org.uml.visual.palette.PaletteSupport;
 public class ComponentConnectProvider implements ConnectProvider {
 
     DialogDescriptor dd;
-    PaletteItem pi = null;
 
     public ComponentConnectProvider() {
     }
@@ -42,88 +40,44 @@ public class ComponentConnectProvider implements ConnectProvider {
 
     @Override
     public boolean isSourceWidget(Widget sourceWidget) {
-        pi = PaletteSupport.getPalette().getSelectedItem().lookup(PaletteItem.class);
-        return (sourceWidget instanceof ClassWidget
-                || (sourceWidget instanceof InterfaceWidget
-                && pi != null && (pi.getDropClass() == IsRelation.class || pi.getDropClass() == UseRelation.class)));
+        return (sourceWidget instanceof ClassWidget || sourceWidget instanceof InterfaceWidget);
     }
 
     @Override
     public ConnectorState isTargetWidget(Widget sourceWidget, Widget targetWidget) {
-        pi = PaletteSupport.getPalette().getSelectedItem().lookup(PaletteItem.class);
-        if (pi == null || !RelationBase.class.isAssignableFrom(pi.getDropClass())
-                || !(sourceWidget instanceof ComponentWidgetBase) || !(targetWidget instanceof ComponentWidgetBase)) {
+        if (sourceWidget instanceof ComponentWidgetBase && targetWidget instanceof ComponentWidgetBase) {
+            return ConnectorState.ACCEPT;
+        } else {
             return ConnectorState.REJECT;
         }
-
-        ComponentWidgetBase source = (ComponentWidgetBase) sourceWidget;
-        ComponentWidgetBase target = (ComponentWidgetBase) targetWidget;
-
-        RelationBase relation;
-        try {
-            relation = (RelationBase) pi.getDropClass().newInstance();
-            if (relation.canConnect(source.getComponent(), target.getComponent())) {
-                return ConnectorState.ACCEPT;
-            } else {
-                return ConnectorState.REJECT;
-            }
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        return ConnectorState.REJECT;
     }
 
     @Override
     public void createConnection(Widget sourceWidget, Widget targetWidget) {
+        PaletteItem pi = PaletteSupport.getPalette().getSelectedItem().lookup(PaletteItem.class);
         ComponentWidgetBase source = (ComponentWidgetBase) sourceWidget;
-        ComponentWidgetBase target = (ComponentWidgetBase) targetWidget;
-        Class<?> sourceClass = source.getClass();
-        Class<?> targetClass = target.getClass();
 
         try {
-            RelationBase relation = (RelationBase) pi.getDropClass().newInstance();
-
-            if (relation instanceof IsRelation) {
-                if (sourceClass == ClassWidget.class && targetClass == ClassWidget.class
-                        || sourceClass == InterfaceWidget.class && targetClass == InterfaceWidget.class) {
-                    connect(relation, source, target);
-                }
-            } else if (relation instanceof HasBaseRelation) {
-                ClassHasRelationPanel panel = new ClassHasRelationPanel(source);
-                panel.getComboBoxTarget().setSelectedItem(target);
-                dd = new DialogDescriptor(panel, "Has relation");
-                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    HasBaseRelation r = (HasBaseRelation) relation;
-                    r.setName(panel.getRelationName());
-                    r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
-                    ComponentWidgetBase selectedTarget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
-
-                    CardinalityEnum ce = (CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem();
-
-                    if (ce.equals(CardinalityEnum.One2Many) || ce.equals(CardinalityEnum.Zero2Many)) {
-                        String collectionType = panel.getCollectionType();
-                        if (collectionType == null || collectionType.equals("")) {
-                            collectionType = "List";
-                        }
-                        r.setCollectionType(collectionType);
+            ComponentWidgetBase target = (ComponentWidgetBase) targetWidget;
+            if (pi != null && RelationBase.class.isAssignableFrom(pi.getDropClass())) {
+                RelationBase relation = (RelationBase) pi.getDropClass().newInstance();
+                if (relation.canConnect(source.getComponent(), target.getComponent())) {
+                    if (relation instanceof IsRelation) {
+                        connect(relation, source, target);
+                    } else if (relation instanceof ImplementsRelation) {
+                        connect(relation, source, target);
+                    } else if (relation instanceof HasBaseRelation) {
+                        ConnectRelationPanel panel = new ConnectRelationPanel(source.getClassDiagramScene(), source, target, relation);
+                        panel.openRelationDialog();
+                    } else if (relation instanceof UseRelation) {
+                        ConnectRelationPanel panel = new ConnectRelationPanel(source.getClassDiagramScene(), source, target, relation);
+                        panel.openRelationDialog();
                     }
-                    connect(r, source, selectedTarget);
                 }
-            } else if (relation instanceof UseRelation) {
-                ClassUseRelationPanel panel = new ClassUseRelationPanel(source);
-                panel.getComboBoxTarget().setSelectedItem(target);
-                dd = new DialogDescriptor(panel, "Use relation");
-                if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
-                    UseRelation r = (UseRelation) relation;
-                    r.setName(panel.getRelationName());
-                    r.setCardinalitySource((CardinalityEnum) panel.getComboBoxCardinalitySource().getSelectedItem());
-                    r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
-                    ComponentWidgetBase selectedTarget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
-                    connect(r, source, selectedTarget);
-                }
-            } else if (relation instanceof ImplementsRelation) {
-                connect(relation, source, target);
+            } else {
+                // Create generic dialog with these two components
+                ConnectRelationPanel panel = new ConnectRelationPanel(source.getClassDiagramScene(), source, target);
+                panel.openRelationDialog();
             }
         } catch (InstantiationException | IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
@@ -133,9 +87,30 @@ public class ComponentConnectProvider implements ConnectProvider {
     private void connect(RelationBase relation, ComponentWidgetBase source, ComponentWidgetBase target) {
         relation.setSource(source.getComponent());
         relation.setTarget(target.getComponent());
-        
+
         source.getClassDiagramScene().addRelationToScene(relation, source.getComponent(), target.getComponent());
     }
+//        AddRelationDialog dialog = new AddRelationDialog(null, source.getClassDiagramScene(), true);
+//        ClassHasRelationPanel panel = new ClassHasRelationPanel(source);
+//        panel.getComboBoxTarget().setSelectedItem(target);
+//        dd = new DialogDescriptor(panel, "Has relation");
+//        if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
+//            HasBaseRelation r = (HasBaseRelation) relation;
+//            r.setName(panel.getRelationName());
+//            r.setCardinalityTarget((CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem());
+//            ComponentWidgetBase selectedTarget = (ComponentWidgetBase) panel.getComboBoxTarget().getSelectedItem();
+//
+//            CardinalityEnum ce = (CardinalityEnum) panel.getComboBoxCardinalityTarget().getSelectedItem();
+//
+//            if (ce.equals(CardinalityEnum.One2Many) || ce.equals(CardinalityEnum.Zero2Many)) {
+//                String collectionType = panel.getCollectionType();
+//                if (collectionType == null || collectionType.equals("")) {
+//                    collectionType = "List";
+//                }
+//                r.setCollectionType(collectionType);
+//            }
+//            connect(r, source, selectedTarget);
+//        }
 
     // ako se dodaje preko choose relationa - necemo jer moze drag'n'drop bilo sta, a ne da se vuce bilo sta
 //            final ChooseRelationPanel panel = new ChooseRelationPanel();

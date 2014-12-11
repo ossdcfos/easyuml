@@ -17,11 +17,10 @@ import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
 import org.uml.model.Visibility;
-import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.actions.NameEditor;
 import org.uml.visual.widgets.providers.popups.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ComponentWidgetAcceptProvider;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
@@ -83,22 +82,22 @@ public class ClassWidget extends ComponentWidgetBase {
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
 
         // Fill the widget when loading an existing diagram
-        for (Constructor c : classComponent.getConstructors().values()) {
+        for (Constructor c : classComponent.getConstructors()) {
             ConstructorWidget w = new ConstructorWidget(scene, c);
             addMember(methodsContainer, w);
         }
 
-        for (Field fieldComp : classComponent.getFields().values()) {
+        for (Field fieldComp : classComponent.getFields()) {
             FieldWidget w = new FieldWidget(getClassDiagramScene(), fieldComp);
             addMember(fieldsContainer, w);
         }
 
-        for (Method methodComp : classComponent.getMethods().values()) {
+        for (Method methodComp : classComponent.getMethods()) {
             MethodWidget mw = new MethodWidget(getClassDiagramScene(), methodComp);
             addMember(methodsContainer, mw);
         }
     }
-    
+
     public void addFieldWidget() {
         Field field = new Field("untitledField", "Object", Visibility.PRIVATE);
         addField(field);
@@ -106,7 +105,7 @@ public class ClassWidget extends ComponentWidgetBase {
         addMember(fieldsContainer, fieldWidget);
         getScene().validate();
 
-        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(fieldWidget));
+        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditor(fieldWidget));
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(fieldWidget.getNameLabel());
         MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
@@ -123,7 +122,7 @@ public class ClassWidget extends ComponentWidgetBase {
         addMember(methodsContainer, methodWidget);
         getScene().validate();
 
-        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(methodWidget));
+        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditor(methodWidget));
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(methodWidget.getNameLabel());
         MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
@@ -179,59 +178,12 @@ public class ClassWidget extends ComponentWidgetBase {
         getScene().validate();
     }
 
-    // TODO REMAKE, COPIED FROM ClassPopupMenuProvider
-    private int getCounter(MemberBase member) {
-        int brojac = 1;
-        String name = member.getName();
-        String broj = name.substring(name.length() - 1);
-        if (broj.matches("[0-9]")) {
-            name = name.substring(0, name.length() - 1);
-            member.setName(name);
-            brojac = Integer.parseInt(broj) + 1;
-        }
-        return brojac;
-    }
-
     private void addField(Field f) {
-//        try {
-            getComponent().addField(f);
-//        } catch (RuntimeException ex) {
-//            int counter = getCounter(f);
-//            f.setName(f.getName() + counter);
-//            addField(f);
-//        }
+        getComponent().addField(f);
     }
 
     private void addMethod(Method method) {
-//        try {
-            getComponent().addMethod(method);
-//        } catch (RuntimeException ex) {
-//            int counter = getCounter(method);
-//            method.setName(method.getName() + counter);
-//            addMethod(method);
-//        }
-    }
-
-    @Override
-    public void setSignature(String signature) {
-        String[] keyWords = signature.split(" ");
-        for (String keyWord : keyWords) {
-            if (keyWord.equals("public")) {
-                component.setVisibility(Visibility.PUBLIC);
-            } else if (keyWord.equals("protected")) {
-                component.setVisibility(Visibility.PUBLIC);
-            } else if (keyWord.equals("private")) {
-                component.setVisibility(Visibility.PRIVATE);
-            }
-            if (keyWord.equals("abstract")) {
-                getComponent().setAbstract(true);
-            }
-        }
-    }
-
-    @Override
-    public String getSignature() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        getComponent().addMethod(method);
     }
 
 }

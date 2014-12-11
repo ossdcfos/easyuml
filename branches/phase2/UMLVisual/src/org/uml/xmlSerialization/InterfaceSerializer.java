@@ -32,7 +32,7 @@ public class InterfaceSerializer implements ClassDiagramComponentSerializer{
      */
     @Override
     public void serialize(Element node) {
-        if (interfaceComponent.getParentPackage() != null) node.addAttribute("package", interfaceComponent.getParentPackage().getName());
+        if (interfaceComponent.getParentPackage() != null) node.addAttribute("package", interfaceComponent.getParentPackage());
         if (interfaceComponent.getName() != null) node.addAttribute("name", interfaceComponent.getName());
         if (interfaceComponent.getVisibility() != null) node.addAttribute("visibility", interfaceComponent.getVisibility().name().toLowerCase());
         Element methods = node.addElement("Methods");

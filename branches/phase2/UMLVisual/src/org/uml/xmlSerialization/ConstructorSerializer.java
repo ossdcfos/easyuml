@@ -1,6 +1,6 @@
 package org.uml.xmlSerialization;
 
-import java.util.HashMap;
+import java.util.LinkedHashSet;
 import org.dom4j.Element;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.MethodArgument;
@@ -11,9 +11,9 @@ import org.uml.model.members.MethodArgument;
  */
 public class ConstructorSerializer implements XmlSerializer{
 
-    private HashMap<String, Constructor> constructors;
+    private LinkedHashSet<Constructor> constructors;
 
-    public ConstructorSerializer(HashMap<String, Constructor> constructors) {
+    public ConstructorSerializer(LinkedHashSet<Constructor> constructors) {
         this.constructors = constructors;
     }
     /**
@@ -24,7 +24,7 @@ public class ConstructorSerializer implements XmlSerializer{
      */
     @Override
     public void serialize(Element node) {
-        for (Constructor constructor : constructors.values()) {
+        for (Constructor constructor : constructors) {
             Element constructorNode = node.addElement("Constructor");
             if (constructor.getName() != null) constructorNode.addAttribute("name", constructor.getName());
             if (constructor.getVisibility()!= null) constructorNode.addAttribute("visibility", constructor.getVisibility().name().toLowerCase());

@@ -1,4 +1,4 @@
-package org.uml.visual.dialogs;
+package org.uml.visual.dialogs.unused;
 
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -54,7 +54,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
         btnOk = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         lblRelationType = new javax.swing.JLabel();
-        cbxRelations = new javax.swing.JComboBox<RelationBase>();
+        cbxRelations = new javax.swing.JComboBox<org.uml.model.relations.RelationBase>();
         lblName = new javax.swing.JLabel();
         txfName = new javax.swing.JTextField();
         cbxCardinalityTarget = new javax.swing.JComboBox<CardinalityEnum>();
@@ -328,34 +328,34 @@ public class AddRelationDialog extends javax.swing.JDialog {
     }
 
     // nepotrebno ako je deselektovano na pocetku sve iz combo boxeva
-    private void reinitTargetComboBoxExcept(RelationBase rc, ComponentWidgetBase src) {
-        List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
-
-        if (rc instanceof IsRelation) {
-            for (Widget widget : widgets) {
-                if (!widget.equals(src) && widget instanceof ClassWidget) {
-                    cbxClassesTarget.addItem(widget);
-                }
-            }
-        } else if (rc instanceof HasBaseRelation) {
-            for (Widget widget : widgets) {
-                cbxClassesTarget.addItem(widget);
-            }
-        } else if (rc instanceof UseRelation) {
-            for (Widget widget : widgets) {
-                if (!widget.equals(src)) {
-                    cbxClassesTarget.addItem(widget);
-                }
-            }
-        } else if (rc instanceof ImplementsRelation) {
-            for (Widget widget : widgets) {
-                if (widget instanceof InterfaceWidget) {
-                    cbxClassesTarget.addItem(widget);
-                }
-            }
-        }
-        cbxClassesTarget.setSelectedItem(null);
-    }
+//    private void reinitTargetComboBoxExcept(RelationBase rc, ComponentWidgetBase src) {
+//        List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
+//
+//        if (rc instanceof IsRelation) {
+//            for (Widget widget : widgets) {
+//                if (!widget.equals(src) && widget instanceof ClassWidget) {
+//                    cbxClassesTarget.addItem(widget);
+//                }
+//            }
+//        } else if (rc instanceof HasBaseRelation) {
+//            for (Widget widget : widgets) {
+//                cbxClassesTarget.addItem(widget);
+//            }
+//        } else if (rc instanceof UseRelation) {
+//            for (Widget widget : widgets) {
+//                if (!widget.equals(src)) {
+//                    cbxClassesTarget.addItem(widget);
+//                }
+//            }
+//        } else if (rc instanceof ImplementsRelation) {
+//            for (Widget widget : widgets) {
+//                if (widget instanceof InterfaceWidget) {
+//                    cbxClassesTarget.addItem(widget);
+//                }
+//            }
+//        }
+//        cbxClassesTarget.setSelectedItem(null);
+//    }
 
     private void fillSourceAndTargetComboBoxes(RelationBase rc) {
         List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
@@ -444,7 +444,7 @@ public class AddRelationDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox<Widget> cbxClassesSource;
     private javax.swing.JComboBox<Widget> cbxClassesTarget;
     private javax.swing.JComboBox<String> cbxCollectionType;
-    private javax.swing.JComboBox<RelationBase> cbxRelations;
+    private javax.swing.JComboBox<org.uml.model.relations.RelationBase> cbxRelations;
     private javax.swing.JLabel lblCardinalitySource;
     private javax.swing.JLabel lblCardinalityTarget;
     private javax.swing.JLabel lblCollectionType;

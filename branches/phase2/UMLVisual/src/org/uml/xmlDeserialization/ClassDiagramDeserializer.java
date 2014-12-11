@@ -68,7 +68,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             classDiagram.addComponent(component);
         }
         
-        ArrayList<ComponentBase> components = new ArrayList<>(classDiagram.getComponents().values());
+        ArrayList<ComponentBase> components = new ArrayList<>(classDiagram.getComponents());
         Element classDiagramRelations = node.element("ClassDiagramRelations");
         Iterator<?> isRelationIterator = classDiagramRelations.elementIterator("IsRelation");
         while (isRelationIterator != null && isRelationIterator.hasNext()) {

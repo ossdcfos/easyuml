@@ -105,23 +105,27 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         ProxyLookup jointLookup = new ProxyLookup(fixedLookup, abstrLookup);
 
         associateLookup(jointLookup);
-        
+
         classDiagramScene.addObjectSceneListener(new ObjectSceneAdapter() {
             @Override
             public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
                 if (previousFocusedObject != null) {
                     content.remove(previousFocusedObject);
-                    content.remove(oldNode);
+                    if(oldNode != null) content.remove(oldNode);
                 }
+                
                 if (newFocusedObject != null) {
                     content.add(newFocusedObject);
 
                     if (newFocusedObject instanceof ComponentBase) {
                         oldNode = new ComponentNode((ComponentBase) newFocusedObject);
+                        content.add(oldNode);
                     } else if (newFocusedObject instanceof MemberBase) {
                         oldNode = new MemberNode((MemberBase) newFocusedObject);
+                        content.add(oldNode);
+                    } else {
+                        oldNode = null;
                     }
-                    content.add(oldNode);
                 }
             }
 

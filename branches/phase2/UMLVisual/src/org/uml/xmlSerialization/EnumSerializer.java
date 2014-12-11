@@ -32,7 +32,7 @@ public class EnumSerializer implements ClassDiagramComponentSerializer{
      */
     @Override
     public void serialize(Element node) {
-        if (enumComponent.getParentPackage() != null) node.addAttribute("package", enumComponent.getParentPackage().getName());
+        if (enumComponent.getParentPackage() != null) node.addAttribute("package", enumComponent.getParentPackage());
         if (enumComponent.getName() != null) node.addAttribute("name", enumComponent.getName());
         if (enumComponent.getVisibility() != null) node.addAttribute("visibility", enumComponent.getVisibility().name().toLowerCase());
         

@@ -32,6 +32,7 @@ public class ImplementsRelation extends RelationBase {
     public boolean canConnect(ComponentBase source, ComponentBase target) {
         Class<?> sc = source.getClass();
         Class<?> tc = target.getClass();
+        if(source == target) return false;
         if(sc == ClassComponent.class && tc == InterfaceComponent.class) return true;
         return false;
     }

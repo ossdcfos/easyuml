@@ -1,6 +1,7 @@
 package org.uml.code;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Field;
 
@@ -11,14 +12,14 @@ import org.uml.model.members.Field;
  */
 public class FieldCodeGenerator implements CodeGenerator {
 
-    LinkedHashMap<String, Field> fields = new LinkedHashMap<>();
+    LinkedHashSet<Field> fields = new LinkedHashSet<>();
 
     /**
      * Constructor that sets this object's fields HasMap to the given value.
      *
      * @param fields which code needs to be generated
      */
-    public FieldCodeGenerator(LinkedHashMap<String, Field> fields) {
+    public FieldCodeGenerator(LinkedHashSet<Field> fields) {
         this.fields = fields;
     }
 
@@ -33,7 +34,7 @@ public class FieldCodeGenerator implements CodeGenerator {
     public String generateCode() {
         String fieldsString = "";
 
-        for (Field field : fields.values()) {
+        for (Field field : fields) {
             fieldsString += field.getFullSignature();
         }
         return fieldsString;

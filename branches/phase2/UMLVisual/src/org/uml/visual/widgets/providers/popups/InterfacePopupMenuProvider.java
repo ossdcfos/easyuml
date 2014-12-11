@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
-import java.util.Random;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -13,14 +12,13 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.windows.WindowManager;
 import org.uml.model.ClassDiagram;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
-import org.uml.visual.dialogs.PackageDialog;
+import org.uml.visual.dialogs.EditPackageDialog;
 import org.uml.visual.widgets.components.InterfaceWidget;
 import org.uml.visual.widgets.members.MethodWidget;
-import org.uml.visual.widgets.actions.NameEditorAction;
+import org.uml.visual.widgets.actions.NameEditor;
 import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
@@ -34,7 +32,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addMethod;
     private JMenuItem editPackage;
     private JMenuItem deleteInterface;
-    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(interfaceWidget));
+    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(interfaceWidget));
     MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
     public InterfacePopupMenuProvider(InterfaceWidget interfaceWidget) {
@@ -43,14 +41,13 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
 
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
-        
+
         menu.addSeparator();
-        
-//        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
-//        menu.add(editPackage);
-        
+
+        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
+        menu.add(editPackage);
         menu.addSeparator();
-        
+
         (deleteInterface = new JMenuItem("Delete Interface")).addActionListener(removeWidgetListener);
         menu.add(deleteInterface);
     }
@@ -63,26 +60,24 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
                 interfaceWidget.getComponent().addMethod(m);
 
             } catch (RuntimeException ex) {
-                JOptionPane.showMessageDialog(menu, "Greska u pravljenju metode interfejsa "+m.getName(), "Greska!", JOptionPane.ERROR_MESSAGE);
-//                Random r = new Random();
-//                int i = r.nextInt(10000);
-//                m.setName(m.getName() + i);
-//                interfaceWidget.getComponent().addMethod(m);
+                JOptionPane.showMessageDialog(menu, "Greska u pravljenju metode interfejsa " + m.getName(), "Greska!", JOptionPane.ERROR_MESSAGE);
             }
             MethodWidget w = new MethodWidget(interfaceWidget.getClassDiagramScene(), m);
             interfaceWidget.addMethodWidget(w);
             interfaceWidget.getScene().validate();
 
-            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditorAction(w));
+            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditor(w));
             ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
             MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
             interfaceWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
-    
-//    ActionListener editPackageListener = new ActionListener() {
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
+
+    ActionListener editPackageListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            EditPackageDialog epd = new EditPackageDialog(interfaceWidget.getComponent());
+            epd.setVisible(true);
 ////            String pack = "";
 //            PackageDialog pd = new PackageDialog(null, true, interfaceWidget.getComponent(), interfaceWidget.getClassDiagramScene().getClassDiagram());
 //            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
@@ -97,14 +92,14 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
 //            interfaceWidget.getScene().validate();
 //
 ////            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
-//        }
-//    };
-    
+        }
+    };
+
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassDiagram classDiagram = interfaceWidget.getComponent().getParentDiagram();
-            classDiagram.removeComponent(interfaceWidget.getComponent().getName());
+            classDiagram.removeComponent(interfaceWidget.getComponent());
         }
     };
 
