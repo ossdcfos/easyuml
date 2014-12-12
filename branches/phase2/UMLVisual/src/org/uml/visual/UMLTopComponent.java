@@ -2,6 +2,8 @@ package org.uml.visual;
 
 import com.timboudreau.vl.jung.ObjectSceneAdapter;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.io.*;
 import java.util.Collection;
 import javax.swing.JScrollPane;
@@ -80,7 +82,10 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         classDiagramScene = new ClassDiagramScene(classDiagram, this);
         classDiagramPanel = new JScrollPane();
         classDiagramPanel.setViewportView(classDiagramScene.createView());
-
+        classDiagramScene.setMaximumBounds(new Rectangle(0, 0, 2000, 2000));
+        classDiagramScene.setMaximumSize(new Dimension(2000, 2000));
+        classDiagramScene.validate();
+        classDiagramScene.setCheckClipping(true);
         classDiagramScene.setKeyEventProcessingType(EventProcessingType.FOCUSED_WIDGET_AND_ITS_CHILDREN);
 
         add(classDiagramPanel, BorderLayout.CENTER);

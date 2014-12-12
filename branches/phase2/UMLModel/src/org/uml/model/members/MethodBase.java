@@ -50,7 +50,8 @@ public abstract class MethodBase extends MemberBase {
      */
     public MethodBase(String name) {
         super(name);
-        arguments = new HashMap<>();
+        this.arguments = new HashMap<>();
+        this.visibility = Visibility.PUBLIC;
     }
 
     public HashMap<String, MethodArgument> getArguments() {
@@ -126,7 +127,7 @@ public abstract class MethodBase extends MemberBase {
      */
     public String getSignatureForLabel() {
         StringBuilder result = new StringBuilder();
-        if (modifiers != 0) result.append(Modifier.toString(modifiers)).append(" ");
+        if (modifiers != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
         result.append(getSignature());
         return result.toString();
     }

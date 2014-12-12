@@ -105,18 +105,18 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         propertiesSet.setDisplayName("Properties");
 
         try {
-            Property<String> nameProp = new PropertySupport.Reflection(this, String.class, "getName", "setComponentName");
+            Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getName", "setComponentName");
             nameProp.setName("Name");
             propertiesSet.put(nameProp);
             
-            Property<String> packageProp = new PropertySupport.Reflection(this, String.class, "getParentPackage", "setParentPackage");
+            Property<String> packageProp = new PropertySupport.Reflection<>(this, String.class, "getParentPackage", "setParentPackage");
             packageProp.setName("Package");
             propertiesSet.put(packageProp);
 
             if (component instanceof ClassComponent) {
                 ClassComponent classComponent = (ClassComponent) component;
 
-                Property<String> visibilityProp = new PropertySupport.Reflection(classComponent, Visibility.class, "getVisibility", "setVisibility");
+                Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(classComponent, Visibility.class, "getVisibility", "setVisibility");
                 visibilityProp.setName("Visibility");
                 propertiesSet.put(visibilityProp);
 

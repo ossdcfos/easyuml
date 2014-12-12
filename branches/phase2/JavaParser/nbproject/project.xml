@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.parser.java</code-name-base>
+            <suite-component/>
+            <module-dependencies/>
+            <public-packages>
+                <package>japa.parser</package>
+                <package>japa.parser.ast</package>
+                <package>japa.parser.ast.body</package>
+                <package>japa.parser.ast.comments</package>
+                <package>japa.parser.ast.expr</package>
+                <package>japa.parser.ast.stmt</package>
+                <package>japa.parser.ast.type</package>
+                <package>japa.parser.ast.visitor</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/javaparser-1.0.12-SNAPSHOT.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/javaparser-1.0.12-SNAPSHOT.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

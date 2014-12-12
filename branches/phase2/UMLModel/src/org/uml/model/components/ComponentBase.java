@@ -53,8 +53,9 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      *
      * @return all members of this ClassDiagramComponent
      */
+    @SuppressWarnings("unchecked")
     public LinkedHashSet<MemberBase> getMembers() {
-        return new LinkedHashSet(containerComponents);
+        return new LinkedHashSet<>(containerComponents);
     }
 
     /**
@@ -101,25 +102,25 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         return parentPackage;
     }
 
-    public void setParentPackage(String parentPackage) {        
+    public void setParentPackage(String parentPackage) {
         String oldParentPackage = this.parentPackage;
         this.parentPackage = parentPackage;
-        fire("parentPackage", oldParentPackage, parentPackage);
+        pcs.firePropertyChange("parentPackage", oldParentPackage, parentPackage);
     }
-    
+
     @Override
-    public String getSignature(){
+    public String getSignature() {
         return getParentPackage() + " " + getName();
     }
-    
-    public String deriveNewSignatureFromName(String newName){
+
+    public String deriveNewSignatureFromName(String newName) {
         return getParentPackage() + " " + newName;
     }
-    
-    public String deriveNewSignatureFromPackage(String newParentPackage){
+
+    public String deriveNewSignatureFromPackage(String newParentPackage) {
         return newParentPackage + " " + getName();
     }
-    
+
 //    /**
 //     * Returns package that contains this ClassDiagramComponent
 //     *
@@ -139,7 +140,6 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
 //        this.parentPackage = parentPackage;
 //        //   parentPackage.addMember(this);
 //    }
-
     /**
      * Returns the visibility modifier of this ClassDiagramComponent
      *
@@ -159,7 +159,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     public void setVisibility(Visibility visibility) {
         Visibility oldVisibility = this.visibility;
         this.visibility = visibility;
-        fire("visibility", oldVisibility, visibility);
+        pcs.firePropertyChange("visibility", oldVisibility, visibility);
     }
 
     public Rectangle getBounds() {
@@ -173,6 +173,6 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     @Override
     public String toString() {
         return getSignature();
-    }   
+    }
 
 }

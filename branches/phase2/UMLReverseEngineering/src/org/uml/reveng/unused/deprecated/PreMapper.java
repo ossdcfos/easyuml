@@ -1,4 +1,4 @@
-package deprecated;
+package org.uml.reveng.unused.deprecated;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

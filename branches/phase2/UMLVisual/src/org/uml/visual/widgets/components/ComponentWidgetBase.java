@@ -12,9 +12,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.MoveStrategy;
-import org.netbeans.api.visual.action.ResizeProvider;
-import org.netbeans.api.visual.action.ResizeStrategy;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -64,7 +61,7 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
 //    public Lookup getLookup() {
 //        return Lookups.fixed(this, this.getScene());
 //    }
-    public ComponentWidgetBase(ClassDiagramScene scene, ComponentBase component) {
+    public ComponentWidgetBase(final ClassDiagramScene scene, ComponentBase component) {
         super(scene);
         this.component = component;
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
@@ -94,11 +91,27 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));        
         
-        // TODO: Change detection - check how this works
+//        // TODO: Change detection - check how this works
+//        // Too slow, should find another solution
 //        addDependency(new Dependency() {
 //            @Override
 //            public void revalidateDependency() {
-//                System.out.println("PROMENA!");
+//                Point widgetBounds = getPreferredLocation();
+//                int x = widgetBounds.x;
+//                int y = widgetBounds.y;
+//                        
+//                Rectangle bounds = scene.getBounds();
+//                int leftBound = bounds.x;
+//                int topBound = bounds.y;
+//                int rightBound = bounds.x + bounds.width;
+//                int bottomBound = bounds.y + bounds.height;
+//                
+//                if(x <= leftBound) x = leftBound;
+//                if(y <= topBound) y = topBound;
+//                if(x >= rightBound - 10) x = rightBound - 10;
+//                if(y >= bottomBound - 10) y = bottomBound - 10;
+//                
+//                if(x != widgetBounds.x || y != widgetBounds.y) setPreferredLocation(new Point(x, y));
 //            }
 //        });
     }

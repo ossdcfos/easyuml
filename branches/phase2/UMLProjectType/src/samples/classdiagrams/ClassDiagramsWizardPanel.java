@@ -13,6 +13,7 @@ import org.openide.util.NbBundle;
 /**
  * Panel just asking for basic info.
  */
+@SuppressWarnings("rawtypes")
 public class ClassDiagramsWizardPanel implements WizardDescriptor.Panel,
         WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
@@ -29,7 +30,8 @@ public class ClassDiagramsWizardPanel implements WizardDescriptor.Panel,
         }
         return component;
     }
-
+    
+    @SuppressWarnings("deprecation")
     public HelpCtx getHelp() {
         return new HelpCtx(ClassDiagramsWizardPanel.class);
     }
