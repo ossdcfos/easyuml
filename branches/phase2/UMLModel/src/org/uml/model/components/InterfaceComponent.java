@@ -64,7 +64,7 @@ public class InterfaceComponent extends ComponentBase {
     public void setStatic(boolean isStatic) {
         boolean oldValue = this.isStatic;
         this.isStatic = isStatic;
-        fire("isStatic", oldValue, this.isStatic);
+        pcs.firePropertyChange("isStatic", oldValue, this.isStatic);
     }
 
     @Override

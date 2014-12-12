@@ -132,7 +132,7 @@ public class ClassComponent extends ComponentBase {
     public void setAbstract(boolean isAbstract) {
         boolean oldValue = this.isAbstract;
         this.isAbstract = isAbstract;
-        fire("isAbstract", oldValue, this.isAbstract);
+        pcs.firePropertyChange("isAbstract", oldValue, this.isAbstract);
     }
 
     public boolean isStatic() {
@@ -142,7 +142,7 @@ public class ClassComponent extends ComponentBase {
     public void setStatic(boolean isStatic) {
         boolean oldValue = this.isStatic;
         this.isStatic = isStatic;
-        fire("isStatic", oldValue, this.isStatic);
+        pcs.firePropertyChange("isStatic", oldValue, this.isStatic);
     }
 
     public boolean isFinal() {
@@ -152,7 +152,7 @@ public class ClassComponent extends ComponentBase {
     public void setFinal(boolean isFinal) {
         boolean oldValue = this.isFinal;
         this.isFinal = isFinal;
-        fire("isFinal", oldValue, this.isFinal);
+        pcs.firePropertyChange("isFinal", oldValue, this.isFinal);
     }
 
     @Override

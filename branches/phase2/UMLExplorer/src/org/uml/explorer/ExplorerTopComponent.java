@@ -76,7 +76,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
         getActionMap().put("delete", ExplorerUtils.actionDelete(explorerManager, true));
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
 
-        ((BeanTreeView) explorerTree).setRootVisible(false);
+        explorerTree.setRootVisible(false);
     }
 
     @Override
@@ -139,21 +139,22 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void resultChanged(LookupEvent ev) {
-        Lookup.Result result = (Lookup.Result) ev.getSource();
-        Collection<Object> instances = result.allInstances();
-        
+        Lookup.Result<Object> result = (Lookup.Result<Object>) ev.getSource();
+        Collection<? extends Object> instances = result.allInstances();
+
         if (!instances.isEmpty()) {
             for (Object selectedItem : instances) {
                 if (selectedItem instanceof ClassDiagram) {
                     ClassDiagram selectedComponent = (ClassDiagram) selectedItem;
 //                    if (cNode == null || selectedComponent != cNode.getClassDiagram()) {
-                        cNode = new ClassDiagramNode(selectedComponent);
-                        explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
-                        explorerTree.setRootVisible(true);
+                    cNode = new ClassDiagramNode(selectedComponent);
+                    explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
+                    explorerTree.setRootVisible(true);
 //                    }
-                    
-                // TODO refactor
+
+                    // TODO refactor
                 } else if (selectedItem instanceof ComponentBase) {
                     Children children = explorerManager.getRootContext().getChildren();
                     ArrayList<Node> nodes = new ArrayList<>();

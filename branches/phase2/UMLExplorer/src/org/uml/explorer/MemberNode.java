@@ -92,17 +92,17 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
 
         try {
             if (member instanceof Field || member instanceof Method || member instanceof Literal) {
-                Property<String> nameProp = new PropertySupport.Reflection(this, String.class, "getMemberName", "setMemberName");
+                Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getMemberName", "setMemberName");
                 nameProp.setName("Name");
                 propertiesSet.put(nameProp);
 
                 if (member instanceof Field || member instanceof Method) {
 
-                    Property<String> typeProp = new PropertySupport.Reflection(this, String.class, "getType", "setType");
+                    Property<String> typeProp = new PropertySupport.Reflection<>(this, String.class, "getType", "setType");
                     typeProp.setName("Type");
                     propertiesSet.put(typeProp);
 
-                    Property<String> visibilityProp = new PropertySupport.Reflection(member, Visibility.class, "getVisibility", "setVisibility");
+                    Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(member, Visibility.class, "getVisibility", "setVisibility");
                     visibilityProp.setName("Visibility");
                     propertiesSet.put(visibilityProp);
 

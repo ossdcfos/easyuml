@@ -219,7 +219,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
 
             LabelWidget cardinalityTarget = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
             widget.addChild(cardinalityTarget);
-            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 0.95f);
+            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 0.93f);
         } else {
             UseRelation useRelation = (UseRelation) e;
 
@@ -227,11 +227,11 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
 
             LabelWidget cardinalitySource = new LabelWidget(this, useRelation.getCardinalitySource().toString());
             widget.addChild(cardinalitySource);
-            widget.setConstraint(cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_SOURCE, 0.05f);
+            widget.setConstraint(cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_SOURCE, 0.07f);
 
             LabelWidget cardinalityTarget = new LabelWidget(this, useRelation.getCardinalityTarget().toString());
             widget.addChild(cardinalityTarget);
-            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 0.95f);
+            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 0.93f);
         }
         widget.addChild(name);
         widget.setConstraint(name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);

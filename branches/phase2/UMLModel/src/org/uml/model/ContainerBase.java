@@ -1,11 +1,9 @@
 package org.uml.model;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -19,21 +17,21 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     protected LinkedHashSet<T> containerComponents; // contains classes, interfaces or enums
     protected transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
     
-    private transient List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
+    protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        listeners.add(pcl);
+        pcs.addPropertyChangeListener(pcl);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
-        listeners.remove(pcl);
+        pcs.removePropertyChangeListener(pcl);
     }
 
-    protected void fire(String propertyName, Object old, Object nue) {
-        for (PropertyChangeListener pcl : listeners) {
-            pcl.propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
-        }
-    }
+//    protected void fire(String propertyName, Object old, Object nue) {
+//        for (PropertyChangeListener pcl : listeners) {
+//            pcl.propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
+//        }
+//    }
 
     public ContainerBase(String name) {
         this.name = name;
@@ -107,7 +105,7 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     public void setName(String newName) {
         String oldName = name;
         name = newName;
-        fire("name", oldName, newName);
+        pcs.firePropertyChange("name", oldName, newName);
     }
 
     // temporary solution, add package

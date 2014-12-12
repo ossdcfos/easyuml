@@ -70,11 +70,10 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
         initComponents();
 
         btnOK.addActionListener(new ActionListener() {
-            ComponentWidgetBase src = (ComponentWidgetBase) cbxSource.getSelectedItem();
-            ComponentWidgetBase trg = (ComponentWidgetBase) cbxTarget.getSelectedItem();
-
             @Override
             public void actionPerformed(ActionEvent e) {
+                ComponentWidgetBase src = (ComponentWidgetBase) cbxSource.getSelectedItem();
+                ComponentWidgetBase trg = (ComponentWidgetBase) cbxTarget.getSelectedItem();
                 if (relation instanceof IsRelation) {
                     connect(relation, src, trg);
                 } else if (relation instanceof ImplementsRelation) {

@@ -16,7 +16,7 @@ id = "org.uml.code.GenerateCodeAction")
 @ActionReference(path = "Menu/Source", position = 200)
 @ActionRegistration(
     displayName = "#CTL_GenerateCodeAction")
-@Messages("CTL_GenerateCodeAction=Generate Code")
+@Messages("CTL_GenerateCodeAction=easyUML Generate Code")
 public final class GenerateCodeAction implements ActionListener {
 
     @Override

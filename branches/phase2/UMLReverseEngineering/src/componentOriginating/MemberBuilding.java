@@ -3,20 +3,17 @@ package componentOriginating;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.util.Types;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
-import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
-import org.uml.model.components.InterfaceComponent;
-import org.uml.model.members.Literal;
 import org.uml.model.members.MethodBase;
 import org.uml.model.members.MethodArgument;
-import org.uml.model.components.PackageComponent;
 import org.uml.model.Visibility;
 import org.apache.commons.lang.StringUtils;
+import org.uml.model.components.PackageComponent;
+import org.uml.model.members.Constructor;
+import org.uml.model.members.Literal;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 
@@ -28,29 +25,29 @@ import org.uml.model.members.Method;
  */
 public class MemberBuilding {
 
-//    /**
-//     * Selects and sets the right Package component for the Class diagram
-//     * component given, if one exists; if not, it is created and coupled with
-//     * the component.
-//     *
-//     * @param cdc for which a package should be found
-//     * @param packageName of Class diagram component
-//     * @see PackageComponent
-//     */
-//    public static void packageSelector(ComponentBase cdc, String packageName) {
-////        if (CompilationProcessor.generatedDiagram.getPackages().containsKey(packageName)) {
-////            PackageComponent tempPack = CompilationProcessor.generatedDiagram.getPackages().get(packageName);
-////            CompilationProcessor.generatedDiagram.getPackages().remove(packageName);
-////            tempPack.addComponent(cdc);
-////            CompilationProcessor.generatedDiagram.addPackage(tempPack);
-////            cdc.setParentPackage(tempPack);
-////        } else {
-////            PackageComponent cpckg = new PackageComponent(CompilationProcessor.generatedDiagram, packageName);
-////            cpckg.addComponent(cdc);
-////            CompilationProcessor.generatedDiagram.addPackage(cpckg);
-////            cdc.setParentPackage(cpckg);
-////        }
-//    }
+    /**
+     * Selects and sets the right Package component for the Class diagram
+     * component given, if one exists; if not, it is created and coupled with
+     * the component.
+     *
+     * @param cdc for which a package should be found
+     * @param packageName of Class diagram component
+     * @see PackageComponent
+     */
+    public static void packageSelector(ComponentBase cdc, String packageName) {
+//        if (CompilationProcessor.generatedDiagram.getPackages().containsKey(packageName)) {
+//            PackageComponent tempPack = CompilationProcessor.generatedDiagram.getPackages().get(packageName);
+//            CompilationProcessor.generatedDiagram.getPackages().remove(packageName);
+//            tempPack.addComponent(cdc);
+//            CompilationProcessor.generatedDiagram.addPackage(tempPack);
+//            cdc.setParentPackage(tempPack);
+//        } else {
+//            PackageComponent cpckg = new PackageComponent(CompilationProcessor.generatedDiagram, packageName);
+//            cpckg.addComponent(cdc);
+//            CompilationProcessor.generatedDiagram.addPackage(cpckg);
+//            cdc.setParentPackage(cpckg);
+//        }
+    }
 
     /**
      * Fully builds a Field component out of given Element object and creates a
@@ -93,58 +90,58 @@ public class MemberBuilding {
         return typeOfField;
     }
 
-//    /**
-//     * Fully builds a Method or Constructor component out of given Element
-//     * object and creates an Uses relationship component if needed.
-//     *
-//     * @param element based on which a Method or Constructor component is
-//     * created
-//     * @param modifierElemnts visibility and other modifiers (public, static...)
-//     * @return fully built Method or Constructor component
-//     * @see MethodBase
-//     * @see Constructor
-//     */
-//    public static Object methodAndConstructorBuilder(Element element, Object[] modifierElemnts, boolean isMethod) {
-//        String name = element.getSimpleName().toString();
-//        if (name.equals("<init>")) {
-//            return "Default constructor";
-//        }
-//        String[] allTypes = element.asType().toString().split("\\)");
-//        String returnType = allTypes[1];
-//        Element topEl = element.getEnclosingElement();
-//        String elementPath = topEl.toString();
-//        HashMap<String, MethodArgument> generatedArgumens = new HashMap<>();
-//        if (allTypes[0].length() > 1) {
-//            String argumentTypes = allTypes[0].substring(1);
-//            RelationshipResolver.relationshipUsesCreator(argumentTypes, elementPath, "", name);
-//            argumentsPopulation(argumentTypes, generatedArgumens, false);
-//        }
-//        if (isMethod) {
-//            Method createdMethod = new Method(name, returnType, generatedArgumens);
-//            setModifiers(createdMethod, modifierElemnts);
-//            return createdMethod;
-//        } else {
-//            String className = element.getEnclosingElement().getSimpleName().toString();
-//            Constructor createdConstructor = new Constructor(className, generatedArgumens);
-//            setModifiers(createdConstructor, modifierElemnts);
-//            return createdConstructor;
-//        }
-//    }
-//
-//    /**
-//     * Fully builds a Literal component out of given Element object and creates
-//     * an Uses relationship component if needed.
-//     *
-//     * @param element based on which a Literal component is created
-//     * @param modifierElemnts visibility and other modifiers (public, static...)
-//     * @return fully built Literal component
-//     * @see Literal
-//     */
-//    public static Literal literalBuilder(Element element, Object[] modifierElemnts) {
-//        Literal createdLiteral = new Literal(element.getSimpleName().toString());
-//        setModifiers(element, modifierElemnts);
-//        return createdLiteral;
-//    }
+    /**
+     * Fully builds a Method or Constructor component out of given Element
+     * object and creates an Uses relationship component if needed.
+     *
+     * @param element based on which a Method or Constructor component is
+     * created
+     * @param modifierElemnts visibility and other modifiers (public, static...)
+     * @return fully built Method or Constructor component
+     * @see MethodBase
+     * @see Constructor
+     */
+    public static Object methodAndConstructorBuilder(Element element, Object[] modifierElemnts, boolean isMethod) {
+        String name = element.getSimpleName().toString();
+        if (name.equals("<init>")) {
+            return "Default constructor";
+        }
+        String[] allTypes = element.asType().toString().split("\\)");
+        String returnType = allTypes[1];
+        Element topEl = element.getEnclosingElement();
+        String elementPath = topEl.toString();
+        HashMap<String, MethodArgument> generatedArgumens = new HashMap<>();
+        if (allTypes[0].length() > 1) {
+            String argumentTypes = allTypes[0].substring(1);
+            RelationshipResolver.relationshipUsesCreator(argumentTypes, elementPath, "", name);
+            argumentsPopulation(argumentTypes, generatedArgumens, false);
+        }
+        if (isMethod) {
+            Method createdMethod = new Method(name, returnType, generatedArgumens);
+            setModifiers(createdMethod, modifierElemnts);
+            return createdMethod;
+        } else {
+            String className = element.getEnclosingElement().getSimpleName().toString();
+            Constructor createdConstructor = new Constructor(className, generatedArgumens);
+            setModifiers(createdConstructor, modifierElemnts);
+            return createdConstructor;
+        }
+    }
+
+    /**
+     * Fully builds a Literal component out of given Element object and creates
+     * an Uses relationship component if needed.
+     *
+     * @param element based on which a Literal component is created
+     * @param modifierElemnts visibility and other modifiers (public, static...)
+     * @return fully built Literal component
+     * @see Literal
+     */
+    public static Literal literalBuilder(Element element, Object[] modifierElemnts) {
+        Literal createdLiteral = new Literal(element.getSimpleName().toString());
+        setModifiers(element, modifierElemnts);
+        return createdLiteral;
+    }
 
     /**
      * Sets modifiers (public, static, abstract...) to the given Member object.

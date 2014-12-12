@@ -1,4 +1,4 @@
-package org.uml.reveng;
+package org.uml.reveng.unused;
 
 import java.awt.Point;
 import java.util.HashMap;

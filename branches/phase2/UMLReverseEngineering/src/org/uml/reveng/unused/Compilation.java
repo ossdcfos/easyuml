@@ -1,4 +1,4 @@
-package org.uml.reveng;
+package org.uml.reveng.unused;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import org.apache.commons.io.FileUtils;
 import org.uml.model.ClassDiagram;
-import static org.uml.reveng.CompilationProcessor.generatedDiagram;
 
 /**
  * Compilation process that processes all required files starts here.
@@ -30,6 +29,7 @@ public class Compilation {
      * @param projectSource where the selected project is located
      * @param separator default file system separator character
      */
+    @SuppressWarnings("unchecked")
     public static void initiateCompilation(String projectSource, String separator) {
         //Creating an instance of Java compiler
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();

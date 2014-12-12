@@ -37,7 +37,7 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
     @Override
     public void addComponent(ComponentBase component) {
         super.addComponent(component);
-        ((ComponentBase)component).setParentDiagram(this);
+        component.setParentDiagram(this);
     }
 
     /**
@@ -79,8 +79,9 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
      *
      * @return collection of components
      */
+    @SuppressWarnings("unchecked")
     public LinkedHashSet<ComponentBase> getComponents() {
-        return new LinkedHashSet(containerComponents);
+        return new LinkedHashSet<>(containerComponents);
     }
 
     /**

@@ -30,54 +30,54 @@ public class CategoryNode extends AbstractNode {
         this.category = category;
     }
 
-//    public PasteType getDropType(Transferable t, final int action, int index) {
-//        final Node dropNode = NodeTransfer.node( t, 
-//                DnDConstants.ACTION_COPY_OR_MOVE+NodeTransfer.CLIPBOARD_CUT );
-//        if( null != dropNode ) {
-//            final Movie movie = (Movie)dropNode.getLookup().lookup( Movie.class );
-//            if( null != movie  && !this.equals( dropNode.getParentNode() )) {
-//                return new PasteType() {
-//                    @Override
-//                    public Transferable paste() throws IOException {
-//                        getChildren().add( new Node[] { new MovieNode(movie) } );
-//                        if( (action & DnDConstants.ACTION_MOVE) != 0 ) {
-//                            dropNode.getParentNode().getChildren().remove( new Node[] {dropNode} );
-//                        }
-//                        return null;
-//                    }
-//                };
-//            }
-//        }
-//        return null;
-//    }
-    @Override
-    public Cookie getCookie(Class clazz) {
-        Children ch = getChildren();
-
-        if (clazz.isInstance(ch)) {
-            return (Cookie) ch;
-        }
-
-        return super.getCookie(clazz);
-    }
-
+////    public PasteType getDropType(Transferable t, final int action, int index) {
+////        final Node dropNode = NodeTransfer.node( t, 
+////                DnDConstants.ACTION_COPY_OR_MOVE+NodeTransfer.CLIPBOARD_CUT );
+////        if( null != dropNode ) {
+////            final Movie movie = (Movie)dropNode.getLookup().lookup( Movie.class );
+////            if( null != movie  && !this.equals( dropNode.getParentNode() )) {
+////                return new PasteType() {
+////                    @Override
+////                    public Transferable paste() throws IOException {
+////                        getChildren().add( new Node[] { new MovieNode(movie) } );
+////                        if( (action & DnDConstants.ACTION_MOVE) != 0 ) {
+////                            dropNode.getParentNode().getChildren().remove( new Node[] {dropNode} );
+////                        }
+////                        return null;
+////                    }
+////                };
+////            }
+////        }
+////        return null;
+////    }
 //    @Override
-//    protected void createPasteTypes(Transferable t, java.util.List s) {
-//        super.createPasteTypes(t, s);
-//        PasteType paste = getDropType( t, DnDConstants.ACTION_COPY, -1 );
-//        if( null != paste ) {
-//            s.add( paste );
+//    public Cookie getCookie(Class clazz) {
+//        Children ch = getChildren();
+//
+//        if (clazz.isInstance(ch)) {
+//            return (Cookie) ch;
 //        }
+//
+//        return super.getCookie(clazz);
 //    }
-//    
+//
+////    @Override
+////    protected void createPasteTypes(Transferable t, java.util.List s) {
+////        super.createPasteTypes(t, s);
+////        PasteType paste = getDropType( t, DnDConstants.ACTION_COPY, -1 );
+////        if( null != paste ) {
+////            s.add( paste );
+////        }
+////    }
+////    
+////    @Override
+////    public Action[] getActions(boolean context) {
+////        return new Action[] {
+////            SystemAction.get( NewAction.class ),
+////            SystemAction.get( PasteAction.class ) };
+////    }
 //    @Override
-//    public Action[] getActions(boolean context) {
-//        return new Action[] {
-//            SystemAction.get( NewAction.class ),
-//            SystemAction.get( PasteAction.class ) };
+//    public boolean canDestroy() {
+//        return true;
 //    }
-    @Override
-    public boolean canDestroy() {
-        return true;
-    }
 }
