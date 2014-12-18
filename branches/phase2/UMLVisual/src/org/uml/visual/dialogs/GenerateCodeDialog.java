@@ -6,7 +6,7 @@ import java.util.Map;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.project.Project;
 import org.uml.code.ClassDiagramCodeGenerator;
-import org.uml.code.FileWriter;
+import org.uml.code.UMLFileWriter;
 import org.uml.model.ClassDiagram;
 
 /**
@@ -182,7 +182,7 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
             String testMapa = string;
             String testCombo = (String) jComboBoxProjects.getSelectedItem();
             if (string.equals(jComboBoxProjects.getSelectedItem())){
-                FileWriter.getInstance().setProject(project);
+                UMLFileWriter.getInstance().setProject(project);
             }
         }
         String generatedCode = ClassDiagramCodeGenerator.getInstance().generateCode();

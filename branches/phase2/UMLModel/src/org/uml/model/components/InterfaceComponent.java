@@ -1,5 +1,6 @@
 package org.uml.model.components;
 
+import java.lang.reflect.Modifier;
 import java.util.LinkedHashSet;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
@@ -17,7 +18,6 @@ import org.uml.model.members.Method;
 public class InterfaceComponent extends ComponentBase {
 
     private LinkedHashSet<Method> methods;
-    private boolean isStatic;
     
     /**
      * Default constructor only specifying parent diagram. Sets name to default value.
@@ -38,9 +38,9 @@ public class InterfaceComponent extends ComponentBase {
     }
 
     /**
-     * Returns all methods this interface has as a collection (HashMap)
+     * Returns all methods this interface has as a collection (HashSet)
      *
-     * @return HashMap of methods
+     * @return HashSet of methods
      */
     public LinkedHashSet<Method> getMethods() {
         return methods;
@@ -58,13 +58,17 @@ public class InterfaceComponent extends ComponentBase {
     }
 
     public boolean isStatic() {
-        return isStatic;
+        return Modifier.isStatic(modifiers);
     }
 
     public void setStatic(boolean isStatic) {
-        boolean oldValue = this.isStatic;
-        this.isStatic = isStatic;
-        pcs.firePropertyChange("isStatic", oldValue, this.isStatic);
+        int oldModifiers = modifiers;
+        if (isStatic) {
+            addModifier(Modifier.STATIC);
+        } else {
+            removeModifier(Modifier.STATIC);
+        }
+        pcs.firePropertyChange("isStatic", Modifier.isStatic(oldModifiers), isStatic());
     }
 
     @Override

@@ -6,7 +6,6 @@ import org.uml.visual.widgets.members.FieldWidget;
 import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
-import java.util.HashMap;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -18,7 +17,6 @@ import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
 import org.uml.model.Visibility;
 import org.uml.model.members.Method;
-import org.uml.model.members.MethodArgument;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.NameEditor;
 import org.uml.visual.widgets.providers.popups.ClassPopupMenuProvider;
@@ -116,7 +114,7 @@ public class ClassWidget extends ComponentWidgetBase {
     }
 
     public void addMethodWidget() {
-        Method method = new Method("untitledMethod", "void", new HashMap<String, MethodArgument>());
+        Method method = new Method("untitledMethod", "void");
         addMethod(method);
         MethodWidget methodWidget = new MethodWidget(getClassDiagramScene(), method);
         addMember(methodsContainer, methodWidget);

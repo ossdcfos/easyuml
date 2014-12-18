@@ -2,7 +2,6 @@ package org.uml.code;
 
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
-import org.uml.model.components.PackageComponent;
 
 /**
  * Enumeration's code generating class. Implements all necessary methods
@@ -32,30 +31,17 @@ class EnumCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         String code = "";
-//        PackageComponent pc = enumComponent.getParentPackage();
-        PackageComponent pc = null;
-        if (pc != null && !pc.getName().equals("")) {
-            String pack = pc.getName();
-            code += "package " + pack + "; \n";
+        String parentPackage = enumComponent.getParentPackage();
+        if (!parentPackage.equals("")) {
+            code += "package " + parentPackage + ";\n\n";
         }
-        String abstractModifierStr = "";
         String header = "public enum {\n";
         LiteralCodeGenerator lcg = new LiteralCodeGenerator(enumComponent.getLiterals());
         String literals = lcg.generateCode();
-//        ConstructorCodeGenerator ccg = new ConstructorCodeGenerator(enumComponent.getConstructors());
-//        String constructors = ccg.generateCode();
-//        FieldCodeGenerator fcg = new FieldCodeGenerator(enumComponent.getFields());
-//        String fields = fcg.generateCode();
-//        MethodCodeGenerator mcg = new MethodCodeGenerator(enumComponent.getMethods());
-//        String methods = mcg.generateCode();
         String end = "\n }";
-        //classComponent.get
 
         code += header + "\n";
-        code += literals + ";\n";
-//        code += constructors + "\n";
-//        code += fields + "\n";
-//        code += methods + "\n";
+        if (!literals.equals("")) code += literals + ";\n";
         code += end;
         return code;
     }

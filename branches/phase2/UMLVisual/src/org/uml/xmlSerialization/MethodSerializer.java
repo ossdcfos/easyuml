@@ -37,10 +37,10 @@ public class MethodSerializer implements XmlSerializer {
             if (method.isFinal()) methodNode.addAttribute("isFinal", Boolean.toString(method.isFinal()));
             if (method.isAbstract()) methodNode.addAttribute("isAbstract", Boolean.toString(method.isAbstract()));
             if (method.isSynchronized()) methodNode.addAttribute("isSynchronized", Boolean.toString(method.isSynchronized()));
-            
+
             if (method.getArguments() != null) {
-                for (MethodArgument argument : method.getArguments().values()) {
-                    Element argumentNode = methodNode.addElement("Argument")
+                for (MethodArgument argument : method.getArguments()) {
+                    methodNode.addElement("Argument")
                             .addAttribute("type", argument.getType())
                             .addAttribute("name", argument.getName());
                 }

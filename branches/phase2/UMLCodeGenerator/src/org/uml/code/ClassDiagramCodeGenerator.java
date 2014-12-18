@@ -8,7 +8,6 @@ import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.InterfaceComponent;
-import org.uml.model.components.PackageComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.RelationBase;
 
@@ -76,15 +75,9 @@ public class ClassDiagramCodeGenerator implements CodeGenerator {
                 ((ClassCodeGenerator) codeGen).setRelevantRelations(getRelevantRelations(comp, classDiagram.getRelations()));
             }
             String code = codeGen.generateCode();
-//            PackageComponent pc = comp.getParentPackage();
-            PackageComponent pc = null;
-            String packName;
-            if (pc == null) {
-                packName = null;
-            } else {
-                packName = pc.getName();
-            }
-            FileWriter.getInstance().writeFiles(code, comp.getName(), packName);
+
+            String parentPackage = comp.getParentPackage();
+            UMLFileWriter.getInstance().writeFile(comp.getName(), parentPackage, code);
 
             sb.append(code);
             sb.append("\n");

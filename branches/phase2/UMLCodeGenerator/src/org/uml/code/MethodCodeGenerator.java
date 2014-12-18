@@ -1,9 +1,7 @@
 package org.uml.code;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import org.uml.model.components.ComponentBase;
-import org.uml.model.members.Field;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodBase;
 
@@ -26,7 +24,7 @@ public class MethodCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Generates code for all methods inside this object's methods HashMap.
+     * Generates code for all methods inside this object's methods HashSet.
      * Utilises Method's getSignature method to properly generate code.
      *
      * @return code of the generated methods.

@@ -132,6 +132,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.parser.java</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.uml.code</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>

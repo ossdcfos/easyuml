@@ -11,30 +11,21 @@ import org.openide.util.Utilities;
 import org.uml.model.ClassDiagram;
 
 @ActionID(
-    category = "Source",
-id = "org.uml.code.GenerateCodeAction")
+        category = "Source",
+        id = "org.uml.code.GenerateCodeAction")
 @ActionReference(path = "Menu/Source", position = 200)
 @ActionRegistration(
-    displayName = "#CTL_GenerateCodeAction")
+        displayName = "#CTL_GenerateCodeAction")
 @Messages("CTL_GenerateCodeAction=easyUML Generate Code")
 public final class GenerateCodeAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-      ClassDiagram classDiagram =  Utilities.actionsGlobalContext().lookup(ClassDiagram.class);
-      Project project = Utilities.actionsGlobalContext().lookup(Project.class);
-      
-      FileWriter.getInstance().setProject(project);
-      ClassDiagramCodeGenerator.getInstance().generateCode();
-      
-//      FileWriter.writeFiles();
-      
-      
-   //     String code = ClassDiagramCodeGenerator.getInstance().generateCode();
-  //      CodeTopComponent ctc = new CodeTopComponent();
- //       ctc.open();
-   //     ctc.requestActive();        
-  //      ctc.setCode(code);
+        ClassDiagram classDiagram = Utilities.actionsGlobalContext().lookup(ClassDiagram.class);
+        Project project = Utilities.actionsGlobalContext().lookup(Project.class);
+
+        UMLFileWriter.getInstance().setProject(project);
+        ClassDiagramCodeGenerator.getInstance().setClassDiagram(classDiagram);
+        ClassDiagramCodeGenerator.getInstance().generateCode();
     }
 }

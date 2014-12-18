@@ -1,10 +1,8 @@
-package org.uml.visual.dialogs;
+package org.uml.visual.dialogs.unused;
 
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import org.openide.windows.WindowManager;
 import org.uml.model.components.ComponentBase;
 

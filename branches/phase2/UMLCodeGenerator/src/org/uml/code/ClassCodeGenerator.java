@@ -8,9 +8,7 @@ import org.uml.model.relations.HasBaseRelation;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.relations.IsRelation;
-import org.uml.model.components.PackageComponent;
 import org.uml.model.relations.RelationBase;
-import org.uml.model.relations.UseRelation;
 
 /**
  * Class component's code generating class. Implements all necessary methods
@@ -61,17 +59,19 @@ public class ClassCodeGenerator implements CodeGenerator {
     @Override
     public String generateCode() {
         String code = "";
-//        PackageComponent pc = classComponent.getParentPackage();
-        PackageComponent pc = null;
-        if (pc != null && !pc.getName().equals("")) {
-            String pack = pc.getName();
-            code += "package " + pack + "; \n";
+        String parentPackage = classComponent.getParentPackage();
+        if (!parentPackage.equals("")) {
+            code += "package " + parentPackage + ";\n\n";
         }
+
+        String header = "";
+        String visibility = classComponent.getVisibility().toString() + " ";
+        if (visibility.equals("package")) visibility = "";
         String abstractModifierStr = "";
         if (classComponent.isAbstract()) {
-            abstractModifierStr = "abstract";
+            abstractModifierStr = "abstract ";
         }
-        String header = "public " + abstractModifierStr + " class " + classComponent.getName();
+        header = visibility + abstractModifierStr + "class " + classComponent.getName();
         String extendsClass = getClassThatIsExtended(relevantRelations);
         if (extendsClass != null) {
             header += " extends " + extendsClass;
@@ -80,12 +80,12 @@ public class ClassCodeGenerator implements CodeGenerator {
         if (!implementedClasses.equals("")) {
             header += " implements " + implementedClasses;
         }
-        header += " { ";
+        header += " {\n";
         ConstructorCodeGenerator ccg = new ConstructorCodeGenerator(classComponent.getConstructors());
         String constructors = ccg.generateCode();
         FieldCodeGenerator fcg = new FieldCodeGenerator(classComponent.getFields());
         String fields = fcg.generateCode();
-        fields += getFieldsFromUseRelations(relevantRelations);
+//        fields += getFieldsFromUseRelations(relevantRelations);
         fields += getFieldsFromHasRelations(relevantRelations);
         MethodCodeGenerator mcg = new MethodCodeGenerator(classComponent.getMethods());
         String methods = mcg.generateCode();
@@ -93,14 +93,12 @@ public class ClassCodeGenerator implements CodeGenerator {
         if (!methodsFromInterfaces.equals("")) {
             methods += methodsFromInterfaces;
         }
-        String end = "\n }";
-        //classComponent.get
 
         code += header + "\n";
-        code += fields + "\n";
-        code += constructors + "\n";
-        code += methods + "\n";
-        code += end;
+        if (!fields.equals("")) code += fields + "\n";
+        if (!constructors.equals("")) code += constructors + "\n";
+        if (!methods.equals("")) code += methods + "\n";
+        code += "}";
         return code;
     }
 
@@ -124,9 +122,9 @@ public class ClassCodeGenerator implements CodeGenerator {
      */
     public String getClassThatIsExtended(List<RelationBase> relations) {
         String extendedClassName = null;
-        for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof IsRelation) {
-                extendedClassName = ((ClassComponent) relations.get(i).getTarget()).getName();
+        for (RelationBase relation : relations) {
+            if (relation instanceof IsRelation) {
+                extendedClassName = ((ClassComponent) relation.getTarget()).getName();
             }
         }
         return extendedClassName;
@@ -141,9 +139,9 @@ public class ClassCodeGenerator implements CodeGenerator {
      */
     public String getClassesThatAreImplemented(List<RelationBase> relations) {
         String implementedClasses = "";
-        for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof ImplementsRelation) {
-                implementedClasses += relations.get(i).getTarget().getName() + ", ";
+        for (RelationBase relation : relations) {
+            if (relation instanceof ImplementsRelation) {
+                implementedClasses += relation.getTarget().getName() + ", ";
             }
         }
         if (!implementedClasses.equals("")) {
@@ -160,33 +158,33 @@ public class ClassCodeGenerator implements CodeGenerator {
      */
     public String getMethodsFromInterfaces(List<RelationBase> relations) {
         String methods = "";
-        for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof ImplementsRelation) {
-                MethodCodeGenerator generator = new MethodCodeGenerator(((InterfaceComponent) relations.get(i).getTarget()).getMethods());
+        for (RelationBase relation : relations) {
+            if (relation instanceof ImplementsRelation) {
+                MethodCodeGenerator generator = new MethodCodeGenerator(((InterfaceComponent) relation.getTarget()).getMethods());
                 methods += generator.generateCode();
             }
         }
         return methods;
     }
 
-    /**
-     * Returns all fields (with access modifiers, names and types) that are
-     * implemented via Use relations.
-     *
-     * @param relations where search should be conducted
-     * @return name(s) of the implemented fields
-     */
-    public String getFieldsFromUseRelations(List<RelationBase> relations) {
-        String fields = "";
-        for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof UseRelation) {
-                String fieldType = relations.get(i).getTarget().getName();
-                String fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1, fieldType.length());
-                fields += "private " + fieldType + " " + fieldName + ";\n";
-            }
-        }
-        return fields;
-    }
+//    /**
+//     * Returns all fields (with access modifiers, names and types) that are
+//     * implemented via Use relations.
+//     *
+//     * @param relations where search should be conducted
+//     * @return name(s) of the implemented fields
+//     */
+//    public String getFieldsFromUseRelations(List<RelationBase> relations) {
+//        String fields = "";
+//        for (RelationBase relation : relations) {
+//            if (relation instanceof UseRelation) {
+//                String fieldType = relation.getTarget().getName();
+//                String fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1, fieldType.length());
+//                fields += "private " + fieldType + " " + fieldName + ";\n";
+//            }
+//        }
+//        return fields;
+//    }
 
     /**
      * Returns all fields (with access modifiers, names and types) that are
@@ -196,21 +194,28 @@ public class ClassCodeGenerator implements CodeGenerator {
      * @return name(s) of the implemented fields
      */
     public String getFieldsFromHasRelations(List<RelationBase> relations) {
-        String fields = "";
-        for (int i = 0; i < relations.size(); i++) {
-            if (relations.get(i) instanceof HasBaseRelation) {
-                HasBaseRelation hasRelation = (HasBaseRelation) relations.get(i);
+        StringBuilder fields = new StringBuilder();
+        for (RelationBase relation : relations) {
+            if (relation instanceof HasBaseRelation) {
+                HasBaseRelation hasRelation = (HasBaseRelation) relation;
                 String fieldType = hasRelation.getTarget().getName();
-                String fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1, fieldType.length());
+                String fieldName;
+                if (!hasRelation.getName().equals("")) fieldName = hasRelation.getName();
+                else fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1);
+                
+                StringBuilder field = new StringBuilder();
+                field.append("private ");
+                
                 if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
-                    String field = "private " + hasRelation.getCollectionType() + "<" + hasRelation.getTarget().getName() + "> " + fieldName + "s;\n";
-                    fields += field;
+                    field.append(hasRelation.getCollectionType()).append("<").append(fieldType).append("> ").append(fieldName);
+                    if (!hasRelation.getName().equals("")) field.append("s");
+                    field.append(";\n");
                 } else {
-                    String field = "private " + fieldType + " " + fieldName + ";\n";
-                    fields += field;
+                    field.append(fieldType).append(" ").append(fieldName).append(";\n");
                 }
+                fields.append(field);
             }
         }
-        return fields;
+        return fields.toString();
     }
 }

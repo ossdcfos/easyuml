@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
@@ -155,7 +156,7 @@ public class ReverseEngineer {
     }
 
     private static Method createMethod(MethodDeclaration declaration) {
-        Method method = new Method(declaration.getName());
+        Method method = new Method(declaration.getName(), declaration.getType().toString());
         method.setVisibility(getVisibility(declaration));
 
         int modifiers = declaration.getModifiers();
@@ -164,12 +165,10 @@ public class ReverseEngineer {
         method.setFinal(ModifierSet.isFinal(modifiers));
         method.setSynchronized(ModifierSet.isSynchronized(modifiers));
 
-        method.setType(declaration.getType().toString());
-
-        HashMap<String, MethodArgument> arguments = method.getArguments();
+        LinkedHashSet<MethodArgument> arguments = method.getArguments();
         for (Parameter parameter : safe(declaration.getParameters())) {
             MethodArgument arg = new MethodArgument(parameter.getType().toString(), parameter.getId().getName());
-            arguments.put(arg.getName(), arg);
+            arguments.add(arg);
         }
 
         return method;
@@ -190,11 +189,11 @@ public class ReverseEngineer {
 
         constructor.setType(declaration.getName());
 
-        HashMap<String, MethodArgument> arguments = constructor.getArguments();
+        LinkedHashSet<MethodArgument> arguments = constructor.getArguments();
 
         for (Parameter parameter : safe(declaration.getParameters())) {
             MethodArgument arg = new MethodArgument(parameter.getType().toString(), parameter.getId().getName());
-            arguments.put(arg.getName(), arg);
+            arguments.add(arg);
         }
 
         return constructor;

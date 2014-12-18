@@ -49,7 +49,7 @@ public abstract class MemberBase implements INameable, IHasSignature {
      *
      * @param name of a member
      */
-    public MemberBase(String name) {
+    protected MemberBase(String name) {
         this.name = name;
     }
     

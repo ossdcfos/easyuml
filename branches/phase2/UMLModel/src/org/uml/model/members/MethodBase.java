@@ -3,6 +3,7 @@ package org.uml.model.members;
 import org.uml.model.Visibility;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
@@ -21,7 +22,7 @@ import org.uml.model.components.InterfaceComponent;
  */
 public abstract class MethodBase extends MemberBase {
 
-    protected HashMap<String, MethodArgument> arguments;
+    protected LinkedHashSet<MethodArgument> arguments;
 
     /**
      * Constructor with three parameters used to set name, type of return
@@ -30,46 +31,30 @@ public abstract class MethodBase extends MemberBase {
      *
      * @param name of the Method being modeled
      * @param type of the Method being modeled
-     * @param arguments - collection of input arguments
      */
-    public MethodBase(String name, String type, HashMap<String, MethodArgument> arguments) {
+    protected MethodBase(String name, String type) {
         super(name);
         this.type = type;
         this.visibility = Visibility.PUBLIC;
-        this.arguments = arguments;
-        //this.returnType="void";
+        this.arguments = new LinkedHashSet<>();
     }
 
-    /**
-     * Constructor with parameter for setting Method's name. Only sets the name
-     * parameter.
-     * <p>
-     * Calls super constructor.
-     *
-     * @param name of the method being modeled
-     */
-    public MethodBase(String name) {
-        super(name);
-        this.arguments = new HashMap<>();
-        this.visibility = Visibility.PUBLIC;
-    }
-
-    public HashMap<String, MethodArgument> getArguments() {
+    public LinkedHashSet<MethodArgument> getArguments() {
         return arguments;
     }
 
-    public void setArguments(HashMap<String, MethodArgument> arguments) {
+    public void setArguments(LinkedHashSet<MethodArgument> arguments) {
         this.arguments = arguments;
     }
 
     @Override
     public String getSignature() {
         StringBuilder result = new StringBuilder();
-        if (type != null) result = result.append(type).append(" ");
+        if (type != null) result.append(type).append(" ");
         result.append(getName()).append("(");
         String args = "";
         if (getArguments() != null) {
-            for (MethodArgument argument : getArguments().values()) {
+            for (MethodArgument argument : getArguments()) {
                 args += argument.getType() + " " + argument.getName() + ", ";
             }
             if (!args.equals("")) {
@@ -87,7 +72,7 @@ public abstract class MethodBase extends MemberBase {
         result.append(getName()).append("(");
         String args = "";
         if (getArguments() != null) {
-            for (MethodArgument argument : getArguments().values()) {
+            for (MethodArgument argument : getArguments()) {
                 args += argument.getType() + " " + argument.getName() + ", ";
             }
             if (!args.equals("")) {
@@ -105,7 +90,7 @@ public abstract class MethodBase extends MemberBase {
         result.append(newName).append("(");
         String args = "";
         if (getArguments() != null) {
-            for (MethodArgument argument : getArguments().values()) {
+            for (MethodArgument argument : getArguments()) {
                 args += argument.getType() + " " + argument.getName() + ", ";
             }
             if (!args.equals("")) {
@@ -127,7 +112,8 @@ public abstract class MethodBase extends MemberBase {
      */
     public String getSignatureForLabel() {
         StringBuilder result = new StringBuilder();
-        if (modifiers != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
+        // removes static because it is rendered as underline
+        if ((modifiers & ~Modifier.STATIC) != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
         result.append(getSignature());
         return result.toString();
     }
@@ -146,7 +132,8 @@ public abstract class MethodBase extends MemberBase {
         StringBuilder result = new StringBuilder();
         if (visibility != null && !Visibility.PACKAGE.equals(visibility))
             result = result.append(getVisibility().toString()).append(" ");
-        result.append(getSignatureForLabel());
+        if(modifiers != 0) result.append(Modifier.toString(modifiers)).append(" ");
+        result.append(getSignature());
         result.append(" {}\n");
         return result.toString();
     }

@@ -66,7 +66,8 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
     private InstanceContent content = new InstanceContent();
     private AbstractNode oldNode;
 
-    Lookup.Result<ComponentNode> result;
+    Lookup.Result<ComponentNode> selectedExplorerComponent;
+    Lookup.Result<MemberNode> selectedExplorerMember;
 
     public UMLTopComponent() {
         // should never be called
@@ -149,8 +150,10 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         // pomereno iz konstruktora class diagram scene
         //GraphLayout graphLayout = GraphLayoutFactory.createOrthogonalGraphLayout(classDiagramScene, true);
         //graphLayout.layoutGraph(classDiagramScene);
-        result = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
-        result.addLookupListener(this);
+        selectedExplorerComponent = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
+        selectedExplorerComponent.addLookupListener(this);
+        selectedExplorerMember = Utilities.actionsGlobalContext().lookupResult(MemberNode.class);
+        selectedExplorerMember.addLookupListener(this);
     }
 
     @Override
@@ -215,13 +218,20 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        Collection<? extends ComponentNode> coll = result.allInstances();
+        Collection<? extends ComponentNode> coll = selectedExplorerComponent.allInstances();
         for (ComponentNode node : coll) {
             ComponentBase component = node.getComponent();
             if (classDiagramScene.isNode(component)) {
                 classDiagramScene.setFocusedObject(component);
                 break;
             }
+        }
+
+        Collection<? extends MemberNode> mColl = selectedExplorerMember.allInstances();
+        for (MemberNode node : mColl) {
+            MemberBase member = node.getMember();
+            classDiagramScene.setFocusedObject(member);
+            break;
         }
         getScene().validate();
         getScene().repaint();

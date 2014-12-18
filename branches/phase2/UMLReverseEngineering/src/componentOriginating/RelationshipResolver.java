@@ -518,7 +518,7 @@ public class RelationshipResolver {
         }
         String requiredPackageName = componentName.split("." + componentClasName)[0];
         for (ComponentBase component : foundElementsInDiagramComponent) {
-            if (component.getParentPackage().equals(requiredPackageName)) {
+            if (requiredPackageName.equals(component.getParentPackage())) {
                 return component;
             }
         }

@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.concurrent.Callable;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import org.openide.actions.DeleteAction;
@@ -40,7 +41,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
 
     private ComponentNode(ComponentBase component, InstanceContent content) {
         // synchronous so that selection of members doesn't miss (if everything was not yet generated)
-        super(Children.create(new ComponentChildrenFactory(component), false), new AbstractLookup(content));
+        super(Children.createLazy(new MyCallable(component)), new AbstractLookup(content));
         // disable expand if there are no children
 //        if(getChildren().getNodesCount() == 0) setChildren(Children.LEAF);
         content.add(this);
@@ -49,6 +50,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         setName(component.getName());
         setDisplayName(component.getName());
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
+        this.addPropertyChangeListener(this);
     }
 
     @Override
@@ -108,21 +110,36 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
             Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getName", "setComponentName");
             nameProp.setName("Name");
             propertiesSet.put(nameProp);
-            
+
             Property<String> packageProp = new PropertySupport.Reflection<>(this, String.class, "getParentPackage", "setParentPackage");
             packageProp.setName("Package");
             propertiesSet.put(packageProp);
 
-            if (component instanceof ClassComponent) {
-                ClassComponent classComponent = (ClassComponent) component;
+            if (component instanceof ClassComponent || component instanceof InterfaceComponent) {
 
-                Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(classComponent, Visibility.class, "getVisibility", "setVisibility");
+                Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(component, Visibility.class, "getVisibility", "setVisibility");
                 visibilityProp.setName("Visibility");
                 propertiesSet.put(visibilityProp);
 
-                Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isAbstract", "setAbstract");
-                isAbstractProp.setName("abstract");
-                propertiesSet.put(isAbstractProp);
+                if (component instanceof ClassComponent) {
+                    ClassComponent classComponent = (ClassComponent) component;
+                    Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isStatic", "setStatic");
+                    isStaticProp.setName("static");
+                    propertiesSet.put(isStaticProp);
+
+                    Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isFinal", "setFinal");
+                    isFinalProp.setName("final");
+                    propertiesSet.put(isFinalProp);
+
+                    Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isAbstract", "setAbstract");
+                    isAbstractProp.setName("abstract");
+                    propertiesSet.put(isAbstractProp);
+                } else if (component instanceof InterfaceComponent) {
+                    InterfaceComponent interfaceComponent = (InterfaceComponent) component;
+                    Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(interfaceComponent, boolean.class, "isStatic", "setStatic");
+                    isStaticProp.setName("static");
+                    propertiesSet.put(isStaticProp);
+                }
             }
 
 //            PackageComponent pack = component.getParentPackage();
@@ -137,26 +154,25 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         return sheet;
     }
 
-    
     /**
      * Changes the name of the Component.
      *
      * @param parentPackage
      */
     public void setParentPackage(String parentPackage) {
-        if (!getParentPackage().equals(parentPackage)) {
+        if (!parentPackage.equals(getParentPackage())) {
             if (component.getParentDiagram().signatureExists(component.deriveNewSignatureFromPackage(parentPackage))) {
-                JOptionPane.showMessageDialog(null, "Component \"" + component.getName()+ "\" already exists in package "+parentPackage+"!");
+                JOptionPane.showMessageDialog(null, "Component \"" + component.getName() + "\" already exists in package " + parentPackage + "!");
             } else {
                 component.setParentPackage(parentPackage);
             }
         }
     }
-    
+
     public String getParentPackage() {
         return component.getParentPackage();
     }
-    
+
     /**
      * Changes the name of the Component.
      *
@@ -174,10 +190,41 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("name".equals(evt.getPropertyName())) {
-            setName((String) evt.getNewValue());
-        }
+        if (null != evt.getPropertyName())
+            switch (evt.getPropertyName()) {
+                case "name":
+                    setName((String) evt.getNewValue());
+                    break;
+                case "ADD":
+                    setChildren(Children.create(new ComponentChildrenFactory(component), false));
+                    break;
+                case "REMOVE":
+                    if (component.getMembers().isEmpty()) {
+                        setChildren(Children.LEAF);
+                    }
+                    break;
+            }
+
         firePropertySetsChange(null, this.getPropertySets());
+    }
+
+    private static class MyCallable implements Callable<Children> {
+
+        private final ComponentBase key;
+
+        private MyCallable(ComponentBase key) {
+            this.key = key;
+        }
+
+        @Override
+        public Children call() throws Exception {
+            if (key.getMembers().isEmpty()) {
+                return Children.LEAF;
+            } else {
+                return Children.create(new ComponentChildrenFactory(key), false);
+            }
+        }
+
     }
 
 }

@@ -41,7 +41,7 @@ public class EnumComponent extends ComponentBase {
     /**
      * Returns the collection of literals that this enum contains
      *
-     * @return HashMap of enum's literals
+     * @return HashSet of enum's literals
      */
     public LinkedHashSet<Literal> getLiterals() {
         return literals;

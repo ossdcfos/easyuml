@@ -1,6 +1,5 @@
 package org.uml.code;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.members.Literal;
@@ -15,7 +14,7 @@ class LiteralCodeGenerator implements CodeGenerator {
     private LinkedHashSet<Literal> literals;
 
     /**
-     * A constructor that sets this object's HashMap of literals to the given
+     * A constructor that sets this object's HashSet of literals to the given
      * value.
      *
      * @param literals which code needs to be generated
@@ -25,7 +24,7 @@ class LiteralCodeGenerator implements CodeGenerator {
     }
 
     /**
-     * Genrates code for this object's HashMap of Enum's literals.
+     * Genrates code for this object's HashSet of Enum's literals.
      *
      * @return code of the generated literals
      * @see Literal

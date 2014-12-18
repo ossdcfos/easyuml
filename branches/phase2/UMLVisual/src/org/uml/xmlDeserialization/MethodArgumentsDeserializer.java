@@ -2,6 +2,7 @@ package org.uml.xmlDeserialization;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import org.dom4j.Element;
 import org.uml.model.members.MethodArgument;
 
@@ -11,9 +12,9 @@ import org.uml.model.members.MethodArgument;
  */
 public class MethodArgumentsDeserializer implements XmlDeserializer{
 
-    private HashMap<String, MethodArgument> arguments;
+    private LinkedHashSet<MethodArgument> arguments;
 
-    public MethodArgumentsDeserializer(HashMap<String, MethodArgument> arguments) {
+    public MethodArgumentsDeserializer(LinkedHashSet<MethodArgument> arguments) {
         this.arguments = arguments;
     }
     
@@ -30,7 +31,7 @@ public class MethodArgumentsDeserializer implements XmlDeserializer{
             String name = argument.attributeValue("name");
             if (type != null && name != null) {
                 MethodArgument methodArgument = new MethodArgument(type, name);
-                arguments.put(methodArgument.getName(), methodArgument);
+                arguments.add(methodArgument);
             }
         }
     }
