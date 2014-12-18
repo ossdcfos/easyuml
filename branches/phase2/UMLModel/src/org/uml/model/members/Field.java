@@ -152,7 +152,7 @@ public class Field extends MemberBase {
     public String getSignatureForLabel() {
         StringBuilder result = new StringBuilder();
         // removes static because it is rendered as underline
-        result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
+        if((modifiers & ~Modifier.STATIC) != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
         result.append(getSignature());
         return result.toString();
     }
@@ -171,7 +171,8 @@ public class Field extends MemberBase {
         if (visibility != null && !visibility.equals(Visibility.PACKAGE)) {
             result = result.append(getVisibility().toString()).append(" ");
         }
-        result.append(getSignatureForLabel());
+        if(modifiers != 0) result.append(Modifier.toString(modifiers)).append(" ");
+        result.append(getSignature());
         return result.toString();
     }
 

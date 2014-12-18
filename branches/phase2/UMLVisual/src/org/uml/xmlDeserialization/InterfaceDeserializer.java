@@ -46,7 +46,7 @@ public class InterfaceDeserializer implements XmlDeserializer{
         Iterator<?> methodIterator = node.element("Methods").elementIterator("Method");
         while (methodIterator != null && methodIterator.hasNext()) {
             Element methodElement = (Element) methodIterator.next();
-            Method method = new Method(null);
+            Method method = new Method(null, null);
             MethodDeserializer md = new MethodDeserializer(method);
             md.deserialize(methodElement);
             interfaceComponent.addMethod(method);

@@ -2,6 +2,7 @@ package org.uml.xmlDeserialization;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import org.dom4j.Element;
 import org.uml.model.members.MethodArgument;
 import org.uml.model.Visibility;
@@ -40,15 +41,15 @@ public class MethodDeserializer implements XmlDeserializer{
         if (isAbstract != null) method.setAbstract(Boolean.parseBoolean(isAbstract));
         if (isSynchronized != null) method.setSynchronized(Boolean.parseBoolean(isSynchronized));
         
-        HashMap<String, MethodArgument> arguments = new HashMap<>();
+        LinkedHashSet<MethodArgument> arguments = new LinkedHashSet<>();
         Iterator<?> argumentIterator = node.elementIterator("Argument");
         while (argumentIterator != null && argumentIterator.hasNext()) {
             Element argumentElement = (Element) argumentIterator.next();
             String argumentType = argumentElement.attributeValue("type");
             String argumentName = argumentElement.attributeValue("name");
             if (type != null && name != null) {
-                MethodArgument methodArgument = new MethodArgument(type, name);
-                arguments.put(methodArgument.getName(), methodArgument);
+                MethodArgument methodArgument = new MethodArgument(argumentType, argumentName);
+                arguments.add(methodArgument);
             }
         }
         method.setArguments(arguments);

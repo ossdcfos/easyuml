@@ -1,6 +1,7 @@
 package org.uml.model.components;
 
 //import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import java.lang.reflect.Modifier;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
 import java.util.LinkedHashSet;
@@ -22,9 +23,6 @@ public class ClassComponent extends ComponentBase {
     private LinkedHashSet<Field> fields;
     private LinkedHashSet<Constructor> constructors;
     private LinkedHashSet<Method> methods;
-    private boolean isAbstract;
-    private boolean isStatic;
-    private boolean isFinal;
 
     /**
      * Default constructor only specifying parent diagram. Sets name to default value.
@@ -45,17 +43,15 @@ public class ClassComponent extends ComponentBase {
      */
     public ClassComponent(String name) {
         super(name);
-        //setParentPackage(null);
         fields = new LinkedHashSet<>();
         constructors = new LinkedHashSet<>();
         methods = new LinkedHashSet<>();
-        isAbstract = false;
     }
 
     /**
      * Returns the collection of fields that this class contains
      *
-     * @return HashMap of fields contained
+     * @return HashSet of fields contained
      */
     public LinkedHashSet<Field> getFields() {
         return fields;
@@ -64,7 +60,7 @@ public class ClassComponent extends ComponentBase {
     /**
      * Returns the collection of methods that this class contains
      *
-     * @return HashMap of methods contained
+     * @return HashSet of methods contained
      */
     public LinkedHashSet<Method> getMethods() {
         return methods;
@@ -73,7 +69,7 @@ public class ClassComponent extends ComponentBase {
     /**
      * Returns the collection of constructors for this class
      *
-     * @return HashMap of this clas's constructors
+     * @return HashSet of this clas's constructors
      */
     public LinkedHashSet<Constructor> getConstructors() {
         return constructors;
@@ -121,7 +117,7 @@ public class ClassComponent extends ComponentBase {
      * @return true if class is abstract
      */
     public boolean isAbstract() {
-        return isAbstract;
+        return Modifier.isAbstract(modifiers);
     }
 
     /**
@@ -130,29 +126,41 @@ public class ClassComponent extends ComponentBase {
      * @param isAbstract - true if the class is abstract, if not - false
      */
     public void setAbstract(boolean isAbstract) {
-        boolean oldValue = this.isAbstract;
-        this.isAbstract = isAbstract;
-        pcs.firePropertyChange("isAbstract", oldValue, this.isAbstract);
+        int oldModifiers = modifiers;
+        if (isAbstract) {
+            addModifier(Modifier.ABSTRACT);
+        } else {
+            removeModifier(Modifier.ABSTRACT);
+        }
+        pcs.firePropertyChange("isAbstract", Modifier.isAbstract(oldModifiers), isAbstract());
     }
 
     public boolean isStatic() {
-        return isStatic;
+        return Modifier.isStatic(modifiers);
     }
 
     public void setStatic(boolean isStatic) {
-        boolean oldValue = this.isStatic;
-        this.isStatic = isStatic;
-        pcs.firePropertyChange("isStatic", oldValue, this.isStatic);
+        int oldModifiers = modifiers;
+        if (isStatic) {
+            addModifier(Modifier.STATIC);
+        } else {
+            removeModifier(Modifier.STATIC);
+        }
+        pcs.firePropertyChange("isStatic", Modifier.isStatic(oldModifiers), isStatic());
     }
 
     public boolean isFinal() {
-        return isFinal;
+        return Modifier.isFinal(modifiers);
     }
 
     public void setFinal(boolean isFinal) {
-        boolean oldValue = this.isFinal;
-        this.isFinal = isFinal;
-        pcs.firePropertyChange("isFinal", oldValue, this.isFinal);
+        int oldModifiers = modifiers;
+        if (isFinal) {
+            addModifier(Modifier.FINAL);
+        } else {
+            removeModifier(Modifier.FINAL);
+        }
+        pcs.firePropertyChange("isFinal", Modifier.isFinal(oldModifiers), isFinal());
     }
 
     @Override

@@ -12,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.anchor.Anchor;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -36,6 +37,7 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
 
     protected ComponentBase component;
     protected LabelWidget nameWidget;
+    protected Anchor anchor;
 
     // attribute name
     protected static final Dimension MIN_DIMENSION = new Dimension(120, 120);
@@ -236,6 +238,14 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
     @Override
     public String getSignature() {
         return component.getSignature();
+    }
+
+    public Anchor getAnchor() {
+        return anchor;
+    }
+
+    public void setAnchor(Anchor anchor) {
+        this.anchor = anchor;
     }
 
     @Override

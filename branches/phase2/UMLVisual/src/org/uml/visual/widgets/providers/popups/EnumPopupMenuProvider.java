@@ -11,7 +11,6 @@ import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.members.Literal;
-import org.uml.visual.dialogs.EditPackageDialog;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.members.LiteralWidget;
 import org.uml.visual.widgets.actions.NameEditor;
@@ -40,10 +39,10 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
         
         menu.addSeparator();
         
-        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
-        menu.add(editPackage);     
-        
-        menu.addSeparator();
+//        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
+//        menu.add(editPackage);     
+//        
+//        menu.addSeparator();
 
         (deleteClass = new JMenuItem("Delete Enum")).addActionListener(removeWidgetListener);
         menu.add(deleteClass);
@@ -65,28 +64,28 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
             enumWidget.getScene().getView().addMouseListener(mouseListener);
         }
     };
-    ActionListener editPackageListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-//            String pack = "";
-            EditPackageDialog epd = new EditPackageDialog(enumWidget.getComponent());
-            epd.setVisible(true);
-//            EditPackageDialog pd = new EditPackageDialog(null, true, null)
-//            EditPackageDialog pd = new EditPackageDialog(null, true, enumWidget.getComponent(), enumWidget.getClassDiagramScene().getClassDiagram());
-//            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-//            pd.setTitle("Package");
-//            pd.setVisible(true);
-
-//            classWidget.getComponent().setPack(pack);
-//            Constructor c = new Constructor(classWidget.getName());
-//            classWidget.getComponent().addConstructor(c);
-//            ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
-//            classWidget.addConstructorWidget(w);
-            enumWidget.getScene().validate();
-
-//            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
-        }
-    };
+//    ActionListener editPackageListener = new ActionListener() {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+////            String pack = "";
+//            EditPackageDialog epd = new EditPackageDialog(enumWidget.getComponent());
+//            epd.setVisible(true);
+////            EditPackageDialog pd = new EditPackageDialog(null, true, null)
+////            EditPackageDialog pd = new EditPackageDialog(null, true, enumWidget.getComponent(), enumWidget.getClassDiagramScene().getClassDiagram());
+////            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+////            pd.setTitle("Package");
+////            pd.setVisible(true);
+//
+////            classWidget.getComponent().setPack(pack);
+////            Constructor c = new Constructor(classWidget.getName());
+////            classWidget.getComponent().addConstructor(c);
+////            ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
+////            classWidget.addConstructorWidget(w);
+//            enumWidget.getScene().validate();
+//
+////            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
+//        }
+//    };
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {

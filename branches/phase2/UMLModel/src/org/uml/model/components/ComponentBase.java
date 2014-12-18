@@ -3,7 +3,9 @@ package org.uml.model.components;
 import org.uml.model.members.*;
 import java.awt.*;
 import java.io.Serializable;
+import java.lang.reflect.Modifier;
 import java.util.*;
+import org.uml.*;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ContainerBase;
 import org.uml.model.Visibility;
@@ -24,10 +26,11 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     private transient ClassDiagram parentDiagram;
 
     private String parentPackage;
-//    private PackageComponent parentPackage;
     private Visibility visibility;
+    protected int modifiers;
 
-    private Point position; // this should be removed in future
+    // these should be removed in future
+    private Point position;
     private Rectangle bounds;
 
     /**
@@ -42,7 +45,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      */
     public ComponentBase(String name) {
         super(name);
-        parentPackage = "default";
+        parentPackage = "";
         visibility = Visibility.PUBLIC;
     }
 
@@ -110,36 +113,54 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
 
     @Override
     public String getSignature() {
-        return getParentPackage() + " " + getName();
+//        if(!getParentPackage().equals("")){
+            return getParentPackage() + " " + getName();
+//        } else return getName();
     }
 
     public String deriveNewSignatureFromName(String newName) {
-        return getParentPackage() + " " + newName;
+//        if(!getParentPackage().equals("")){
+            return getParentPackage() + " " + newName;
+//        } else return newName;
     }
 
     public String deriveNewSignatureFromPackage(String newParentPackage) {
         return newParentPackage + " " + getName();
     }
+    
+    /**
+     * Adds numerical representation of java Modifier enum's constants into
+     * modifiers array.
+     * <p>
+     * Modifiers array can hold up to four modifier constants. Modifiers are
+     * thoroughly explained in Member class.
+     *
+     * @param modifier to be added to modifiers array
+     * @see java.lang.reflect.Modifier
+     * @see MemberBase
+     */
+    public void addModifier(int modifier) //throws Exception 
+    {
+        if ((this instanceof ClassComponent && (Modifier.classModifiers()& modifier) != 0)
+                || (this instanceof InterfaceComponent && (Modifier.interfaceModifiers()& modifier) != 0)) {
+            modifiers |= modifier;
+        } else {
+            //throw new Exception("Modifier " + Modifier.toString(modifier) + " not allowed for " + this.getClass().getSimpleName() + ".");
+        }
+    }
 
-//    /**
-//     * Returns package that contains this ClassDiagramComponent
-//     *
-//     * @return PackageComponent of this ClassDiagramComponent
-//     * @see PackageComponent
-//     */
-//    public PackageComponent getParentPackage() {
-//        return parentPackage;
-//    }
-//
-//    /**
-//     * Sets the package that contains this ClassDiagramComponent
-//     *
-//     * @param parentPackage
-//     */
-//    public void setParentPackage(PackageComponent parentPackage) {
-//        this.parentPackage = parentPackage;
-//        //   parentPackage.addMember(this);
-//    }
+    /**
+     * Removes given modifier integer from modifiers array.
+     * <p>
+     * Modifiers are thoroughly explained in Member class.
+     *
+     * @param modifier to be removed
+     * @see Modifier
+     */
+    public void removeModifier(int modifier) {
+        modifiers &= ~modifier;
+    }
+
     /**
      * Returns the visibility modifier of this ClassDiagramComponent
      *

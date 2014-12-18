@@ -2,7 +2,7 @@ package componentOriginating;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
+import java.util.LinkedHashSet;
 import javax.lang.model.element.Element;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
@@ -110,21 +110,23 @@ public class MemberBuilding {
         String returnType = allTypes[1];
         Element topEl = element.getEnclosingElement();
         String elementPath = topEl.toString();
-        HashMap<String, MethodArgument> generatedArgumens = new HashMap<>();
+        LinkedHashSet<MethodArgument> generatedArgumens = new LinkedHashSet<>();
         if (allTypes[0].length() > 1) {
             String argumentTypes = allTypes[0].substring(1);
             RelationshipResolver.relationshipUsesCreator(argumentTypes, elementPath, "", name);
             argumentsPopulation(argumentTypes, generatedArgumens, false);
         }
         if (isMethod) {
-            Method createdMethod = new Method(name, returnType, generatedArgumens);
-            setModifiers(createdMethod, modifierElemnts);
-            return createdMethod;
+//            Method createdMethod = new Method(name, returnType, generatedArgumens);
+//            setModifiers(createdMethod, modifierElemnts);
+//            return createdMethod;
+            return null;
         } else {
-            String className = element.getEnclosingElement().getSimpleName().toString();
-            Constructor createdConstructor = new Constructor(className, generatedArgumens);
-            setModifiers(createdConstructor, modifierElemnts);
-            return createdConstructor;
+//            String className = element.getEnclosingElement().getSimpleName().toString();
+//            Constructor createdConstructor = new Constructor(className, generatedArgumens);
+//            setModifiers(createdConstructor, modifierElemnts);
+//            return createdConstructor;
+            return null;
         }
     }
 
@@ -225,7 +227,7 @@ public class MemberBuilding {
      * @param truePaths if arguments's classes should be represented without
      * their packages
      */
-    private static void argumentsPopulation(String argumentTypes, HashMap<String, MethodArgument> generatedArgumens, boolean truePaths) {
+    private static void argumentsPopulation(String argumentTypes, LinkedHashSet<MethodArgument> generatedArgumens, boolean truePaths) {
         generatedArgumens.clear();
         if (argumentTypes.contains(",")) {
             String argument = "";
@@ -236,11 +238,11 @@ public class MemberBuilding {
                 int openSharpBrackets = StringUtils.countMatches(argument, "<");
                 int closedSharpBrackets = StringUtils.countMatches(argument, ">");
                 if (openSharpBrackets == closedSharpBrackets) {
-                    int offset = arguments.length - i - 1;
+//                    int offset = arguments.length - i - 1;
                     if (truePaths) {
-                        generatedArgumens.put("arg" + offset, new MethodArgument(argument, "Argument" + argumentNoCounter));
+                        generatedArgumens.add(new MethodArgument(argument, "Argument" + argumentNoCounter));
                     } else {
-                        generatedArgumens.put("arg" + offset, new MethodArgument(getShorterArguments(argument), "Argument" + argumentNoCounter));
+                        generatedArgumens.add(new MethodArgument(getShorterArguments(argument), "Argument" + argumentNoCounter));
                     }
                     argumentNoCounter++;
                     argument = "";
@@ -252,9 +254,9 @@ public class MemberBuilding {
             }
         } else {
             if (truePaths) {
-                generatedArgumens.put("arg1", new MethodArgument(argumentTypes, "Argument0"));
+                generatedArgumens.add(new MethodArgument(argumentTypes, "Argument0"));
             } else {
-                generatedArgumens.put("arg1", new MethodArgument(getShorterArguments(argumentTypes), "Argument0"));
+                generatedArgumens.add(new MethodArgument(getShorterArguments(argumentTypes), "Argument0"));
             }
         }
     }

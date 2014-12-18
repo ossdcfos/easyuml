@@ -22,6 +22,7 @@ import org.netbeans.api.visual.anchor.*;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.router.RouterFactory;
+import org.netbeans.api.visual.vmd.VMDNodeAnchor;
 import org.netbeans.api.visual.widget.*;
 import org.openide.nodes.AbstractNode;
 import org.openide.util.Lookup;
@@ -31,6 +32,7 @@ import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.visual.UMLTopComponent;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
+import org.uml.visual.widgets.anchors.ParallelNodeAnchor;
 import org.uml.visual.widgets.providers.*;
 import org.uml.visual.widgets.providers.popups.ScenePopupMenuProvider;
 
@@ -55,19 +57,19 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
     public ClassDiagramScene(ClassDiagram umlClassDiagram, final UMLTopComponent umlTopComponent) {
 
         classDiagram = umlClassDiagram;
-        
+
         classDiagram.addDeleteListener(new IComponentDeleteListener() {
             @Override
             public void componentDeleted(INameable component) {
-                removeNodeWithEdges((ComponentBase)component);
-                
+                removeNodeWithEdges((ComponentBase) component);
+
                 classDiagram.removeRelationsForAComponent(component);
-                
+
                 repaint();
                 validate();
             }
         });
-        
+
         this.umlTopComponent = umlTopComponent;
         mainLayer = new LayerWidget(this);
         addChild(mainLayer);
@@ -258,9 +260,17 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
     protected void attachEdgeSourceAnchor(RelationBase edge, ComponentBase oldSourceNode, ComponentBase sourceNode) {
         ConnectionWidget edgeWidget = (ConnectionWidget) findWidget(edge);
         if (edgeWidget != null) {
-            Widget sourceNodeWidget = findWidget(sourceNode);
-            Anchor sourceAnchor = AnchorFactory.createRectangularAnchor(sourceNodeWidget);
-            edgeWidget.setSourceAnchor(sourceAnchor);
+            ComponentWidgetBase nodeWidget = (ComponentWidgetBase) findWidget(sourceNode);
+//            Anchor anchor = AnchorFactory.createRectangularAnchor(nodeWidget);
+//            edgeWidget.setSourceAnchor(anchor);
+            if (nodeWidget != null) {
+                if (nodeWidget.getAnchor() == null) {
+                    nodeWidget.setAnchor(new ParallelNodeAnchor(nodeWidget));
+                }
+                edgeWidget.setSourceAnchor(nodeWidget.getAnchor());
+            } else {
+                edgeWidget.setSourceAnchor(null);
+            }
         }
     }
 
@@ -268,9 +278,17 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> {
     protected void attachEdgeTargetAnchor(RelationBase edge, ComponentBase oldSourceNode, ComponentBase targetNode) {
         ConnectionWidget edgeWidget = (ConnectionWidget) findWidget(edge);
         if (edgeWidget != null) {
-            Widget targetNodeWidget = findWidget(targetNode);
-            Anchor targetAnchor = AnchorFactory.createRectangularAnchor(targetNodeWidget);
-            edgeWidget.setTargetAnchor(targetAnchor);
+            ComponentWidgetBase nodeWidget = (ComponentWidgetBase) findWidget(targetNode);
+//            Anchor anchor = AnchorFactory.createRectangularAnchor(nodeWidget);
+//            edgeWidget.setTargetAnchor(anchor);
+            if (nodeWidget != null) {
+                if (nodeWidget.getAnchor() == null) {
+                    nodeWidget.setAnchor(new ParallelNodeAnchor(nodeWidget));
+                }
+                edgeWidget.setTargetAnchor(nodeWidget.getAnchor());
+            } else {
+                edgeWidget.setTargetAnchor(null);
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package org.uml.model.members;
 
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import org.uml.model.Visibility;
 
 /**
@@ -10,13 +9,8 @@ import org.uml.model.Visibility;
  */
 public class Method extends MethodBase {
 
-    public Method(String name) {
-        super(name);
-        arguments = new HashMap<>();
-    }
-
-    public Method(String name, String returnType, HashMap<String, MethodArgument> arguments) {
-        super(name, returnType, arguments);
+    public Method(String name, String returnType) {
+        super(name, returnType);
     }
 
     /**

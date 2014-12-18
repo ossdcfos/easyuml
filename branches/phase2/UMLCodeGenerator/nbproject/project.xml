@@ -7,6 +7,23 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.apache.commons.io</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.4</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.editor</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>3</release-version>
+                        <specification-version>1.79.1.5.22.43</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.indent</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -116,6 +133,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.parser.java</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.uml.model</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -126,7 +151,16 @@
             </module-dependencies>
             <public-packages>
                 <package>org.uml.code</package>
+                <package>org.uml.newcode.renaming</package>
             </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/log4j.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/log4j.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jalopy.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jalopy.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

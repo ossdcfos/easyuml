@@ -1,11 +1,9 @@
 package org.uml.model.members;
 
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.Objects;
+import java.util.LinkedHashSet;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
-import org.uml.model.Visibility;
 
 /**
  * Constructors from UML Class diagrams. Used to represent class constructors
@@ -31,19 +29,7 @@ public class Constructor extends MethodBase {
      * @see MemberBase
      */
     public Constructor(String name) {
-        super(name, null, new HashMap<String, MethodArgument>());
-    }
-
-    /**
-     * Constructor with three parameters used to set name, type of return
-     * argument and input arguments(variables) of constructor. Calls the super
-     * constructor.
-     *
-     * @param name of the Constructor
-     * @param arguments - collection of arguments
-     */
-    public Constructor(String name, HashMap<String, MethodArgument> arguments) {
-        super(name, null, arguments);
+        super(name, null);
     }
 
     @Override

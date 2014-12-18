@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -15,7 +16,6 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagram;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
-import org.uml.visual.dialogs.EditPackageDialog;
 import org.uml.visual.widgets.components.InterfaceWidget;
 import org.uml.visual.widgets.members.MethodWidget;
 import org.uml.visual.widgets.actions.NameEditor;
@@ -44,9 +44,9 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
 
         menu.addSeparator();
 
-        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
-        menu.add(editPackage);
-        menu.addSeparator();
+//        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
+//        menu.add(editPackage);
+//        menu.addSeparator();
 
         (deleteInterface = new JMenuItem("Delete Interface")).addActionListener(removeWidgetListener);
         menu.add(deleteInterface);
@@ -55,7 +55,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            Method m = new Method("untitledMethod", null, new HashMap<String, MethodArgument>());
+            Method m = new Method("untitledMethod", "void");
             try {
                 interfaceWidget.getComponent().addMethod(m);
 
@@ -73,27 +73,27 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
         }
     };
 
-    ActionListener editPackageListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            EditPackageDialog epd = new EditPackageDialog(interfaceWidget.getComponent());
-            epd.setVisible(true);
-////            String pack = "";
-//            PackageDialog pd = new PackageDialog(null, true, interfaceWidget.getComponent(), interfaceWidget.getClassDiagramScene().getClassDiagram());
-//            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-//            pd.setTitle("Package");
-//            pd.setVisible(true);
-//
-////            classWidget.getComponent().setPack(pack);
-////            Constructor c = new Constructor(classWidget.getName());
-////            classWidget.getComponent().addConstructor(c);
-////            ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
-////            classWidget.addConstructorWidget(w);
-//            interfaceWidget.getScene().validate();
-//
-////            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
-        }
-    };
+//    ActionListener editPackageListener = new ActionListener() {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            EditPackageDialog epd = new EditPackageDialog(interfaceWidget.getComponent());
+//            epd.setVisible(true);
+//////            String pack = "";
+////            PackageDialog pd = new PackageDialog(null, true, interfaceWidget.getComponent(), interfaceWidget.getClassDiagramScene().getClassDiagram());
+////            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+////            pd.setTitle("Package");
+////            pd.setVisible(true);
+////
+//////            classWidget.getComponent().setPack(pack);
+//////            Constructor c = new Constructor(classWidget.getName());
+//////            classWidget.getComponent().addConstructor(c);
+//////            ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
+//////            classWidget.addConstructorWidget(w);
+////            interfaceWidget.getScene().validate();
+////
+//////            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
+//        }
+//    };
 
     ActionListener removeWidgetListener = new ActionListener() {
         @Override

@@ -1,4 +1,4 @@
-package org.uml.code;
+package org.uml.code.unused;
 
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;

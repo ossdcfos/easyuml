@@ -1,12 +1,18 @@
 package org.uml.visual.dialogs;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -415,6 +421,8 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
         relation = (RelationBase) cbxRelation.getSelectedItem();
 
         txfName.setEnabled(false);
+        ComponentWidgetBase savedSrc = (ComponentWidgetBase) cbxSource.getSelectedItem();
+        ComponentWidgetBase savedTrg = (ComponentWidgetBase) cbxTarget.getSelectedItem();
         disableElements();
 
         cbxSource.setEnabled(true);
@@ -422,6 +430,11 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
 
         cbxTarget.setEnabled(true);
         fillTargetComboBox(relation);
+
+        if (savedSrc != null && savedTrg != null && relation.canConnect(savedSrc.getComponent(), savedTrg.getComponent())) {
+            cbxSource.setSelectedItem(savedSrc);
+            cbxTarget.setSelectedItem(savedTrg);
+        }
 
         if (relation instanceof HasBaseRelation) {
             lblName.setEnabled(true);
@@ -521,47 +534,6 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
         cbxTarget.setSelectedItem(null);
     }
 
-    private void fillSourceAndTargetComboBoxes(RelationBase rc) {
-        List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
-
-        if (rc instanceof IsRelation) {
-            for (Widget widget : widgets) {
-                if (widget instanceof ClassWidget) {
-                    cbxSource.addItem(widget);
-                    //if(!widget.equals(cbxClassesSource.getItemAt(0))) 
-                    cbxTarget.addItem(widget);
-                }
-            }
-        } else if (rc instanceof HasBaseRelation) {
-            for (Widget widget : widgets) {
-                if (widget instanceof ClassWidget) {
-                    cbxSource.addItem(widget);
-                }
-                cbxTarget.addItem(widget);
-            }
-        } else if (rc instanceof UseRelation) {
-            for (Widget widget : widgets) {
-                if (widget instanceof ClassWidget || widget instanceof InterfaceWidget) {
-                    cbxSource.addItem(widget);
-                }
-                //if(!widget.equals(cbxClassesSource.getItemAt(0)))
-                cbxTarget.addItem(widget);
-            }
-        } else if (rc instanceof ImplementsRelation) {
-            for (Widget widget : widgets) {
-                if (widget instanceof ClassWidget) {
-                    cbxSource.addItem(widget);
-                }
-                if (widget instanceof InterfaceWidget) {
-                    cbxTarget.addItem(widget);
-                }
-            }
-        }
-
-        cbxSource.setSelectedItem(null);
-        cbxTarget.setSelectedItem(null);
-    }
-
     private void fillRelationsComboBox() {
         for (RelationBase rc : RelationUtilities.allRelations()) {
             if (rc.canConnect(source.getComponent(), target.getComponent())) {
@@ -581,7 +553,19 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
         comboBox.addItem(CardinalityEnum.Zero2Many);
         comboBox.addItem(CardinalityEnum.One2One);
         comboBox.addItem(CardinalityEnum.Zero2One);
+        comboBox.setRenderer(new CardinalityListCellRenderer());
         comboBox.setEnabled(true);
+    }
+
+    private class CardinalityListCellRenderer implements ListCellRenderer<CardinalityEnum> {
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends CardinalityEnum> list, CardinalityEnum value, int index, boolean isSelected, boolean cellHasFocus) {
+            JLabel renderer = (JLabel) new DefaultListCellRenderer().getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            renderer.setText(value + " (" + value.name().replace("2", " to ") + ")");
+            return renderer;
+        }
+
     }
 
     private void fillCollectionsComboBox() {

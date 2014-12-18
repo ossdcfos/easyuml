@@ -58,6 +58,7 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
             suffix++;
         }
         containerComponents.add(component);
+        pcs.firePropertyChange("ADD", null, component);
     }
 
     /**
@@ -70,6 +71,7 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
             icdl.componentDeleted(component);
         }
         containerComponents.remove(component);
+        pcs.firePropertyChange("REMOVE", null, component);
     }
 
     /**
