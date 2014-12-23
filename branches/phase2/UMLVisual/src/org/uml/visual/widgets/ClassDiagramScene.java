@@ -405,11 +405,10 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
                 if (isObject(member)) {
                     setFocusedObject(member);
                 }
-            } else {
-                setFocusedObject(null);
             }
         } else {
-//            setFocusedObject(null);
+            // root is selected
+            setFocusedObject(null);
         }
 
         repaint();

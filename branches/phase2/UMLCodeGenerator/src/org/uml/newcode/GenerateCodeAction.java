@@ -14,15 +14,15 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.uml.model.ClassDiagram;
 
-@ActionID(
-        category = "Source",
-        id = "org.uml.newcode.GenerateCodeAction"
-)
-@ActionRegistration(
-        displayName = "#CTL_GenerateCodeAction"
-)
-@ActionReference(path = "Menu/Source", position = -50)
-@Messages("CTL_GenerateCodeAction=easyUML NEW Generate Code")
+//@ActionID(
+//        category = "Source",
+//        id = "org.uml.newcode.GenerateCodeAction"
+//)
+//@ActionRegistration(
+//        displayName = "#CTL_GenerateCodeAction"
+//)
+//@ActionReference(path = "Menu/Source", position = -50)
+//@Messages("CTL_GenerateCodeAction=easyUML NEW Generate Code")
 public final class GenerateCodeAction implements ActionListener {
 
     @Override
