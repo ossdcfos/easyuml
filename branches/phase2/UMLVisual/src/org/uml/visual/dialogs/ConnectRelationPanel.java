@@ -1,6 +1,5 @@
 package org.uml.visual.dialogs;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
@@ -557,12 +556,14 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
         comboBox.setEnabled(true);
     }
 
-    private class CardinalityListCellRenderer implements ListCellRenderer<CardinalityEnum> {
+    private class CardinalityListCellRenderer implements ListCellRenderer<Object> {
 
         @Override
-        public Component getListCellRendererComponent(JList<? extends CardinalityEnum> list, CardinalityEnum value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             JLabel renderer = (JLabel) new DefaultListCellRenderer().getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            renderer.setText(value + " (" + value.name().replace("2", " to ") + ")");
+            if (value instanceof CardinalityEnum) {
+                renderer.setText(value + " (" + ((CardinalityEnum) value).name().replace("2", " to ") + ")");
+            }
             return renderer;
         }
 

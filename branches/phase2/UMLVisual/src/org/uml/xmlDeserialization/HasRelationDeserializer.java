@@ -35,11 +35,12 @@ public class HasRelationDeserializer implements XmlDeserializer{
         if (name != null && !name.equals("")) {
             relation.setName(name);
         }
-        for (int i = 0; i < components.size(); i++) {
-            if (source != null && components.get(i).getName().equals(source)) {
-                relation.setSource(components.get(i));
-            }else if (target != null && components.get(i).getName().equals(target)) {
-                relation.setTarget(components.get(i));
+        for (ComponentBase component : components) {
+            if (source != null && component.getName().equals(source)) {
+                relation.setSource(component);
+            }
+            if (target != null && component.getName().equals(target)) {
+                relation.setTarget(component);
             }
         }
         String sourceCardinality = node.attributeValue("sourceCardinality");

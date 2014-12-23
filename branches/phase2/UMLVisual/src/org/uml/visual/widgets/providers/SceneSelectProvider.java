@@ -1,6 +1,7 @@
 package org.uml.visual.widgets.providers;
 
 import java.awt.Point;
+import java.util.HashSet;
 import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.visual.widgets.ClassDiagramScene;
@@ -12,6 +13,7 @@ import org.uml.visual.widgets.ClassDiagramScene;
 public class SceneSelectProvider implements SelectProvider{
 
     private ClassDiagramScene scene;
+    private static HashSet<Object> EMPTY_SET = new HashSet<>();
 
     public SceneSelectProvider(ClassDiagramScene scene) {
         this.scene = scene;
@@ -37,13 +39,8 @@ public class SceneSelectProvider implements SelectProvider{
 //            }
             
             //scene.getView().requestFocusInWindow();
-            //scene.setFocusedWidget(null);
             scene.setFocusedObject(null);
-            
-//            for (Widget w : scene.getConnectionLayer().getChildren()) {
-//                ConnectionWidget rel = (ConnectionWidget) w;
-//                rel.notifyStateChanged(rel.getState(), rel.getState().createNormal());
-//            }
+            scene.setSelectedObjects(EMPTY_SET);
             
             //scene.validate();
         }        

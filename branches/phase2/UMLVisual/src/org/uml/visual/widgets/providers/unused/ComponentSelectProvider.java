@@ -24,25 +24,25 @@ public class ComponentSelectProvider implements SelectProvider {
 
     @Override
     public void select(Widget widget, Point point, boolean bln) {
-        if (widget instanceof ComponentWidgetBase) {
-            ComponentWidgetBase selectedComponent = (ComponentWidgetBase) widget;
-            ClassDiagramScene scene = (ClassDiagramScene) selectedComponent.getScene();
-
-            if (selectedComponent.getState().isSelected()) {
-                selectedComponent.notifyStateChanged(selectedComponent.getState(), selectedComponent.getState().deriveSelected(false));
-            } else {
-                scene.getContent().add(selectedComponent.getComponent());
-
-                selectedComponent.notifyStateChanged(selectedComponent.getState(), selectedComponent.getState().deriveSelected(true));
-
-                for (Widget w : scene.getMainLayer().getChildren()) {
-                    if (!w.equals(selectedComponent)) {
-                        ComponentWidgetBase component = (ComponentWidgetBase) w;
-                        scene.getContent().remove(component.getComponent());
-                        component.notifyStateChanged(component.getState(), component.getState().deriveSelected(false).deriveWidgetAimed(true));
-                    }
-                }
-            }
-        }
+//        if (widget instanceof ComponentWidgetBase) {
+//            ComponentWidgetBase selectedComponent = (ComponentWidgetBase) widget;
+//            ClassDiagramScene scene = (ClassDiagramScene) selectedComponent.getScene();
+//
+//            if (selectedComponent.getState().isSelected()) {
+//                selectedComponent.notifyStateChanged(selectedComponent.getState(), selectedComponent.getState().deriveSelected(false));
+//            } else {
+//                scene.getContent().add(selectedComponent.getComponent());
+//
+//                selectedComponent.notifyStateChanged(selectedComponent.getState(), selectedComponent.getState().deriveSelected(true));
+//
+//                for (Widget w : scene.getMainLayer().getChildren()) {
+//                    if (!w.equals(selectedComponent)) {
+//                        ComponentWidgetBase component = (ComponentWidgetBase) w;
+//                        scene.getContent().remove(component.getComponent());
+//                        component.notifyStateChanged(component.getState(), component.getState().deriveSelected(false).deriveWidgetAimed(true));
+//                    }
+//                }
+//            }
+//        }
     }
 }

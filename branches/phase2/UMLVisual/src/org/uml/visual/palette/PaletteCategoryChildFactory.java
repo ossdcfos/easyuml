@@ -30,8 +30,7 @@ class PaletteCategoryChildFactory extends ChildFactory<PaletteCategory> {
 
     @Override
     protected Node createNodeForKey(PaletteCategory key) {
-        PaletteCategoryNode pcn = null;
-        pcn = new PaletteCategoryNode(key);
+        PaletteCategoryNode pcn = new PaletteCategoryNode(key);
         return pcn;
     }
 }

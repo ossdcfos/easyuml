@@ -22,7 +22,7 @@ import org.uml.model.ClassDiagram;
 import org.uml.project.UMLProject;
 
 // TODO define position attribute
-@TemplateRegistration(folder = "UML", displayName = "#NewClassDiagramWizardIterator_displayName", iconBase = "org/uml/filetype/cdg/wizard/classdiagramicon.png", description = "newClassDiagram.html")
+@TemplateRegistration(folder = "UML", displayName = "#NewClassDiagramWizardIterator_displayName", iconBase = "org/uml/filetype/cdg/classDiagramIcon.png", description = "newClassDiagram.html")
 @Messages("NewClassDiagramWizardIterator_displayName=New Class Diagram")
 public final class NewClassDiagramWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 

@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 // TODO define position attribute
-@TemplateRegistration(folder = "Project/UML", displayName = "#ClassDiagrams_displayName", description = "ClassDiagramsDescription.html", iconBase = "samples/classdiagrams/ClassDiagrams.png", content = "ClassDiagramsProject.zip")
+@TemplateRegistration(folder = "Project/UML", displayName = "#ClassDiagrams_displayName", description = "ClassDiagramsDescription.html", iconBase = "org/uml/project/UMLProject.png", content = "ClassDiagramsProject.zip")
 @Messages("ClassDiagrams_displayName=Class Diagrams")
 @SuppressWarnings("rawtypes")
 public class ClassDiagramsWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
