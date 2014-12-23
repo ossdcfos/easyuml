@@ -13,6 +13,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.actions.Savable;
+import org.netbeans.api.visual.graph.GraphScene;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -26,7 +27,6 @@ import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
-import org.uml.classDiagramManager.ClassDiagramManager;
 import org.uml.model.ClassDiagram;
 import org.uml.visual.UMLTopComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
@@ -43,7 +43,7 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 )
 @DataObject.Registration(
         mimeType = "text/x-cdg",
-        iconBase = "org/uml/filetype/cdg/classdiagramicon.png",
+        iconBase = "org/uml/filetype/cdg/classDiagramIcon.png",
         displayName = "#LBL_ClassDiagram_LOADER",
         position = 300
 )
@@ -140,9 +140,6 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
             topComponent.open();
         }
         topComponent.requestActive();
-
-        ClassDiagramScene scene = topComponent.getScene();
-        ClassDiagramManager.getInstance().addScene(scene);
     }
 
     private ClassDiagram readFromFile(FileObject fileObject) {
@@ -187,11 +184,11 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
 
                 ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
                 ClassDiagram diagram = topComponent.getLookup().lookup(ClassDiagram.class);
-//                ClassDiagramScene cdScene = topComponent.getLookup().lookup(ClassDiagramScene.class);
+                ClassDiagramScene cdScene = (ClassDiagramScene)topComponent.getLookup().lookup(GraphScene.class);
                 
                 diagram.setName(fo.getName());
                 serializer.setClassDiagram(diagram);
-                serializer.setClassDiagramScene(ClassDiagramManager.getInstance().getSceneForDiagram(diagram));
+                serializer.setClassDiagramScene(cdScene);
                 Document document = DocumentHelper.createDocument();
                 // document.setXMLEncoding("UTF-8");
                 Element root = document.addElement("ClassDiagram");

@@ -83,7 +83,7 @@ public final class ReverseEngineerAction implements ActionListener {
         //Present the generated diagram to user
         umlTopComponent.open();
         //Make JUNG object
-        JUNGEngine je = new JUNGEngine(umlTopComponent.getScene());
+        JUNGEngine je = new JUNGEngine(umlTopComponent.getClassDiagramScene());
         //Apply it's layout to diagram (scene)
         je.applyJUNGLayout();
     }
@@ -108,7 +108,7 @@ public final class ReverseEngineerAction implements ActionListener {
         fileForSaving.mkdirs();
         String format = ".cdg";
         path += File.separator + "Reverse Engineered diagram XML " + dateFormat.format(date) + format;
-        save(path, generatedDiagram, tc.getScene(), separator);
+        save(path, generatedDiagram, tc.getClassDiagramScene(), separator);
         return fileForSaving;
     }
 

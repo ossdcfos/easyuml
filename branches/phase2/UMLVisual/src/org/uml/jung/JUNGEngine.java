@@ -109,7 +109,7 @@ public class JUNGEngine {
         }
     }
 
-    public ClassDiagramScene getScene() {
+    public ClassDiagramScene getClassDiagramScene() {
         return scene;
     }
 

@@ -12,7 +12,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.anchor.Anchor;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -37,7 +36,6 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
 
     protected ComponentBase component;
     protected LabelWidget nameWidget;
-    protected Anchor anchor;
 
     // attribute name
     protected static final Dimension MIN_DIMENSION = new Dimension(120, 120);
@@ -45,17 +43,32 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
 
     public static final int RESIZE_SIZE = 5;
 
+    // Gray theme
     public static final Color DEFAULT_COLOR = new Color(0xFBFBFB);
     public static final Color HOVER_COLOR = new Color(0xF2F2F2);
     public static final Color HOVER_SELECTED_COLOR = new Color(0xF7F7F7);
     public static final Color SELECTED_COLOR = new Color(0xFAFAFA);
 
-    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_SIZE), BorderFactory.createLineBorder());
+    // Sand theme
+//    public static final Color DEFAULT_COLOR = new Color(0xF2D8A0);
+//    public static final Color HOVER_COLOR = new Color(0xF27272);
+//    public static final Color HOVER_SELECTED_COLOR = new Color(0x70F27272, true);
+//    public static final Color SELECTED_COLOR = new Color(0x7FF27272, true);
+    
+    // Blue theme
+//    public static final Color DEFAULT_COLOR = new Color(0x7FCCCCCC, true);
+//    public static final Color HOVER_COLOR = new Color(0x7F003366, true);
+//    public static final Color HOVER_SELECTED_COLOR = new Color(0x7003366, true);
+//    public static final Color SELECTED_COLOR = new Color(0x7F03366, true);
+
+    
 //    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createRoundedBorder(RESIZE_SIZE, RESIZE_SIZE, DEFAULT_COLOR, Color.BLACK));
 //    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createRoundedBorder(RESIZE_SIZE, RESIZE_SIZE, HOVER_COLOR, new Color(0x000047)));
+    
+    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_SIZE), BorderFactory.createLineBorder());
     public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_SIZE), BorderFactory.createLineBorder(1, new Color(0x0000BB)));
     // +1, because dashed line falls into the widget (thickness of resize border is 
-    public static final Border RESIZE_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(RESIZE_SIZE), BorderFactory.createEmptyBorder(1));
+    public static final Border RESIZE_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(RESIZE_SIZE, new Color(0x0000BB), false), BorderFactory.createEmptyBorder(1));
 
     public static final Border EMPTY_BORDER_4 = BorderFactory.createEmptyBorder(4);
 
@@ -68,7 +81,7 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         this.component = component;
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
         this.component.setParentDiagram(scene.getClassDiagram());
-        
+
         // Layout
         setBorder(DEFAULT_BORDER);
         setMinimumSize(MIN_DIMENSION);
@@ -91,8 +104,8 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         getActions().addAction(scene.createWidgetHoverAction());
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
-        getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));        
-        
+        getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
+
 //        // TODO: Change detection - check how this works
 //        // Too slow, should find another solution
 //        addDependency(new Dependency() {
@@ -144,34 +157,8 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         }
 
         if (select && !wasSelected) {
-            //ResizeStrategyProvider stratProv = getResizeStrategyProvider();
-            //createActions(DesignerTools.SELECT).addAction(0, new ResizeAction(stratProv));
-            //setBorder(BorderFactory.createResizeBorder(RESIZE_SIZE));
-            //setBorder(new ResizeBorder(RESIZE_SIZE, Color.BLACK, getResizeControlPoints()));
-
-            // select u okviru Explorer Managera
-//            ExplorerManager em = ExplorerTopComponent.getStaticExplorerManager();
-//            Children children = em.getRootContext().getChildren();
-//            ArrayList<Node> nodes = new ArrayList<>();
-//            for(Node n : children.getNodes()){
-//                if(n instanceof ClassDiagramComponentNode){
-//                    ClassDiagramComponentNode cdcn = (ClassDiagramComponentNode)n;
-//                    if(cdcn.getComponent() == this.getComponent()){
-//                        nodes.add(n);
-//                    }
-//                }
-//            }
-//            try {
-//                em.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
-//            } catch (PropertyVetoException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
             setBorder(RESIZE_BORDER);
         } else if (!select && wasSelected) {
-            //if(getActions().getActions().get(0) instanceof ResizeAction)
-            //createActions(DesignerTools.SELECT).removeAction(0);
-            //setBorder(BorderFactory.createEmptyBorder());
-
             setBorder(DEFAULT_BORDER);
         }
     }
@@ -238,14 +225,6 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
     @Override
     public String getSignature() {
         return component.getSignature();
-    }
-
-    public Anchor getAnchor() {
-        return anchor;
-    }
-
-    public void setAnchor(Anchor anchor) {
-        this.anchor = anchor;
     }
 
     @Override

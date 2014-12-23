@@ -2,8 +2,8 @@ package org.uml.explorer;
 
 import java.awt.BorderLayout;
 import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import javax.swing.tree.TreeSelectionModel;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -21,6 +21,7 @@ import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
+import org.openide.windows.WindowManager;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.members.MemberBase;
@@ -57,11 +58,10 @@ import org.uml.model.members.MemberBase;
 public final class ExplorerTopComponent extends TopComponent implements ExplorerManager.Provider, LookupListener {
 
     private ExplorerManager explorerManager = new ExplorerManager();
-    private ClassDiagramNode cNode;
     private BeanTreeView explorerTree;
 
     Result<ClassDiagram> resultCD;
-    Result<ComponentBase> resultCDC;
+    Result<ComponentBase> resultC;
     Result<MemberBase> resultM;
 
     public ExplorerTopComponent() {
@@ -104,8 +104,8 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
         // zasto ovaj poziv? radi i bez toga, jer je registrovan lookup, sam zove resultChanged
 //        resultChanged(new LookupEvent(resultCD));
 
-        resultCDC = Utilities.actionsGlobalContext().lookupResult(ComponentBase.class);
-        resultCDC.addLookupListener(this);
+        resultC = Utilities.actionsGlobalContext().lookupResult(ComponentBase.class);
+        resultC.addLookupListener(this);
 
         resultM = Utilities.actionsGlobalContext().lookupResult(MemberBase.class);
         resultM.addLookupListener(this);
@@ -124,7 +124,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     @Override
     public void componentClosed() {
         resultCD.removeLookupListener(this);
-        resultCDC.removeLookupListener(this);
+        resultC.removeLookupListener(this);
         resultM.removeLookupListener(this);
     }
 
@@ -141,65 +141,72 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     @Override
     @SuppressWarnings("unchecked")
     public void resultChanged(LookupEvent ev) {
-        Lookup.Result<Object> result = (Lookup.Result<Object>) ev.getSource();
-        Collection<? extends Object> instances = result.allInstances();
+        Lookup.Result source = (Lookup.Result) ev.getSource();
+        List instances = (List) source.allInstances();
+        try {
+            if (instances.isEmpty()) {
+                Set<TopComponent> tcs = WindowManager.getDefault().getRegistry().getOpened();
+                for (TopComponent tc : tcs) {
+                    // This is made hardcoded, because we cannot access UMLTopComponent from here because of cyclic dependency
+                    // TODO maybe rework
+                    if (tc.getClass().getSimpleName().equals("UMLTopComponent")) {
+                        repaint();
+                        validate();
+                        return;
+                    }
+                }
 
-        if (!instances.isEmpty()) {
-            for (Object selectedItem : instances) {
-                if (selectedItem instanceof ClassDiagram) {
-                    ClassDiagram selectedComponent = (ClassDiagram) selectedItem;
-//                    if (cNode == null || selectedComponent != cNode.getClassDiagram()) {
-                    cNode = new ClassDiagramNode(selectedComponent);
-                    explorerManager.setRootContext(cNode); //this one calls resultChanged recursivly, since global lookup is changed
-                    explorerTree.setRootVisible(true);
-//                    }
+                explorerManager.setRootContext(Node.EMPTY);
+                explorerTree.setRootVisible(false);
+            } else {
+                Object instance = instances.get(0);
 
-                    // TODO refactor
-                } else if (selectedItem instanceof ComponentBase) {
-                    Children children = explorerManager.getRootContext().getChildren();
-                    ArrayList<Node> nodes = new ArrayList<>();
-                    for (Node n : children.getNodes()) {
-                        if (n instanceof ComponentNode) {
-                            ComponentNode cdcn = (ComponentNode) n;
-                            if (cdcn.getComponent() == selectedItem) {
-                                nodes.add(n);
-                                break;
-                            }
+                if (instance instanceof ClassDiagram) {
+                    ClassDiagram diagram = (ClassDiagram) instance;
+                    if (!(explorerManager.getRootContext() instanceof ClassDiagramNode)) {
+                        ClassDiagramNode node = new ClassDiagramNode(diagram);
+                        explorerManager.setRootContext(node);
+                        explorerTree.setRootVisible(true);
+                    } else {
+                        ClassDiagramNode root = (ClassDiagramNode) explorerManager.getRootContext();
+                        if (diagram != root.getClassDiagram()) {
+                            ClassDiagramNode node = new ClassDiagramNode(diagram);
+                            explorerManager.setRootContext(node);
+                            explorerTree.setRootVisible(true);
+                        } else {
+                            explorerManager.setSelectedNodes(new Node[]{explorerManager.getRootContext()});
                         }
                     }
-                    try {
-                        explorerManager.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
-//                        setActivatedNodes(nodes.toArray(new Node[nodes.size()]));
-                    } catch (PropertyVetoException ex) {
-                        Exceptions.printStackTrace(ex);
+                } else if (instance instanceof ComponentBase) {
+                    ComponentBase component = (ComponentBase) instance;
+                    for (Node n : explorerManager.getRootContext().getChildren().getNodes()) {
+                        ComponentNode cn = (ComponentNode) n;
+                        if (cn.getComponent() == component) {
+                            explorerManager.setSelectedNodes(new Node[]{cn});
+                            break;
+                        }
                     }
-                } else if (selectedItem instanceof MemberBase) {
-                    Children children = explorerManager.getRootContext().getChildren();
-                    ArrayList<Node> nodes = new ArrayList<>();
+                } else if (instance instanceof MemberBase) {
+                    MemberBase member = (MemberBase) instance;
                     boolean over = false;
-                    for (Node n : children.getNodes()) {
-                        for (Node nc : n.getChildren().getNodes()) {
-                            if (nc instanceof MemberNode) {
-                                MemberNode mn = (MemberNode) nc;
-                                if (mn.getMember() == selectedItem) {
-                                    nodes.add(nc);
-                                    over = true;
-                                    break;
-                                }
+                    for (Node n : explorerManager.getRootContext().getChildren().getNodes()) {
+                        for (Node cn : n.getChildren().getNodes()) {
+                            MemberNode mn = (MemberNode) cn;
+                            if (mn.getMember() == member) {
+                                explorerManager.setSelectedNodes(new Node[]{mn});
+                                over = true;
+                                break;
                             }
                         }
                         if (over) break;
                     }
-                    try {
-                        explorerManager.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
-//                        setActivatedNodes(nodes.toArray(new Node[nodes.size()]));
-                    } catch (PropertyVetoException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
                 }
             }
-        } else {
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
         }
+        repaint();
+        validate();
 //        open();
         // ne moze uvek ovo
 //        requestActive();

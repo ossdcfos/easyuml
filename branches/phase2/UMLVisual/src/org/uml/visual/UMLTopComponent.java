@@ -1,35 +1,29 @@
 package org.uml.visual;
 
-import com.timboudreau.vl.jung.ObjectSceneAdapter;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.*;
-import java.util.Collection;
 import javax.swing.JScrollPane;
 import org.dom4j.*;
 import org.dom4j.io.*;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.netbeans.api.visual.model.ObjectSceneEvent;
-import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.widget.EventProcessingType;
 import org.netbeans.spi.actions.AbstractSavable;
-import org.netbeans.spi.palette.PaletteController;
 import org.openide.*;
 import org.openide.NotifyDescriptor.Confirmation;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
 import org.openide.filesystems.FileObject;
-import org.openide.nodes.AbstractNode;
 import org.openide.util.*;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.*;
 import org.openide.windows.WindowManager;
-import org.uml.explorer.*;
+import org.uml.explorer.ClassDiagramNode;
 import org.uml.model.ClassDiagram;
-import org.uml.model.components.ComponentBase;
-import org.uml.model.members.MemberBase;
 import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
@@ -55,22 +49,16 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
     "CTL_UMLTopComponent=UML Class Diagram Window",
     "HINT_UMLTopComponent=This is a UML Class Diagram window"
 })
-public final class UMLTopComponent extends TopComponent implements LookupListener {
+public final class UMLTopComponent extends TopComponent implements ExplorerManager.Provider {
 
-//    public static String tcID = "";
-    private ClassDiagram classDiagram;
     private ClassDiagramScene classDiagramScene;
     private JScrollPane classDiagramPanel;
-    private PaletteController palette;
     private FileObject fileObject;
     private InstanceContent content = new InstanceContent();
-    private AbstractNode oldNode;
+    private ExplorerManager explorerManager = new ExplorerManager();
 
-    Lookup.Result<ComponentNode> selectedExplorerComponent;
-    Lookup.Result<MemberNode> selectedExplorerMember;
-
+    // should never be called
     public UMLTopComponent() {
-        // should never be called
         this(new ClassDiagram());
     }
 
@@ -79,7 +67,6 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         setName(classDiagram.getName()); // samo se ime razlikuje, Bundle.CTL_UMLTopComponent(), da li je bitno?
         setToolTipText(Bundle.HINT_UMLTopComponent());
 
-        this.classDiagram = classDiagram;
         classDiagramScene = new ClassDiagramScene(classDiagram, this);
         classDiagramPanel = new JScrollPane();
         classDiagramPanel.setViewportView(classDiagramScene.createView());
@@ -90,78 +77,47 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         classDiagramScene.setKeyEventProcessingType(EventProcessingType.FOCUSED_WIDGET_AND_ITS_CHILDREN);
 
         add(classDiagramPanel, BorderLayout.CENTER);
-        //Instead of adding the satellite view to the TopComponent,
-        //use the Navigator panel:
-//        add(classDiagramScene.createSatelliteView(), BorderLayout.WEST);
-
-        palette = PaletteSupport.getPalette();
 
         classDiagramScene.validate();
+        
+        explorerManager.setRootContext(new ClassDiagramNode(classDiagram));
 
         Lookup fixedLookup = Lookups.fixed(
-                classDiagramScene,
-                classDiagramScene.getLookup(),
-                classDiagram,
-                palette,
-                new UMLNavigatorLookupHint()
+                classDiagramScene, // for saving of diagram
+                PaletteSupport.getPalette(), // palette
+                new UMLNavigatorLookupHint() // navigator
         );
 
         AbstractLookup abstrLookup = new AbstractLookup(content);
 
-        ProxyLookup jointLookup = new ProxyLookup(fixedLookup, abstrLookup);
+        ProxyLookup jointLookup = new ProxyLookup(
+                fixedLookup,
+                ExplorerUtils.createLookup(explorerManager, getActionMap()),
+                classDiagramScene.getLookup(), // node selection in explorer
+                abstrLookup
+        );
 
         associateLookup(jointLookup);
-
-        classDiagramScene.addObjectSceneListener(new ObjectSceneAdapter() {
-            @Override
-            public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-                if (previousFocusedObject != null) {
-                    content.remove(previousFocusedObject);
-                    if(oldNode != null) content.remove(oldNode);
-                }
-                
-                if (newFocusedObject != null) {
-                    content.add(newFocusedObject);
-
-                    if (newFocusedObject instanceof ComponentBase) {
-                        oldNode = new ComponentNode((ComponentBase) newFocusedObject);
-                        content.add(oldNode);
-                    } else if (newFocusedObject instanceof MemberBase) {
-                        oldNode = new MemberNode((MemberBase) newFocusedObject);
-                        content.add(oldNode);
-                    } else {
-                        oldNode = null;
-                    }
-                }
-            }
-
-            @Override
-            public void objectAdded(ObjectSceneEvent event, Object addedObject) {
-                modify();
-            }
-
-            @Override
-            public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
-                modify();
-            }
-        }, ObjectSceneEventType.OBJECT_ADDED, ObjectSceneEventType.OBJECT_REMOVED, ObjectSceneEventType.OBJECT_FOCUS_CHANGED);
 
         //classDiagramScene.getMainLayer().bringToFront();
         // pomereno iz konstruktora class diagram scene
         //GraphLayout graphLayout = GraphLayoutFactory.createOrthogonalGraphLayout(classDiagramScene, true);
         //graphLayout.layoutGraph(classDiagramScene);
-        selectedExplorerComponent = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
-        selectedExplorerComponent.addLookupListener(this);
-        selectedExplorerMember = Utilities.actionsGlobalContext().lookupResult(MemberNode.class);
-        selectedExplorerMember.addLookupListener(this);
     }
 
     @Override
     public void componentActivated() {
         super.componentActivated();
-        classDiagramScene.getView().requestFocusInWindow();
+        requestActive();
+//        classDiagramScene.getView().requestFocusInWindow();
 //        tcID = WindowManager.getDefault().findTopComponentID(this);
 //        System.out.println(tcID);
+    }
+
+    @Override
+    protected void componentDeactivated() {
+        super.componentDeactivated(); //To change body of generated methods, choose Tools | Templates.
+        classDiagramScene.setFocusedObject(null);
     }
 
     /**
@@ -184,6 +140,7 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
     @Override
     public void componentOpened() {
         WindowManager.getDefault().findTopComponent("ExplorerTopComponent").open();
+        WindowManager.getDefault().findTopComponent("properties").open();
     }
 
     @Override
@@ -202,7 +159,7 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         // TODO read your settings according to their version
     }
 
-    public ClassDiagramScene getScene() {
+    public ClassDiagramScene getClassDiagramScene() {
         return classDiagramScene;
     }
 
@@ -216,29 +173,13 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
         }
     }
 
-    @Override
-    public void resultChanged(LookupEvent ev) {
-        Collection<? extends ComponentNode> coll = selectedExplorerComponent.allInstances();
-        for (ComponentNode node : coll) {
-            ComponentBase component = node.getComponent();
-            if (classDiagramScene.isNode(component)) {
-                classDiagramScene.setFocusedObject(component);
-                break;
-            }
-        }
-
-        Collection<? extends MemberNode> mColl = selectedExplorerMember.allInstances();
-        for (MemberNode node : mColl) {
-            MemberBase member = node.getMember();
-            classDiagramScene.setFocusedObject(member);
-            break;
-        }
-        getScene().validate();
-        getScene().repaint();
-    }
-
     public void setFileObject(FileObject fileObject) {
         this.fileObject = fileObject;
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return explorerManager;
     }
 
     class UMLTopComponentSavable extends AbstractSavable {
@@ -254,7 +195,7 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
 
         @Override
         protected String findDisplayName() {
-            return "My name is " + topComponent.getName(); // get display name somehow
+            return "Diagram " + topComponent.getName(); // get display name somehow
         }
 
         @Override
@@ -299,7 +240,7 @@ public final class UMLTopComponent extends TopComponent implements LookupListene
                 fileOut = new FileOutputStream(putanja);
 
                 ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
-                serializer.setClassDiagram(classDiagram);
+                serializer.setClassDiagram(classDiagramScene.getClassDiagram());
                 serializer.setClassDiagramScene(classDiagramScene);
                 Document document = DocumentHelper.createDocument();
                 // document.setXMLEncoding("UTF-8");

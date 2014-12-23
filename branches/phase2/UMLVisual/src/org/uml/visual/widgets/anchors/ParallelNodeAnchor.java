@@ -1,16 +1,18 @@
 package org.uml.visual.widgets.anchors;
 
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 import org.netbeans.api.visual.anchor.Anchor;
 import org.netbeans.api.visual.widget.Widget;
 
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
-import static org.netbeans.api.visual.anchor.Anchor.DIRECTION_ANY;
-import org.netbeans.api.visual.vmd.VMDColorScheme;
-import org.netbeans.api.visual.vmd.VMDFactory;
+import org.netbeans.api.visual.widget.ConnectionWidget;
 
 /**
  * This class represents a node anchor used in VMD visualization style. The
@@ -25,44 +27,16 @@ public class ParallelNodeAnchor extends Anchor {
     private boolean requiresRecalculation = true;
 
     private LinkedHashMap<Anchor.Entry, Anchor.Result> results = new LinkedHashMap<>();
-    private final boolean vertical;
-    private VMDColorScheme scheme;
-
-    /**
-     * Creates a node anchor with vertical direction.
-     *
-     * @param widget the node widget where the anchor is attached to
-     */
-    public ParallelNodeAnchor(Widget widget) {
-        this(widget, true);
-    }
 
     /**
      * Creates a node anchor.
      *
      * @param widget the node widget where the anchor is attached to
-     * @param vertical if true, then anchors are placed vertically; if false,
-     * then anchors are placed horizontally
-     */
-    public ParallelNodeAnchor(Widget widget, boolean vertical) {
-        this(widget, vertical, VMDFactory.getOriginalScheme());
-    }
-
-    /**
-     * Creates a node anchor.
-     *
-     * @param widget the node widget where the anchor is attached to
-     * @param vertical if true, then anchors are placed vertically; if false,
-     * then anchors are placed horizontally
-     * @param scheme color scheme
      * @since 2.5
      */
-    public ParallelNodeAnchor(Widget widget, boolean vertical, VMDColorScheme scheme) {
+    public ParallelNodeAnchor(Widget widget) {
         super(widget);
         assert widget != null;
-        assert scheme != null;
-        this.vertical = vertical;
-        this.scheme = scheme;
     }
 
     /**
@@ -96,94 +70,303 @@ public class ParallelNodeAnchor extends Anchor {
         requiresRecalculation = true;
     }
 
+//    private void recalculate() {
+//        if (!requiresRecalculation)
+//            return;
+//
+//        Widget widget = getRelatedWidget();
+//        Point relatedLocation = getRelatedSceneLocation();
+//
+//        Rectangle bounds = widget.convertLocalToScene(widget.getBounds());
+//
+//        LinkedHashMap<Anchor.Entry, Float> topmap = new LinkedHashMap<>();
+//        LinkedHashMap<Anchor.Entry, Float> bottommap = new LinkedHashMap<>();
+//        LinkedHashMap<Anchor.Entry, Float> leftmap = new LinkedHashMap<>();
+//        LinkedHashMap<Anchor.Entry, Float> rightmap = new LinkedHashMap<>();
+//
+//        for (Anchor.Entry entry : getEntries()) {
+//            Point oppositeLocation = getOppositeSceneLocation(entry);
+//            if (oppositeLocation == null || relatedLocation == null) {
+//                results.put(entry, new Anchor.Result(new Point(bounds.x, bounds.y), DIRECTION_ANY));
+//                continue;
+//            }
+//
+//            int dy = oppositeLocation.y - relatedLocation.y;
+//            int dx = oppositeLocation.x - relatedLocation.x;
+//
+//            if (vertical) {
+//                if (dy > 0)
+//                    bottommap.put(entry, (float) dx / (float) dy);
+//                else if (dy < 0)
+//                    topmap.put(entry, (float) -dx / (float) dy);
+//                else
+//                    topmap.put(entry, dx < 0 ? Float.MAX_VALUE : Float.MIN_VALUE);
+//            } else {
+//                if (dx > 0)
+//                    bottommap.put(entry, (float) dy / (float) dx);
+//                else if (dy < 0)
+//                    topmap.put(entry, (float) -dy / (float) dx);
+//                else
+//                    topmap.put(entry, dy < 0 ? Float.MAX_VALUE : Float.MIN_VALUE);
+//            }
+//        }
+//
+//        Anchor.Entry[] topList = toArray(topmap);
+//        Anchor.Entry[] bottomList = toArray(bottommap);
+//
+//        // Offsetted by 1, because of composite borders being used
+//        int borderGap = widget.getBorder().getInsets().top - 1;
+//        int y = bounds.y + borderGap;
+//        int x = bounds.x + borderGap;
+//        int len = topList.length;
+//
+//        for (int a = 0; a < len; a++) {
+//            Anchor.Entry entry = topList[a];
+//            if (vertical)
+//                x = bounds.x + (a + 1) * bounds.width / (len + 1);
+//            else
+//                y = bounds.y + (a + 1) * bounds.height / (len + 1);
+//            results.put(entry, new Anchor.Result(new Point(x, y), vertical ? Anchor.Direction.TOP : Anchor.Direction.LEFT));
+//        }
+//
+//        y = bounds.y + bounds.height - borderGap;
+//        x = bounds.x + bounds.width - borderGap;
+//        len = bottomList.length;
+//
+//        for (int a = 0; a < len; a++) {
+//            Anchor.Entry entry = bottomList[a];
+//            if (vertical)
+//                x = bounds.x + (a + 1) * bounds.width / (len + 1);
+//            else
+//                y = bounds.y + (a + 1) * bounds.height / (len + 1);
+//            results.put(entry, new Anchor.Result(new Point(x, y), Anchor.Direction.BOTTOM));
+//        }
+//
+//        requiresRecalculation = false;
+//    }
     private void recalculate() {
         if (!requiresRecalculation)
             return;
 
+        LinkedHashMap<Entry, Float> topmap = new LinkedHashMap<>();
+        LinkedHashMap<Entry, Float> bottommap = new LinkedHashMap<>();
+        LinkedHashMap<Entry, Float> leftmap = new LinkedHashMap<>();
+        LinkedHashMap<Entry, Float> rightmap = new LinkedHashMap<>();
+
+        ArrayList<Entry> topList = new ArrayList<>();
+        ArrayList<Entry> bottomList = new ArrayList<>();
+        ArrayList<Entry> leftList = new ArrayList<>();
+        ArrayList<Entry> rightList = new ArrayList<>();
+
         Widget widget = getRelatedWidget();
-        Point relatedLocation = getRelatedSceneLocation();
 
-        Rectangle bounds = widget.convertLocalToScene(widget.getBounds());
+//        Lookup lookup = widget.getLookup();
+        Rectangle bounds = null;
+//        WidgetShape shape = null;
+//        if (lookup != null) {
+//            shape = lookup.lookup(WidgetShape.class);
+//            if (shape != null) {
+//                bounds = shape.getBounds();
+//            }
+//        }
 
-        LinkedHashMap<Anchor.Entry, Float> topmap = new LinkedHashMap<>();
-        LinkedHashMap<Anchor.Entry, Float> bottommap = new LinkedHashMap<>();
+        boolean includeBorders = false;
 
-        for (Anchor.Entry entry : getEntries()) {
+        if (bounds == null) {
+            bounds = widget.getBounds();
+            if (!includeBorders) {
+                Insets insets = widget.getBorder().getInsets();
+                bounds.x += insets.left;
+                bounds.y += insets.top;
+                bounds.width -= insets.left + insets.right;
+                bounds.height -= insets.top + insets.bottom;
+            }
+            bounds = widget.convertLocalToScene(bounds);
+        }
+
+        for (Entry entry : getEntries()) {
+            Point relatedLocation = getRelatedSceneLocation();
             Point oppositeLocation = getOppositeSceneLocation(entry);
-            if (oppositeLocation == null || relatedLocation == null) {
-                results.put(entry, new Anchor.Result(new Point(bounds.x, bounds.y), DIRECTION_ANY));
-                continue;
+
+            if (bounds.isEmpty() || relatedLocation.equals(oppositeLocation)) {
+//                return new Anchor.Result(relatedLocation, Anchor.DIRECTION_ANY);
             }
+            float dx = oppositeLocation.x - relatedLocation.x;
+            float dy = oppositeLocation.y - relatedLocation.y;
 
-            int dy = oppositeLocation.y - relatedLocation.y;
-            int dx = oppositeLocation.x - relatedLocation.x;
+            float ddx = Math.abs(dx) / (float) bounds.width;
+            float ddy = Math.abs(dy) / (float) bounds.height;
 
-            if (vertical) {
-                if (dy > 0)
-                    bottommap.put(entry, (float) dx / (float) dy);
-                else if (dy < 0)
-                    topmap.put(entry, (float) -dx / (float) dy);
-                else
-                    topmap.put(entry, dx < 0 ? Float.MAX_VALUE : Float.MIN_VALUE);
+            //Anchor.Direction direction;
+            // self link case, always route from right edge to bottom
+            if (ddx == 0 && ddy == 0) {
+                if (entry.isAttachedToConnectionSource()) {
+                    rightmap.put(entry, 0f);
+                    rightList.add(entry);
+                } else {
+                    bottommap.put(entry, 0f);
+                    bottomList.add(entry);
+                }
+            } else if (ddx >= ddy) {
+                //direction = dx >= 0.0f ? Direction.RIGHT : Direction.LEFT;
+                if (dx > 0.0f) {
+                    rightmap.put(entry, dy / dx);
+                    rightList.add(entry);
+                } else {
+                    leftmap.put(entry, -dy / dx);
+                    leftList.add(entry);
+                }
             } else {
-                if (dx > 0)
-                    bottommap.put(entry, (float) dy / (float) dx);
-                else if (dy < 0)
-                    topmap.put(entry, (float) -dy / (float) dx);
-                else
-                    topmap.put(entry, dy < 0 ? Float.MAX_VALUE : Float.MIN_VALUE);
+                //direction = dy >= 0.0F ? Direction.BOTTOM : Direction.TOP;
+                if (dy >= 0.0F) {
+                    bottommap.put(entry, dx / dy);
+                    bottomList.add(entry);
+                } else {
+                    topmap.put(entry, -dx / dy);
+                    topList.add(entry);
+                }
             }
         }
 
-        Anchor.Entry[] topList = toArray(topmap);
-        Anchor.Entry[] bottomList = toArray(bottommap);
+        int edgeGap = 0;
+        int len = rightList.size();
+        Entry[] sortedEntries = toArray(rightList, rightmap);
 
-        // Offsetted by 1, because of composite borders being used
-        int borderGap = widget.getBorder().getInsets().top - 1;
-        int y = bounds.y + borderGap;
-        int x = bounds.x + borderGap;
-        int len = topList.length;
-
+        // Inside the loop I need to now calculate the new slop (based on the 
+        // location of the entries new point), and then 
+        int x = bounds.x + bounds.width + edgeGap;
         for (int a = 0; a < len; a++) {
-            Anchor.Entry entry = topList[a];
-            if (vertical)
-                x = bounds.x + (a + 1) * bounds.width / (len + 1);
-            else
-                y = bounds.y + (a + 1) * bounds.height / (len + 1);
-            results.put(entry, new Anchor.Result(new Point(x, y), vertical ? Anchor.Direction.TOP : Anchor.Direction.LEFT));
+            Entry curEntry = sortedEntries[a];
+            int y = bounds.y + (a + 1) * bounds.height / (len + 1);
+
+            Point newPt = null;
+//            if (shape != null) {
+//                newPt = shape.getIntersection(getOppositeSceneLocation(curEntry), new Point(x, y));
+//            } else {
+            newPt = new Point(x, y);
+//            }
+
+            results.put(curEntry, new Result(newPt, Direction.RIGHT));
         }
 
-        y = bounds.y + bounds.height - borderGap;
-        x = bounds.x + bounds.width - borderGap;
-        len = bottomList.length;
+        len = leftList.size();
+        sortedEntries = toArray(leftList, leftmap);
 
+        x = bounds.x - edgeGap;
         for (int a = 0; a < len; a++) {
-            Anchor.Entry entry = bottomList[a];
-            if (vertical)
-                x = bounds.x + (a + 1) * bounds.width / (len + 1);
-            else
-                y = bounds.y + (a + 1) * bounds.height / (len + 1);
-            results.put(entry, new Anchor.Result(new Point(x, y), vertical ? Anchor.Direction.BOTTOM : Anchor.Direction.RIGHT));
+            Entry curEntry = sortedEntries[a];
+            int y = bounds.y + (a + 1) * bounds.height / (len + 1);
+
+            Point newPt = null;
+//            if (shape != null) {
+//                newPt = shape.getIntersection(getOppositeSceneLocation(curEntry), new Point(x, y));
+//            } else {
+            newPt = new Point(x, y);
+//            }
+
+            results.put(curEntry, new Result(newPt, Direction.LEFT));
+        }
+
+        len = topList.size();
+        sortedEntries = toArray(topList, topmap);
+
+        int y = bounds.y - edgeGap;
+        for (int a = 0; a < len; a++) {
+            Entry curEntry = sortedEntries[a];
+            x = bounds.x + (a + 1) * bounds.width / (len + 1);
+
+            Point newPt = null;
+//            if (shape != null) {
+//                newPt = shape.getIntersection(getOppositeSceneLocation(curEntry), new Point(x, y));
+//            } else {
+            newPt = new Point(x, y);
+//            }
+
+            results.put(curEntry, new Result(newPt, Direction.TOP));
+        }
+
+        len = bottomList.size();
+        sortedEntries = toArray(bottomList, bottommap);
+
+        y = bounds.y + bounds.height + edgeGap;
+        for (int a = 0; a < len; a++) {
+            Entry curEntry = sortedEntries[a];
+            x = bounds.x + (a + 1) * bounds.width / (len + 1);
+
+            Point newPt = null;
+//            if (shape != null) {
+//                newPt = shape.getIntersection(getOppositeSceneLocation(curEntry), new Point(x, y));
+//            } else {
+            newPt = new Point(x, y);
+//            }
+
+            results.put(curEntry, new Result(newPt, Direction.BOTTOM));
         }
 
         requiresRecalculation = false;
     }
 
-    private Anchor.Entry[] toArray(final LinkedHashMap<Anchor.Entry, Float> map) {
-        Set<Anchor.Entry> keys = map.keySet();
-        Anchor.Entry[] entries = keys.toArray(new Anchor.Entry[keys.size()]);
-//        Arrays.sort(entries, new Comparator<Anchor.Entry>() {
-//            public int compare(Anchor.Entry o1, Anchor.Entry o2) {
-//                float f = map.get(o1) - map.get(o2);
-//                if (f > 0.0f)
-//                    return 1;
-//                else if (f < 0.0f)
-//                    return -1;
-//                else
-//                    return 0;
-//            }
-//        });
-        return entries;
+    @Override
+    public Point getOppositeSceneLocation(Entry entry) {
+        Point retVal = super.getOppositeSceneLocation(entry);
+
+        // If the connection widget has connection points we need to find the 
+        // connection point that is closes to the related widget.
+        //
+        // There are always two, one for the source and target ends.
+        ConnectionWidget connection = entry.getAttachedConnectionWidget();
+        if ((connection != null) && (connection.getControlPoints().size() > 2)) {
+            List< Point> points = connection.getControlPoints();
+            if (entry.isAttachedToConnectionSource() == true) {
+                // The source end starts from the start of the collection of points.
+                retVal = points.get(1);
+            } else {
+                // The target end starts from the end of the collection of points.
+                retVal = points.get(points.size() - 2);
+            }
+        }
+
+        return retVal;
+    }
+
+//    private Anchor.Entry[] toArray(final LinkedHashMap<Anchor.Entry, Float> map) {
+//        Set<Anchor.Entry> keys = map.keySet();
+//        Anchor.Entry[] entries = keys.toArray(new Anchor.Entry[keys.size()]);
+////        Arrays.sort(entries, new Comparator<Anchor.Entry>() {
+////            public int compare(Anchor.Entry o1, Anchor.Entry o2) {
+////                float f = map.get(o1) - map.get(o2);
+////                if (f > 0.0f)
+////                    return 1;
+////                else if (f < 0.0f)
+////                    return -1;
+////                else
+////                    return 0;
+////            }
+////        });
+//        return entries;
+//    }
+    private Entry[] toArray(List<Entry> entries, final LinkedHashMap<Entry, Float> map) {
+        Set<Entry> keys = map.keySet();
+
+        Entry[] retVal = new Entry[entries.size()];
+        if (entries.size() > 0) {
+            entries.toArray(retVal);
+
+            Arrays.sort(retVal, new Comparator<Entry>() {
+
+                public int compare(Entry o1, Entry o2) {
+                    float f = map.get(o1) - map.get(o2);
+                    if (f > 0.0f) {
+                        return 1;
+                    } else if (f < 0.0f) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+        }
+        return retVal;
     }
 
     /**
