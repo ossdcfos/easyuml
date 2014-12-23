@@ -174,11 +174,11 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
         sceneMenu.addSeparator();
 
-        sceneMenu.add(miGenerateCode);
-
-        sceneMenu.add(miExportAsImage);
-
-        sceneMenu.addSeparator();
+//        sceneMenu.add(miGenerateCode);
+//
+//        sceneMenu.add(miExportAsImage);
+//
+//        sceneMenu.addSeparator();
 
         sceneMenu.add(miApplyJUNGLayout);
     }
