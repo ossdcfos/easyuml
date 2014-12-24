@@ -1,4 +1,4 @@
-package org.uml.visual.widgets.providers.popups;
+package org.uml.visual.widgets.popups;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -24,11 +24,11 @@ import org.uml.model.components.InterfaceComponent;
 import org.uml.visual.dialogs.ConnectRelationPanel;
 import org.uml.visual.dialogs.GenerateCodeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.InterfaceWidget;
-import org.uml.visual.widgets.actions.NameEditor;
-import org.uml.visual.widgets.providers.MouseAdapterZaView;
+import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
 
 /**
  *
@@ -69,12 +69,13 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 // here we should just add new class component to model, and the scene should be updated elsewhere
                 ClassWidget widget = (ClassWidget) scene.addNode(new ClassComponent());
                 widget.setPreferredLocation(popupPoint);
+                widget.getComponent().setLocation(popupPoint);
                 scene.validate();
-                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(widget));
 
                 // open editor for class name
+                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(widget));
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
-                scene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
+                scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
             }
         });
         miCreateInterface = new JMenuItem("Add Interface");
@@ -83,11 +84,12 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             public void actionPerformed(ActionEvent e) {
                 InterfaceWidget widget = (InterfaceWidget) scene.addNode(new InterfaceComponent());
                 widget.setPreferredLocation(popupPoint);
+                widget.getComponent().setLocation(popupPoint);
                 scene.validate();
-                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(widget));
 
+                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(widget));
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
-                scene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
+                scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
             }
         });
         miCreateEnum = new JMenuItem("Add Enum");
@@ -96,11 +98,12 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             public void actionPerformed(ActionEvent e) {
                 EnumWidget widget = (EnumWidget) scene.addNode(new EnumComponent());
                 widget.setPreferredLocation(popupPoint);
+                widget.getComponent().setLocation(popupPoint);
                 scene.validate();
-                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(widget));
 
+                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(widget));
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
-                scene.getView().addMouseListener(new MouseAdapterZaView(editorAction));
+                scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
             }
         });
 

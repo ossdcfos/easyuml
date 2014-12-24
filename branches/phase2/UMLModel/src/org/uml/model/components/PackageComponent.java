@@ -13,6 +13,7 @@ import org.uml.model.members.MemberBase;
  * @see EnumComponent
  * @see InterfaceComponent
  */
+// TODO use or delete
 public class PackageComponent extends ComponentBase {
 
     private LinkedHashSet<ComponentBase> classDiagramComponents;
@@ -77,7 +78,7 @@ public class PackageComponent extends ComponentBase {
     }
 
     @Override
-    public void removeMemberFromContainer(MemberBase member) {
+    public void removeMember(MemberBase member) {
         // TODO: fix this when redoing the model!
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

@@ -41,7 +41,7 @@ public class InterfaceDeserializer implements XmlDeserializer{
         if (visibility != null && !visibility.equals("")) {
             interfaceComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         }
-        interfaceComponent.setPosition(position);
+        interfaceComponent.setLocation(position);
         
         Iterator<?> methodIterator = node.element("Methods").elementIterator("Method");
         while (methodIterator != null && methodIterator.hasNext()) {

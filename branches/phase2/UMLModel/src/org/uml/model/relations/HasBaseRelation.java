@@ -17,25 +17,42 @@ import org.uml.model.components.ComponentBase;
 public abstract class HasBaseRelation extends RelationBase {
     //Usually 0..*
 
+    public static enum Type {
+
+        AGGREGATION {
+                    @Override
+                    public String toString() {
+                        return "Aggregation";
+                    }
+                },
+        COMPOSITION {
+                    @Override
+                    public String toString() {
+                        return "Composition";
+                    }
+                }
+    }
+
     private CardinalityEnum cardinalitySource;
     //Usually 0..1
+
     private CardinalityEnum cardinalityTarget;
     /**
      * Can be List, ArrayList or LinkedList
      */
     private String collectionType;
-    private boolean composition;
-    
+    private Type type;
+
     // aggregation by default
-    public HasBaseRelation(){
-        this(false);
+    public HasBaseRelation() {
+        this(Type.AGGREGATION);
     }
-    
+
     // if not composition, than it is aggregation
-    protected HasBaseRelation(boolean composition){
-        this.composition = composition;
+    protected HasBaseRelation(Type type) {
+        this.type = type;
     }
-    
+
     /**
      * Returns the name of relation.
      *
@@ -43,8 +60,7 @@ public abstract class HasBaseRelation extends RelationBase {
      */
     @Override
     public String toString() {
-        if(composition) return "Has (Composition)";
-        else return "Has (Aggregation)";
+        return "Has ("+type+")";
     }
 
     /**
@@ -116,16 +132,19 @@ public abstract class HasBaseRelation extends RelationBase {
     }
 
     public boolean isComposition() {
-        return composition;
+        return type == Type.COMPOSITION;
     }
 
     @Override
     public boolean canConnect(ComponentBase source, ComponentBase target) {
         Class<?> sc = source.getClass();
-        if(sc == ClassComponent.class) return true;
+
+        if (sc == ClassComponent.class) return true;
+
         return false;
     }
 
+    // TODO see hashes
     @Override
     public int hashCode() {
         int hash = 5;
@@ -134,10 +153,10 @@ public abstract class HasBaseRelation extends RelationBase {
         hash = 53 * hash + Objects.hashCode(this.cardinalitySource);
         hash = 53 * hash + Objects.hashCode(this.cardinalityTarget);
         hash = 53 * hash + Objects.hashCode(this.collectionType);
-        hash = 53 * hash + (this.composition ? 1 : 0);
+        hash = 53 * hash + Objects.hashCode(this.type);
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
@@ -145,8 +164,8 @@ public abstract class HasBaseRelation extends RelationBase {
         HasBaseRelation other = (HasBaseRelation) obj;
         if (!Objects.equals(this.name, other.name)) return false;
         if (getClass() != obj.getClass()) return false;
-        if (this.composition != other.composition) return false;
+        if (this.type != other.type) return false;
         return true;
     }
-    
+
 }

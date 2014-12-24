@@ -1,4 +1,4 @@
-package org.uml.visual.widgets.providers.popups;
+package org.uml.visual.widgets.popups;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -7,8 +7,6 @@ import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.widget.*;
 import org.uml.model.ClassDiagram;
 import org.uml.visual.widgets.components.ClassWidget;
-import org.uml.visual.widgets.actions.NameEditor;
-import org.uml.visual.widgets.providers.MouseAdapterZaView;
 
 /**
  *
@@ -22,9 +20,6 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addField;
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
-    private JMenuItem editPackage;
-    WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new NameEditor(classWidget));
-    MouseListener mouseListener = new MouseAdapterZaView(editorAction);
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
         this.classWidget = classWidget;
@@ -38,11 +33,6 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         menu.add(addMethod);
 
         menu.addSeparator();
-
-//        (editPackage = new JMenuItem("Edit Package")).addActionListener(editPackageListener);
-//        menu.add(editPackage);
-//
-//        menu.addSeparator();
         
         (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
         menu.add(deleteClass);
@@ -52,7 +42,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassDiagram classDiagram = classWidget.getComponent().getParentDiagram();
-            classDiagram.removeComponent(classWidget.getComponent());
+            classDiagram.removePartFromContainer(classWidget.getComponent());
         }
     };
     
@@ -75,28 +65,6 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.addConstructorWidget();
         }
     };
-    
-//    ActionListener editPackageListener = new ActionListener() {
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            EditPackageDialog epd = new EditPackageDialog(classWidget.getComponent());
-//            epd.setVisible(true);
-//////            String pack = "";
-////            PackageDialog pd = new PackageDialog(null, true, classWidget.getComponent(), classWidget.getClassDiagramScene().getClassDiagram());
-////            pd.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-////            pd.setTitle("Package");
-////            pd.setVisible(true);
-////
-//////            classWidget.getComponent().setPack(pack);
-//////            Constructor c = new Constructor(classWidget.getName());
-//////            classWidget.getComponent().addConstructor(c);
-//////            ConstructorWidget w = new ConstructorWidget(classWidget.getClassDiagramScene(), c);
-//////            classWidget.addConstructorWidget(w);
-////            classWidget.getScene().validate();
-////
-//////            w.getActions().addAction(classWidget.getScene().createWidgetHoverAction());
-//        }
-//    };
     
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {

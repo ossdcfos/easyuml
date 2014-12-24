@@ -45,7 +45,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             ClassComponent component = new ClassComponent();
             ClassDeserializer cd = new ClassDeserializer(component);
             cd.deserialize(componentNode);
-            classDiagram.addComponent(component);
+            classDiagram.addPartToContainter(component);
         }
 
         Iterator<?> interfaceIterator = classDiagramComponents.elementIterator("Interface");
@@ -55,7 +55,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             InterfaceComponent component = new InterfaceComponent();
             InterfaceDeserializer id = new InterfaceDeserializer(component);
             id.deserialize(interfaceNode);
-            classDiagram.addComponent(component);
+            classDiagram.addPartToContainter(component);
         }
         
         Iterator<?> enumIterator = classDiagramComponents.elementIterator("Enum");
@@ -65,7 +65,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             EnumComponent component = new EnumComponent();
             EnumDeserializer ed = new EnumDeserializer(component);
             ed.deserialize(enumNode);
-            classDiagram.addComponent(component);
+            classDiagram.addPartToContainter(component);
         }
         
         ArrayList<ComponentBase> components = new ArrayList<>(classDiagram.getComponents());

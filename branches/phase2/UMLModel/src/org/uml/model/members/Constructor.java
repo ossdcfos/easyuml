@@ -1,7 +1,5 @@
 package org.uml.model.members;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 
@@ -29,17 +27,8 @@ public class Constructor extends MethodBase {
      * @see MemberBase
      */
     public Constructor(String name) {
+        // name is the type for constructor
         super(name, null);
-    }
-
-    @Override
-    public String deriveNewSignatureFromName(String newName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String deriveNewSignatureFromType(String newType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

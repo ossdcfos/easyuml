@@ -12,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -21,10 +22,9 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.WeakListeners;
 import org.uml.model.components.ComponentBase;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.IUMLWidget;
 import org.uml.visual.widgets.TranslucentCompositeBorder;
+import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
-import org.uml.visual.widgets.actions.NameEditor;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
 
 /**
@@ -32,10 +32,15 @@ import org.uml.visual.widgets.providers.ComponentConnectProvider;
  * @author "NUGS"
  */
 // doesn't have to be ImageWidget
-abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, PropertyChangeListener {
+abstract public class ComponentWidgetBase extends Widget implements PropertyChangeListener {
 
     protected ComponentBase component;
-    protected LabelWidget nameWidget;
+    protected LabelWidget nameLabel;
+    private WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(this));
+
+    public WidgetAction getNameEditorAction() {
+        return nameEditorAction;
+    }
 
     // attribute name
     protected static final Dimension MIN_DIMENSION = new Dimension(120, 120);
@@ -90,10 +95,10 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         //setCheckClipping(true);
         setBackground(DEFAULT_COLOR);
 
-        nameWidget = new LabelWidget(scene);
-        nameWidget.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-        nameWidget.setAlignment(LabelWidget.Alignment.CENTER);
-        nameWidget.getActions().addAction(ActionFactory.createInplaceEditorAction(new NameEditor(this)));
+        nameLabel = new LabelWidget(scene);
+        nameLabel.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
+        nameLabel.setAlignment(LabelWidget.Alignment.CENTER);
+        nameLabel.getActions().addAction(nameEditorAction);
 
         // **** Actions ****
         // Connect action - CTRL + click
@@ -163,30 +168,29 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
         }
     }
 
-    abstract public ComponentBase getComponent();
-
+    // used for InplaceEditorAction
     public LabelWidget getNameLabel() {
-        return nameWidget;
+        return nameLabel;
     }
 
     public final String getName() {
-        return nameWidget.getLabel();
+        return component.getName();
     }
 
     public void setName(String newName) {
         if (!getName().equals(newName)) {
-            if (component.getParentDiagram().signatureExists(newName)) {
-                JOptionPane.showMessageDialog(getScene().getView(), "Name \"" + newName + "\" already exists!");
+            if (component.getParentDiagram().signatureExists(component.getParentPackage()+"."+newName)) {
+                JOptionPane.showMessageDialog(getScene().getView(), "Name \"" + component.getParentPackage()+"."+newName + "\" already exists!");
             } else {
                 component.setName(newName);
             }
         }
     }
 
-    @Override
-    public String toString() {
-        return nameWidget.getLabel();
-    }
+//    @Override
+//    public String toString() {
+//        return nameLabel.getLabel();
+//    }
 
     // already has getScene in widget, but this is casted, so it's easier
     public ClassDiagramScene getClassDiagramScene() {
@@ -195,15 +199,15 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
 
     protected void addMember(Widget container, MemberWidgetBase member) {
         container.addChild(member);
-        changedNotify();
+        notifyTopComponentModified();
     }
 
     protected void removeMember(Widget container, MemberWidgetBase member) {
         container.removeChild(member);
-        changedNotify();
+        notifyTopComponentModified();
     }
 
-    protected void changedNotify() {
+    protected void notifyTopComponentModified() {
         getClassDiagramScene().getUmlTopComponent().modify();
     }
 
@@ -211,21 +215,13 @@ abstract public class ComponentWidgetBase extends Widget implements IUMLWidget, 
     public void propertyChange(PropertyChangeEvent evt) {
         if ("name".equals(evt.getPropertyName())) {
             String newName = (String) evt.getNewValue();
-            nameWidget.setLabel(newName);
+            nameLabel.setLabel(newName);
         }
-        changedNotify();
+        notifyTopComponentModified();
         getScene().validate();
     }
 
-    @Override
-    public void setSignature(String signature) {
-        component.setName(signature);
-    }
-
-    @Override
-    public String getSignature() {
-        return component.getSignature();
-    }
+    abstract public ComponentBase getComponent();
 
     @Override
     // To achieve resize cursors and move cursor

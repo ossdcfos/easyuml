@@ -7,7 +7,6 @@ package org.uml.model.relations;
 public class AggregationRelation extends HasBaseRelation{
 
     public AggregationRelation() {
-        super(false);
+        super(Type.AGGREGATION);
     }
-    
 }

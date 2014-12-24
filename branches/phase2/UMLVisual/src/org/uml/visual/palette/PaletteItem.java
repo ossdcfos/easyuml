@@ -10,7 +10,6 @@ public class PaletteItem {
     String title;
     String category;
     Class<?> dropComponentClass;
-    //Class<?> widget;
 
     public PaletteItem() {
     }
@@ -46,12 +45,4 @@ public class PaletteItem {
     public void setDropClass(Class<?> dropClass) {
         this.dropComponentClass = dropClass;
     }
-
-//    public Class<?> getTargetWidget() {
-//        return widget;
-//    }
-//
-//    public void setTargetWidget(Class<?> targetWidget) {
-//        this.widget = targetWidget;
-//    }
 }

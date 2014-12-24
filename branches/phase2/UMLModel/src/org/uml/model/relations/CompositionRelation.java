@@ -7,7 +7,6 @@ package org.uml.model.relations;
 public class CompositionRelation extends HasBaseRelation {
 
     public CompositionRelation() {
-        super(true);
+        super(Type.COMPOSITION);
     }
-    
 }

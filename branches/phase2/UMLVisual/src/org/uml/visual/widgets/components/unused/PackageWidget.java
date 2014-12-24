@@ -1,4 +1,4 @@
-package org.uml.visual.widgets.components;
+package org.uml.visual.widgets.components.unused;
 
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.border.BorderFactory;
@@ -7,14 +7,16 @@ import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.PackageComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.IUMLWidget;
-import org.uml.visual.widgets.providers.popups.PackagePopupMenuProvider;
+import org.uml.visual.widgets.ISignedUMLWidget;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import org.uml.visual.widgets.popups.PackagePopupMenuProvider;
 
 /**
  *
  * @author Uros
  */
-public class PackageWidget extends ComponentWidgetBase implements IUMLWidget {
+// TODO use or delete
+public class PackageWidget extends ComponentWidgetBase implements ISignedUMLWidget {
 
     public PackageWidget(ClassDiagramScene scene, PackageComponent packageComponent) {
         super(scene, packageComponent);
@@ -31,8 +33,8 @@ public class PackageWidget extends ComponentWidgetBase implements IUMLWidget {
         packageWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
 //        packageWidget.setBorder(EMPTY_BORDER_6);
 
-        nameWidget.setLabel(component.getName());
-        packageWidget.addChild(nameWidget);
+        nameLabel.setLabel(component.getName());
+        packageWidget.addChild(nameLabel);
         addChild(packageWidget);
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new PackagePopupMenuProvider(this)));

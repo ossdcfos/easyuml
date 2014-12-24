@@ -10,7 +10,7 @@ import org.uml.model.components.InterfaceComponent;
 import org.uml.model.members.Method;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.providers.ComponentWidgetAcceptProvider;
-import org.uml.visual.widgets.providers.popups.InterfacePopupMenuProvider;
+import org.uml.visual.widgets.popups.InterfacePopupMenuProvider;
 
 /**
  *
@@ -31,8 +31,8 @@ public class InterfaceWidget extends ComponentWidgetBase {
         stereotip.setAlignment(LabelWidget.Alignment.CENTER);
         headerWidget.addChild(stereotip);
 
-        nameWidget.setLabel(component.getName());
-        headerWidget.addChild(nameWidget);
+        nameLabel.setLabel(component.getName());
+        headerWidget.addChild(nameLabel);
         addChild(headerWidget);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
@@ -46,7 +46,7 @@ public class InterfaceWidget extends ComponentWidgetBase {
         methodsContainer.addChild(operationName);
         addChild(methodsContainer);
 
-        this.nameWidget.setLabel(component.getName());
+        this.nameLabel.setLabel(component.getName());
 
         getActions().addAction(ActionFactory.createAcceptAction(new ComponentWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new InterfacePopupMenuProvider(this)));

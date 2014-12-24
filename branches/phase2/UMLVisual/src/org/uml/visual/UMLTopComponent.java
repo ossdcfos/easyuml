@@ -109,9 +109,6 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
     public void componentActivated() {
         super.componentActivated();
         requestActive();
-//        classDiagramScene.getView().requestFocusInWindow();
-//        tcID = WindowManager.getDefault().findTopComponentID(this);
-//        System.out.println(tcID);
     }
 
     @Override

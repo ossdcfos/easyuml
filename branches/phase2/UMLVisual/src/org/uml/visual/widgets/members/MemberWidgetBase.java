@@ -2,8 +2,6 @@ package org.uml.visual.widgets.members;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
-import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.model.ObjectState;
@@ -11,19 +9,18 @@ import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.members.MemberBase;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.IUMLWidget;
-import org.uml.visual.widgets.actions.NameEditor;
 
 /**
  *
  * @author Jelena
  */
-public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget, PropertyChangeListener {
+public abstract class MemberWidgetBase extends LabelWidget implements PropertyChangeListener {
 
     protected MemberBase component;
-    protected LabelWidget nameWidget;
-    protected WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditor(this));
-    
+    protected LabelWidget visibilityLabel = new LabelWidget(getScene());
+    protected LabelWidget nameLabel = new LabelWidget(getScene());
+
+    /* Visual */
     protected static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(1);
     protected static final Border HOVER_BORDER = BorderFactory.createLineBorder(1, Color.GRAY);
     protected static final Border SELECT_BORDER = BorderFactory.createLineBorder(1, new Color(0x0000A1)); //0x0096FF33
@@ -34,6 +31,7 @@ public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget
 
     protected static final Color DEFAULT_FONT_COLOR = Color.BLACK;
     protected static final Color SELECT_FONT_COLOR = new Color(0xFFFFFF);
+    /* End Visual */
 
     public MemberWidgetBase(ClassDiagramScene scene, MemberBase member) {
         super(scene);
@@ -42,51 +40,49 @@ public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget
         setOpaque(true);
         setBackground(DEFAULT_COLOR);
         setBorder(DEFAULT_BORDER);
+
         // To support hovering and selecting (in notifyStateChanged), otherwise a Provider is needed
         getActions().addAction(scene.createWidgetHoverAction());
         getActions().addAction(scene.createSelectAction());
     }
 
-    public MemberBase getMember() {
+    public final MemberBase getMember() {
         return component;
     }
 
-    public ClassDiagramScene getClassDiagramScene() {
+    public final ClassDiagramScene getClassDiagramScene() {
         return (ClassDiagramScene) getScene();
     }
-    
-    protected void changedNotify() {
+
+    // used for InplaceEditorAction
+    public final LabelWidget getNameLabel() {
+        return nameLabel;
+    }
+
+    protected void notifyTopComponentModified() {
         getClassDiagramScene().getUmlTopComponent().modify();
     }
-    
-//    @Override
-//    public String getName(){
-//        return component.getName();
-//    }
-
-    abstract public LabelWidget getNameLabel();
 
     @Override
     public void notifyStateChanged(ObjectState previousState, ObjectState state) {
-        // u ovu metodu ubaciti reakcija ne hover, focus, selected itd.
+        // Reaction to hover, focus and selection goes here
         super.notifyStateChanged(previousState, state);
 
-        // in case it has not yet been initialized (adding to the scene calls notifyStateChanged, before the full object has been initialized)
-        if(getParentWidget() == null) return;
+        // in case it has not yet been initialized return (adding to the scene calls notifyStateChanged, before the full object has been initialized)
+        if (getParentWidget() == null) return;
 
         boolean selected = state.isFocused();
         Widget parent = getParentWidget().getParentWidget();
         parent.setState(parent.getState().deriveWidgetHovered(false));
 
         if (selected) {
-            setSelected(true);
+            setSelectedLook(true);
             setBorder(SELECT_BORDER);
             setBackground(SELECT_COLOR);
-            parent.setState(parent.getState().deriveSelected(true));
         } else {
             setBorder(DEFAULT_BORDER);
             setBackground(DEFAULT_COLOR);
-            setSelected(false);
+            setSelectedLook(false);
         }
 
         if (state.isHovered()) {
@@ -98,6 +94,31 @@ public abstract class MemberWidgetBase extends LabelWidget implements IUMLWidget
         }
     }
 
-    protected abstract void setSelected(boolean isSelected);
+    public final void updateVisibilityLabel() {
+        switch (component.getVisibility()) {
+            case PUBLIC:
+                visibilityLabel.setLabel("+");
+                break;
+            case PRIVATE:
+                visibilityLabel.setLabel("-");
+                break;
+            case PROTECTED:
+                visibilityLabel.setLabel("#");
+                break;
+            case PACKAGE:
+                visibilityLabel.setLabel("~");
+                break;
+        }
+    }
 
+    // used for setting the font etc.
+    protected void setSelectedLook(boolean isSelected) {
+        if (isSelected) {
+            visibilityLabel.setForeground(SELECT_FONT_COLOR);
+            nameLabel.setForeground(SELECT_FONT_COLOR);
+        } else {
+            visibilityLabel.setForeground(DEFAULT_FONT_COLOR);
+            nameLabel.setForeground(DEFAULT_FONT_COLOR);
+        }
+    }
 }

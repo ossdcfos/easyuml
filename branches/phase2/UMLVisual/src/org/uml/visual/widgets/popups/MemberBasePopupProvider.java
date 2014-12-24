@@ -1,4 +1,4 @@
-package org.uml.visual.widgets.providers.popups;
+package org.uml.visual.widgets.popups;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -33,8 +33,8 @@ public class MemberBasePopupProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             MemberBase member = widget.getMember();
-            member.getDeclaringComponent().removeComponent(widget.getMember());
-            member.getDeclaringComponent().removeMemberFromContainer(member);
+            member.getDeclaringComponent().removePartFromContainer(widget.getMember());
+            member.getDeclaringComponent().removeMember(member);
             widget.getClassDiagramScene().removeObject(member);
             widget.removeFromParent();
         }

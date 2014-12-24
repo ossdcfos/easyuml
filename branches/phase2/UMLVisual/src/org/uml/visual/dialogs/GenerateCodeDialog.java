@@ -13,6 +13,8 @@ import org.uml.model.ClassDiagram;
  *
  * @author Uros
  */
+
+// TODO Use or delete this.
 public class GenerateCodeDialog extends javax.swing.JDialog {
     private ClassDiagram classDiagram;
     HashMap<Project, String> projects;

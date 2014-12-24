@@ -66,7 +66,7 @@ public class ReverseEngineer {
         for (File file : files) {
             List<ComponentBase> components = createComponents(file);
             for (ComponentBase component : components) {
-                classDiagram.addComponent(component);
+                classDiagram.addPartToContainter(component);
             }
         }
 
@@ -127,7 +127,7 @@ public class ReverseEngineer {
                 clazz.addMethod(methodMember);
             }
         }
-        clazz.setPosition(getNextComponentPosition());
+        clazz.setLocation(getNextComponentPosition());
 
         return clazz;
     }
@@ -219,7 +219,7 @@ public class ReverseEngineer {
                 interfaze.addMethod(methodMember);
             }
         }
-        interfaze.setPosition(getNextComponentPosition());
+        interfaze.setLocation(getNextComponentPosition());
 
         return interfaze;
     }
@@ -234,7 +234,7 @@ public class ReverseEngineer {
                 enumm.addLiteral(literalMember);
             }
         }
-        enumm.setPosition(getNextComponentPosition());
+        enumm.setLocation(getNextComponentPosition());
 
         return enumm;
     }

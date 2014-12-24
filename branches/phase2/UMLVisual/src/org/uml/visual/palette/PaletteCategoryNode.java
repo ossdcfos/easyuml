@@ -11,7 +11,6 @@ public class PaletteCategoryNode extends AbstractNode {
 
     public PaletteCategoryNode(PaletteCategory category) {
         super(Children.create(new PaletteItemChildFactory(category), true));
-        //super(new PaletteItemChildren(category));
         setDisplayName(category.getName());
     }
 }

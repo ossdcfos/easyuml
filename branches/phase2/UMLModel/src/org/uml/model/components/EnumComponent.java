@@ -56,15 +56,16 @@ public class EnumComponent extends ComponentBase {
      * @param literal that will be added to collection
      */
     public void addLiteral(Literal literal) {
-        addComponent(literal);
+        addPartToContainter(literal);
         literal.setDeclaringComponent(this);
+        // TODO make Literal to contain only name
         // has to be here, because literal does not have a declaring component when it is created
         literal.setType(name);
         literals.add(literal);
     }
 
     @Override
-    public void removeMemberFromContainer(MemberBase member) {
+    public void removeMember(MemberBase member) {
         if (member instanceof Literal) literals.remove((Literal)member);
         else throw new RuntimeException("Removing unsupported member: "+member.toString());
     }

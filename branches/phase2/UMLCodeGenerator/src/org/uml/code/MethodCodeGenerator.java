@@ -34,7 +34,7 @@ public class MethodCodeGenerator implements CodeGenerator {
     public String generateCode() {
         StringBuilder methodsString = new StringBuilder();
         for (Method method : methods) {
-            methodsString.append(method.getFullSignature());
+//            methodsString.append(method.getFullSignature());
         }
         return methodsString.toString();
     }
@@ -51,7 +51,7 @@ public class MethodCodeGenerator implements CodeGenerator {
     String generateCodeMethodsForInterfaces() {
         String methodsString = "";
         for (Method method : methods) {
-            methodsString += method.getSignatureForInterfaces();
+//            methodsString += method.getSignatureForInterfaces();
         }
         return methodsString;
     }

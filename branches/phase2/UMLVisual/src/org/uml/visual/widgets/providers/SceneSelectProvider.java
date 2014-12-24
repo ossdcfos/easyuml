@@ -10,15 +10,10 @@ import org.uml.visual.widgets.ClassDiagramScene;
  *
  * @author stefanpetrovic
  */
-public class SceneSelectProvider implements SelectProvider{
+public class SceneSelectProvider implements SelectProvider {
 
-    private ClassDiagramScene scene;
     private static HashSet<Object> EMPTY_SET = new HashSet<>();
 
-    public SceneSelectProvider(ClassDiagramScene scene) {
-        this.scene = scene;
-    }
-    
     @Override
     public boolean isAimingAllowed(Widget widget, Point point, boolean bln) {
         return true;
@@ -31,18 +26,11 @@ public class SceneSelectProvider implements SelectProvider{
 
     @Override
     public void select(Widget widget, Point point, boolean bln) {
-        if (widget instanceof ClassDiagramScene) {
-//            for (Widget w : scene.getMainLayer().getChildren()) {
-//                ComponentWidgetBase comp = (ComponentWidgetBase) w;
-//                scene.getContent().remove(comp.getComponent());
-//                //comp.notifyStateChanged(comp.getState(), comp.getState().createNormal());
-//            }
-            
-            //scene.getView().requestFocusInWindow();
-            scene.setFocusedObject(null);
-            scene.setSelectedObjects(EMPTY_SET);
-            
-            //scene.validate();
-        }        
+        ClassDiagramScene scene = (ClassDiagramScene) widget;
+        scene.setFocusedObject(null);
+        scene.setSelectedObjects(EMPTY_SET);
+        scene.setSceneFocusForExplorer();
+                    
+        scene.getUmlTopComponent().requestFocusInWindow();
     }
 }

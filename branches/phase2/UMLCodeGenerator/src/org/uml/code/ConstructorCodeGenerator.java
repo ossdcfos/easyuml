@@ -35,7 +35,7 @@ public class ConstructorCodeGenerator implements CodeGenerator {
     public String generateCode() {
         StringBuilder constructorString = new StringBuilder();
         for (Constructor constructor : constructors) {
-            constructorString.append(constructor.getFullSignature());
+//            constructorString.append(constructor.getFullSignature());
         }
         return constructorString.toString();
     }

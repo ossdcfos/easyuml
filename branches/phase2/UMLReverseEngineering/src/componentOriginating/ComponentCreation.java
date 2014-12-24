@@ -39,7 +39,7 @@ public class ComponentCreation {
                 populateComponent(tlcc);
 //                CompilationProcessor.allFoundClasses.add(CompilationProcessor.genClass);
                 try {
-                    CompilationProcessor.generatedDiagram.addComponent(CompilationProcessor.genClass);
+                    CompilationProcessor.generatedDiagram.addPartToContainter(CompilationProcessor.genClass);
                 } catch (RuntimeException rtex) {
                     System.out.println("Error in Class creation!");
                 }
@@ -48,7 +48,7 @@ public class ComponentCreation {
                 CompilationProcessor.genEnum = enumBuilder(tlcc, rootModifiers);
 //                CompilationProcessor.allFoundClasses.add(CompilationProcessor.genEnum);
                 try {
-                    CompilationProcessor.generatedDiagram.addComponent(CompilationProcessor.genEnum);
+                    CompilationProcessor.generatedDiagram.addPartToContainter(CompilationProcessor.genEnum);
                 } catch (RuntimeException rtex) {
                     System.out.println("Error in Enum creation!");
                 }
@@ -57,7 +57,7 @@ public class ComponentCreation {
                 CompilationProcessor.genInterface = interfaceBuilder(tlcc, rootModifiers);
 //                CompilationProcessor.allFoundClasses.add(CompilationProcessor.genInterface);
                 try {
-                    CompilationProcessor.generatedDiagram.addComponent(CompilationProcessor.genInterface);
+                    CompilationProcessor.generatedDiagram.addPartToContainter(CompilationProcessor.genInterface);
                 } catch (RuntimeException rtex) {
                     System.out.println("Error in Interface creation!");
                 }
@@ -82,7 +82,7 @@ public class ComponentCreation {
         createdClass.setName(className);
         MemberBuilding.setModifiers(createdClass, modifierElemnts);
 //        MemberBuilding.packageSelector(createdClass, packages);        
-        createdClass.setPosition(GeneratedDiagramManager.getInstance().getNextComponentPosition());
+        createdClass.setLocation(GeneratedDiagramManager.getInstance().getNextComponentPosition());
         return createdClass;
     }
 
@@ -103,7 +103,7 @@ public class ComponentCreation {
         createdInterface.setName(interfaceName);
         MemberBuilding.setModifiers(elem, modifierElemnts);
 //        MemberBuilding.packageSelector(createdInterface, packages);
-        createdInterface.setPosition(GeneratedDiagramManager.getInstance().getNextComponentPosition());
+        createdInterface.setLocation(GeneratedDiagramManager.getInstance().getNextComponentPosition());
         return createdInterface;
     }
 
@@ -124,7 +124,7 @@ public class ComponentCreation {
         createdEnum.setName(enumName);
         MemberBuilding.setModifiers(elem, modifierElemnts);
 //        MemberBuilding.packageSelector(createdEnum, packages);
-        createdEnum.setPosition(GeneratedDiagramManager.getInstance().getNextComponentPosition());
+        createdEnum.setLocation(GeneratedDiagramManager.getInstance().getNextComponentPosition());
         return createdEnum;
     }
 

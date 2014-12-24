@@ -40,7 +40,6 @@ class PaletteItemChildFactory extends ChildFactory<PaletteItem> {
                 item.setIcon(itemString[2]);
                 try {
                     item.setDropClass(Class.forName(itemString[3]));
-                    //item.setTargetWidget(Class.forName(itemString[4]));
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace(System.out);
                 }
