@@ -9,19 +9,17 @@ import org.netbeans.api.visual.action.WidgetAction;
  *
  * @author Jelena
  */
-public class MouseAdapterZaView extends MouseAdapter{
+public class CloseInplaceEditorOnClickAdapter extends MouseAdapter {
 
     WidgetAction editorAction;
-    
+
+    public CloseInplaceEditorOnClickAdapter(WidgetAction a) {
+        editorAction = a;
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
         ActionFactory.getInplaceEditorController(editorAction).closeEditor(true);
     }
-
-    public MouseAdapterZaView(WidgetAction a) {
-        editorAction = a;
-    }
-    
-    
 }

@@ -9,7 +9,7 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.members.Literal;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.providers.popups.EnumPopupMenuProvider;
+import org.uml.visual.widgets.popups.EnumPopupMenuProvider;
 
 /**
  *
@@ -30,8 +30,8 @@ public class EnumWidget extends ComponentWidgetBase {
         stereotype.setAlignment(LabelWidget.Alignment.CENTER);
         headerWidget.addChild(stereotype);
 
-        nameWidget.setLabel(component.getName());
-        headerWidget.addChild(nameWidget);
+        nameLabel.setLabel(component.getName());
+        headerWidget.addChild(nameLabel);
         addChild(headerWidget);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
@@ -45,7 +45,7 @@ public class EnumWidget extends ComponentWidgetBase {
         literalsContainer.addChild(literalName);
         addChild(literalsContainer);
 
-        this.nameWidget.setLabel(component.getName());
+        this.nameLabel.setLabel(component.getName());
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new EnumPopupMenuProvider(this)));
 

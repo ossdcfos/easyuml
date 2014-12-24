@@ -76,7 +76,7 @@ public class ClassDeserializer implements XmlDeserializer {
         String xOffString = node.attributeValue("xOff");
         String yOffString = node.attributeValue("yOff");
 
-        classComponent.setPosition(new Point(xPos, yPos));
+        classComponent.setLocation(new Point(xPos, yPos));
         if (widthString != null) {
             int width = Integer.parseInt(widthString);
             int height = Integer.parseInt(heightString);

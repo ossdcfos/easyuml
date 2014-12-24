@@ -52,9 +52,9 @@ public class InterfaceComponent extends ComponentBase {
      * @param method which will be added
      */
     public void addMethod(Method method) {
+        addPartToContainter(method);
         method.setDeclaringComponent(this);
         methods.add(method);
-        addComponent(method);
     }
 
     public boolean isStatic() {
@@ -72,7 +72,7 @@ public class InterfaceComponent extends ComponentBase {
     }
 
     @Override
-    public void removeMemberFromContainer(MemberBase member) {
+    public void removeMember(MemberBase member) {
         if (member instanceof Method) methods.remove((Method)member);
         else throw new RuntimeException("Removing unsupported member: "+member.toString());
     }

@@ -61,8 +61,8 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
     @Override
     public void destroy() throws IOException {
         ComponentBase parent = member.getDeclaringComponent();
-        parent.removeComponent(member);
-        parent.removeMemberFromContainer(member);
+        parent.removePartFromContainer(member);
+        parent.removeMember(member);
         fireNodeDestroyed();
     }
 
@@ -91,14 +91,19 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
         propertiesSet.setDisplayName("Properties");
 
         try {
-            if (member instanceof Field || member instanceof Method || member instanceof Literal) {
+            if (member instanceof Constructor) {
+                Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(member, Visibility.class, "getVisibility", "setVisibility");
+                visibilityProp.setName("Visibility");
+                propertiesSet.put(visibilityProp);
+            } 
+            else if (member instanceof Field || member instanceof Method || member instanceof Literal) {
                 Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getMemberName", "setMemberName");
                 nameProp.setName("Name");
                 propertiesSet.put(nameProp);
 
                 if (member instanceof Field || member instanceof Method) {
 
-                    Property<String> typeProp = new PropertySupport.Reflection<>(this, String.class, "getType", "setType");
+                    Property<String> typeProp = new PropertySupport.Reflection<>(this, String.class, "getMemberType", "setMemberType");
                     typeProp.setName("Type");
                     propertiesSet.put(typeProp);
 
@@ -125,8 +130,7 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
                         isVolatileProp.setName("volatile");
                         propertiesSet.put(isVolatileProp);
                     }
-
-                    if (member instanceof Method) {
+                    else if (member instanceof Method) {
                         Method method = (Method) member;
 
                         Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(method, boolean.class, "isStatic", "setStatic");
@@ -147,11 +151,6 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
                     }
                 }
             }
-
-//            PackageComponent pack = component.getParentPackage();
-//            Property<String> packageProp = new PropertySupport.Reflection<>(pack, String.class, "getName", null);
-//            packageProp.setName("Package");
-//            propertiesSet.put(packageProp);
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
         }
@@ -180,11 +179,11 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
         }
     }
 
-    public String getType() {
+    public String getMemberType() {
         return member.getType();
     }
 
-    public void setType(String newType) {
+    public void setMemberType(String newType) {
         if (!member.getName().equals(newType)) {
             String newSignature = member.deriveNewSignatureFromType(newType);
             if (member.getDeclaringComponent().signatureExists(newSignature)) {

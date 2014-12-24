@@ -1,4 +1,4 @@
-package org.uml.visual.widgets.providers.popups;
+package org.uml.visual.widgets.popups;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -8,7 +8,7 @@ import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagram;
-import org.uml.visual.widgets.components.PackageWidget;
+import org.uml.visual.widgets.components.unused.PackageWidget;
 
 /**
  *
@@ -31,7 +31,7 @@ public class PackagePopupMenuProvider implements PopupMenuProvider {
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            packageWidget.getComponent().getParentDiagram().removeComponent(packageWidget.getComponent());
+            packageWidget.getComponent().getParentDiagram().removePartFromContainer(packageWidget.getComponent());
             ClassDiagram classDiagram = packageWidget.getComponent().getParentDiagram();
 
             /*for(Map.Entry<String,RelationComponent> entry : classDiagram.getRelations().entrySet()) {

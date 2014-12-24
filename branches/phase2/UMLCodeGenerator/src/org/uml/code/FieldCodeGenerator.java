@@ -34,7 +34,7 @@ public class FieldCodeGenerator implements CodeGenerator {
         StringBuilder fieldsString = new StringBuilder();
 
         for (Field field : fields) {
-            fieldsString.append(field.getFullSignature()).append(";\n");
+//            fieldsString.append(field.getFullSignature()).append(";\n");
         }
         return fieldsString.toString();
     }

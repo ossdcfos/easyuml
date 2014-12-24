@@ -72,7 +72,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
 
     @Override
     public void destroy() throws IOException {
-        component.getParentDiagram().removeComponent(component);
+        component.getParentDiagram().removePartFromContainer(component);
         fireNodeDestroyed();
     }
 

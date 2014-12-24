@@ -4,51 +4,29 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
-import org.netbeans.api.visual.widget.LabelWidget;
 import org.openide.util.WeakListeners;
-import org.uml.model.members.Field;
 import org.uml.model.members.Literal;
-import org.uml.model.members.MemberBase;
-import org.uml.model.members.Method;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.providers.popups.MemberBasePopupProvider;
+import org.uml.visual.widgets.ISignedUMLWidget;
+import org.uml.visual.widgets.actions.MemberNameEditor;
+import org.uml.visual.widgets.popups.MemberBasePopupProvider;
 
 /**
  *
  * @author Jelena
  */
-public class LiteralWidget extends MemberWidgetBase {
+public class LiteralWidget extends MemberWidgetBase implements ISignedUMLWidget {
 
     public LiteralWidget(ClassDiagramScene scene, Literal literal) {
         super(scene, literal);
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
         this.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
-        nameWidget = new LabelWidget(getScene());
-        nameWidget.setLabel(literal.getName());
-        this.addChild(nameWidget);
-        nameWidget.getActions().addAction(nameEditorAction);
+        nameLabel.setLabel(literal.getName());
+        this.addChild(nameLabel);
+        nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new MemberNameEditor(this)));
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
-    }
-
-    @Override
-    public LabelWidget getNameLabel() {
-        return nameWidget;
-    }
-
-    @Override
-    public MemberBase getMember() {
-        return component;
-    }
-
-    @Override
-    protected void setSelected(boolean isSelected) {
-        if (isSelected) {
-            nameWidget.setForeground(SELECT_FONT_COLOR);
-        } else {
-            nameWidget.setForeground(DEFAULT_FONT_COLOR);
-        }
     }
 
     @Override
@@ -61,7 +39,7 @@ public class LiteralWidget extends MemberWidgetBase {
                 component.setName(signature);
             }
         }
-        nameWidget.setLabel(((Literal) component).getSignatureForLabel());
+        nameLabel.setLabel(((Literal) component).getLabelText());
     }
 
     @Override
@@ -73,10 +51,9 @@ public class LiteralWidget extends MemberWidgetBase {
     public void propertyChange(PropertyChangeEvent evt) {
         String propName = evt.getPropertyName();
         if ("name".equals(propName)) {
-            nameWidget.setLabel(((Literal) component).getSignatureForLabel());
+            nameLabel.setLabel(((Literal) component).getLabelText());
         }
-        changedNotify();
+        notifyTopComponentModified();
         getScene().validate();
     }
-
 }

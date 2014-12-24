@@ -18,10 +18,10 @@ import org.uml.model.members.Field;
 import org.uml.model.Visibility;
 import org.uml.model.members.Method;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.actions.NameEditor;
-import org.uml.visual.widgets.providers.popups.ClassPopupMenuProvider;
+import org.uml.visual.widgets.actions.MemberNameEditor;
+import org.uml.visual.widgets.popups.ClassPopupMenuProvider;
 import org.uml.visual.widgets.providers.ComponentWidgetAcceptProvider;
-import org.uml.visual.widgets.providers.MouseAdapterZaView;
+import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
 
 /**
  *
@@ -47,8 +47,8 @@ public class ClassWidget extends ComponentWidgetBase {
             headerWidget.addChild(abstractLabel);
         }
 
-        nameWidget.setLabel(component.getName());
-        headerWidget.addChild(nameWidget);
+        nameLabel.setLabel(component.getName());
+        headerWidget.addChild(nameLabel);
         addChild(headerWidget);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
@@ -103,9 +103,9 @@ public class ClassWidget extends ComponentWidgetBase {
         addMember(fieldsContainer, fieldWidget);
         getScene().validate();
 
-        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditor(fieldWidget));
+        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(fieldWidget));
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(fieldWidget.getNameLabel());
-        MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+        MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
     }
 
@@ -120,9 +120,9 @@ public class ClassWidget extends ComponentWidgetBase {
         addMember(methodsContainer, methodWidget);
         getScene().validate();
 
-        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new NameEditor(methodWidget));
+        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(methodWidget));
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(methodWidget.getNameLabel());
-        MouseListener mouseListener = new MouseAdapterZaView(nameEditorAction);
+        MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
     }
 
@@ -141,18 +141,6 @@ public class ClassWidget extends ComponentWidgetBase {
     @Override
     public ClassComponent getComponent() {
         return (ClassComponent) component;
-    }
-
-    @Override
-    public void setName(String newName) {
-        String oldName = component.getName();
-        super.setName(newName);
-
-        for (Widget w : methodsContainer.getChildren()) {
-            if (w instanceof ConstructorWidget) {
-                ((ConstructorWidget) w).propertyChange(new PropertyChangeEvent(nameWidget, "name", oldName, newName));
-            }
-        }
     }
 
     @Override

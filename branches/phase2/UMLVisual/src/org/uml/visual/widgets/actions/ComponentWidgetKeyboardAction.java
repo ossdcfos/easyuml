@@ -13,12 +13,23 @@ import org.uml.visual.widgets.components.ComponentWidgetBase;
  *
  * @author Boris
  */
+// TODO not detecting key events
 public class ComponentWidgetKeyboardAction extends WidgetAction.Adapter {
 
     private final MoveProvider provider;
 
     public ComponentWidgetKeyboardAction() {
         this.provider = ActionFactory.createDefaultMoveProvider();
+    }
+
+    @Override
+    public State keyTyped(Widget widget, WidgetKeyEvent event) {
+        return super.keyTyped(widget, event); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public State mouseWheelMoved(Widget widget, WidgetMouseWheelEvent event) {
+        return super.mouseWheelMoved(widget, event); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -38,7 +49,7 @@ public class ComponentWidgetKeyboardAction extends WidgetAction.Adapter {
                 newX = newX - 20;
             } else if (event.getKeyCode() == KeyEvent.VK_DELETE) {
                 ClassDiagram classDiagram = ((ComponentWidgetBase) widget).getComponent().getParentDiagram();
-                classDiagram.removeComponent(((ComponentWidgetBase) widget).getComponent());
+                classDiagram.removePartFromContainer(((ComponentWidgetBase) widget).getComponent());
             }
             provider.movementStarted(widget);
             provider.setNewLocation(widget, new Point(newX, newY));

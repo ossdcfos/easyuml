@@ -35,11 +35,9 @@ public abstract class MemberBase implements INameable, IHasSignature {
     protected int modifiers;
     private transient ComponentBase declaringComponent;
     protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         pcs.addPropertyChangeListener(pcl);
     }
-
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         pcs.removePropertyChangeListener(pcl);
     }
@@ -131,12 +129,13 @@ public abstract class MemberBase implements INameable, IHasSignature {
     @Override
     // signature without modifiers
     public abstract String getSignature();
+    public abstract String getLabelText();
+    
     public abstract String deriveNewSignatureFromName(String newName);
     public abstract String deriveNewSignatureFromType(String newType);
     
-    @Override
-    public String toString(){
-        return getSignature();
-    }
-    
+//    @Override
+//    public String toString(){
+//        return getSignature();
+//    }
 }

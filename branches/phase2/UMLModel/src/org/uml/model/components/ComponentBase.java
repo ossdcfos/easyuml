@@ -5,7 +5,6 @@ import java.awt.*;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import org.uml.*;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ContainerBase;
 import org.uml.model.Visibility;
@@ -29,9 +28,11 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     private Visibility visibility;
     protected int modifiers;
 
-    // these should be removed in future
-    private Point position;
+    // TODO these should be removed in future (use only bounds
+    private Point location;
     private Rectangle bounds;
+
+    public abstract void removeMember(MemberBase member);
 
     /**
      * Default constructor. Initializes members of the ComponentBase. Members
@@ -43,13 +44,11 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @see Constructor
      * @see Literal
      */
-    public ComponentBase(String name) {
+    protected ComponentBase(String name) {
         super(name);
         parentPackage = "";
         visibility = Visibility.PUBLIC;
     }
-
-    public abstract void removeMemberFromContainer(MemberBase member);
 
     /**
      * Returns members that this ClassDiagramComponent has
@@ -58,7 +57,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      */
     @SuppressWarnings("unchecked")
     public LinkedHashSet<MemberBase> getMembers() {
-        return new LinkedHashSet<>(containerComponents);
+        return new LinkedHashSet<>(parts);
     }
 
     /**
@@ -88,17 +87,25 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      *
      * @return point that represents X and Y coordinates
      */
-    public Point getPosition() {
-        return position;
+    public Point getLocation() {
+        return location;
     }
 
     /**
      * Sets this ClassDiagramComponent's position on scene
      *
-     * @param position that the component has
+     * @param location that the component has
      */
-    public void setPosition(Point position) {
-        this.position = position;
+    public void setLocation(Point location) {
+        this.location = location;
+    }
+
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
+    public void setBounds(Rectangle bounds) {
+        this.bounds = bounds;
     }
 
     public String getParentPackage() {
@@ -183,17 +190,8 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         pcs.firePropertyChange("visibility", oldVisibility, visibility);
     }
 
-    public Rectangle getBounds() {
-        return bounds;
-    }
-
-    public void setBounds(Rectangle bounds) {
-        this.bounds = bounds;
-    }
-
-    @Override
-    public String toString() {
-        return getSignature();
-    }
-
+//    @Override
+//    public String toString() {
+//        return getSignature();
+//    }
 }

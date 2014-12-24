@@ -14,28 +14,20 @@ import java.util.List;
 public abstract class ContainerBase<T extends INameable & IHasSignature> implements INameable, IHasSignature {
 
     protected String name;
-    protected LinkedHashSet<T> containerComponents; // contains classes, interfaces or enums
+    protected LinkedHashSet<T> parts; // contains components or members
     protected transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
     
     protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         pcs.addPropertyChangeListener(pcl);
     }
-
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         pcs.removePropertyChangeListener(pcl);
     }
-
-//    protected void fire(String propertyName, Object old, Object nue) {
-//        for (PropertyChangeListener pcl : listeners) {
-//            pcl.propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
-//        }
-//    }
-
+    
     public ContainerBase(String name) {
         this.name = name;
-        this.containerComponents = new LinkedHashSet<>();
+        this.parts = new LinkedHashSet<>();
     }
 
     public void addDeleteListener(IComponentDeleteListener icdl) {
@@ -48,30 +40,30 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
      * be added with it's name concatenated with current component counter
      * number.
      *
-     * @param component to be added to collection
+     * @param part to be added to collection
      */
-    public void addComponent(T component) {
-        String componentName = component.getName();
+    public void addPartToContainter(T part) {
+        String componentName = part.getName();
         int suffix = 1;
-        while (signatureExists(component.toString())) {
-            component.setName(componentName + suffix);
+        while (signatureExists(part.toString())) {
+            part.setName(componentName + suffix);
             suffix++;
         }
-        containerComponents.add(component);
-        pcs.firePropertyChange("ADD", null, component);
+        parts.add(part);
+        pcs.firePropertyChange("ADD", null, part);
     }
 
     /**
      * Removes the given component from this diagram's collection of components.
      *
-     * @param component to be removed
+     * @param part to be removed
      */
-    public void removeComponent(T component) {
+    public void removePartFromContainer(T part) {
         for (IComponentDeleteListener icdl : deleteListeners) {
-            icdl.componentDeleted(component);
+            icdl.componentDeleted(part);
         }
-        containerComponents.remove(component);
-        pcs.firePropertyChange("REMOVE", null, component);
+        parts.remove(part);
+        pcs.firePropertyChange("REMOVE", null, part);
     }
 
     /**
@@ -82,7 +74,7 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
      * @return if that component exists in collection
      */
     public boolean signatureExists(String componentString) {
-        for (T component : containerComponents) {
+        for (T component : parts) {
             if(component.getSignature().equals(componentString)) return true;
         }
         return false;
@@ -110,10 +102,9 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
         pcs.firePropertyChange("name", oldName, newName);
     }
 
-    // temporary solution, add package
+    // TODO temporary solution, add package
     @Override
     public String getSignature(){
         return getName();
     }
-
 }

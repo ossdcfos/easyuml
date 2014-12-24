@@ -2,7 +2,6 @@ package org.uml.model.members;
 
 import org.uml.model.Visibility;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
@@ -65,6 +64,24 @@ public abstract class MethodBase extends MemberBase {
         return result.toString();
     }
 
+    /**
+     * Creates a string that can be used to represent Method inside UML model.
+     * <p>
+     * By concatenating strings a text is created, which can be used to
+     * represent this Method in the UML diagram's class that holds it e.g.
+     * "public static String firstMethod(int theNumber)".
+     *
+     * @return specially formed String representation of the Method
+     */
+    @Override
+    public String getLabelText() {
+        StringBuilder result = new StringBuilder();
+        // removes static because it is rendered as underline
+        if ((modifiers & ~Modifier.STATIC) != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
+        result.append(getSignature());
+        return result.toString();
+    }
+
     @Override
     public String deriveNewSignatureFromType(String newType){
         StringBuilder result = new StringBuilder();
@@ -101,42 +118,25 @@ public abstract class MethodBase extends MemberBase {
         return result.toString();
     }
 
-    /**
-     * Creates a string that can be used to represent Method inside UML model.
-     * <p>
-     * By concatenating strings a text is created, which can be used to
-     * represent this Method in the UML diagram's class that holds it e.g.
-     * "public static String firstMethod(int theNumber)".
-     *
-     * @return specially formed String representation of the Method
-     */
-    public String getSignatureForLabel() {
-        StringBuilder result = new StringBuilder();
-        // removes static because it is rendered as underline
-        if ((modifiers & ~Modifier.STATIC) != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
-        result.append(getSignature());
-        return result.toString();
-    }
-
-    /**
-     * Creates a string that represents Method's signature.
-     * <p>
-     * By concatenating strings a text is created, which can be used to
-     * represent this Field in the UML diagram's class that holds it e.g.
-     * "public static String firstMethod(int theNumber)".
-     *
-     *
-     * @return specially formed Method's String representation
-     */
-    public String getFullSignature() {
-        StringBuilder result = new StringBuilder();
-        if (visibility != null && !Visibility.PACKAGE.equals(visibility))
-            result = result.append(getVisibility().toString()).append(" ");
-        if(modifiers != 0) result.append(Modifier.toString(modifiers)).append(" ");
-        result.append(getSignature());
-        result.append(" {}\n");
-        return result.toString();
-    }
+//    /**
+//     * Creates a string that represents Method's signature.
+//     * <p>
+//     * By concatenating strings a text is created, which can be used to
+//     * represent this Field in the UML diagram's class that holds it e.g.
+//     * "public static String firstMethod(int theNumber)".
+//     *
+//     *
+//     * @return specially formed Method's String representation
+//     */
+//    public String getFullSignature() {
+//        StringBuilder result = new StringBuilder();
+//        if (visibility != null && !Visibility.PACKAGE.equals(visibility))
+//            result = result.append(getVisibility().toString()).append(" ");
+//        if(modifiers != 0) result.append(Modifier.toString(modifiers)).append(" ");
+//        result.append(getSignature());
+//        result.append(" {}\n");
+//        return result.toString();
+//    }
 
 //    /**
 //     * Method used to check if Method object's modifier array contains the

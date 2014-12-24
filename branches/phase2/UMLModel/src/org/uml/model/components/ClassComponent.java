@@ -28,6 +28,7 @@ public class ClassComponent extends ComponentBase {
      * Default constructor only specifying parent diagram. Sets name to default value.
      * 
      */
+    // Used when deserializing and adding a new component from palette or popup menu
     public ClassComponent() {
         this("UntitledClass");
     }
@@ -41,6 +42,7 @@ public class ClassComponent extends ComponentBase {
      *
      * @param name to be set
      */
+    // Used when reverse engineering
     public ClassComponent(String name) {
         super(name);
         fields = new LinkedHashSet<>();
@@ -81,8 +83,7 @@ public class ClassComponent extends ComponentBase {
      * @param field that will be added to collection.
      */
     public void addField(Field field) {
-        addComponent(field);
-//        addMember(field);
+        addPartToContainter(field);
         field.setDeclaringComponent(this);
         fields.add(field);
     }
@@ -93,8 +94,7 @@ public class ClassComponent extends ComponentBase {
      * @param method that will be added to collection.
      */
     public void addMethod(Method method) {
-//        addMember(method);
-        addComponent(method);
+        addPartToContainter(method);
         method.setDeclaringComponent(this);
         methods.add(method);
     }
@@ -105,8 +105,7 @@ public class ClassComponent extends ComponentBase {
      * @param constructor which will be added to collection.
      */
     public void addConstructor(Constructor constructor) {
-//        addMember(constructor);
-        addComponent(constructor);
+        addPartToContainter(constructor);
         constructor.setDeclaringComponent(this);
         constructors.add(constructor);
     }
@@ -120,6 +119,7 @@ public class ClassComponent extends ComponentBase {
         return Modifier.isAbstract(modifiers);
     }
 
+    
     /**
      * Sets abstract modifier to true or false
      *
@@ -162,9 +162,10 @@ public class ClassComponent extends ComponentBase {
         }
         pcs.firePropertyChange("isFinal", Modifier.isFinal(oldModifiers), isFinal());
     }
+    
 
     @Override
-    public void removeMemberFromContainer(MemberBase member) {
+    public void removeMember(MemberBase member) {
         if(member instanceof Field) fields.remove((Field)member);
         else if (member instanceof Method) methods.remove((Method)member);
         else if (member instanceof Constructor) constructors.remove((Constructor)member);

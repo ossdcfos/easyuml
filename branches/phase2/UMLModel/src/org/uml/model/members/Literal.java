@@ -29,8 +29,9 @@ public class Literal extends MemberBase {
     public String getSignature() {
         return name;
     }
-    
-    public String getSignatureForLabel() {
+
+    @Override
+    public String getLabelText() {
         return getSignature();
     }
 
@@ -39,10 +40,10 @@ public class Literal extends MemberBase {
         return newName;
     }
 
+    //TODO Remove this maybe, Literal cannot change type
     @Override
     public String deriveNewSignatureFromType(String newType) {
-        //TODO Remove this
-        return newType+" "+name;
+        return name;
     }
-    
+
 }

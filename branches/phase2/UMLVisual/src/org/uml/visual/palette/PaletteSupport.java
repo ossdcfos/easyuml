@@ -19,8 +19,7 @@ public class PaletteSupport {
         if(pc == null){
             AbstractNode paletteRoot = new AbstractNode(Children.create(new PaletteCategoryChildFactory(), true));
             paletteRoot.setName("Palette Root");
-            pc = PaletteFactory.createPalette(paletteRoot, new EmptyPaletteActions(), null, new PaletteDnDHandler());
-            //pc = PaletteFactory.createPalette(paletteRoot, new EmptyPaletteActions(), null, null/* new PaletteDnDHandler()*/);
+            pc = PaletteFactory.createPalette(paletteRoot, new EmptyPaletteActions());
         }
         return pc;
     }
