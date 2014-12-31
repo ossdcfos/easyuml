@@ -161,7 +161,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
      */
     public void setParentPackage(String parentPackage) {
         if (!parentPackage.equals(getParentPackage())) {
-            if (component.getParentDiagram().signatureExists(component.deriveNewSignatureFromPackage(parentPackage))) {
+            if (component.getParentDiagram().signatureExists(component.deriveSignatureFromPackage(parentPackage))) {
                 JOptionPane.showMessageDialog(null, "Component \"" + component.getName() + "\" already exists in package " + parentPackage + "!");
             } else {
                 component.setParentPackage(parentPackage);
@@ -180,7 +180,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
      */
     public void setComponentName(String newName) {
         if (!getName().equals(newName)) {
-            if (component.getParentDiagram().signatureExists(component.deriveNewSignatureFromName(newName))) {
+            if (component.getParentDiagram().signatureExists(component.deriveSignatureFromName(newName))) {
                 JOptionPane.showMessageDialog(null, "Name \"" + newName + "\" already exists!");
             } else {
                 component.setName(newName);

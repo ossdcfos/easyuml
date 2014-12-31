@@ -32,7 +32,7 @@ public class HasRelationDeserializer implements XmlDeserializer{
         String name = node.attributeValue("name");
         String source = node.attributeValue("source");
         String target = node.attributeValue("target");
-        if (name != null && !name.equals("")) {
+        if (name != null) {
             relation.setName(name);
         }
         for (ComponentBase component : components) {

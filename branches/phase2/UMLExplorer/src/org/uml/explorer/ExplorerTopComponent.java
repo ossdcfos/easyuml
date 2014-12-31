@@ -139,7 +139,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void resultChanged(LookupEvent ev) {
         Lookup.Result source = (Lookup.Result) ev.getSource();
         List instances = (List) source.allInstances();

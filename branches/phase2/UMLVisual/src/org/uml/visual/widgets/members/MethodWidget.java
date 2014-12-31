@@ -10,7 +10,6 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.openide.util.WeakListeners;
 import org.uml.model.members.Method;
-import org.uml.model.members.MethodBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ISignedUMLWidget;
 import org.uml.visual.widgets.actions.MemberNameEditor;
@@ -38,7 +37,6 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new MemberNameEditor(this)));
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
-        updateVisibilityLabel();
     }
 
     @Override
@@ -48,7 +46,7 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
             if (component.getDeclaringComponent().signatureExists(signature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
             } else {
-                MemberParser.fillMethodComponents((MethodBase) component, signature);
+                MemberParser.fillMethodComponents((Method) component, signature);
             }
         }
     }
@@ -74,13 +72,13 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
         if ("isStatic".equals(propName)) {
             setStatic((boolean) evt.getNewValue());
         }
-        else if ("isFinal".equals(propName) || "isAbstract".equals(propName) || "isSynchronized".equals(propName) || "name".equals(propName) || "type".equals(propName)) {
+        else if ("isFinal".equals(propName) || "isAbstract".equals(propName) || "isSynchronized".equals(propName) || "name".equals(propName) || "type".equals(propName) || "arguments".equals(propName)) {
             nameLabel.setLabel(((Method) component).getLabelText());
         }
         else if ("visibility".equals(evt.getPropertyName())) {
             updateVisibilityLabel();
         }
-        getClassDiagramScene().getUmlTopComponent().modify();
+        notifyTopComponentModified();
         getScene().validate();
     }
 }

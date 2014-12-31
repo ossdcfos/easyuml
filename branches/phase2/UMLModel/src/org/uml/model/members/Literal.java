@@ -36,13 +36,13 @@ public class Literal extends MemberBase {
     }
 
     @Override
-    public String deriveNewSignatureFromName(String newName) {
+    public String deriveSignatureFromName(String newName) {
         return newName;
     }
 
     //TODO Remove this maybe, Literal cannot change type
     @Override
-    public String deriveNewSignatureFromType(String newType) {
+    public String deriveSignatureFromType(String newType) {
         return name;
     }
 

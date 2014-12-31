@@ -3,10 +3,6 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group/>
-        <group name="UML">
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin%20phase%203/UMLVisual/src/org/uml/visual/widgets/providers/SceneSelectProvider.java</file>
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin%20phase%203/UMLVisual/src/org/uml/visual/widgets/providers/SceneAcceptProvider.java</file>
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UML%20Plugin%20phase%203/UMLVisual/src/org/uml/visual/widgets/ClassDiagramScene.java</file>
-        </group>
+        <group name="UML"/>
     </open-files>
 </project-private>

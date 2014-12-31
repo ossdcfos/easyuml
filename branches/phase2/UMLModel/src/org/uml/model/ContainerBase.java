@@ -24,6 +24,12 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         pcs.removePropertyChangeListener(pcl);
     }
+    public boolean listenerTypeExists(Class clazz){
+        for(PropertyChangeListener pcl : pcs.getPropertyChangeListeners()){
+            if(clazz.isAssignableFrom(pcl.getClass())) return true;
+        }
+        return false;
+    }
     
     public ContainerBase(String name) {
         this.name = name;
@@ -45,7 +51,7 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     public void addPartToContainter(T part) {
         String componentName = part.getName();
         int suffix = 1;
-        while (signatureExists(part.toString())) {
+        while (signatureExists(part.getSignature())) {
             part.setName(componentName + suffix);
             suffix++;
         }

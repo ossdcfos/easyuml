@@ -42,8 +42,10 @@ public abstract class MethodBase extends MemberBase {
         return arguments;
     }
 
-    public void setArguments(LinkedHashSet<MethodArgument> arguments) {
-        this.arguments = arguments;
+    public void setArguments(LinkedHashSet<MethodArgument> newArguments) {
+        LinkedHashSet<MethodArgument> oldArguments = arguments;
+        arguments = newArguments;
+        pcs.firePropertyChange("arguments", oldArguments, newArguments);
     }
 
     @Override
@@ -83,7 +85,7 @@ public abstract class MethodBase extends MemberBase {
     }
 
     @Override
-    public String deriveNewSignatureFromType(String newType){
+    public String deriveSignatureFromType(String newType){
         StringBuilder result = new StringBuilder();
         if (type != null) result = result.append(newType).append(" ");
         result.append(getName()).append("(");
@@ -101,7 +103,7 @@ public abstract class MethodBase extends MemberBase {
     }
 
     @Override
-    public String deriveNewSignatureFromName(String newName){
+    public String deriveSignatureFromName(String newName){
         StringBuilder result = new StringBuilder();
         if (type != null) result = result.append(type).append(" ");
         result.append(newName).append("(");
