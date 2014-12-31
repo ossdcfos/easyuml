@@ -77,7 +77,7 @@ public class SceneAcceptProvider implements AcceptProvider {
                 panel.openRelationDialog();
             }
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | RuntimeException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString());
+            JOptionPane.showMessageDialog(null, "SceneAcceptProvider exception! "+ex.getMessage());
             Exceptions.printStackTrace(ex);
         }
 

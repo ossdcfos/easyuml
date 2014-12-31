@@ -120,21 +120,23 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
 
     @Override
     public String getSignature() {
-//        if(!getParentPackage().equals("")){
-            return getParentPackage() + " " + getName();
-//        } else return getName();
+        if (!getParentPackage().equals("")) {
+            return getParentPackage() + "." + getName();
+        } else return getName();
     }
 
-    public String deriveNewSignatureFromName(String newName) {
-//        if(!getParentPackage().equals("")){
-            return getParentPackage() + " " + newName;
-//        } else return newName;
+    public String deriveSignatureFromName(String newName) {
+        if (!getParentPackage().equals("")) {
+            return getParentPackage() + "." + newName;
+        } else return newName;
     }
 
-    public String deriveNewSignatureFromPackage(String newParentPackage) {
-        return newParentPackage + " " + getName();
+    public String deriveSignatureFromPackage(String newParentPackage) {
+        if (!newParentPackage.equals("")) {
+            return newParentPackage + "." + getName();
+        } else return getName();
     }
-    
+
     /**
      * Adds numerical representation of java Modifier enum's constants into
      * modifiers array.
@@ -148,8 +150,8 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      */
     public void addModifier(int modifier) //throws Exception 
     {
-        if ((this instanceof ClassComponent && (Modifier.classModifiers()& modifier) != 0)
-                || (this instanceof InterfaceComponent && (Modifier.interfaceModifiers()& modifier) != 0)) {
+        if ((this instanceof ClassComponent && (Modifier.classModifiers() & modifier) != 0)
+                || (this instanceof InterfaceComponent && (Modifier.interfaceModifiers() & modifier) != 0)) {
             modifiers |= modifier;
         } else {
             //throw new Exception("Modifier " + Modifier.toString(modifier) + " not allowed for " + this.getClass().getSimpleName() + ".");

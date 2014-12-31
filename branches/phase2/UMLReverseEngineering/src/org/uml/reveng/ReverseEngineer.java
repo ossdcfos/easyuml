@@ -368,6 +368,7 @@ public class ReverseEngineer {
         return relations;
     }
 
+    @SuppressWarnings("unchecked")
     private static <T> List<T> safe(List<T> other) {
         return other == null ? Collections.EMPTY_LIST : other;
     }

@@ -22,7 +22,7 @@ import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.visual.dialogs.ConnectRelationPanel;
-import org.uml.visual.dialogs.GenerateCodeDialog;
+import org.uml.newcode.GenerateCodeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.components.ClassWidget;
@@ -120,9 +120,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         miGenerateCode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GenerateCodeDialog dialog = new GenerateCodeDialog(null, true, scene.getClassDiagram());
+                GenerateCodeDialog dialog = new GenerateCodeDialog(scene.getClassDiagram());
                 dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-                dialog.setTitle("Generate code");
                 dialog.setVisible(true);
             }
         });

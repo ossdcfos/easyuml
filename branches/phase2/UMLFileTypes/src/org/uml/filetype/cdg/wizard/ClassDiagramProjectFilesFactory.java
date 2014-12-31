@@ -51,7 +51,7 @@ public class ClassDiagramProjectFilesFactory {
             }
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            JOptionPane.showMessageDialog(null, "ClassDiagramProjectFilesFactory exception! "+ex.getMessage());
         }
     }
     

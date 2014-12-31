@@ -170,7 +170,7 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
      */
     public void setMemberName(String newName) {
         if (!member.getName().equals(newName)) {
-            String newSignature = member.deriveNewSignatureFromName(newName);
+            String newSignature = member.deriveSignatureFromName(newName);
             if (member.getDeclaringComponent().signatureExists(newSignature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + newSignature + "\" already exists!");
             } else {
@@ -185,7 +185,7 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
 
     public void setMemberType(String newType) {
         if (!member.getName().equals(newType)) {
-            String newSignature = member.deriveNewSignatureFromType(newType);
+            String newSignature = member.deriveSignatureFromType(newType);
             if (member.getDeclaringComponent().signatureExists(newSignature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + newSignature + "\" already exists!");
             } else {

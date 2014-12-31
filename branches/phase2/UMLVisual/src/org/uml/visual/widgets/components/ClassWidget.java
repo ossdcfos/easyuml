@@ -6,6 +6,7 @@ import org.uml.visual.widgets.members.FieldWidget;
 import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -17,6 +18,7 @@ import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
 import org.uml.model.Visibility;
 import org.uml.model.members.Method;
+import org.uml.visual.parser.MemberParser;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.MemberNameEditor;
 import org.uml.visual.widgets.popups.ClassPopupMenuProvider;
@@ -98,7 +100,7 @@ public class ClassWidget extends ComponentWidgetBase {
 
     public void addFieldWidget() {
         Field field = new Field("untitledField", "Object", Visibility.PRIVATE);
-        addField(field);
+        getComponent().addField(field);
         FieldWidget fieldWidget = new FieldWidget(getClassDiagramScene(), field);
         addMember(fieldsContainer, fieldWidget);
         getScene().validate();
@@ -115,7 +117,7 @@ public class ClassWidget extends ComponentWidgetBase {
 
     public void addMethodWidget() {
         Method method = new Method("untitledMethod", "void");
-        addMethod(method);
+        getComponent().addMethod(method);
         MethodWidget methodWidget = new MethodWidget(getClassDiagramScene(), method);
         addMember(methodsContainer, methodWidget);
         getScene().validate();
@@ -128,9 +130,17 @@ public class ClassWidget extends ComponentWidgetBase {
 
     public final void addConstructorWidget() {
         Constructor constructor = new Constructor(getName());
-        getComponent().addConstructor(constructor);
-        ConstructorWidget constructorWidget = new ConstructorWidget(getClassDiagramScene(), constructor);
-        addMember(methodsContainer, constructorWidget);
+        String signature = constructor.getSignature();
+        
+        if (component.signatureExists(signature)) {
+            JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
+        } else {
+            MemberParser.fillConstructorComponents(constructor, signature);
+            getComponent().addConstructor(constructor);
+            ConstructorWidget constructorWidget = new ConstructorWidget(getClassDiagramScene(), constructor);
+            addMember(methodsContainer, constructorWidget);
+        }
+
         getScene().validate();
     }
 
@@ -163,13 +173,4 @@ public class ClassWidget extends ComponentWidgetBase {
         }
         getScene().validate();
     }
-
-    private void addField(Field f) {
-        getComponent().addField(f);
-    }
-
-    private void addMethod(Method method) {
-        getComponent().addMethod(method);
-    }
-
 }

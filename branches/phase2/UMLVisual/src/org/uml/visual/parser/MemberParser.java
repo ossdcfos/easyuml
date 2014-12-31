@@ -7,8 +7,9 @@ import japa.parser.ast.body.BodyDeclaration;
 import japa.parser.ast.body.FieldDeclaration;
 import java.util.LinkedHashSet;
 import org.openide.util.Exceptions;
+import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
-import org.uml.model.members.MethodBase;
+import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
 
 public class MemberParser {
@@ -66,11 +67,15 @@ public class MemberParser {
      * @param m represents Method object passed from MethodWidget
      * @param methodWidgetText represents string typed in the class diagram
      */
-    public static void fillMethodComponents(MethodBase m, String methodWidgetText) {
+    public static void fillMethodComponents(Method m, String methodWidgetText) {
 //        setMethodModifiers(getAllMethodModifiers());
         m.setArguments(getArguments(methodWidgetText));
         m.setType(getReturnType(methodWidgetText));
         m.setName(getMethodName(methodWidgetText));
+    }
+
+    public static void fillConstructorComponents(Constructor c, String constructorWidgetText) {
+        c.setArguments(getArguments(constructorWidgetText));
     }
 
     private static LinkedHashSet<MethodArgument> getArguments(String signature) {

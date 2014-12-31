@@ -178,7 +178,7 @@ public class Field extends MemberBase {
 //    }
 
     @Override
-    public String deriveNewSignatureFromName(String newName) {
+    public String deriveSignatureFromName(String newName) {
         StringBuilder result = new StringBuilder();
         result = result.append(type).append(" ");
         result = result.append(newName);
@@ -186,7 +186,7 @@ public class Field extends MemberBase {
     }
 
     @Override
-    public String deriveNewSignatureFromType(String newType) {
+    public String deriveSignatureFromType(String newType) {
         StringBuilder result = new StringBuilder();
         result = result.append(newType).append(" ");
         result = result.append(getName());

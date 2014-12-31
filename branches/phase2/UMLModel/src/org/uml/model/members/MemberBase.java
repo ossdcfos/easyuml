@@ -41,6 +41,12 @@ public abstract class MemberBase implements INameable, IHasSignature {
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         pcs.removePropertyChangeListener(pcl);
     }
+    public boolean listenerTypeExists(Class clazz){
+        for(PropertyChangeListener pcl : pcs.getPropertyChangeListeners()){
+            if(clazz.isAssignableFrom(pcl.getClass())) return true;
+        }
+        return false;
+    }
 
     /**
      * Default constructor. Only sets the name of a Member.
@@ -131,8 +137,8 @@ public abstract class MemberBase implements INameable, IHasSignature {
     public abstract String getSignature();
     public abstract String getLabelText();
     
-    public abstract String deriveNewSignatureFromName(String newName);
-    public abstract String deriveNewSignatureFromType(String newType);
+    public abstract String deriveSignatureFromName(String newName);
+    public abstract String deriveSignatureFromType(String newType);
     
 //    @Override
 //    public String toString(){
