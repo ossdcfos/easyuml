@@ -24,6 +24,7 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         pcs.removePropertyChangeListener(pcl);
     }
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public boolean listenerTypeExists(Class clazz){
         for(PropertyChangeListener pcl : pcs.getPropertyChangeListeners()){
             if(clazz.isAssignableFrom(pcl.getClass())) return true;

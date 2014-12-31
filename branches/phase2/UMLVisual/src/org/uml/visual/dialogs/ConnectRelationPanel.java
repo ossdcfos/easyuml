@@ -12,6 +12,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -113,6 +115,22 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dialog.dispose();
+            }
+        });
+        txfName.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateOKButton();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateOKButton();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateOKButton();
             }
         });
     }
@@ -232,9 +250,9 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             pnlRelationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlRelationLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblRelationType)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(cbxRelation, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblRelationType, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxRelation, 0, 160, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnlRelationLayout.setVerticalGroup(
@@ -259,8 +277,8 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             pnlNameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlNameLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txfName, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -290,9 +308,9 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             pnlSourceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSourceLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblSource)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
-                .addComponent(cbxSource, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblSource, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxSource, 0, 160, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnlSourceLayout.setVerticalGroup(
@@ -323,9 +341,9 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             pnlTargetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTargetLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTarget)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                .addComponent(cbxTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxTarget, 0, 160, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnlTargetLayout.setVerticalGroup(
@@ -348,9 +366,9 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             pnlCardinalitySourceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlCardinalitySourceLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblCardinalitySource)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                .addComponent(cbxCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblCardinalitySource, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxCardinalitySource, 0, 160, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnlCardinalitySourceLayout.setVerticalGroup(
@@ -373,9 +391,9 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             pnlCardinalityTargetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlCardinalityTargetLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblCardinalityTarget)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addComponent(cbxCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblCardinalityTarget, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxCardinalityTarget, 0, 160, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnlCardinalityTargetLayout.setVerticalGroup(
@@ -398,9 +416,9 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             pnlCollectionTypeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlCollectionTypeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblCollectionType)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addComponent(cbxCollectionType, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblCollectionType, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxCollectionType, 0, 160, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnlCollectionTypeLayout.setVerticalGroup(
@@ -548,10 +566,10 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
     }
 
     private void fillCardinalityComboBox(JComboBox<CardinalityEnum> comboBox) {
-        comboBox.addItem(CardinalityEnum.One2Many);
-        comboBox.addItem(CardinalityEnum.Zero2Many);
         comboBox.addItem(CardinalityEnum.One2One);
+        comboBox.addItem(CardinalityEnum.One2Many);
         comboBox.addItem(CardinalityEnum.Zero2One);
+        comboBox.addItem(CardinalityEnum.Zero2Many);
         comboBox.setRenderer(new CardinalityListCellRenderer());
         comboBox.setEnabled(true);
     }
@@ -619,6 +637,11 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
 
     private void updateOKButton() {
         btnOK.setEnabled(false);
+
+        if (relation instanceof HasBaseRelation && txfName.getText().trim().isEmpty()) {
+            return;
+        }
+
         ComponentWidgetBase src = (ComponentWidgetBase) cbxSource.getSelectedItem();
         ComponentWidgetBase trg = (ComponentWidgetBase) cbxTarget.getSelectedItem();
         if (src != null && trg != null && relation != null) {
@@ -651,5 +674,4 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
     private javax.swing.JPanel pnlTarget;
     private javax.swing.JTextField txfName;
     // End of variables declaration//GEN-END:variables
-
 }

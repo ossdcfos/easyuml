@@ -7,7 +7,7 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.uml.code</code-name-base>
+                    <code-name-base>org.uml.newcode</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

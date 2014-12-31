@@ -45,7 +45,7 @@ public class UMLProject implements Project {
     private final ProjectState state;
     private Lookup lkp;
 
-    public static final String CLASS_DIAGRAMS_DIR = "Class Diagrams";
+    public static final String CLASS_DIAGRAMS_DIR = "UML Diagrams";
 
     UMLProject(FileObject dir, ProjectState state) {
         this.projectDir = dir;
