@@ -15,7 +15,7 @@ public class ComponentRenameTable implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        String prop = (String) evt.getPropertyName();
+        String prop = evt.getPropertyName();
         if (prop.equals("name") || prop.equals("parentPackage")) {
             ComponentBase component = (ComponentBase) evt.getSource();
             String oldValue = (String) evt.getOldValue();

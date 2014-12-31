@@ -183,7 +183,7 @@ class ClassCodeGenerator {
         FieldCodeGenerator.updateFields(component, cu);
         
         // TODO update
-//        ConstructorCodeGenerator.createConstructors(component, cu);
+        ConstructorCodeGenerator.updateConstructors(component, cu);
 //        MethodCodeGenerator.createMethods(component, cu);
 
         return cu.toString();

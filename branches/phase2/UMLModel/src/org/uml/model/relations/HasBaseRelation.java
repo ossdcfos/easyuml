@@ -43,11 +43,6 @@ public abstract class HasBaseRelation extends RelationBase {
     private String collectionType;
     private Type type;
 
-    // aggregation by default
-    public HasBaseRelation() {
-        this(Type.AGGREGATION);
-    }
-
     // if not composition, than it is aggregation
     protected HasBaseRelation(Type type) {
         this.type = type;

@@ -1,5 +1,6 @@
 package org.uml.visual.widgets.popups;
 
+import java.awt.Dialog;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -16,8 +17,10 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.Utilities;
 import org.openide.windows.WindowManager;
 import org.uml.jung.JUNGEngine;
+import org.uml.model.ClassDiagram;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
@@ -116,17 +119,17 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             }
         });
 
-        miGenerateCode = new JMenuItem("Generate code");
+        miGenerateCode = new JMenuItem("Generate Code");
         miGenerateCode.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {        
                 GenerateCodeDialog dialog = new GenerateCodeDialog(scene.getClassDiagram());
                 dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
                 dialog.setVisible(true);
             }
         });
 
-        miExportAsImage = new JMenuItem("Export As Image");
+        miExportAsImage = new JMenuItem("Export as Image");
         miExportAsImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -176,11 +179,11 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
         sceneMenu.addSeparator();
 
-//        sceneMenu.add(miGenerateCode);
-//
-//        sceneMenu.add(miExportAsImage);
-//
-//        sceneMenu.addSeparator();
+        sceneMenu.add(miGenerateCode);
+
+        sceneMenu.add(miExportAsImage);
+
+        sceneMenu.addSeparator();
 
         sceneMenu.add(miApplyJUNGLayout);
     }

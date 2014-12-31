@@ -50,7 +50,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         setName(component.getName());
         setDisplayName(component.getName());
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
-        this.addPropertyChangeListener(this);
+//        this.addPropertyChangeListener(this);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
 
     @Override
     public boolean canRename() {
-        return true;
+        return false;
     }
 
     @Override
@@ -205,9 +205,12 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
                     break;
             }
 
-        firePropertySetsChange(null, this.getPropertySets());
+//        // updating Properties window when for example renaming the node
+//        firePropertySetsChange(null, this.getPropertySets());
     }
 
+    // To enable creating leaf nodes at start, otherwise we need to pass a factory,
+    // which will can expand only manually and then check that there are no children nodes
     private static class MyCallable implements Callable<Children> {
 
         private final ComponentBase key;
@@ -224,9 +227,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
                 return Children.create(new ComponentChildrenFactory(key), false);
             }
         }
-
     }
-
 }
 
 //        //STARA METODA KOJA JE POTPUNO FUNKCIONALNA I KOJA U PROPERTIES WINDOW POSTAVLJA FIELDS, METHODS, LITERALS...

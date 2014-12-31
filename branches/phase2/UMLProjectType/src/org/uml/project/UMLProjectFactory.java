@@ -33,5 +33,4 @@ public class UMLProjectFactory implements ProjectFactory {
     public void saveProject(final Project project) throws IOException, ClassCastException {
         // leave unimplemented for the moment
     }
-
 }

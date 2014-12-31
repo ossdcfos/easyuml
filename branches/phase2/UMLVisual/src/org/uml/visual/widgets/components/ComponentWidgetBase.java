@@ -187,11 +187,6 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         }
     }
 
-//    @Override
-//    public String toString() {
-//        return nameLabel.getLabel();
-//    }
-
     // already has getScene in widget, but this is casted, so it's easier
     public ClassDiagramScene getClassDiagramScene() {
         return (ClassDiagramScene) getScene();
@@ -277,4 +272,9 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         }
     }
 
+    // Used for representation in combo boxes in ConnectRelationPanel dialog
+    @Override
+    public String toString() {
+        return nameLabel.getLabel();
+    }
 }
