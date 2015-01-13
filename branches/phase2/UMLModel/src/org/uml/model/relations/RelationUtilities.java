@@ -13,6 +13,7 @@ public class RelationUtilities {
         List<RelationBase> list = new LinkedList<>();
         list.add(new IsRelation());
         list.add(new ImplementsRelation());
+        list.add(new HasRelation());
         list.add(new AggregationRelation());
         list.add(new CompositionRelation());
         list.add(new UseRelation());

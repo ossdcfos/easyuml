@@ -1,4 +1,4 @@
-package org.uml.newcode;
+package org.uml.newcode.components;
 
 import de.hunsicker.jalopy.Jalopy;
 import japa.parser.JavaParser;
@@ -26,13 +26,16 @@ import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.RelationBase;
+import org.uml.newcode.members.ConstructorCodeGenerator;
+import org.uml.newcode.members.FieldCodeGenerator;
+import org.uml.newcode.members.MethodCodeGenerator;
 import org.uml.newcode.renaming.ComponentRenameTable;
 
 /**
  *
  * @author Boris
  */
-class ClassCodeGenerator {
+public class ClassCodeGenerator {
 
     public static void generateOrUpdateCode(ClassComponent component, String sourcePath) {
 
@@ -44,8 +47,7 @@ class ClassCodeGenerator {
             String oldFullQualifiedName = ComponentRenameTable.components.get(newSignature);
             String pathToOldFile = sourcePath + oldFullQualifiedName.replace(".", File.separator) + ".java";
             sourceFile = new File(pathToOldFile);
-        } 
-        // if the component has not been renamed, the source should have the new name
+        } // if the component has not been renamed, the source should have the new name
         else {
             String fullQualifiedName = component.getSignature();
             String pathToFile = sourcePath + fullQualifiedName.replace(".", File.separator) + ".java";
@@ -70,8 +72,7 @@ class ClassCodeGenerator {
                 JOptionPane.showMessageDialog(null, "IOException!", "Error", JOptionPane.ERROR_MESSAGE);
                 Exceptions.printStackTrace(ex);
             }
-        } 
-        // if source does not exist, generate code from scratch
+        } // if source does not exist, generate code from scratch
         else {
             code = generateCode(component);
         }
@@ -181,10 +182,9 @@ class ClassCodeGenerator {
         if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
         updateHeader(component, cu);
         FieldCodeGenerator.updateFields(component, cu);
-        
         // TODO update
         ConstructorCodeGenerator.updateConstructors(component, cu);
-//        MethodCodeGenerator.createMethods(component, cu);
+        MethodCodeGenerator.updateMethods(component, cu);
 
         return cu.toString();
     }

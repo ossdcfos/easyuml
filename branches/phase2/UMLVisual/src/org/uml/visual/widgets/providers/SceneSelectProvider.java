@@ -27,9 +27,12 @@ public class SceneSelectProvider implements SelectProvider {
     @Override
     public void select(Widget widget, Point point, boolean bln) {
         ClassDiagramScene scene = (ClassDiagramScene) widget;
+        // de-focus
         scene.setFocusedObject(null);
+        // de-select
         scene.setSelectedObjects(EMPTY_SET);
-        scene.setSceneFocusForExplorer();
+        // focus root in explorer window
+        scene.setDiagramFocusForExplorer();
                     
         scene.getUmlTopComponent().requestFocusInWindow();
     }

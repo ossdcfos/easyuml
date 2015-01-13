@@ -86,76 +86,85 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
     @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
-        Sheet.Set propertiesSet = Sheet.createPropertiesSet();
-        propertiesSet.setName("propertiesSet");
-        propertiesSet.setDisplayName("Properties");
+        
+        Sheet.Set generalProperties = Sheet.createPropertiesSet();
+        generalProperties.setName("generalSet");
+        generalProperties.setDisplayName("General");
+        
+        Sheet.Set modifiersProperties = Sheet.createPropertiesSet();
+        modifiersProperties.setName("modifiersSet");
+        modifiersProperties.setDisplayName("Modifiers");
 
         try {
             if (member instanceof Constructor) {
                 Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(member, Visibility.class, "getVisibility", "setVisibility");
                 visibilityProp.setName("Visibility");
-                propertiesSet.put(visibilityProp);
-            } 
-            else if (member instanceof Field || member instanceof Method || member instanceof Literal) {
+                generalProperties.put(visibilityProp);
+            } else if (member instanceof Field || member instanceof Method || member instanceof Literal) {
                 Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getMemberName", "setMemberName");
                 nameProp.setName("Name");
-                propertiesSet.put(nameProp);
+                generalProperties.put(nameProp);
 
-                if (member instanceof Field || member instanceof Method) {
+                if (member instanceof Field) {
+                    Field field = (Field) member;
 
                     Property<String> typeProp = new PropertySupport.Reflection<>(this, String.class, "getMemberType", "setMemberType");
                     typeProp.setName("Type");
-                    propertiesSet.put(typeProp);
+                    generalProperties.put(typeProp);
 
                     Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(member, Visibility.class, "getVisibility", "setVisibility");
                     visibilityProp.setName("Visibility");
-                    propertiesSet.put(visibilityProp);
+                    generalProperties.put(visibilityProp);
 
-                    if (member instanceof Field) {
-                        Field field = (Field) member;
+                    Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(field, boolean.class, "isStatic", "setStatic");
+                    isStaticProp.setName("static");
+                    modifiersProperties.put(isStaticProp);
 
-                        Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(field, boolean.class, "isStatic", "setStatic");
-                        isStaticProp.setName("static");
-                        propertiesSet.put(isStaticProp);
+                    Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(field, boolean.class, "isFinal", "setFinal");
+                    isFinalProp.setName("final");
+                    modifiersProperties.put(isFinalProp);
 
-                        Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(field, boolean.class, "isFinal", "setFinal");
-                        isFinalProp.setName("final");
-                        propertiesSet.put(isFinalProp);
+                    Property<Boolean> isTransientProp = new PropertySupport.Reflection<>(field, boolean.class, "isTransient", "setTransient");
+                    isTransientProp.setName("transient");
+                    modifiersProperties.put(isTransientProp);
 
-                        Property<Boolean> isTransientProp = new PropertySupport.Reflection<>(field, boolean.class, "isTransient", "setTransient");
-                        isTransientProp.setName("transient");
-                        propertiesSet.put(isTransientProp);
+                    Property<Boolean> isVolatileProp = new PropertySupport.Reflection<>(field, boolean.class, "isVolatile", "setVolatile");
+                    isVolatileProp.setName("volatile");
+                    modifiersProperties.put(isVolatileProp);
+                } else if (member instanceof Method) {
+                    Method method = (Method) member;
 
-                        Property<Boolean> isVolatileProp = new PropertySupport.Reflection<>(field, boolean.class, "isVolatile", "setVolatile");
-                        isVolatileProp.setName("volatile");
-                        propertiesSet.put(isVolatileProp);
-                    }
-                    else if (member instanceof Method) {
-                        Method method = (Method) member;
+                    Property<String> typeProp = new PropertySupport.Reflection<>(this, String.class, "getMemberType", "setMemberType");
+                    typeProp.setName("Return type");
+                    generalProperties.put(typeProp);
 
-                        Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(method, boolean.class, "isStatic", "setStatic");
-                        isStaticProp.setName("static");
-                        propertiesSet.put(isStaticProp);
+                    Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(member, Visibility.class, "getVisibility", "setVisibility");
+                    visibilityProp.setName("Visibility");
+                    generalProperties.put(visibilityProp);
 
-                        Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(method, boolean.class, "isFinal", "setFinal");
-                        isFinalProp.setName("final");
-                        propertiesSet.put(isFinalProp);
+                    Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(method, boolean.class, "isStatic", "setStatic");
+                    isStaticProp.setName("static");
+                    modifiersProperties.put(isStaticProp);
 
-                        Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(method, boolean.class, "isAbstract", "setAbstract");
-                        isAbstractProp.setName("abstract");
-                        propertiesSet.put(isAbstractProp);
+                    Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(method, boolean.class, "isFinal", "setFinal");
+                    isFinalProp.setName("final");
+                    modifiersProperties.put(isFinalProp);
 
-                        Property<Boolean> isSynchronizedProp = new PropertySupport.Reflection<>(method, boolean.class, "isSynchronized", "setSynchronized");
-                        isSynchronizedProp.setName("synchronized");
-                        propertiesSet.put(isSynchronizedProp);
-                    }
+                    Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(method, boolean.class, "isAbstract", "setAbstract");
+                    isAbstractProp.setName("abstract");
+                    modifiersProperties.put(isAbstractProp);
+
+                    Property<Boolean> isSynchronizedProp = new PropertySupport.Reflection<>(method, boolean.class, "isSynchronized", "setSynchronized");
+                    isSynchronizedProp.setName("synchronized");
+                    modifiersProperties.put(isSynchronizedProp);
                 }
             }
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
         }
 
-        sheet.put(propertiesSet);
+        sheet.put(generalProperties);
+        sheet.put(modifiersProperties);
         return sheet;
     }
 

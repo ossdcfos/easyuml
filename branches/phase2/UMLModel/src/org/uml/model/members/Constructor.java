@@ -30,5 +30,10 @@ public class Constructor extends MethodBase {
         // name is the type for constructor
         super(name, null);
     }
+
+    @Override
+    public boolean allowedToAddModifier(int modifier) {
+        return false;
+    }
     
 }

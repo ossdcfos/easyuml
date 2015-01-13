@@ -385,6 +385,12 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(lblCardinalityTarget, org.openide.util.NbBundle.getMessage(ConnectRelationPanel.class, "ConnectRelationPanel.lblCardinalityTarget.text")); // NOI18N
 
+        cbxCardinalityTarget.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxCardinalityTargetActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlCardinalityTargetLayout = new javax.swing.GroupLayout(pnlCardinalityTarget);
         pnlCardinalityTarget.setLayout(pnlCardinalityTargetLayout);
         pnlCardinalityTargetLayout.setHorizontalGroup(
@@ -481,6 +487,10 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
     private void cbxTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTargetActionPerformed
         updateOKButton();
     }//GEN-LAST:event_cbxTargetActionPerformed
+
+    private void cbxCardinalityTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxCardinalityTargetActionPerformed
+        adaptLayoutBasedOnTargetCardinality();
+    }//GEN-LAST:event_cbxCardinalityTargetActionPerformed
 
     private void fillSourceComboBox(RelationBase rc) {
         List<Widget> widgets = classDiagramScene.getMainLayer().getChildren();
@@ -584,7 +594,6 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             }
             return renderer;
         }
-
     }
 
     private void fillCollectionsComboBox() {
@@ -628,6 +637,18 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             pnlName.setVisible(true);
             pnlCardinalitySource.setVisible(true);
             pnlCardinalityTarget.setVisible(true);
+            adaptLayoutBasedOnTargetCardinality();
+        }
+    }
+
+    private void adaptLayoutBasedOnTargetCardinality() {
+        CardinalityEnum cardinalityTarget = (CardinalityEnum) cbxCardinalityTarget.getSelectedItem();
+        if (cardinalityTarget == CardinalityEnum.Zero2One || cardinalityTarget == CardinalityEnum.One2One) {
+            pnlCollectionType.setVisible(false);
+            if (dialog != null) {
+                dialog.setBounds(dialog.getBounds().x, dialog.getBounds().y, dialog.getBounds().width, 6 * 42 + 100);
+            }
+        } else {
             pnlCollectionType.setVisible(true);
             if (dialog != null) {
                 dialog.setBounds(dialog.getBounds().x, dialog.getBounds().y, dialog.getBounds().width, 7 * 42 + 100);

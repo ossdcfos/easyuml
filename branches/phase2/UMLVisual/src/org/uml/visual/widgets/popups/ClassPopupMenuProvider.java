@@ -33,11 +33,11 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         menu.add(addMethod);
 
         menu.addSeparator();
-        
+
         (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
         menu.add(deleteClass);
     }
-    
+
     ActionListener removeWidgetListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -45,14 +45,14 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classDiagram.removePartFromContainer(classWidget.getComponent());
         }
     };
-    
+
     ActionListener addFieldListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             classWidget.addFieldWidget();
         }
     };
-    
+
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -65,10 +65,9 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
             classWidget.addConstructorWidget();
         }
     };
-    
+
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;
     }
-    
 }

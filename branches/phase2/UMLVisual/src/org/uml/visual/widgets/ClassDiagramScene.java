@@ -9,24 +9,18 @@ import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.components.EnumComponent;
-import org.uml.visual.widgets.anchors.RhombusAnchorShape;
-import org.uml.model.relations.UseRelation;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.HasBaseRelation;
-import org.uml.visual.widgets.popups.RelationPopupMenuProvider;
-import java.awt.BasicStroke;
 import java.beans.PropertyVetoException;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.anchor.*;
 import org.netbeans.api.visual.graph.GraphScene;
-import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.model.ObjectSceneEvent;
 import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.router.Router;
-import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.*;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
@@ -43,10 +37,14 @@ import org.uml.model.members.MemberBase;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.visual.UMLTopComponent;
-import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
 import org.uml.visual.widgets.anchors.ParallelNodeAnchor;
 import org.uml.visual.widgets.providers.*;
 import org.uml.visual.widgets.popups.ScenePopupMenuProvider;
+import org.uml.visual.widgets.relations.HasBaseRelationWidget;
+import org.uml.visual.widgets.relations.ImplementsRelationWidget;
+import org.uml.visual.widgets.relations.IsRelationWidget;
+import org.uml.visual.widgets.relations.RelationBaseWidget;
+import org.uml.visual.widgets.relations.UseRelationWidget;
 
 /**
  *
@@ -100,16 +98,13 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
 
         // middle-click + drag  Scene.getInputBindings().getPanActionButton()
         getActions().addAction(ActionFactory.createPanAction());
-
         // ctrl + scroll        Scene.getInputBindings().getZoomActionModifiers()
         getActions().addAction(ActionFactory.createMouseCenteredZoomAction(1.1));
-
         // To support selecting background scene (deselecting all widgets)
         getActions().addAction(ActionFactory.createSelectAction(new SceneSelectProvider(), false));
-
         // To support drag-and-drop from the palette
         getActions().addAction(ActionFactory.createAcceptAction(new SceneAcceptProvider()));
-
+        // To support right-click on the scene
         getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
 
         addObjectSceneListener(new FocusAdapter(),
@@ -192,73 +187,17 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             classDiagram.addRelation(relation);
         }
 
-        LabelWidget name = new LabelWidget(this, relation.getName());
-        name.setOpaque(true);
-
         // Initialization
-        ConnectionWidget widget = new ConnectionWidget(this);
+        RelationBaseWidget widget = null;
         if (relation instanceof ImplementsRelation) {
-            final BasicStroke DASHED
-                    = new BasicStroke(1.0f,
-                            BasicStroke.CAP_BUTT,
-                            BasicStroke.JOIN_MITER,
-                            10.0f, new float[]{10.0f}, 0.0f);
-            widget.setStroke(DASHED);
-            widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
-            relation.setName("<<implements>>");
-            name.setLabel("<<implements>>");
+            widget = new ImplementsRelationWidget(relation, this);
         } else if (relation instanceof IsRelation) {
-            widget.setTargetAnchorShape(AnchorShape.TRIANGLE_HOLLOW);
-            relation.setName("is");
-            name.setLabel("is");
+            widget = new IsRelationWidget(relation, this);
         } else if (relation instanceof HasBaseRelation) {
-            HasBaseRelation hasRelation = (HasBaseRelation) relation;
-
-            if (hasRelation.isComposition())
-                widget.setSourceAnchorShape(new RhombusAnchorShape(45, 10, true));
-            else
-                widget.setSourceAnchorShape(new RhombusAnchorShape(45, 10, false));
-
-            widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
-
-            LabelWidget cardinalityTarget = new LabelWidget(this, hasRelation.getCardinalityTarget().toString());
-            widget.addChild(cardinalityTarget);
-            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 0.93f);
+            widget = new HasBaseRelationWidget(relation, this);
         } else {
-            UseRelation useRelation = (UseRelation) relation;
-
-            widget.setTargetAnchorShape(AnchorShapeFactory.createArrowAnchorShape(45, 10));
-
-            LabelWidget cardinalitySource = new LabelWidget(this, useRelation.getCardinalitySource().toString());
-            widget.addChild(cardinalitySource);
-            widget.setConstraint(cardinalitySource, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_SOURCE, 0.07f);
-
-            LabelWidget cardinalityTarget = new LabelWidget(this, useRelation.getCardinalityTarget().toString());
-            widget.addChild(cardinalityTarget);
-            widget.setConstraint(cardinalityTarget, LayoutFactory.ConnectionWidgetLayoutAlignment.TOP_TARGET, 0.93f);
+            widget = new UseRelationWidget(relation, this);
         }
-        // Layout
-        widget.addChild(name);
-        widget.setConstraint(name, LayoutFactory.ConnectionWidgetLayoutAlignment.CENTER, 0.5f);
-
-        widget.setEndPointShape(PointShape.SQUARE_FILLED_BIG);
-
-        widget.setControlPointShape(PointShape.SQUARE_FILLED_BIG);
-        widget.setPaintControlPoints(true);
-
-        widget.setRouter(RouterFactory.createFreeRouter());
-
-        // Actions
-        // Double-click name editor action
-        name.getActions().addAction(ActionFactory.createInplaceEditorAction(new RelationLabelTextFieldEditorAction(relation)));
-        // Right-click action
-        widget.getActions().addAction(ActionFactory.createPopupMenuAction(new RelationPopupMenuProvider(widget, relation)));
-        // Selection and hover action
-        widget.getActions().addAction(createObjectHoverAction());
-        widget.getActions().addAction(createSelectAction());
-        // Control points actions
-        widget.getActions().addAction(ActionFactory.createAddRemoveControlPointAction());
-        widget.getActions().addAction(ActionFactory.createMoveControlPointAction(ActionFactory.createFreeMoveControlPointProvider(), ConnectionWidget.RoutingPolicy.UPDATE_END_POINTS_ONLY));
 
         connectionLayer.addChild(widget);
         return widget;
@@ -340,21 +279,22 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     @SuppressWarnings("rawtypes")
     public void resultChanged(LookupEvent ev) {
         Lookup.Result source = (Lookup.Result) ev.getSource();
-        List instances = (List) source.allInstances();
+        Collection instances = source.allInstances();
         if (!instances.isEmpty()) {
-            Object instance = instances.get(0);
-
-            // Set focused object based on the selection of a Node in Explorer
-            if (instance instanceof ComponentNode) {
-                ComponentBase component = ((ComponentNode) instance).getComponent();
-                if (isNode(component)) {
-                    setFocusedObject(component);
+            for (Object instance : instances) {
+                // Set focused object based on the selection of a Node in Explorer
+                if (instance instanceof ComponentNode) {
+                    ComponentBase component = ((ComponentNode) instance).getComponent();
+                    if (isNode(component)) {
+                        setFocusedObject(component);
+                    }
+                } else if (instance instanceof MemberNode) {
+                    MemberBase member = ((MemberNode) instance).getMember();
+                    if (isObject(member)) {
+                        setFocusedObject(member);
+                    }
                 }
-            } else if (instance instanceof MemberNode) {
-                MemberBase member = ((MemberNode) instance).getMember();
-                if (isObject(member)) {
-                    setFocusedObject(member);
-                }
+                break;
             }
         } else {
             // root is selected
@@ -365,7 +305,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         validate();
     }
 
-    public void setSceneFocusForExplorer() {
+    public void setDiagramFocusForExplorer() {
         try {
             ExplorerManager em = umlTopComponent.getExplorerManager();
             em.setSelectedNodes(new Node[]{em.getRootContext()});

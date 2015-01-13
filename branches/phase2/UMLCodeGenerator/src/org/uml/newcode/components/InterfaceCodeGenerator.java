@@ -1,4 +1,4 @@
-package org.uml.newcode;
+package org.uml.newcode.components;
 
 import de.hunsicker.jalopy.Jalopy;
 import japa.parser.ast.CompilationUnit;
@@ -13,7 +13,6 @@ import japa.parser.ast.body.VariableDeclaratorId;
 import japa.parser.ast.expr.NameExpr;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import java.io.File;
-import static java.io.File.separator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -26,57 +25,87 @@ import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.RelationBase;
+import org.uml.newcode.CodeGeneratorUtils;
+import org.uml.newcode.renaming.ComponentRenameTable;
 
 /**
  *
  * @author Boris
  */
-class InterfaceCodeGenerator {
+public class InterfaceCodeGenerator {
 
     public static void generateOrUpdateCode(InterfaceComponent component, String sourcePath) {
-//        String pack = component.getParentPackage();
-//        if (!pack.equals("")) {
-//            String packagePath = pack.replace(".", separator);
-//            sourcePath += packagePath + separator;
-//        }
-//        new File(sourcePath).mkdirs();
-//        String name = component.getName();
-//        File sourceFile = new File(sourcePath + name + ".java");
-//
-//        String code = "";
-//        if (sourceFile.exists()) {
-////            CompilationUnit cu;
-////            try {
-////                cu = JavaParser.parse(new FileReader(sourceFile), true);
-////                code = updateCode(component, cu);
-////            } catch (ParseException ex) {
-////                Token tok = ex.currentToken;
-////                int line = tok.beginLine;
-////                int column = tok.beginColumn;
-////                JOptionPane.showMessageDialog(null, "Malformed code at line " + line + " column " + column + ". Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
-////            } catch (FileNotFoundException ex) {
-////                // Already checked for file existance, but if file is somehow deleted, generate code.
-////                code = generateCode(component);
-////            }
-//            // temp
-//            code = generateCode(component);
-//        } else {
-//            code = generateCode(component);
-//        }
-//
-//        try {
-//            FileUtils.writeStringToFile(sourceFile, code);
-//        } catch (IOException ex) {
-//            JOptionPane.showMessageDialog(null, "Cannot write file " + sourceFile.getName() + "!", "Error", JOptionPane.ERROR_MESSAGE);
-//        }
-//
-//        try {
-//            Jalopy jlp = new Jalopy();
-//            jlp.setInput(sourceFile);
-//            jlp.setOutput(sourceFile);
-//            jlp.format();
-//        } catch (FileNotFoundException ex) {
-//        }
+        
+        String code = "";
+        File sourceFile;
+        // if component has been renamed, the source file should have the old name
+        if (ComponentRenameTable.components.containsKey(component.getSignature())) {  //-> new to old
+            String newSignature = component.getSignature();
+            String oldFullQualifiedName = ComponentRenameTable.components.get(newSignature);
+            String pathToOldFile = sourcePath + oldFullQualifiedName.replace(".", File.separator) + ".java";
+            sourceFile = new File(pathToOldFile);
+        } 
+        // if the component has not been renamed, the source should have the new name
+        else {
+            String fullQualifiedName = component.getSignature();
+            String pathToFile = sourcePath + fullQualifiedName.replace(".", File.separator) + ".java";
+            sourceFile = new File(pathToFile);
+        }
+
+        // if source exists, update code
+        if (sourceFile.exists()) {
+//            try {
+//                FileReader fileReader = new FileReader(sourceFile);
+//                CompilationUnit cu = JavaParser.parse(fileReader, true);
+//                fileReader.close();
+//                code = updateCode(component, cu);
+//                sourceFile.delete();
+//            } catch (ParseException ex) {
+//                Token tok = ex.currentToken;
+//                JOptionPane.showMessageDialog(null, "Malformed code at line " + tok.beginLine + " column " + tok.beginColumn + ". Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
+//            } catch (FileNotFoundException ex) {
+//                // Already checked for file existance, but if file is somehow deleted, generate code.
+                code = generateCode(component);
+//            } catch (IOException ex) {
+//                JOptionPane.showMessageDialog(null, "IOException!", "Error", JOptionPane.ERROR_MESSAGE);
+//                Exceptions.printStackTrace(ex);
+//            }
+        } 
+        // if source does not exist, generate code from scratch
+        else {
+            code = generateCode(component);
+        }
+
+        // Add package to path
+        String pack = component.getParentPackage();
+        String fullPackagePath;
+        if (!pack.equals("")) {
+            String packagePath = pack.replace(".", File.separator);
+            fullPackagePath = sourcePath + packagePath + File.separator;
+        } else {
+            fullPackagePath = sourcePath;
+        }
+
+        // Create path folder structure
+        new File(fullPackagePath).mkdirs();
+
+        String name = component.getName();
+        // Write-out the source file
+        File outSourceFile = new File(fullPackagePath + name + ".java");
+        try {
+            FileUtils.writeStringToFile(outSourceFile, code);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Cannot write file " + outSourceFile.getName() + "!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        // Format the source file
+        try {
+            Jalopy jlp = new Jalopy();
+            jlp.setInput(outSourceFile);
+            jlp.setOutput(outSourceFile);
+            jlp.format();
+        } catch (FileNotFoundException ex) {
+        }
     }
 
     private static String generateCode(InterfaceComponent component) {
@@ -106,7 +135,7 @@ class InterfaceCodeGenerator {
         }
         if (component.isStatic()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
 
-        ComponentBase extendedComponent = getClassThatIsExtended(component);
+        ComponentBase extendedComponent = getInterfaceThatIsExtended(component);
         if (extendedComponent != null) {
             List<ClassOrInterfaceType> extended = new LinkedList<>();
             extended.add(new ClassOrInterfaceType(extendedComponent.getName()));
@@ -118,7 +147,7 @@ class InterfaceCodeGenerator {
         cu.getTypes().add(declaration);
     }
 
-    private static ComponentBase getClassThatIsExtended(InterfaceComponent component) {
+    private static ComponentBase getInterfaceThatIsExtended(InterfaceComponent component) {
         for (RelationBase relation : component.getParentDiagram().getRelations()) {
             if (relation instanceof IsRelation && relation.getSource() == component) {
                 return relation.getTarget();

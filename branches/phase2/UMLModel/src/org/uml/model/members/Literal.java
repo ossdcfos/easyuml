@@ -46,4 +46,9 @@ public class Literal extends MemberBase {
         return name;
     }
 
+    @Override
+    public boolean allowedToAddModifier(int modifier) {
+        return false;
+    }
+
 }

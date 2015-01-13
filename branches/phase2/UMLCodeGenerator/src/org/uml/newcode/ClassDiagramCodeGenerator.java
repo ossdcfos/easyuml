@@ -1,5 +1,8 @@
 package org.uml.newcode;
 
+import org.uml.newcode.components.InterfaceCodeGenerator;
+import org.uml.newcode.components.ClassCodeGenerator;
+import org.uml.newcode.components.EnumCodeGenerator;
 import java.io.File;
 import java.util.HashMap;
 import org.uml.model.ClassDiagram;
@@ -36,7 +39,7 @@ public class ClassDiagramCodeGenerator {
             } else if (component instanceof InterfaceComponent) {
                 InterfaceCodeGenerator.generateOrUpdateCode((InterfaceComponent) component, sourcePath);
             } else if (component instanceof EnumComponent) {
-                EnumCodeGenerator.generateOrUpdateCode((EnumComponent) component);
+                EnumCodeGenerator.generateOrUpdateCode((EnumComponent) component, sourcePath);
             }
         }
         // clear tables after everything has been generated, because the data in them has already been applied to code

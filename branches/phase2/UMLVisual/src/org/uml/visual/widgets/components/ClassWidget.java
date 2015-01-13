@@ -1,11 +1,13 @@
 package org.uml.visual.widgets.components;
 
+import java.awt.Dimension;
 import org.uml.visual.widgets.members.ConstructorWidget;
 import org.uml.visual.widgets.members.MethodWidget;
 import org.uml.visual.widgets.members.FieldWidget;
 import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
+import java.util.concurrent.Callable;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -31,9 +33,9 @@ import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
  */
 public class ClassWidget extends ComponentWidgetBase {
 
-    private Widget headerWidget;
-    private final Widget fieldsContainer;
-    private final Widget methodsContainer;
+    private final Widget headerWidget;
+    private final MemberContainerWidget fieldsContainer;
+    private final MemberContainerWidget methodsContainer;
 
     public ClassWidget(ClassDiagramScene scene, ClassComponent classComponent) {
         super(scene, classComponent);
@@ -41,14 +43,17 @@ public class ClassWidget extends ComponentWidgetBase {
         // Header
         headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        headerWidget.setBorder(EMPTY_BORDER_4);
+        headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
         if (classComponent.isAbstract()) {
             LabelWidget abstractLabel = new LabelWidget(headerWidget.getScene(), "<<abstract>>");
-            abstractLabel.setFont(headerWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
+            abstractLabel.setFont(headerWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC, 11));
             abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
             headerWidget.addChild(abstractLabel);
+            setMinimumSize(MIN_DIMENSION_2ROW);
+        } else {
+            setMinimumSize(MIN_DIMENSION_1ROW);
         }
-
+        
         nameLabel.setLabel(component.getName());
         headerWidget.addChild(nameLabel);
         addChild(headerWidget);
@@ -56,46 +61,54 @@ public class ClassWidget extends ComponentWidgetBase {
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
         // Fields
-        fieldsContainer = new Widget(scene);
-        fieldsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
-        fieldsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
-        fieldsContainer.setOpaque(false);
-        fieldsContainer.setBorder(EMPTY_BORDER_4);
-        LabelWidget fieldName = new LabelWidget(scene);
-        fieldsContainer.addChild(fieldName);
+        fieldsContainer = new MemberContainerWidget(scene, "field");
+        fieldsContainer.addAddAction(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                addFieldWidget();
+                return null;
+            }
+        });
         addChild(fieldsContainer);
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
         // Methods
-        methodsContainer = new Widget(scene);
-        methodsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
-        methodsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
-        methodsContainer.setOpaque(false);
-        methodsContainer.setBorder(EMPTY_BORDER_4);
-        LabelWidget methodName = new LabelWidget(scene);
-        methodsContainer.addChild(methodName);
+        methodsContainer = new MemberContainerWidget(scene, "method");
+        methodsContainer.addAddAction(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                addMethodWidget();
+                return null;
+            }
+        });
         addChild(methodsContainer);
 
         // Actions
         getActions().addAction(ActionFactory.createAcceptAction(new ComponentWidgetAcceptProvider()));
         getActions().addAction(ActionFactory.createPopupMenuAction(new ClassPopupMenuProvider(this)));
 
+//        setMaximumSize(new Dimension(Integer.MAX_VALUE, MIN_DIMENSION_1ROW.height + 2*(getLabelSizeForFont(ADD_LABEL_FONT_SIZE) + 2*EMPTY_BORDER_SIZE)));
         // Fill the widget when loading an existing diagram
-        for (Constructor c : classComponent.getConstructors()) {
-            ConstructorWidget w = new ConstructorWidget(scene, c);
-            addMember(methodsContainer, w);
+        for (Constructor constructor : classComponent.getConstructors()) {
+            ConstructorWidget constructorWidget = new ConstructorWidget(scene, constructor);
+            addMember(methodsContainer, constructorWidget);
         }
 
-        for (Field fieldComp : classComponent.getFields()) {
-            FieldWidget w = new FieldWidget(getClassDiagramScene(), fieldComp);
-            addMember(fieldsContainer, w);
+        for (Field field : classComponent.getFields()) {
+            FieldWidget fieldWidget = new FieldWidget(scene, field);
+            addMember(fieldsContainer, fieldWidget);
         }
 
-        for (Method methodComp : classComponent.getMethods()) {
-            MethodWidget mw = new MethodWidget(getClassDiagramScene(), methodComp);
-            addMember(methodsContainer, mw);
+        for (Method method : classComponent.getMethods()) {
+            MethodWidget methodWidget = new MethodWidget(scene, method);
+            addMember(methodsContainer, methodWidget);
         }
+    }
+
+    @Override
+    public ClassComponent getComponent() {
+        return (ClassComponent) component;
     }
 
     public void addFieldWidget() {
@@ -131,7 +144,7 @@ public class ClassWidget extends ComponentWidgetBase {
     public final void addConstructorWidget() {
         Constructor constructor = new Constructor(getName());
         String signature = constructor.getSignature();
-        
+
         if (component.signatureExists(signature)) {
             JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
         } else {
@@ -149,11 +162,6 @@ public class ClassWidget extends ComponentWidgetBase {
     }
 
     @Override
-    public ClassComponent getComponent() {
-        return (ClassComponent) component;
-    }
-
-    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         super.propertyChange(evt);
         if ("isAbstract".equals(evt.getPropertyName())) {
@@ -168,8 +176,10 @@ public class ClassWidget extends ComponentWidgetBase {
             abstractLabel.setFont(headerWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
             abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
             headerWidget.addChild(0, abstractLabel);
+            setMinimumSize(MIN_DIMENSION_2ROW);
         } else {
             headerWidget.removeChild(headerWidget.getChildren().get(0));
+            setMinimumSize(MIN_DIMENSION_1ROW);
         }
         getScene().validate();
     }

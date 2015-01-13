@@ -35,7 +35,7 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 @ActionRegistration(
         displayName = "#CTL_ReverseEngineerAction")
 @ActionReferences({
-    @ActionReference(path = "Menu/Source", position = 50),
+//    @ActionReference(path = "Menu/Source", position = 50),
     @ActionReference(path = "Projects/org-netbeans-modules-java-j2seproject/Actions", position = 1050)
 })
 @Messages("CTL_ReverseEngineerAction=easyUML Reverse Engineer")
@@ -82,10 +82,10 @@ public final class ReverseEngineerAction implements ActionListener {
         }
         //Present the generated diagram to user
         umlTopComponent.open();
-        //Make JUNG object
-        JUNGEngine je = new JUNGEngine(umlTopComponent.getClassDiagramScene());
-        //Apply it's layout to diagram (scene)
-        je.applyJUNGLayout();
+//        //Make JUNG object
+//        JUNGEngine je = new JUNGEngine(umlTopComponent.getClassDiagramScene());
+//        //Apply it's layout to diagram (scene)
+//        je.applyJUNGLayout();
     }
 
     /**
