@@ -113,7 +113,12 @@ public class ReverseEngineer {
         clazz.setFinal(ModifierSet.isFinal(declaration.getModifiers()));
         clazz.setStatic(ModifierSet.isStatic(declaration.getModifiers()));
         // TODO fix for inner classes
-        clazz.setParentPackage(((CompilationUnit) declaration.getParentNode()).getPackage().getName().toString());
+        CompilationUnit parent = (CompilationUnit) declaration.getParentNode();
+        if (parent.getPackage() != null) {
+            clazz.setParentPackage(parent.getPackage().getName().toString());
+        } else {
+            clazz.setParentPackage("");
+        }
 
         for (BodyDeclaration member : safe(declaration.getMembers())) {
             if (member instanceof FieldDeclaration) {
@@ -130,6 +135,49 @@ public class ReverseEngineer {
         clazz.setLocation(getNextComponentPosition());
 
         return clazz;
+    }
+
+    private static ComponentBase createInterface(ClassOrInterfaceDeclaration declaration) {
+        InterfaceComponent interfaze = new InterfaceComponent(declaration.getName());
+        interfaze.setStatic(ModifierSet.isStatic(declaration.getModifiers()));
+
+        CompilationUnit parent = (CompilationUnit) declaration.getParentNode();
+        if (parent.getPackage() != null) {
+            interfaze.setParentPackage(parent.getPackage().getName().toString());
+        } else {
+            interfaze.setParentPackage("");
+        }
+
+        for (BodyDeclaration member : safe(declaration.getMembers())) {
+            if (member instanceof MethodDeclaration) {
+                Method methodMember = createMethod((MethodDeclaration) member);
+                interfaze.addMethod(methodMember);
+            }
+        }
+        interfaze.setLocation(getNextComponentPosition());
+
+        return interfaze;
+    }
+
+    private static ComponentBase createEnum(EnumDeclaration declaration) {
+        EnumComponent enumm = new EnumComponent(declaration.getName());
+
+        CompilationUnit parent = (CompilationUnit) declaration.getParentNode();
+        if (parent.getPackage() != null) {
+            enumm.setParentPackage(parent.getPackage().getName().toString());
+        } else {
+            enumm.setParentPackage("");
+        }
+
+        for (BodyDeclaration entry : safe(declaration.getEntries())) {
+            if (entry instanceof EnumConstantDeclaration) {
+                Literal literalMember = createLiteral((EnumConstantDeclaration) entry);
+                enumm.addLiteral(literalMember);
+            }
+        }
+        enumm.setLocation(getNextComponentPosition());
+
+        return enumm;
     }
 
     private static Field createField(FieldDeclaration declaration) {
@@ -206,37 +254,6 @@ public class ReverseEngineer {
             return Visibility.PROTECTED;
         else if (ModifierSet.isPrivate(modifiers)) return Visibility.PRIVATE;
         else return Visibility.PACKAGE;
-    }
-
-    private static ComponentBase createInterface(ClassOrInterfaceDeclaration declaration) {
-        InterfaceComponent interfaze = new InterfaceComponent(declaration.getName());
-        interfaze.setStatic(ModifierSet.isStatic(declaration.getModifiers()));
-        interfaze.setParentPackage(declaration.getParentNode().toString());
-
-        for (BodyDeclaration member : safe(declaration.getMembers())) {
-            if (member instanceof MethodDeclaration) {
-                Method methodMember = createMethod((MethodDeclaration) member);
-                interfaze.addMethod(methodMember);
-            }
-        }
-        interfaze.setLocation(getNextComponentPosition());
-
-        return interfaze;
-    }
-
-    private static ComponentBase createEnum(EnumDeclaration declaration) {
-        EnumComponent enumm = new EnumComponent(declaration.getName());
-        enumm.setParentPackage(declaration.getParentNode().toString());
-
-        for (BodyDeclaration member : safe(declaration.getMembers())) {
-            if (member instanceof EnumConstantDeclaration) {
-                Literal literalMember = createLiteral((EnumConstantDeclaration) member);
-                enumm.addLiteral(literalMember);
-            }
-        }
-        enumm.setLocation(getNextComponentPosition());
-
-        return enumm;
     }
 
     private static Literal createLiteral(EnumConstantDeclaration declaration) {

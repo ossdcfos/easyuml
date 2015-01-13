@@ -19,6 +19,12 @@ public abstract class HasBaseRelation extends RelationBase {
 
     public static enum Type {
 
+        DEFAULT {
+                    @Override
+                    public String toString() {
+                        return "Default";
+                    }
+                },
         AGGREGATION {
                     @Override
                     public String toString() {
@@ -43,6 +49,10 @@ public abstract class HasBaseRelation extends RelationBase {
     private String collectionType;
     private Type type;
 
+    public Type getType() {
+        return type;
+    }
+
     // if not composition, than it is aggregation
     protected HasBaseRelation(Type type) {
         this.type = type;
@@ -55,7 +65,7 @@ public abstract class HasBaseRelation extends RelationBase {
      */
     @Override
     public String toString() {
-        return "Has ("+type+")";
+        return "Has (" + type + ")";
     }
 
     /**
@@ -124,10 +134,6 @@ public abstract class HasBaseRelation extends RelationBase {
      */
     public void setCollectionType(String collectionType) {
         this.collectionType = collectionType;
-    }
-
-    public boolean isComposition() {
-        return type == Type.COMPOSITION;
     }
 
     @Override

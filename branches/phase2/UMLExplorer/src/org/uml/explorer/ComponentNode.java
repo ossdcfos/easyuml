@@ -102,55 +102,56 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
     @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
-        Sheet.Set propertiesSet = Sheet.createPropertiesSet();
-        propertiesSet.setName("propertiesSet");
-        propertiesSet.setDisplayName("Properties");
+        
+        Sheet.Set generalProperties = Sheet.createPropertiesSet();
+        generalProperties.setName("generalSet");
+        generalProperties.setDisplayName("General");
+        
+        Sheet.Set modifiersProperties = Sheet.createPropertiesSet();
+        modifiersProperties.setName("modifiersSet");
+        modifiersProperties.setDisplayName("Modifiers");
 
         try {
             Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getName", "setComponentName");
             nameProp.setName("Name");
-            propertiesSet.put(nameProp);
+            generalProperties.put(nameProp);
 
             Property<String> packageProp = new PropertySupport.Reflection<>(this, String.class, "getParentPackage", "setParentPackage");
             packageProp.setName("Package");
-            propertiesSet.put(packageProp);
+            generalProperties.put(packageProp);
 
             if (component instanceof ClassComponent || component instanceof InterfaceComponent) {
 
                 Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(component, Visibility.class, "getVisibility", "setVisibility");
                 visibilityProp.setName("Visibility");
-                propertiesSet.put(visibilityProp);
+                generalProperties.put(visibilityProp);
 
                 if (component instanceof ClassComponent) {
                     ClassComponent classComponent = (ClassComponent) component;
                     Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isStatic", "setStatic");
                     isStaticProp.setName("static");
-                    propertiesSet.put(isStaticProp);
+                    modifiersProperties.put(isStaticProp);
 
                     Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isFinal", "setFinal");
                     isFinalProp.setName("final");
-                    propertiesSet.put(isFinalProp);
+                    modifiersProperties.put(isFinalProp);
 
                     Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isAbstract", "setAbstract");
                     isAbstractProp.setName("abstract");
-                    propertiesSet.put(isAbstractProp);
+                    modifiersProperties.put(isAbstractProp);
                 } else if (component instanceof InterfaceComponent) {
                     InterfaceComponent interfaceComponent = (InterfaceComponent) component;
                     Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(interfaceComponent, boolean.class, "isStatic", "setStatic");
                     isStaticProp.setName("static");
-                    propertiesSet.put(isStaticProp);
+                    modifiersProperties.put(isStaticProp);
                 }
             }
-
-//            PackageComponent pack = component.getParentPackage();
-//            Property<String> packageProp = new PropertySupport.Reflection<>(pack, String.class, "getName", null);
-//            packageProp.setName("Package");
-//            propertiesSet.put(packageProp);
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
         }
 
-        sheet.put(propertiesSet);
+        sheet.put(generalProperties);
+        sheet.put(modifiersProperties);
         return sheet;
     }
 

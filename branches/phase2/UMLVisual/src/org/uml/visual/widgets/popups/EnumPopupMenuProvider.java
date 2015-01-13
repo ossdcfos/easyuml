@@ -44,16 +44,7 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
     ActionListener addLiteralListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Literal literal = new Literal("LITERAL");
-            LiteralWidget w = new LiteralWidget(enumWidget.getClassDiagramScene(), literal);
-            enumWidget.getComponent().addLiteral(literal);
-            enumWidget.addLiteralWidget(w);
-            enumWidget.getScene().validate();
-
-            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(w));
-            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
-            MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
-            enumWidget.getScene().getView().addMouseListener(mouseListener);
+            enumWidget.addLiteralWidget();
         }
     };
     

@@ -99,6 +99,25 @@ public class Method extends MethodBase {
         }
         pcs.firePropertyChange("isSynchronized", Modifier.isSynchronized(oldModifiers), isSynchronized());
     }
+    
+    @Override
+    public boolean allowedToAddModifier(int modifier) {
+        switch (modifier) {
+            case Modifier.STATIC:
+                if (isAbstract()) return false;
+                break;
+            case Modifier.FINAL:
+                if (isAbstract()) return false;
+                break;
+            case Modifier.ABSTRACT:
+                if (isStatic() || isFinal() || isSynchronized()) return false;
+                break;
+            case Modifier.SYNCHRONIZED:
+                if (isAbstract()) return false;
+                break;
+        }
+        return true;
+    }
 
 //    /**
 //     * Creates a string that represents Method's signature.
@@ -119,5 +138,4 @@ public class Method extends MethodBase {
 //        result.append(";\n");
 //        return result.toString();
 //    }
-
 }

@@ -1,4 +1,4 @@
-package org.uml.newcode;
+package org.uml.newcode.members;
 
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
@@ -17,6 +17,7 @@ import org.uml.model.members.Field;
 import org.uml.model.relations.CardinalityEnum;
 import org.uml.model.relations.HasBaseRelation;
 import org.uml.model.relations.RelationBase;
+import org.uml.newcode.CodeGeneratorUtils;
 import org.uml.newcode.renaming.MemberRenameTable;
 
 /**
@@ -130,6 +131,17 @@ public class FieldCodeGenerator {
         declaration.setVariables(variables);
         String type = field.getType();
         declaration.setType(CodeGeneratorUtils.parseType(type));
+        switch (field.getVisibility()) {
+            case PUBLIC:
+                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PUBLIC));
+                break;
+            case PROTECTED:
+                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PROTECTED));
+                break;
+            case PRIVATE:
+                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PRIVATE));
+                break;
+        }
         if (field.isStatic()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
         if (field.isFinal()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.FINAL));
         if (field.isVolatile()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.VOLATILE));

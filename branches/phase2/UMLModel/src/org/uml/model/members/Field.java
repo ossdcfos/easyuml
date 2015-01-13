@@ -153,7 +153,7 @@ public class Field extends MemberBase {
     public String getLabelText() {
         StringBuilder result = new StringBuilder();
         // removes static because it is rendered as underline
-        if((modifiers & ~Modifier.STATIC) != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
+        if ((modifiers & ~Modifier.STATIC) != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
         result.append(getSignature());
         return result.toString();
     }
@@ -176,7 +176,6 @@ public class Field extends MemberBase {
 //        result.append(getSignature());
 //        return result.toString();
 //    }
-
     @Override
     public String deriveSignatureFromName(String newName) {
         StringBuilder result = new StringBuilder();
@@ -217,5 +216,22 @@ public class Field extends MemberBase {
 //                break;
 //        }
 //    }
+    
+    
+    @Override
+    public boolean allowedToAddModifier(int modifier) {
+        return true;
+//        switch (modifier) {
+//            case Modifier.STATIC:
+//                break;
+//            case Modifier.FINAL:
+//                break;
+//            case Modifier.TRANSIENT:
+//                break;
+//            case Modifier.VOLATILE:
+//                break;
+//        }
+//        return false;
+    }
 
 }

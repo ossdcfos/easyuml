@@ -12,15 +12,16 @@ import org.openide.nodes.Node;
 class PaletteItemChildFactory extends ChildFactory<PaletteItem> {
 
     private final String[][] ITEMS = new String[][]{
-        {"Class", "Components", "org/uml/visual/icons/class.png", "org.uml.model.components.ClassComponent", "org.uml.visual.widgets.components.ClassWidget"},
-        {"Interface", "Components", "org/uml/visual/icons/interface.png", "org.uml.model.components.InterfaceComponent", "org.uml.visual.widgets.components.InterfaceWidget"},
-        {"Enum", "Components", "org/uml/visual/icons/enum.png", "org.uml.model.components.EnumComponent", "org.uml.visual.widgets.components.EnumWidget"},
+        {"Class", "Components", "org/uml/visual/icons/class.png", "org.uml.model.components.ClassComponent"},
+        {"Interface", "Components", "org/uml/visual/icons/interface.png", "org.uml.model.components.InterfaceComponent"},
+        {"Enum", "Components", "org/uml/visual/icons/enum.png", "org.uml.model.components.EnumComponent"},
         
-        {"Is", "Relations", "org/uml/visual/icons/is.png", "org.uml.model.relations.IsRelation", "org.uml.visual.widgets.RelationWidgetBase"},
-        {"Implements", "Relations", "org/uml/visual/icons/implements.png", "org.uml.model.relations.ImplementsRelation", "org.uml.visual.widgets.RelationWidgetBase"},
-        {"Has (agg)", "Relations", "org/uml/visual/icons/has_agg.png", "org.uml.model.relations.AggregationRelation", "org.uml.visual.widgets.RelationWidgetBase"},
-        {"Has (comp)", "Relations", "org/uml/visual/icons/has_comp.png", "org.uml.model.relations.CompositionRelation", "org.uml.visual.widgets.RelationWidgetBase"},
-        {"Use", "Relations", "org/uml/visual/icons/use.png", "org.uml.model.relations.UseRelation", "org.uml.visual.widgets.RelationWidgetBase"}
+        {"Is", "Relations", "org/uml/visual/icons/is.png", "org.uml.model.relations.IsRelation"},
+        {"Implements", "Relations", "org/uml/visual/icons/implements.png", "org.uml.model.relations.ImplementsRelation"},
+        {"Has", "Relations", "org/uml/visual/icons/has.png", "org.uml.model.relations.HasRelation"},
+        {"Has (agg)", "Relations", "org/uml/visual/icons/has_agg.png", "org.uml.model.relations.AggregationRelation"},
+        {"Has (comp)", "Relations", "org/uml/visual/icons/has_comp.png", "org.uml.model.relations.CompositionRelation"},
+        {"Use", "Relations", "org/uml/visual/icons/use.png", "org.uml.model.relations.UseRelation"}
     };
 
     private final PaletteCategory category;

@@ -3,6 +3,7 @@ package org.uml.model.members;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
+import javax.swing.JOptionPane;
 import org.uml.model.IHasSignature;
 import org.uml.model.INameable;
 import org.uml.model.Visibility;
@@ -29,22 +30,25 @@ public abstract class MemberBase implements INameable, IHasSignature {
     /**
      * Modifier is a int value representing access and non-access modifier in
      * Java e.g. public is represented as 0x00000001, static as 0x00000008.
-     * 
+     *
      * @see java.lang.reflect.Modifier
      */
     protected int modifiers;
     private transient ComponentBase declaringComponent;
     protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         pcs.addPropertyChangeListener(pcl);
     }
+
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         pcs.removePropertyChangeListener(pcl);
     }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public boolean listenerTypeExists(Class clazz){
-        for(PropertyChangeListener pcl : pcs.getPropertyChangeListeners()){
-            if(clazz.isAssignableFrom(pcl.getClass())) return true;
+    public boolean listenerTypeExists(Class clazz) {
+        for (PropertyChangeListener pcl : pcs.getPropertyChangeListeners()) {
+            if (clazz.isAssignableFrom(pcl.getClass())) return true;
         }
         return false;
     }
@@ -57,8 +61,7 @@ public abstract class MemberBase implements INameable, IHasSignature {
     protected MemberBase(String name) {
         this.name = name;
     }
-    
-    
+
     @Override
     public String getName() {
         return name;
@@ -80,7 +83,7 @@ public abstract class MemberBase implements INameable, IHasSignature {
         this.type = newType;
         pcs.firePropertyChange("type", oldType, newType);
     }
-    
+
     /**
      * Adds numerical representation of java Modifier enum's constants into
      * modifiers array.
@@ -94,11 +97,14 @@ public abstract class MemberBase implements INameable, IHasSignature {
      */
     public void addModifier(int modifier) //throws Exception 
     {
-        if ((this instanceof Field && (Modifier.fieldModifiers() & modifier) != 0)
+        if (((this instanceof Field && (Modifier.fieldModifiers() & modifier) != 0)
                 || (this instanceof Method && (Modifier.methodModifiers() & modifier) != 0)
-                || (this instanceof Constructor && (Modifier.constructorModifiers()& modifier) != 0)) {
+                || (this instanceof Constructor && (Modifier.constructorModifiers() & modifier) != 0))
+                && allowedToAddModifier(modifier)) {
             modifiers |= modifier;
         } else {
+            // TODO should not be here, model without GUI
+            JOptionPane.showMessageDialog(null, "Illegal modifier combination \""+Modifier.toString(modifiers | modifier)+"\"!", "Warning", JOptionPane.WARNING_MESSAGE);
             //throw new Exception("Modifier " + Modifier.toString(modifier) + " not allowed for " + this.getClass().getSimpleName() + ".");
         }
     }
@@ -114,6 +120,8 @@ public abstract class MemberBase implements INameable, IHasSignature {
     public void removeModifier(int modifier) {
         modifiers &= ~modifier;
     }
+
+    public abstract boolean allowedToAddModifier(int modifier);
 
     public Visibility getVisibility() {
         return visibility;
@@ -132,15 +140,17 @@ public abstract class MemberBase implements INameable, IHasSignature {
     public void setDeclaringComponent(ComponentBase declaringComponent) {
         this.declaringComponent = declaringComponent;
     }
-    
+
     @Override
     // signature without modifiers
     public abstract String getSignature();
+
     public abstract String getLabelText();
-    
+
     public abstract String deriveSignatureFromName(String newName);
+
     public abstract String deriveSignatureFromType(String newType);
-    
+
 //    @Override
 //    public String toString(){
 //        return getSignature();

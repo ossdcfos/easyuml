@@ -1,7 +1,10 @@
 package org.uml.visual.widgets.components;
 
+import java.awt.event.MouseListener;
+import java.util.concurrent.Callable;
 import org.uml.visual.widgets.members.LiteralWidget;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.SeparatorWidget;
@@ -9,7 +12,9 @@ import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.members.Literal;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.actions.MemberNameEditor;
 import org.uml.visual.widgets.popups.EnumPopupMenuProvider;
+import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
 
 /**
  *
@@ -17,18 +22,19 @@ import org.uml.visual.widgets.popups.EnumPopupMenuProvider;
  */
 public class EnumWidget extends ComponentWidgetBase {
 
-    private final Widget literalsContainer;
+    private final MemberContainerWidget literalsContainer;
 
     public EnumWidget(ClassDiagramScene scene, EnumComponent enumComponent) {
         super(scene, enumComponent);
+        setMinimumSize(MIN_DIMENSION_2ROW);
 
         Widget headerWidget = new Widget(scene);
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        headerWidget.setBorder(EMPTY_BORDER_4);
+        headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
 
-        LabelWidget stereotype = new LabelWidget(scene, "<<enumeration>>");
-        stereotype.setAlignment(LabelWidget.Alignment.CENTER);
-        headerWidget.addChild(stereotype);
+        LabelWidget enumerationLabel = new LabelWidget(scene, "<<enumeration>>");
+        enumerationLabel.setAlignment(LabelWidget.Alignment.CENTER);
+        headerWidget.addChild(enumerationLabel);
 
         nameLabel.setLabel(component.getName());
         headerWidget.addChild(nameLabel);
@@ -36,105 +42,43 @@ public class EnumWidget extends ComponentWidgetBase {
 
         addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
 
-        literalsContainer = new Widget(scene);
-        literalsContainer.setLayout(LayoutFactory.createVerticalFlowLayout());
-        literalsContainer.setMinimumSize(CONTAINER_MIN_DIMENSION);
-        literalsContainer.setOpaque(false);
-        literalsContainer.setBorder(EMPTY_BORDER_4);
-        LabelWidget literalName = new LabelWidget(scene);
-        literalsContainer.addChild(literalName);
+        literalsContainer = new MemberContainerWidget(scene, "literal");
+        literalsContainer.addAddAction(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                addLiteralWidget();
+                return null;
+            }
+        });
         addChild(literalsContainer);
 
         this.nameLabel.setLabel(component.getName());
 
         getActions().addAction(ActionFactory.createPopupMenuAction(new EnumPopupMenuProvider(this)));
+        
+//        setMaximumSize(new Dimension(Integer.MAX_VALUE, MIN_DIMENSION_2ROW.height + (getLabelSizeForFont(ADD_LABEL_FONT_SIZE) + 2*EMPTY_BORDER_SIZE)));
 
-        for (Literal l : getComponent().getLiterals()) {
-            LiteralWidget w = new LiteralWidget(scene, l);
-            this.addLiteralWidget(w);
+        for (Literal literal : getComponent().getLiterals()) {
+            LiteralWidget literalWidget = new LiteralWidget(scene, literal);
+            addMember(literalsContainer, literalWidget);
         }
-
-        // scene.validate();
     }
 
     @Override
     public final EnumComponent getComponent() {
         return (EnumComponent) component;
     }
-
-    @Override
-    public String toString() {
-        return component.getName();
-    }
-
-//    public Widget createLiteralWidget(String literalName) {
-//        Scene scene = getScene();
-//
-//        Widget literalWidget = new Widget(scene);
-//        literalWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-//
-//        LabelWidget labelWidget = new LabelWidget(scene);
-//        labelWidget.setLabel(literalName);
-//        labelWidget.getActions().addAction(nameEditorAction);
-//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(literalWidget)));
-//
-//        literalWidget.addChild(labelWidget);
-//
-//        return literalWidget;
-//    }
-
-//    public Widget createFieldWidget(String fieldName) {
-//        Scene scene = getScene();
-//
-//        Widget fieldWidget = new Widget(scene);
-//        fieldWidget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-//
-//        LabelWidget visibilityLabel = new LabelWidget(scene);
-//        visibilityLabel.setLabel("+");
-//        fieldWidget.addChild(visibilityLabel);
-//
-//        LabelWidget labelWidget = new LabelWidget(scene);
-//        labelWidget.setLabel(fieldName);
-//        labelWidget.getActions().addAction(nameEditorAction);
-//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(fieldWidget)));
-//
-//        fieldWidget.addChild(labelWidget);
-//
-//        return fieldWidget;
-//    }
-
-//    public Widget createMethodWidget(String methodName) {
-//        Scene scene = getScene();
-//        Widget widget = new Widget(scene);
-//        widget.setLayout(LayoutFactory.createHorizontalFlowLayout());
-//
-//        LabelWidget visibilityLabel = new LabelWidget(scene);
-//        visibilityLabel.setLabel("+");
-//        widget.addChild(visibilityLabel);
-//
-//        LabelWidget labelWidget = new LabelWidget(scene);
-//        labelWidget.setLabel(methodName);
-//        widget.addChild(labelWidget);
-//        labelWidget.getActions().addAction(nameEditorAction);
-//        //labelWidget.getActions().addAction(ActionFactory.createPopupMenuAction(new FieldPopupMenuProvider(widget)));
-//
-//        return widget;
-//    }
-
-//    public final void addFieldWidget(FieldWidget fieldWidget) {
-//        addMember(fieldsContainer, fieldWidget);
-//    }
-//
-//    public final void addMethodWidget(MethodWidget operationWidget) {
-//        addMember(methodsContainer, operationWidget);
-//    }
-//
-//    public final void addConstructorWidget(ConstructorWidget operationWidget) {
-//        addMember(methodsContainer, operationWidget);
-//    }
-
-    public final void addLiteralWidget(LiteralWidget literalWidget) {
+    
+    public final void addLiteralWidget() {
+        Literal literal = new Literal("LITERAL");
+        getComponent().addLiteral(literal);
+        LiteralWidget literalWidget = new LiteralWidget(getClassDiagramScene(), literal);
         addMember(literalsContainer, literalWidget);
-    }
+        getScene().validate();
 
+        WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(literalWidget));
+        ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(literalWidget.getNameLabel());
+        MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
+        getScene().getView().addMouseListener(mouseListener);
+    }
 }

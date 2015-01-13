@@ -44,22 +44,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
     ActionListener addMethodListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            Method m = new Method("untitledMethod", "void");
-            try {
-                interfaceWidget.getComponent().addMethod(m);
-
-            } catch (RuntimeException ex) {
-                JOptionPane.showMessageDialog(menu, "Greska u pravljenju metode interfejsa " + m.getName(), "Greska!", JOptionPane.ERROR_MESSAGE);
-            }
-            MethodWidget w = new MethodWidget(interfaceWidget.getClassDiagramScene(), m);
-            interfaceWidget.addMethodWidget(w);
-            interfaceWidget.getScene().validate();
-
-            WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(w));
-            ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(w.getNameLabel());
-            MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
-            interfaceWidget.getScene().getView().addMouseListener(mouseListener);
+            interfaceWidget.addMethodWidget();
         }
     };
 
