@@ -1,5 +1,6 @@
 package org.uml.model.components;
 
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashSet;
 import org.uml.model.members.MemberBase;
@@ -15,6 +16,7 @@ import org.uml.model.members.Method;
  * @see EnumComponent
  * @see PackageComponent
  */
+//@XStreamAlias("Interface")
 public class InterfaceComponent extends ComponentBase {
 
     private LinkedHashSet<Method> methods;

@@ -71,26 +71,26 @@ public abstract class MemberWidgetBase extends LabelWidget implements PropertyCh
         // in case it has not yet been initialized return (adding to the scene calls notifyStateChanged, before the full object has been initialized)
         if (getParentWidget() == null) return;
 
-        boolean selected = state.isFocused();
-        Widget parent = getParentWidget().getParentWidget();
-        parent.setState(parent.getState().deriveWidgetHovered(false));
+        Widget componentWidget = getParentWidget().getParentWidget();
 
-        if (selected) {
+        boolean focused = state.isFocused();
+        boolean hovered = state.isHovered();
+
+        if (focused) {
             setSelectedLook(true);
             setBorder(SELECT_BORDER);
             setBackground(SELECT_COLOR);
+            if (hovered) componentWidget.setState(componentWidget.getState().deriveWidgetHovered(true));
+        } else if (hovered) {
+            setSelectedLook(false);
+            setBorder(HOVER_BORDER);
+            setBackground(HOVER_COLOR);
+            componentWidget.setState(componentWidget.getState().deriveWidgetHovered(true));
         } else {
+            setSelectedLook(false);
             setBorder(DEFAULT_BORDER);
             setBackground(DEFAULT_COLOR);
-            setSelectedLook(false);
-        }
-
-        if (state.isHovered()) {
-            if (!selected) {
-                setBorder(HOVER_BORDER);
-                setBackground(HOVER_COLOR);
-            }
-            parent.setState(parent.getState().deriveWidgetHovered(true));
+            componentWidget.setState(componentWidget.getState().deriveWidgetHovered(false));
         }
     }
 

@@ -2,8 +2,10 @@ package org.uml.filetype.cdg;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -25,8 +27,12 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
+import org.uml.explorer.ExplorerTopComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.visual.UMLTopComponent;
 import org.uml.visual.widgets.ClassDiagramScene;
@@ -166,13 +172,13 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
         }
         return classDiag;
     }
-    
+
     public static void saveDiagram(FileObject fileObject, UMLTopComponent topComponent) {
         NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(
-                "Do you want to save \"" + fileObject.getNameExt() + "\"?", 
+                "Do you want to save \"" + fileObject.getNameExt() + "\"?",
                 NotifyDescriptor.OK_CANCEL_OPTION,
                 NotifyDescriptor.QUESTION_MESSAGE);
-        
+
         Object result = DialogDisplayer.getDefault().notify(msg);
         if (result.equals(NotifyDescriptor.OK_OPTION)) {
             FileOutputStream fileOut = null;
@@ -184,8 +190,8 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
 
                 ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
                 ClassDiagram diagram = topComponent.getLookup().lookup(ClassDiagram.class);
-                ClassDiagramScene cdScene = (ClassDiagramScene)topComponent.getLookup().lookup(GraphScene.class);
-                
+                ClassDiagramScene cdScene = (ClassDiagramScene) topComponent.getLookup().lookup(GraphScene.class);
+
                 diagram.setName(fo.getName());
                 serializer.setClassDiagram(diagram);
                 serializer.setClassDiagramScene(cdScene);
@@ -200,11 +206,37 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
                 Exceptions.printStackTrace(ex);
             } finally {
                 try {
-                    if(fileOut != null) fileOut.close();
-                    if(writer != null) writer.close();
+                    if (fileOut != null) {
+                        fileOut.close();
+                    }
+                    if (writer != null) {
+                        writer.close();
+                    }
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void handleDelete() throws IOException {
+        super.handleDelete();
+        for (final TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+            // TODO maybe rework
+            if (tc.getName().equals(classDiagram.getName())) {
+                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                    @Override
+                    public void run() {
+                        UMLTopComponent umlTopComponent = (UMLTopComponent) tc;
+                        umlTopComponent.close();
+                        
+                        ExplorerTopComponent explorerTopComponent = (ExplorerTopComponent) WindowManager.getDefault().findTopComponent("ExplorerTopComponent");
+                        explorerTopComponent.getExplorerManager().setRootContext(Node.EMPTY);
+                        explorerTopComponent.getExplorerTree().setRootVisible(false);
+                    }
+                });
+                break;
             }
         }
     }

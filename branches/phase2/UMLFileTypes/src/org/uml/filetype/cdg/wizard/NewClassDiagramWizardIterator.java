@@ -70,7 +70,7 @@ public final class NewClassDiagramWizardIterator implements WizardDescriptor.Ins
 //            }
             
             if (project instanceof UMLProject) {
-                ClassDiagramProjectFilesFactory fileFactory = ClassDiagramProjectFilesFactory.getDefault();
+                ClassDiagramFilesFactory fileFactory = ClassDiagramFilesFactory.getDefault();
                 fileFactory.setProject((UMLProject)project);
 
                 String classDiagramName = (String) wizard.getProperty("classDiagramName");

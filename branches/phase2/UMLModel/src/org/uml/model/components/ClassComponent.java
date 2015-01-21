@@ -1,6 +1,7 @@
 package org.uml.model.components;
 
 //import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.lang.reflect.Modifier;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
@@ -17,9 +18,9 @@ import org.uml.model.members.Method;
  * @see InterfaceComponent
  * @see PackageComponent
  */
+//@XStreamAlias("Class")
 public class ClassComponent extends ComponentBase {
 
-//    @XStreamAsAttribute
     private LinkedHashSet<Field> fields;
     private LinkedHashSet<Constructor> constructors;
     private LinkedHashSet<Method> methods;

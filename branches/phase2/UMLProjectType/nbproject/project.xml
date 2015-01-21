@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.uml.projecttype</code-name-base>
+            <code-name-base>org.uml.project</code-name-base>
             <suite-component/>
             <module-dependencies>
                 <dependency>
@@ -12,16 +12,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.14.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.core.multiview</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.29.1</specification-version>
+                        <specification-version>1.24.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -30,7 +21,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.46.1</specification-version>
+                        <specification-version>1.60.2</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -39,7 +30,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.57.1.8</specification-version>
+                        <specification-version>1.78.1.8</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -47,7 +38,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.46.1</specification-version>
+                        <specification-version>7.62.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -55,7 +46,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.25.1</specification-version>
+                        <specification-version>7.38.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -63,7 +54,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.62.1</specification-version>
+                        <specification-version>8.12.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -71,7 +62,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.37.3</specification-version>
+                        <specification-version>7.57.2</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -79,15 +70,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.28.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.openide.text</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>6.49.3</specification-version>
+                        <specification-version>7.39.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -95,7 +78,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.25.2</specification-version>
+                        <specification-version>8.39.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -103,23 +86,12 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.15.2</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.openide.windows</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>6.55.2</specification-version>
+                        <specification-version>8.25.1</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
             <public-packages>
                 <package>org.uml.project</package>
-                <package>org.uml.project.panels</package>
-                <package>org.uml.projecttype.nodes</package>
-                <package>samples.classdiagrams.classdiagram1</package>
             </public-packages>
         </data>
     </configuration>

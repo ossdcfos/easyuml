@@ -20,7 +20,6 @@ import static java.io.File.separator;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +44,8 @@ import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.UseRelation;
+import org.uml.newcode.renaming.ComponentRenameTable;
+import org.uml.newcode.renaming.MemberRenameTable;
 
 /**
  *
@@ -99,7 +100,12 @@ public class ReverseEngineer {
                     EnumDeclaration edecl = (EnumDeclaration) type;
                     component = createEnum(edecl);
                 }
-                if (component != null) components.add(component);
+                if (component != null) {
+                    if (!component.listenerTypeExists(ComponentRenameTable.class)) {
+                        component.addPropertyChangeListener(new ComponentRenameTable());
+                    }
+                    components.add(component);
+                }
             }
         } catch (ParseException | IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -190,6 +196,9 @@ public class ReverseEngineer {
         field.setVolatile(ModifierSet.isVolatile(modifiers));
         field.setTransient(ModifierSet.isTransient(modifiers));
 
+        if (!field.listenerTypeExists(MemberRenameTable.class)) {
+            field.addPropertyChangeListener(new MemberRenameTable());
+        }
         return field;
     }
 
@@ -219,6 +228,9 @@ public class ReverseEngineer {
             arguments.add(arg);
         }
 
+        if (!method.listenerTypeExists(MemberRenameTable.class)) {
+            method.addPropertyChangeListener(new MemberRenameTable());
+        }
         return method;
     }
 
@@ -235,8 +247,6 @@ public class ReverseEngineer {
         Constructor constructor = new Constructor(declaration.getName());
         constructor.setVisibility(getVisibility(declaration));
 
-        constructor.setType(declaration.getName());
-
         LinkedHashSet<MethodArgument> arguments = constructor.getArguments();
 
         for (Parameter parameter : safe(declaration.getParameters())) {
@@ -244,6 +254,9 @@ public class ReverseEngineer {
             arguments.add(arg);
         }
 
+        if (!constructor.listenerTypeExists(MemberRenameTable.class)) {
+            constructor.addPropertyChangeListener(new MemberRenameTable());
+        }
         return constructor;
     }
 

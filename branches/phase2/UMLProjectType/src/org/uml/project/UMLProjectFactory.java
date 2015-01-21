@@ -9,18 +9,18 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author Jelena
+ * @author Boris
  */
 @ServiceProvider(service=ProjectFactory.class)
 public class UMLProjectFactory implements ProjectFactory {
 
-    public static final String PROJECT_DIR = "umlproject";
+    public static final String PROJECT_FILE = "umlproject";
 
     //Specifies when a project is a project, i.e.,
-    //if "umlproject" is present in a folder:
+    //if "customer.txt" is present in a folder:
     @Override
     public boolean isProject(FileObject projectDirectory) {
-        return projectDirectory.getFileObject(PROJECT_DIR) != null;
+        return projectDirectory.getFileObject(PROJECT_FILE) != null;
     }
 
     //Specifies when the project will be opened, i.e., if the project exists:

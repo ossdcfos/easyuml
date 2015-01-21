@@ -1,5 +1,6 @@
 package org.uml.model;
 
+//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -13,7 +14,9 @@ import java.util.List;
  */
 public abstract class ContainerBase<T extends INameable & IHasSignature> implements INameable, IHasSignature {
 
+//    @XStreamAsAttribute
     protected String name;
+    
     protected LinkedHashSet<T> parts; // contains components or members
     protected transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
     
@@ -95,18 +98,6 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     @Override
     public String getName() {
         return name;
-    }
-
-    /**
-     * Sets the name of this Container
-     *
-     * @param newName of Container
-     */
-    @Override
-    public void setName(String newName) {
-        String oldName = name;
-        name = newName;
-        pcs.firePropertyChange("name", oldName, newName);
     }
 
     // TODO temporary solution, add package

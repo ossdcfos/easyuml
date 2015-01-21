@@ -1,11 +1,13 @@
 package org.uml.model.members;
 
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.lang.reflect.Modifier;
 
 /**
  *
  * @author Boris
  */
+//@XStreamAlias("Method")
 public class Method extends MethodBase {
 
     public Method(String name, String returnType) {

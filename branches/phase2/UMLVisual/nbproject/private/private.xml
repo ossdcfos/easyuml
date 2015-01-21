@@ -8,7 +8,10 @@
             <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UMLp3/UMLVisual/src/org/uml/visual/widgets/components/ClassWidget.java</file>
         </group>
         <group>
-            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UMLp3/UMLVisual/src/org/uml/visual/widgets/ClassDiagramScene.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UMLp3/UMLVisual/src/org/uml/visual/widgets/components/ComponentWidgetBase.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UMLp3/UMLVisual/src/org/uml/visual/widgets/members/MemberWidgetBase.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UMLp3/UMLVisual/src/org/uml/visual/widgets/components/MemberContainerWidget.java</file>
+            <file>file:/D:/H1tm4n/EPFL/Praksa/NetLink/UMLp3/UMLVisual/src/org/uml/visual/widgets/members/unused/AddMemberWidget.java</file>
         </group>
     </open-files>
 </project-private>

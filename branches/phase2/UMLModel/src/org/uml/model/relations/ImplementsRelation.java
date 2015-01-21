@@ -1,5 +1,6 @@
 package org.uml.model.relations;
 
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.Objects;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
@@ -16,6 +17,7 @@ import org.uml.model.components.InterfaceComponent;
  * @see IsRelationComponent
  * @see UseRelationComponent
  */
+//@XStreamAlias("ImplementsRelation")
 public class ImplementsRelation extends RelationBase {
 
     /**

@@ -88,7 +88,8 @@ public class MethodCodeGenerator {
                     if (member instanceof MethodDeclaration) {
                         MethodDeclaration declaration = (MethodDeclaration) member;
                         if (oldSignature.equals(getMethodDeclarationSignature(declaration))) {
-                            declaration.setName(oldSignature);
+                            declaration.setName(method.getName());
+                            declaration.setType(CodeGeneratorUtils.parseType(method.getType()));
                             if (!method.getArguments().isEmpty()) {
                                 List<Parameter> parameters = new LinkedList<>();
                                 for (MethodArgument argument : method.getArguments()) {

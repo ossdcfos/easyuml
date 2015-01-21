@@ -1,5 +1,6 @@
 package org.uml.model;
 
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.RelationBase;
 import java.io.Serializable;
@@ -17,8 +18,10 @@ import java.util.List;
  * @see ComponentBase
  * @see RelationBase
  */
+//@XStreamAlias("ClassDiagram")
 public class ClassDiagram extends ContainerBase<ComponentBase> implements Serializable {
 
+//    @XStreamAlias("ClassDiagramRelations")
     private HashSet<RelationBase> relations;
 //    private HashMap<String, PackageComponent> packages;
 
@@ -100,6 +103,18 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
      */
     public void setRelations(HashSet<RelationBase> relations) {
         this.relations = relations;
+    }    
+    
+    /**
+     * Sets the name of this Container
+     *
+     * @param newName of Container
+     */
+    @Override
+    public void setName(String newName) {
+        String oldName = name;
+        name = newName;
+        pcs.firePropertyChange("name", oldName, newName);
     }
 
 //    /**
@@ -128,7 +143,6 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
 //    public HashMap<String, PackageComponent> getPackages() {
 //        return packages;
 //    }
-
 //    @Override
 //    public String toString() {
 //        return getName();

@@ -40,6 +40,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.openide.explorer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.57.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.filesystems</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -96,6 +104,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.uml.explorer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.uml.model</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -104,7 +120,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.uml.projecttype</code-name-base>
+                    <code-name-base>org.uml.project</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

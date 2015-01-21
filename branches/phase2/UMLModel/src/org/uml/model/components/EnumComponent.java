@@ -1,5 +1,6 @@
 package org.uml.model.components;
 
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.LinkedHashSet;
 import org.uml.model.members.Literal;
 import org.uml.model.members.MemberBase;
@@ -14,6 +15,7 @@ import org.uml.model.members.MemberBase;
  * @see InterfaceComponent
  * @see PackageComponent
  */
+//@XStreamAlias("Enum")
 public class EnumComponent extends ComponentBase {
     
     private LinkedHashSet<Literal> literals;

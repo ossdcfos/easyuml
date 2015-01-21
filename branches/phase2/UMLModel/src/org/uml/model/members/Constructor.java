@@ -1,5 +1,6 @@
 package org.uml.model.members;
 
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 
@@ -15,6 +16,7 @@ import org.uml.model.components.EnumComponent;
  * @see ClassComponent
  * @see EnumComponent
  */
+//@XStreamAlias("Constructor")
 public class Constructor extends MethodBase {
     
     /**

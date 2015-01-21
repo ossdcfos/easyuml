@@ -1,6 +1,5 @@
 package org.uml.visual.widgets.popups;
 
-import java.awt.Dialog;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -17,10 +16,8 @@ import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.util.Utilities;
 import org.openide.windows.WindowManager;
 import org.uml.jung.JUNGEngine;
-import org.uml.model.ClassDiagram;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;

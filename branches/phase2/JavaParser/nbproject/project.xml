@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.parser.java</code-name-base>
+            <code-name-base>japa.parser</code-name-base>
             <suite-component/>
             <module-dependencies/>
             <public-packages>
@@ -16,10 +16,6 @@
                 <package>japa.parser.ast.type</package>
                 <package>japa.parser.ast.visitor</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/javaparser-1.0.12-SNAPSHOT.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/javaparser-1.0.12-SNAPSHOT.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>
