@@ -1,5 +1,6 @@
 package org.uml.model.components;
 
+//import com.thoughtworkss.xstream.annotations.XStreamAsAttribute;
 import org.uml.model.members.*;
 import java.awt.*;
 import java.io.Serializable;
@@ -24,12 +25,17 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
 
     private transient ClassDiagram parentDiagram;
 
+//    @XStreamAsAttribute
     private String parentPackage;
+//    @XStreamAsAttribute
     private Visibility visibility;
+//    @XStreamAsAttribute
     protected int modifiers;
 
     // TODO these should be removed in future (use only bounds
+//    @XStreamAsAttribute
     private Point location;
+//    @XStreamAsAttribute
     private Rectangle bounds;
 
     public abstract void removeMember(MemberBase member);
@@ -122,19 +128,25 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     public String getSignature() {
         if (!getParentPackage().equals("")) {
             return getParentPackage() + "." + getName();
-        } else return getName();
+        } else {
+            return getName();
+        }
     }
 
     public String deriveSignatureFromName(String newName) {
         if (!getParentPackage().equals("")) {
             return getParentPackage() + "." + newName;
-        } else return newName;
+        } else {
+            return newName;
+        }
     }
 
     public String deriveSignatureFromPackage(String newParentPackage) {
         if (!newParentPackage.equals("")) {
             return newParentPackage + "." + getName();
-        } else return getName();
+        } else {
+            return getName();
+        }
     }
 
     /**
@@ -192,8 +204,54 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         pcs.firePropertyChange("visibility", oldVisibility, visibility);
     }
 
-//    @Override
-//    public String toString() {
-//        return getSignature();
-//    }
+    @Override
+    public void setName(String newName) {
+        String oldName = name;
+        name = newName;
+        pcs.firePropertyChange("name", oldName, newName);
+
+        for (MemberBase member : parts) {
+            if (member instanceof Constructor) {
+                member.setName(newName);
+            } else if (member instanceof Method) {
+                Method method = (Method) member;
+                if (method.getType().equals(oldName)) method.setType(newName);
+                for (MethodArgument argument : method.getArguments()) {
+                    if (argument.getType().equals(oldName)) argument.setType(newName);
+                }
+                // todo complex types
+            } else if (member instanceof Field) {
+                Field field = (Field) member;
+                if (field.getType().equals(oldName)) field.setType(newName);
+                // todo complex types
+            }
+        }
+
+        if (parentDiagram != null) {
+            for (ComponentBase component : parentDiagram.getComponents()) {
+                if (component != this) {
+                    for (MemberBase member : component.getMembers()) {
+                        if (member instanceof Method) {
+                            Method method = (Method) member;
+                            if (method.getType().equals(oldName)) method.setType(newName);
+                            for (MethodArgument argument : method.getArguments()) {
+                                if (argument.getType().equals(oldName)) argument.setType(newName);
+                            }
+                            // todo complex types, packages
+                        } else if (member instanceof Field) {
+                            Field field = (Field) member;
+                            if (field.getType().equals(oldName)) field.setType(newName);
+                            // todo complex types, packages
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // For serializing
+    @Override
+    public String toString() {
+        return getSignature();
+    }
 }

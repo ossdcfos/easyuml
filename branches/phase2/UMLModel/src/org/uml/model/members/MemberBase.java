@@ -1,5 +1,6 @@
 package org.uml.model.members;
 
+//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
@@ -22,10 +23,13 @@ import org.uml.model.components.ComponentBase;
  */
 public abstract class MemberBase implements INameable, IHasSignature {
 
+//    @XStreamAsAttribute
     protected String name;
     // sta ako je niz? da li treba koristiti Type?
+//    @XStreamAsAttribute
     protected String type;
 
+//    @XStreamAsAttribute
     protected Visibility visibility;
     /**
      * Modifier is a int value representing access and non-access modifier in
@@ -33,6 +37,7 @@ public abstract class MemberBase implements INameable, IHasSignature {
      *
      * @see java.lang.reflect.Modifier
      */
+//    @XStreamAsAttribute
     protected int modifiers;
     private transient ComponentBase declaringComponent;
     protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);

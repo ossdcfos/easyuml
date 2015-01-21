@@ -3,7 +3,6 @@ package org.uml.explorer;
 import java.awt.BorderLayout;
 import java.beans.PropertyVetoException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import javax.swing.tree.TreeSelectionModel;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -12,7 +11,6 @@ import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -58,8 +56,8 @@ import org.uml.model.members.MemberBase;
 })
 public final class ExplorerTopComponent extends TopComponent implements ExplorerManager.Provider, LookupListener {
 
-    private ExplorerManager explorerManager = new ExplorerManager();
-    private BeanTreeView explorerTree;
+    private final ExplorerManager explorerManager = new ExplorerManager();
+    private final BeanTreeView explorerTree;
 
     Result<ClassDiagram> resultCD;
     Result<ComponentBase> resultC;
@@ -85,6 +83,10 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
         return explorerManager;
     }
 
+    public BeanTreeView getExplorerTree() {
+        return explorerTree;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -102,7 +104,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     public void componentOpened() {
         resultCD = Utilities.actionsGlobalContext().lookupResult(ClassDiagram.class);
         resultCD.addLookupListener(this);
-        // zasto ovaj poziv? radi i bez toga, jer je registrovan lookup, sam zove resultChanged
+        // calls result changed on its own, no need for: 
 //        resultChanged(new LookupEvent(resultCD));
 
         resultC = Utilities.actionsGlobalContext().lookupResult(ComponentBase.class);

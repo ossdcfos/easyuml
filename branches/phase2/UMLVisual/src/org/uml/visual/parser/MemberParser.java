@@ -26,10 +26,11 @@ public class MemberParser {
 //    String name = "\\w+";
 //    String argumentBlock = "\\(.*\\)";
     static String NAME = "\\w+";
-    static String FIELD = "[\\w\\<\\>\\[\\]]+" + "\\s+" + "(\\w+)";
+    static String FIELD = "[\\w\\<\\>\\[\\]]+" + "\\s+" + "\\w+";
 
-    static String METHOD = "[\\w\\<\\>\\[\\]]+" + "\\s+" + "(\\w+)" + "\\s*" + "\\([^\\)]*\\)";
-    static String METHOD_WITHOUT_ARGUMENTS = "[\\w\\<\\>\\[\\]]+" + "\\s+" + "(\\w+)";
+    static String METHOD = "[\\w\\<\\>\\[\\]]+" + "\\s+" + "\\w+" + "\\s*" + "\\([^\\)]*\\)";
+    static String METHOD_WITHOUT_ARGUMENTS = "[\\w\\<\\>\\[\\]]+" + "\\s+" + "\\w+";
+    static String METHOD_WITHOUT_RETURN_TYPE = "\\w+" + "\\s*" + "\\([^\\)]*\\)";
 
     /**
      * Sets attributes of the Field object by parsing the fieldWidgetText.
@@ -66,6 +67,8 @@ public class MemberParser {
 
         } else if (methodWidgetText.matches(METHOD_WITHOUT_ARGUMENTS)) {
             methodWidgetText += "()";
+        } else if (methodWidgetText.matches(METHOD_WITHOUT_RETURN_TYPE)) {
+            methodWidgetText = "void " + methodWidgetText;
         } else if (methodWidgetText.matches(NAME)) {
             methodWidgetText = "void " + methodWidgetText + "()";
         } else {
@@ -106,7 +109,7 @@ public class MemberParser {
         type = declaration.getType().toString();
         return type;
     }
-    
+
     /**
      * Parses stringToParse string to extract name.
      *
@@ -120,7 +123,7 @@ public class MemberParser {
         name = declaration.getVariables().get(0).getId().getName();
         return name;
     }
-    
+
     /**
      * Parses stringToParse to extract return type of a method.
      *
@@ -160,7 +163,7 @@ public class MemberParser {
         name = declaration.getName();
         return name;
     }
-    
+
     private static LinkedHashSet<MethodArgument> getArguments(String signature) throws ParseException {
         LinkedHashSet<MethodArgument> arguments = new LinkedHashSet<>();
         String argumentString = signature.substring(signature.indexOf("(") + 1, signature.indexOf(")"));

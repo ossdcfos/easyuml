@@ -42,21 +42,22 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
     private ComponentNode(ComponentBase component, InstanceContent content) {
         // synchronous so that selection of members doesn't miss (if everything was not yet generated)
         super(Children.createLazy(new MyCallable(component)), new AbstractLookup(content));
-        // disable expand if there are no children
-//        if(getChildren().getNodesCount() == 0) setChildren(Children.LEAF);
         content.add(this);
 
         this.component = component;
-        setName(component.getName());
-        setDisplayName(component.getName());
+        this.setDisplayName(component.getName());
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
-//        this.addPropertyChangeListener(this);
+    }
+
+    public ComponentBase getComponent() {
+        return component;
     }
 
     @Override
     public Action[] getActions(boolean context) {
-        return new Action[]{SystemAction.get(DeleteAction.class)
-//            , SystemAction.get(RenameAction.class)
+        return new Action[]{
+            SystemAction.get(DeleteAction.class),
+//            SystemAction.get(RenameAction.class)
         };
     }
 
@@ -69,11 +70,11 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
     public boolean canRename() {
         return false;
     }
+    
 
     @Override
     public void destroy() throws IOException {
         component.getParentDiagram().removePartFromContainer(component);
-        fireNodeDestroyed();
     }
 
     @Override
@@ -95,24 +96,20 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         return getIcon(type);
     }
 
-    public ComponentBase getComponent() {
-        return component;
-    }
-
     @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
-        
+
         Sheet.Set generalProperties = Sheet.createPropertiesSet();
         generalProperties.setName("generalSet");
         generalProperties.setDisplayName("General");
-        
+
         Sheet.Set modifiersProperties = Sheet.createPropertiesSet();
         modifiersProperties.setName("modifiersSet");
         modifiersProperties.setDisplayName("Modifiers");
 
         try {
-            Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getName", "setComponentName");
+            Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getComponentName", "setComponentName");
             nameProp.setName("Name");
             generalProperties.put(nameProp);
 
@@ -155,23 +152,8 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         return sheet;
     }
 
-    /**
-     * Changes the name of the Component.
-     *
-     * @param parentPackage
-     */
-    public void setParentPackage(String parentPackage) {
-        if (!parentPackage.equals(getParentPackage())) {
-            if (component.getParentDiagram().signatureExists(component.deriveSignatureFromPackage(parentPackage))) {
-                JOptionPane.showMessageDialog(null, "Component \"" + component.getName() + "\" already exists in package " + parentPackage + "!");
-            } else {
-                component.setParentPackage(parentPackage);
-            }
-        }
-    }
-
-    public String getParentPackage() {
-        return component.getParentPackage();
+    public String getComponentName() {
+        return component.getName();
     }
 
     /**
@@ -189,15 +171,31 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         }
     }
 
+    public String getParentPackage() {
+        return component.getParentPackage();
+    }
+
+    /**
+     * Changes the name of the Component.
+     *
+     * @param parentPackage
+     */
+    public void setParentPackage(String parentPackage) {
+        if (!parentPackage.equals(getParentPackage())) {
+            if (component.getParentDiagram().signatureExists(component.deriveSignatureFromPackage(parentPackage))) {
+                JOptionPane.showMessageDialog(null, "Component \"" + component.getName() + "\" already exists in package " + parentPackage + "!");
+            } else {
+                component.setParentPackage(parentPackage);
+            }
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (null != evt.getPropertyName())
+        if (null != evt.getPropertyName()) {
             switch (evt.getPropertyName()) {
                 case "name":
                     setName((String) evt.getNewValue());
-                    break;
-                case "ADD":
-                    setChildren(Children.create(new ComponentChildrenFactory(component), false));
                     break;
                 case "REMOVE":
                     if (component.getMembers().isEmpty()) {
@@ -205,13 +203,13 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
                     }
                     break;
             }
-
+        }
 //        // updating Properties window when for example renaming the node
 //        firePropertySetsChange(null, this.getPropertySets());
     }
 
     // To enable creating leaf nodes at start, otherwise we need to pass a factory,
-    // which will can expand only manually and then check that there are no children nodes
+    // which can expand only manually and then check that there are no children nodes
     private static class MyCallable implements Callable<Children> {
 
         private final ComponentBase key;
@@ -225,6 +223,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
             if (key.getMembers().isEmpty()) {
                 return Children.LEAF;
             } else {
+                // synchronous so that selection of members doesn't miss (if everything was not yet generated)
                 return Children.create(new ComponentChildrenFactory(key), false);
             }
         }

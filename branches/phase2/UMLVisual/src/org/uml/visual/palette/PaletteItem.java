@@ -10,6 +10,7 @@ public class PaletteItem {
     String title;
     String category;
     Class<?> dropComponentClass;
+    String shortDescription;
 
     public PaletteItem() {
     }
@@ -45,4 +46,13 @@ public class PaletteItem {
     public void setDropClass(Class<?> dropClass) {
         this.dropComponentClass = dropClass;
     }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
 }

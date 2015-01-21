@@ -45,7 +45,9 @@ public class ComponentConnectProvider implements ConnectProvider {
 
     @Override
     public ConnectorState isTargetWidget(Widget sourceWidget, Widget targetWidget) {
-        if (sourceWidget instanceof ComponentWidgetBase && targetWidget instanceof ComponentWidgetBase) {
+        if (sourceWidget instanceof InterfaceWidget && sourceWidget == targetWidget){
+            return ConnectorState.REJECT;
+        } else if (sourceWidget instanceof ComponentWidgetBase && targetWidget instanceof ComponentWidgetBase) {
             return ConnectorState.ACCEPT;
         } else {
             return ConnectorState.REJECT;

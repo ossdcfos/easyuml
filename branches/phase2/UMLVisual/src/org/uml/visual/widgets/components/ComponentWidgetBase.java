@@ -35,7 +35,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
     protected ComponentBase component;
     protected LabelWidget nameLabel;
 
-    protected static final int EMPTY_BORDER_SIZE = 4;
+    protected static final int EMPTY_BORDER_SIZE = 5;
     protected static final int RESIZE_BORDER_SIZE = 5;
     protected static final int OUTER_BORDER_SIZE = 2 * EMPTY_BORDER_SIZE + 2 * (RESIZE_BORDER_SIZE + 1);
 
@@ -44,8 +44,8 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
     public static int getLabelSizeForFont(int fontSize) {
         return fontSize + 5;
     }
-    protected static final Dimension MIN_DIMENSION_1ROW = new Dimension(110, OUTER_BORDER_SIZE + getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
-    protected static final Dimension MIN_DIMENSION_2ROW = new Dimension(110, OUTER_BORDER_SIZE + 2 * getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
+    protected static final Dimension MIN_DIMENSION_1ROW = new Dimension(130, OUTER_BORDER_SIZE + getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
+    protected static final Dimension MIN_DIMENSION_2ROW = new Dimension(130, OUTER_BORDER_SIZE + 2 * getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
 
     // Gray theme
     public static final Color DEFAULT_COLOR = new Color(0xFBFBFB);

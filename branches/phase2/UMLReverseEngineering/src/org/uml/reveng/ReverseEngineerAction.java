@@ -25,7 +25,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.awt.ActionReferences;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.uml.jung.JUNGEngine;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 

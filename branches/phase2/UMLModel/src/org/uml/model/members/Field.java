@@ -1,5 +1,6 @@
 package org.uml.model.members;
 
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.lang.reflect.Modifier;
 import org.uml.model.Visibility;
 import org.uml.model.components.ClassComponent;
@@ -18,6 +19,7 @@ import org.uml.model.components.EnumComponent;
  * @see EnumComponent
  *
  */
+//@XStreamAlias("Field")
 public class Field extends MemberBase {
 
     /**

@@ -1,5 +1,6 @@
 package org.uml.model.relations;
 
+//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.io.Serializable;
 import java.util.Objects;
 import org.uml.model.ClassDiagram;
@@ -19,8 +20,11 @@ import org.uml.model.components.ComponentBase;
  */
 public abstract class RelationBase implements Serializable {
 
+//    @XStreamAsAttribute
     ComponentBase source;
+//    @XStreamAsAttribute
     ComponentBase target;
+//    @XStreamAsAttribute
     protected String name;
 
     /**

@@ -1,6 +1,5 @@
 package org.uml.newcode.components;
 
-import de.hunsicker.jalopy.Jalopy;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.Token;
@@ -58,7 +57,7 @@ public class ClassCodeGenerator {
         if (sourceFile.exists()) {
             try {
                 FileReader fileReader = new FileReader(sourceFile);
-                CompilationUnit cu = JavaParser.parse(fileReader, true);
+                CompilationUnit cu = JavaParser.parse(fileReader, false);
                 fileReader.close();
                 code = updateCode(component, cu);
                 sourceFile.delete();
@@ -99,14 +98,15 @@ public class ClassCodeGenerator {
             JOptionPane.showMessageDialog(null, "Cannot write file " + outSourceFile.getName() + "!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        // Format the source file
-        try {
-            Jalopy jlp = new Jalopy();
-            jlp.setInput(outSourceFile);
-            jlp.setOutput(outSourceFile);
-            jlp.format();
-        } catch (FileNotFoundException ex) {
-        }
+//        // Format the source file
+//        try {
+//            Convention.getInstance().put(ConventionKeys.SORT, "false");
+//            Jalopy jlp = new Jalopy();
+//            jlp.setInput(outSourceFile);
+//            jlp.setOutput(outSourceFile);
+//            jlp.format();
+//        } catch (FileNotFoundException ex) {
+//        }
     }
 
     private static String generateCode(ClassComponent component) {

@@ -17,7 +17,6 @@ import org.netbeans.spi.project.CopyOperationImplementation;
 import org.netbeans.spi.project.DeleteOperationImplementation;
 import org.netbeans.spi.project.MoveOrRenameOperationImplementation;
 import org.netbeans.spi.project.ProjectState;
-import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -26,18 +25,16 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
-import org.openide.nodes.FilterNode.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
+import org.openide.util.*;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
- * @author Jelena
+ * @author Boris
  */
 public class UMLProject implements Project {
 
@@ -45,13 +42,14 @@ public class UMLProject implements Project {
     private final ProjectState state;
     private Lookup lkp;
 
-    public static final String CLASS_DIAGRAMS_DIR = "UML Diagrams";
+    public static String UML_DIAGRAMS_DIR = "UML Diagrams";
+
+    @StaticResource()
+    public static final String UMLPROJECT_ICON = "org/uml/project/UMLProject.png";
 
     UMLProject(FileObject dir, ProjectState state) {
         this.projectDir = dir;
         this.state = state;
-
-        createProjectFolders();
     }
 
     @Override
@@ -62,41 +60,20 @@ public class UMLProject implements Project {
     @Override
     public Lookup getLookup() {
         if (lkp == null) {
-            lkp = Lookups.fixed(new Object[]{
+            lkp = Lookups.fixed(new Object[]{ // register your features here
                 this,
                 new Info(),
-                new UMLProjectLogicalView(this), //new UMLCustomizerProvider(this)
+                new UMLProjectLogicalView(this),
                 new UMLProjectActionProvider(),
                 new UMLProjectCopyOperation(),
                 new UMLProjectMoveOrRenameOperation(),
                 new UMLProjectDeleteOperation(this)
             });
         }
-        return LookupProviderSupport.createCompositeLookup(
-                lkp,
-                "Projects/org-uml-project/Lookup"
-        );
+        return lkp;
     }
 
-    public final void createProjectFolders() {
-        FileObject umlDiagramsFolder = null;
-
-        if (projectDir.getFileObject(CLASS_DIAGRAMS_DIR) == null) {
-            try {
-                umlDiagramsFolder = projectDir.createFolder(CLASS_DIAGRAMS_DIR);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else {
-            umlDiagramsFolder = projectDir.getFileObject(CLASS_DIAGRAMS_DIR);
-        }
-    }
-
-    public void addNotify() {
-        refresh();
-    }
-
-    private void refresh() {
+    public void refresh() {
         for (FileObject projectFolder : getProjectDirectory().getChildren()) {
             projectFolder.refresh();
         }
@@ -104,12 +81,9 @@ public class UMLProject implements Project {
 
     private final class Info implements ProjectInformation {
 
-        @StaticResource()
-        public static final String UML_PROJECT_ICON = "org/uml/project/UMLProject.png";
-
         @Override
         public Icon getIcon() {
-            return new ImageIcon(ImageUtilities.loadImage(UML_PROJECT_ICON));
+            return new ImageIcon(ImageUtilities.loadImage(UMLPROJECT_ICON));
         }
 
         @Override
@@ -140,9 +114,6 @@ public class UMLProject implements Project {
 
     class UMLProjectLogicalView implements LogicalViewProvider {
 
-        @StaticResource()
-        public static final String UML_PROJECT_ICON = "org/uml/project/UMLProject.png";
-
         private final UMLProject project;
 
         public UMLProjectLogicalView(UMLProject project) {
@@ -166,22 +137,19 @@ public class UMLProject implements Project {
             }
         }
 
-        @Override
-        public Node findPath(Node root, Object target) {
-            // TODO: implement this!!!
-            // throw new UnsupportedOperationException("Not supported yet.");
-            return Node.EMPTY;
-        }
-
         private final class ProjectNode extends FilterNode {
 
             final UMLProject project;
 
             public ProjectNode(Node node, UMLProject project)
                     throws DataObjectNotFoundException {
-                super(node, NodeFactorySupport.createCompositeChildren(project, "Projects/org-uml-project/Nodes"),
-                        // new FilterNode.Children(node),
-                        new ProxyLookup(new Lookup[]{Lookups.singleton(project), node.getLookup()}));
+                super(node,
+                        NodeFactorySupport.createCompositeChildren(project, "Projects/org-uml-project/Nodes"),
+                        new ProxyLookup(
+                                new Lookup[]{
+                                    Lookups.singleton(project),
+                                    node.getLookup()
+                                }));
                 this.project = project;
             }
 
@@ -196,14 +164,13 @@ public class UMLProject implements Project {
                     CommonProjectActions.renameProjectAction(),
                     CommonProjectActions.deleteProjectAction(),
                     null,
-                    //CommonProjectActions.customizeProjectAction(),
                     CommonProjectActions.closeProjectAction()
                 };
             }
 
             @Override
             public Image getIcon(int type) {
-                return ImageUtilities.loadImage(UML_PROJECT_ICON);
+                return ImageUtilities.loadImage(UMLPROJECT_ICON);
             }
 
             @Override
@@ -215,6 +182,13 @@ public class UMLProject implements Project {
             public String getDisplayName() {
                 return project.getProjectDirectory().getName();
             }
+
+        }
+
+        @Override
+        public Node findPath(Node root, Object target) {
+            //leave unimplemented for now
+            return null;
         }
     }
 
@@ -313,10 +287,10 @@ public class UMLProject implements Project {
     }
 
     private final class UMLProjectDeleteOperation implements DeleteOperationImplementation {
-        
+
         private final UMLProject project;
-        
-        private UMLProjectDeleteOperation(UMLProject project){
+
+        private UMLProjectDeleteOperation(UMLProject project) {
             this.project = project;
         }
 
@@ -324,7 +298,7 @@ public class UMLProject implements Project {
         public List<FileObject> getDataFiles() {
             List<FileObject> files = new ArrayList<>();
             FileObject[] projectChildren = project.getProjectDirectory().getChildren();
-            for(FileObject fo : projectChildren){
+            for (FileObject fo : projectChildren) {
                 files.add(fo);
                 //addFile(project.getProjectDirectory(), fo.getNameExt(), files);
             }
@@ -333,7 +307,7 @@ public class UMLProject implements Project {
 
         private void addFile(FileObject projectDirectory, String nameExt, List<FileObject> files) {
             FileObject fo = projectDirectory.getFileObject(nameExt);
-            if(fo != null){
+            if (fo != null) {
                 files.add(fo);
             }
         }
@@ -351,5 +325,4 @@ public class UMLProject implements Project {
         public void notifyDeleted() throws IOException {
         }
     }
-
 }

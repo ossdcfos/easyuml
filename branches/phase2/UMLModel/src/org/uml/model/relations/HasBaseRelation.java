@@ -1,5 +1,6 @@
 package org.uml.model.relations;
 
+//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.util.Objects;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
@@ -39,15 +40,18 @@ public abstract class HasBaseRelation extends RelationBase {
                 }
     }
 
+//    @XStreamAsAttribute
     private CardinalityEnum cardinalitySource;
     //Usually 0..1
 
+//    @XStreamAsAttribute
     private CardinalityEnum cardinalityTarget;
     /**
      * Can be List, ArrayList or LinkedList
      */
+//    @XStreamAsAttribute
     private String collectionType;
-    private Type type;
+    private transient Type type;
 
     public Type getType() {
         return type;

@@ -53,7 +53,7 @@ public class ConstructorCodeGenerator {
                     if (member instanceof ConstructorDeclaration) {
                         ConstructorDeclaration declaration = (ConstructorDeclaration) member;
                         if (oldSignature.equals(getConstructorDeclarationSignature(declaration))) {
-                            declaration.setName(oldSignature);
+                            declaration.setName(constructor.getName());
                             if (!constructor.getArguments().isEmpty()) {
                                 List<Parameter> parameters = new LinkedList<>();
                                 for (MethodArgument argument : constructor.getArguments()) {

@@ -1,5 +1,8 @@
 package org.uml.model.relations;
 
+//import com.thoughtworks.xstream.annotations.XStreamConverter;
+//import com.thoughtworks.xstream.converters.SingleValueConverter;
+
 /**
  * Defines all four combinations of cardinalities.
  *
@@ -10,45 +13,46 @@ package org.uml.model.relations;
  * @see UseRelationComponent
  * @see ImplementsRelationComponent
  */
+//@XStreamConverter(CardinalityEnum.CardinalityEnumConverter.class)
 public enum CardinalityEnum {
 
     /**
      * "1..1" relation
      */
     One2One {
-        @Override
-        public String toString() {
-            return "1..1";
-        }
-    },
+                @Override
+                public String toString() {
+                    return "1..1";
+                }
+            },
     /**
      * "0..1" relation
      */
     Zero2One {
-        @Override
-        public String toString() {
-            return "0..1";
-        }
-    },
+                @Override
+                public String toString() {
+                    return "0..1";
+                }
+            },
     /**
      * "1..*" relation
      */
     One2Many {
-        @Override
-        public String toString() {
-            return "1..*";
-        }
-    },
+                @Override
+                public String toString() {
+                    return "1..*";
+                }
+            },
     /**
      * "0..*" relation
      */
     Zero2Many {
-        @Override
-        public String toString() {
-            return "0..*";
-        }
-    };
-
+                @Override
+                public String toString() {
+                    return "0..*";
+                }
+            };
+    
     /**
      * Converts a String object into adjacent CardinalityEnum element (element
      * with the same meaning). Case insensitive.
@@ -71,4 +75,23 @@ public enum CardinalityEnum {
         }
         return CardinalityEnum.Zero2One;
     }
+
+//    public static final class CardinalityEnumConverter implements SingleValueConverter {
+//
+//        @Override
+//        public String toString(Object o) {
+//            CardinalityEnum cardinality = (CardinalityEnum) o;
+//            return cardinality.toString();
+//        }
+//
+//        @Override
+//        public Object fromString(String string) {
+//            return CardinalityEnum.parseString(string);
+//        }
+//
+//        @Override
+//        public boolean canConvert(Class type) {
+//            return type.equals(CardinalityEnum.class);
+//        }
+//    }
 }

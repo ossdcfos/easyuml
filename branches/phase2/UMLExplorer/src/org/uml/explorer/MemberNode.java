@@ -19,6 +19,7 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
+import org.uml.model.components.InterfaceComponent;
 import org.uml.model.members.*;
 
 /**
@@ -50,7 +51,9 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
 
     @Override
     public Action[] getActions(boolean context) {
-        return new Action[]{SystemAction.get(DeleteAction.class)};
+        return new Action[]{
+            SystemAction.get(DeleteAction.class)
+        };
     }
 
     @Override
@@ -63,7 +66,6 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
         ComponentBase parent = member.getDeclaringComponent();
         parent.removePartFromContainer(member);
         parent.removeMember(member);
-        fireNodeDestroyed();
     }
 
     @Override
@@ -86,11 +88,11 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
     @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
-        
+
         Sheet.Set generalProperties = Sheet.createPropertiesSet();
         generalProperties.setName("generalSet");
         generalProperties.setDisplayName("General");
-        
+
         Sheet.Set modifiersProperties = Sheet.createPropertiesSet();
         modifiersProperties.setName("modifiersSet");
         modifiersProperties.setDisplayName("Modifiers");
@@ -138,25 +140,33 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
                     typeProp.setName("Return type");
                     generalProperties.put(typeProp);
 
-                    Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(member, Visibility.class, "getVisibility", "setVisibility");
-                    visibilityProp.setName("Visibility");
-                    generalProperties.put(visibilityProp);
+                    if (method.getDeclaringComponent() instanceof InterfaceComponent) {
+                        Property<InterfaceMethodVisibility> visibilityProp = new PropertySupport.Reflection<>(this, InterfaceMethodVisibility.class, "getInterfaceMethodVisibility", "setInterfaceMethodVisibility");
+                        visibilityProp.setName("Visibility");
+                        generalProperties.put(visibilityProp);
+                    } else {
+                        Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(member, Visibility.class, "getVisibility", "setVisibility");
+                        visibilityProp.setName("Visibility");
+                        generalProperties.put(visibilityProp);
+                    }
 
                     Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(method, boolean.class, "isStatic", "setStatic");
                     isStaticProp.setName("static");
                     modifiersProperties.put(isStaticProp);
 
-                    Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(method, boolean.class, "isFinal", "setFinal");
-                    isFinalProp.setName("final");
-                    modifiersProperties.put(isFinalProp);
+                    if (!(method.getDeclaringComponent() instanceof InterfaceComponent)) {
+                        Property<Boolean> isFinalProp = new PropertySupport.Reflection<>(method, boolean.class, "isFinal", "setFinal");
+                        isFinalProp.setName("final");
+                        modifiersProperties.put(isFinalProp);
 
-                    Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(method, boolean.class, "isAbstract", "setAbstract");
-                    isAbstractProp.setName("abstract");
-                    modifiersProperties.put(isAbstractProp);
+                        Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(method, boolean.class, "isAbstract", "setAbstract");
+                        isAbstractProp.setName("abstract");
+                        modifiersProperties.put(isAbstractProp);
 
-                    Property<Boolean> isSynchronizedProp = new PropertySupport.Reflection<>(method, boolean.class, "isSynchronized", "setSynchronized");
-                    isSynchronizedProp.setName("synchronized");
-                    modifiersProperties.put(isSynchronizedProp);
+                        Property<Boolean> isSynchronizedProp = new PropertySupport.Reflection<>(method, boolean.class, "isSynchronized", "setSynchronized");
+                        isSynchronizedProp.setName("synchronized");
+                        modifiersProperties.put(isSynchronizedProp);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -166,6 +176,34 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
         sheet.put(generalProperties);
         sheet.put(modifiersProperties);
         return sheet;
+    }
+
+    // TODO maybe move this somewhere more appropriate
+    public enum InterfaceMethodVisibility {
+
+        PUBLIC {
+                    @Override
+                    public String toString() {
+                        return "public";
+                    }
+
+                },
+        PACKAGE {
+                    @Override
+                    public String toString() {
+                        return "package";
+                    }
+                };
+    }
+
+    public InterfaceMethodVisibility getInterfaceMethodVisibility() {
+        if (member.getVisibility() == Visibility.PUBLIC) return InterfaceMethodVisibility.PUBLIC;
+        else return InterfaceMethodVisibility.PACKAGE;
+    }
+
+    public void setInterfaceMethodVisibility(InterfaceMethodVisibility interfaceMethodVisibility) {
+        if (interfaceMethodVisibility == InterfaceMethodVisibility.PUBLIC) member.setVisibility(Visibility.PUBLIC);
+        else member.setVisibility(Visibility.PACKAGE);
     }
 
     public String getMemberName() {
@@ -205,10 +243,13 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("name".equals(evt.getPropertyName())) {
-            setName((String) evt.getNewValue());
+        if (null != evt.getPropertyName()) {
+            switch (evt.getPropertyName()) {
+                case "name":
+                    setName((String) evt.getNewValue());
+                    break;
+            }
         }
         firePropertySetsChange(null, this.getPropertySets());
     }
-
 }

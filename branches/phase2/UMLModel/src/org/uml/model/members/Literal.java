@@ -1,5 +1,6 @@
 package org.uml.model.members;
 
+//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.uml.model.Visibility;
 
 /**
@@ -12,6 +13,7 @@ import org.uml.model.Visibility;
  * @see Method
  * @see Constructor
  */
+//@XStreamAlias("Literal")
 public class Literal extends MemberBase {
 
     /**

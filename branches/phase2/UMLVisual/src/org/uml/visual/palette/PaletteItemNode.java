@@ -17,6 +17,7 @@ public class PaletteItemNode extends AbstractNode{
         this.paletteItem = key;
         setIconBaseWithExtension(key.getIcon());
         setDisplayName(key.getTitle());
+        setShortDescription(key.getShortDescription());
     }
 
     public PaletteItem getPaletteItem() {

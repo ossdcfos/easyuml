@@ -7,19 +7,19 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>japa.parser</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.apache.commons.io</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.4</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.apache.commons.lang</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>2.4.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -37,14 +37,6 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>7.62.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.openide.dialogs</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>7.38.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -80,14 +72,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.parser.java</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.uml.dom4j</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -97,6 +81,14 @@
                 </dependency>
                 <dependency>
                     <code-name-base>org.uml.model</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.uml.newcode</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
