@@ -59,9 +59,11 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     private final ExplorerManager explorerManager = new ExplorerManager();
     private final BeanTreeView explorerTree;
 
-    Result<ClassDiagram> resultCD;
-    Result<ComponentBase> resultC;
-    Result<MemberBase> resultM;
+    private boolean activated;
+
+    private Result<ClassDiagram> resultCD;
+    private Result<ComponentBase> resultC;
+    private Result<MemberBase> resultM;
 
     public ExplorerTopComponent() {
         initComponents();
@@ -101,6 +103,18 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     // End of variables declaration//GEN-END:variables
 
     @Override
+    protected void componentActivated() {
+        super.componentActivated();
+        activated = true;
+    }
+
+    @Override
+    protected void componentDeactivated() {
+        super.componentDeactivated();
+        activated = false;
+    }
+
+    @Override
     public void componentOpened() {
         resultCD = Utilities.actionsGlobalContext().lookupResult(ClassDiagram.class);
         resultCD.addLookupListener(this);
@@ -112,16 +126,6 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
 
         resultM = Utilities.actionsGlobalContext().lookupResult(MemberBase.class);
         resultM.addLookupListener(this);
-    }
-
-    @Override
-    protected void componentActivated() {
-        super.componentActivated();
-    }
-
-    @Override
-    protected void componentShowing() {
-        super.componentShowing();
     }
 
     @Override
@@ -146,74 +150,121 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     public void resultChanged(LookupEvent ev) {
         Lookup.Result source = (Lookup.Result) ev.getSource();
         Collection instances = source.allInstances();
-        try {
-            if (instances.isEmpty()) {
-                Set<TopComponent> tcs = WindowManager.getDefault().getRegistry().getOpened();
-                for (TopComponent tc : tcs) {
-                    // This is made hardcoded, because we cannot access UMLTopComponent from here because of cyclic dependency
-                    // TODO maybe rework
-                    if (tc.getClass().getSimpleName().equals("UMLTopComponent")) {
-                        repaint();
-                        validate();
-                        return;
+        if (instances.isEmpty()) {
+            // When user opens new scene while some is already open, instances are empty
+            // Or when user closes all scenes, instances are empty
+            boolean someSceneOpen = false;
+            boolean currentSceneOpen = false;
+            Set<TopComponent> tcs = WindowManager.getDefault().getRegistry().getOpened();
+            for (TopComponent tc : tcs) {
+                // TODO maybe rework
+                if (tc.getClass().getSimpleName().equals("UMLTopComponent")) { // Class name is hardcoded, because we cannot access UMLTopComponent from here because of cyclic dependency
+                    someSceneOpen = true;
+                    if (tc.getName().equals(explorerManager.getRootContext().getDisplayName())) {
+                        currentSceneOpen = true;
                     }
                 }
-
+            }
+            // If no scenes are open, clear the Explorer
+            if (!someSceneOpen) {
                 explorerManager.setRootContext(Node.EMPTY);
                 explorerTree.setRootVisible(false);
             } else {
-                for (Object instance : instances) {
-                    if (instance instanceof ClassDiagram) {
-                        ClassDiagram diagram = (ClassDiagram) instance;
-                        if (!(explorerManager.getRootContext() instanceof ClassDiagramNode)) {
-                            ClassDiagramNode node = new ClassDiagramNode(diagram);
-                            explorerManager.setRootContext(node);
-                            explorerTree.setRootVisible(true);
-                        } else {
-                            ClassDiagramNode root = (ClassDiagramNode) explorerManager.getRootContext();
-                            if (diagram != root.getClassDiagram()) {
-                                ClassDiagramNode node = new ClassDiagramNode(diagram);
-                                explorerManager.setRootContext(node);
-                                explorerTree.setRootVisible(true);
-                            } else {
-                                explorerManager.setSelectedNodes(new Node[]{explorerManager.getRootContext()});
-                            }
-                        }
-                    } else if (instance instanceof ComponentBase) {
-                        ComponentBase component = (ComponentBase) instance;
-                        for (Node n : explorerManager.getRootContext().getChildren().getNodes()) {
-                            ComponentNode cn = (ComponentNode) n;
-                            if (cn.getComponent() == component) {
-                                explorerManager.setSelectedNodes(new Node[]{cn});
-                                break;
-                            }
-                        }
-                    } else if (instance instanceof MemberBase) {
-                        MemberBase member = (MemberBase) instance;
-                        boolean over = false;
-                        for (Node n : explorerManager.getRootContext().getChildren().getNodes()) {
-                            for (Node cn : n.getChildren().getNodes()) {
-                                MemberNode mn = (MemberNode) cn;
-                                if (mn.getMember() == member) {
-                                    explorerManager.setSelectedNodes(new Node[]{mn});
-                                    over = true;
-                                    break;
-                                }
-                            }
-                            if (over) break;
-                        }
+                // if some are open, clear the selection
+                if (!activated) {
+                    if (currentSceneOpen){
+                        selectNode(null);
+                    } else {
+                        explorerManager.setRootContext(Node.EMPTY);
+                        explorerTree.setRootVisible(false);
                     }
-                    break;
                 }
             }
-        } catch (PropertyVetoException ex) {
-            Exceptions.printStackTrace(ex);
+            repaint();
+            validate();
+        } else {
+            for (Object instance : instances) {
+                if (instance instanceof ClassDiagram) {
+                    ClassDiagram diagram = (ClassDiagram) instance;
+                    // If the rootContext is empty
+                    if (!(explorerManager.getRootContext() instanceof ClassDiagramNode)) {
+                        createRootNode(diagram);
+                    } else {
+                        // If the rootContext exists
+                        ClassDiagramNode currentRoot = (ClassDiagramNode) explorerManager.getRootContext();
+                        // If the root diagram differs from the one in the lookup, replace
+                        if (diagram != currentRoot.getClassDiagram()) {
+                            Node newRoot = createRootNode(diagram);
+                            selectNode(newRoot);
+                        } else {    // else select the root
+                            selectNode(currentRoot);
+                        }
+                    }
+                } else if (instance instanceof ComponentBase) {
+                    selectComponentNode((ComponentBase) instance);
+                } else if (instance instanceof MemberBase) {
+                    selectMemberNode((MemberBase) instance);
+                }
+                // Process only the first of the instances (selection limited do 1)
+                break;
+            }
         }
         repaint();
         validate();
-//        open();
-        // ne moze uvek ovo
-//        requestActive();
     }
 
+    private Node createRootNode(ClassDiagram diagram) {
+        ClassDiagramNode node = new ClassDiagramNode(diagram);
+        explorerManager.setRootContext(node);
+        explorerTree.setRootVisible(true);
+        return node;
+    }
+
+    private void selectComponentNode(ComponentBase component) {
+        if (explorerManager.getRootContext() instanceof ClassDiagramNode) {
+            ClassDiagramNode root = (ClassDiagramNode) explorerManager.getRootContext();
+            if (root.getClassDiagram() != component.getParentDiagram()) {
+                createRootNode(component.getParentDiagram());
+            }
+        }
+        for (Node cn : explorerManager.getRootContext().getChildren().getNodes()) {
+            ComponentNode componentNode = (ComponentNode) cn;
+            if (componentNode.getComponent() == component) {
+                selectNode(componentNode);
+                return;
+            }
+        }
+    }
+
+    private void selectMemberNode(MemberBase member) {
+        if (explorerManager.getRootContext() instanceof ClassDiagramNode) {
+            ClassDiagramNode root = (ClassDiagramNode) explorerManager.getRootContext();
+            if (root.getClassDiagram() != member.getDeclaringComponent().getParentDiagram()) {
+                createRootNode(member.getDeclaringComponent().getParentDiagram());
+            }
+        }
+        for (Node cn : explorerManager.getRootContext().getChildren().getNodes()) {
+            for (Node mn : cn.getChildren().getNodes()) {
+                MemberNode memberNode = (MemberNode) mn;
+                if (memberNode.getMember() == member) {
+                    selectNode(memberNode);
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * Select node in the tree. If null is passed, selection is cleared.
+     *
+     * @param node
+     */
+    private void selectNode(Node node) {
+        try {
+            if (node != null) explorerManager.setSelectedNodes(new Node[]{node});
+            else explorerManager.setSelectedNodes(new Node[]{});
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
 }

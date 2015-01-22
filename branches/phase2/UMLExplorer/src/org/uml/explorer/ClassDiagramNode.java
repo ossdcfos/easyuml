@@ -1,5 +1,6 @@
 package org.uml.explorer;
 
+import com.sun.nio.sctp.Association;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -26,9 +27,8 @@ public class ClassDiagramNode extends AbstractNode implements PropertyChangeList
 
     private ClassDiagramNode(ClassDiagram classDiagram, InstanceContent content) {
         // not callable, because it is always expanded
-        super(Children.create(new ClassDiagramChildrenFactory(classDiagram), false), new AbstractLookup(content));
+        super(Children.create(new ClassDiagramChildFactory(classDiagram), false), new AbstractLookup(content));
         content.add(this);
-
         this.classDiagram = classDiagram;
         this.setDisplayName(classDiagram.getName());
         this.classDiagram.addPropertyChangeListener(WeakListeners.propertyChange(this, this.classDiagram));

@@ -10,7 +10,7 @@ import org.uml.visual.widgets.components.ComponentWidgetBase;
  */
 public class ComponentNameEditor implements TextFieldInplaceEditor {
 
-    private ComponentWidgetBase widget;
+    private final ComponentWidgetBase widget;
 
     public ComponentNameEditor(ComponentWidgetBase widget) {
         this.widget = widget;

@@ -13,10 +13,11 @@ import org.openide.util.Lookup;
  * @author NUGS
  */
 public class PaletteSupport {
+
     public static PaletteController pc = null;
 
     public static PaletteController getPalette() {
-        if(pc == null){
+        if (pc == null) {
             AbstractNode paletteRoot = new AbstractNode(Children.create(new PaletteCategoryChildFactory(), true));
             paletteRoot.setName("Palette Root");
             pc = PaletteFactory.createPalette(paletteRoot, new EmptyPaletteActions());
@@ -25,15 +26,30 @@ public class PaletteSupport {
     }
 
     private static class EmptyPaletteActions extends PaletteActions {
+
         @Override
-        public Action[] getImportActions() {return null;}
+        public Action[] getImportActions() {
+            return null;
+        }
+
         @Override
-        public Action[] getCustomPaletteActions() {return null;}
+        public Action[] getCustomPaletteActions() {
+            return null;
+        }
+
         @Override
-        public Action[] getCustomCategoryActions(Lookup lookup) {return null;}
+        public Action[] getCustomCategoryActions(Lookup lookup) {
+            return null;
+        }
+
         @Override
-        public Action[] getCustomItemActions(Lookup lookup) {return null;}
+        public Action[] getCustomItemActions(Lookup lookup) {
+            return null;
+        }
+
         @Override
-        public Action getPreferredAction(Lookup lookup) {return null;}
+        public Action getPreferredAction(Lookup lookup) {
+            return null;
+        }
     }
 }

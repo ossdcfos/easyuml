@@ -197,6 +197,12 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
                 case "name":
                     setName((String) evt.getNewValue());
                     break;
+                case "ADD":
+                    // create children only when the first member is added, it is refreshed in ComponentChildrenFactory when others are added
+                    if (component.getMembers().size() == 1) {
+                        setChildren(Children.create(new ComponentChildFactory(component), false));
+                    }
+                    break;
                 case "REMOVE":
                     if (component.getMembers().isEmpty()) {
                         setChildren(Children.LEAF);
@@ -224,7 +230,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
                 return Children.LEAF;
             } else {
                 // synchronous so that selection of members doesn't miss (if everything was not yet generated)
-                return Children.create(new ComponentChildrenFactory(key), false);
+                return Children.create(new ComponentChildFactory(key), false);
             }
         }
     }
