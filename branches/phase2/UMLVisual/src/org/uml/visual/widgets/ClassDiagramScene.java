@@ -1,6 +1,7 @@
 package org.uml.visual.widgets;
 
 import com.timboudreau.vl.jung.ObjectSceneAdapter;
+import java.beans.PropertyVetoException;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.ComponentWidgetBase;
@@ -11,8 +12,8 @@ import org.uml.model.components.InterfaceComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.HasBaseRelation;
-import java.beans.PropertyVetoException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
@@ -30,12 +31,14 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.*;
+import org.uml.explorer.ClassDiagramNode;
 import org.uml.explorer.ComponentNode;
 import org.uml.explorer.MemberNode;
 import org.uml.model.*;
 import org.uml.model.members.MemberBase;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
+import org.uml.model.relations.UseRelation;
 import org.uml.visual.UMLTopComponent;
 import org.uml.visual.widgets.anchors.ParallelNodeAnchor;
 import org.uml.visual.widgets.providers.*;
@@ -56,22 +59,24 @@ import org.uml.visual.widgets.relations.UseRelationWidget;
  */
 public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> implements LookupListener {
 
-    private LayerWidget mainLayer;
-    private LayerWidget connectionLayer;
-    private LayerWidget interractionLayer;
+    private final LayerWidget mainLayer;
+    private final LayerWidget connectionLayer;
+    private final LayerWidget interractionLayer;
 
-    private ClassDiagram classDiagram;
-    private UMLTopComponent umlTopComponent;
+    private final ClassDiagram classDiagram;
+    private final UMLTopComponent umlTopComponent;
 
-    private InstanceContent content = new InstanceContent();
-    private AbstractLookup aLookup = new AbstractLookup(content);
+    private final InstanceContent content = new InstanceContent();
+    private final AbstractLookup aLookup = new AbstractLookup(content);
 
-    private HashMap<ComponentWidgetBase, Anchor> anchorMap = new HashMap<>();
+    private final HashMap<ComponentWidgetBase, Anchor> anchorMap = new HashMap<>();
     private Router selfLinkRouter;
 
-    private Lookup.Result<ComponentNode> selectedExplorerComponent;
-    private Lookup.Result<MemberNode> selectedExplorerMember;
+    private final Lookup.Result<ClassDiagramNode> selectedExplorerDiagram;
+    private final Lookup.Result<ComponentNode> selectedExplorerComponent;
+    private final Lookup.Result<MemberNode> selectedExplorerMember;
 
+    @SuppressWarnings("LeakingThisInConstructor")
     public ClassDiagramScene(ClassDiagram umlClassDiagram, final UMLTopComponent umlTopComponent) {
 
         classDiagram = umlClassDiagram;
@@ -122,10 +127,24 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             addRelationToScene(rel, rel.getSource(), rel.getTarget());
         }
 
+        selectedExplorerDiagram = Utilities.actionsGlobalContext().lookupResult(ClassDiagramNode.class);
+        selectedExplorerDiagram.addLookupListener(this);
         selectedExplorerComponent = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
         selectedExplorerComponent.addLookupListener(this);
         selectedExplorerMember = Utilities.actionsGlobalContext().lookupResult(MemberNode.class);
         selectedExplorerMember.addLookupListener(this);
+    }
+
+    public LayerWidget getMainLayer() {
+        return mainLayer;
+    }
+
+    public LayerWidget getConnectionLayer() {
+        return connectionLayer;
+    }
+
+    public LayerWidget getInterractionLayer() {
+        return interractionLayer;
     }
 
     public UMLTopComponent getUmlTopComponent() {
@@ -138,51 +157,37 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
 
     @Override
     public Lookup getLookup() {
-        // TODO why is there classDiagram in lookup here?
-        return new ProxyLookup(aLookup, Lookups.singleton(classDiagram));
-    }
-
-    public InstanceContent getContent() {
-        return content;
+        return aLookup;
     }
 
     // adding of a component
     @Override
     protected Widget attachNodeWidget(ComponentBase component) {
-        ComponentWidgetBase widget = null;
-
-        // need to check, if loading existing diagram...
+        // if adding new component, add it to the diagram
         if (!classDiagram.getComponents().contains(component)) {
             classDiagram.addPartToContainter(component);
         }
 
+        // Initialization
+        ComponentWidgetBase widget = null;
         if (component instanceof ClassComponent) {
             widget = new ClassWidget(this, (ClassComponent) component);
         } else if (component instanceof InterfaceComponent) {
             widget = new InterfaceWidget(this, (InterfaceComponent) component);
         } else if (component instanceof EnumComponent) {
             widget = new EnumWidget(this, (EnumComponent) component);
-        } //        else if (component instanceof PackageComponent) {
-        //            widget = new PackageWidget(this, (PackageComponent) component);
-        //        } 
-        else {
+        } else {
             throw new RuntimeException("Unknown component!");
         }
 
         mainLayer.addChild(widget);
-
         return widget;
     }
 
     // adding of a relation
     @Override
     protected Widget attachEdgeWidget(RelationBase relation) {
-        if (getObjects().contains(relation)) {
-            System.out.println("Vec postoji!");
-            return null;
-        }
-
-        // need to check, if loading existing diagram...
+        // if adding new relation, add it to the diagram
         if (!classDiagram.getRelations().contains(relation)) {
             classDiagram.addRelation(relation);
         }
@@ -195,23 +200,14 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             widget = new IsRelationWidget(relation, this);
         } else if (relation instanceof HasBaseRelation) {
             widget = new HasBaseRelationWidget(relation, this);
-        } else {
+        } else if (relation instanceof UseRelation) {
             widget = new UseRelationWidget(relation, this);
+        } else {
+            throw new RuntimeException("Unknown component!");
         }
 
         connectionLayer.addChild(widget);
         return widget;
-    }
-
-    // Each widget must always return the same anchor in order for ParallelNodeAnchor to work
-    private Anchor getAnchorForWidget(ComponentWidgetBase widget) {
-        Anchor retVal = anchorMap.get(widget);
-
-        if (retVal == null) {
-            retVal = new ParallelNodeAnchor(widget);
-            anchorMap.put(widget, retVal);
-        }
-        return retVal;
     }
 
     @Override
@@ -234,6 +230,17 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         }
         if (isSelfLink(edgeWidget))
             setSelfLinkRouter(edgeWidget);
+    }
+
+    // Each widget must always return the same anchor in order for ParallelNodeAnchor to work
+    private Anchor getAnchorForWidget(ComponentWidgetBase widget) {
+        Anchor retVal = anchorMap.get(widget);
+
+        if (retVal == null) {
+            retVal = new ParallelNodeAnchor(widget);
+            anchorMap.put(widget, retVal);
+        }
+        return retVal;
     }
 
     private boolean isSelfLink(ConnectionWidget connection) {
@@ -261,18 +268,27 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             JOptionPane.showMessageDialog(null, "Relation already exists!");
         }
         repaint();
+        validate();
     }
 
-    public LayerWidget getMainLayer() {
-        return mainLayer;
+    public void selectScene() {
+        setFocusedObject(null);
+        // de-select
+        setSelectedObjects(Collections.EMPTY_SET);
+        // focus root in explorer window
+        setDiagramFocusForExplorer();
+
+        getUmlTopComponent().requestFocusInWindow();
     }
 
-    public LayerWidget getConnectionLayer() {
-        return connectionLayer;
-    }
-
-    public LayerWidget getInterractionLayer() {
-        return interractionLayer;
+    public void setDiagramFocusForExplorer() {
+        try {
+            ExplorerManager em = umlTopComponent.getExplorerManager();
+            em.setSelectedNodes(new Node[]{em.getRootContext()});
+        content.add(classDiagram);
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     @Override
@@ -283,36 +299,29 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         if (!instances.isEmpty()) {
             for (Object instance : instances) {
                 // Set focused object based on the selection of a Node in Explorer
-                if (instance instanceof ComponentNode) {
+                if (instance instanceof ClassDiagramNode) {
+                    setFocusedObject(null);
+                } else if (instance instanceof ComponentNode) {
                     ComponentBase component = ((ComponentNode) instance).getComponent();
-                    if (isNode(component)) {
+                    if (isNode(component))
                         setFocusedObject(component);
-                    }
                 } else if (instance instanceof MemberNode) {
                     MemberBase member = ((MemberNode) instance).getMember();
-                    if (isObject(member)) {
+                    if (isObject(member))
                         setFocusedObject(member);
-                    }
                 }
+                // Process only the first of the instances (selection limited do 1)
                 break;
             }
-        } else {
-            // root is selected
-            setFocusedObject(null);
         }
+//        else {
+//            // No component or member selected in explorer -> root is selected
+//            // this doesn't work, because sometimes there is empty instances event, when we have actually just selected some node
+//            setFocusedObject(null);
+//        }
 
         repaint();
         validate();
-    }
-
-    public void setDiagramFocusForExplorer() {
-        try {
-            ExplorerManager em = umlTopComponent.getExplorerManager();
-            em.setSelectedNodes(new Node[]{em.getRootContext()});
-            content.add(classDiagram);
-        } catch (PropertyVetoException ex) {
-            Exceptions.printStackTrace(ex);
-        }
     }
 
     private class FocusAdapter extends ObjectSceneAdapter {
@@ -320,46 +329,45 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         @Override
         public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
             ExplorerManager em = umlTopComponent.getExplorerManager();
-
             try {
-                if (previousFocusedObject != null) {
-                    content.remove(previousFocusedObject);
-                } else {
-                    content.remove(classDiagram);
-                }
+            if (previousFocusedObject != null) {
+                content.remove(previousFocusedObject);
+            } else {
+                content.remove(classDiagram);
+            }
 
-                if (newFocusedObject != null) {
-                    // for selection inside the Explorer
-                    content.add(newFocusedObject);
+            if (newFocusedObject != null) {
+                // for selection inside the Explorer
+                content.add(newFocusedObject);
 
                     // for properties
                     if (newFocusedObject instanceof ComponentBase) {
-                        for (Node n : em.getRootContext().getChildren().getNodes()) {
-                            ComponentNode cn = (ComponentNode) n;
-                            if (cn.getComponent() == newFocusedObject) {
-                                em.setSelectedNodes(new Node[]{cn});
+                        for (Node cn : em.getRootContext().getChildren().getNodes()) {
+                            ComponentNode componentNode = (ComponentNode) cn;
+                            if (componentNode.getComponent() == newFocusedObject) {
+                                em.setSelectedNodes(new Node[]{componentNode});
                                 break;
                             }
                         }
                     } else if (newFocusedObject instanceof MemberBase) {
-                        boolean over = false;
-                        for (Node n : em.getRootContext().getChildren().getNodes()) {
-                            for (Node cn : n.getChildren().getNodes()) {
-                                MemberNode mn = (MemberNode) cn;
-                                if (mn.getMember() == newFocusedObject) {
-                                    em.setSelectedNodes(new Node[]{mn});
-                                    over = true;
+                        boolean found = false;
+                        for (Node cn : em.getRootContext().getChildren().getNodes()) {
+                            for (Node mn : cn.getChildren().getNodes()) {
+                                MemberNode memberNode = (MemberNode) mn;
+                                if (memberNode.getMember() == newFocusedObject) {
+                                    em.setSelectedNodes(new Node[]{memberNode});
+                                    found = true;
                                     break;
                                 }
                             }
-                            if (over) break;
+                            if (found) break;
                         }
                     }
-                } else {
+            } else {
+//                    // If new focus is null, select classDiagram
 //                    em.setSelectedNodes(new Node[]{em.getRootContext()});
 //                    content.add(classDiagram);
-                }
-
+            }
             } catch (PropertyVetoException ex) {
                 Exceptions.printStackTrace(ex);
             }

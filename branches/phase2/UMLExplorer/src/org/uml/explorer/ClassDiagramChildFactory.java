@@ -13,11 +13,11 @@ import org.uml.model.components.ComponentBase;
  *
  * @author Boris
  */
-public class ClassDiagramChildrenFactory extends ChildFactory<ComponentBase> implements PropertyChangeListener {
+public class ClassDiagramChildFactory extends ChildFactory<ComponentBase> implements PropertyChangeListener {
 
     private final ClassDiagram classDiagram;
 
-    public ClassDiagramChildrenFactory(ClassDiagram classDiagram) {
+    public ClassDiagramChildFactory(ClassDiagram classDiagram) {
         this.classDiagram = classDiagram;
         this.classDiagram.addPropertyChangeListener(WeakListeners.propertyChange(this, this.classDiagram));
     }

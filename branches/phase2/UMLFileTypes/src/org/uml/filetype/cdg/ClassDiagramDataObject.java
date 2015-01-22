@@ -189,9 +189,9 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
                 fileOut = new FileOutputStream(putanja);
 
                 ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
-                ClassDiagram diagram = topComponent.getLookup().lookup(ClassDiagram.class);
-                ClassDiagramScene cdScene = (ClassDiagramScene) topComponent.getLookup().lookup(GraphScene.class);
-
+                ClassDiagramScene cdScene = topComponent.getLookup().lookup(ClassDiagramScene.class);
+                ClassDiagram diagram = cdScene.getClassDiagram();
+                
                 diagram.setName(fo.getName());
                 serializer.setClassDiagram(diagram);
                 serializer.setClassDiagramScene(cdScene);
@@ -224,7 +224,7 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
         super.handleDelete();
         for (final TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
             // TODO maybe rework
-            if (tc.getName().equals(classDiagram.getName())) {
+            if (classDiagram != null && tc.getName().equals(classDiagram.getName())) {
                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                     @Override
                     public void run() {

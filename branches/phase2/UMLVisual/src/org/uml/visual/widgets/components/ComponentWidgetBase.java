@@ -19,6 +19,8 @@ import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.WeakListeners;
+import org.openide.windows.WindowManager;
+import org.uml.explorer.ExplorerTopComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.TranslucentCompositeBorder;
@@ -36,8 +38,8 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
     protected LabelWidget nameLabel;
 
     protected static final int EMPTY_BORDER_SIZE = 5;
-    protected static final int RESIZE_BORDER_SIZE = 5;
-    protected static final int OUTER_BORDER_SIZE = 2 * EMPTY_BORDER_SIZE + 2 * (RESIZE_BORDER_SIZE + 1);
+    protected static final int SELECT_BORDER_SIZE = 5;
+    protected static final int OUTER_BORDER_SIZE = 2 * EMPTY_BORDER_SIZE + 2 * (SELECT_BORDER_SIZE + 1);
 
     protected static final int DEFAULT_LABEL_FONT_SIZE = 12;
     protected static final int ADD_LABEL_FONT_SIZE = 11;
@@ -51,7 +53,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
     public static final Color DEFAULT_COLOR = new Color(0xFBFBFB);
     public static final Color HOVER_COLOR = new Color(0xF2F2F2);
     public static final Color HOVER_SELECTED_COLOR = new Color(0xF7F7F7);
-    public static final Color SELECTED_COLOR = new Color(0xFAFAFA);
+    public static final Color SELECT_COLOR = new Color(0xFAFAFA);
 
     // Sand theme
 //    public static final Color DEFAULT_COLOR = new Color(0xF2D8A0);
@@ -68,9 +70,9 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 //    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createRoundedBorder(RESIZE_SIZE, RESIZE_SIZE, HOVER_COLOR, new Color(0x000047)));
     
     // Borders are +1, because dashed line from resize falls into the widget (thickness of resize border is RESIZE_SIZE+1)
-    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_BORDER_SIZE), BorderFactory.createLineBorder());
-    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(RESIZE_BORDER_SIZE), BorderFactory.createLineBorder(1, new Color(0x0000BB)));
-    public static final Border RESIZE_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(RESIZE_BORDER_SIZE, new Color(0x0000BB), false), BorderFactory.createEmptyBorder(1));
+    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(SELECT_BORDER_SIZE), BorderFactory.createLineBorder());
+    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(SELECT_BORDER_SIZE), BorderFactory.createLineBorder(1, new Color(0x0000BB)));
+    public static final Border SELECT_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(SELECT_BORDER_SIZE, new Color(0x0000BB), false), BorderFactory.createEmptyBorder(1));
     
     public static final Border EMPTY_CONTAINER_BORDER = BorderFactory.createEmptyBorder(EMPTY_BORDER_SIZE);
 
@@ -137,30 +139,19 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         // Reaction to hover, focus and selection goes here
         super.notifyStateChanged(previousState, state);
 
-        // resize reaction
-        boolean select = state.isFocused();
-        boolean wasSelected = previousState.isFocused();
+        boolean focused = state.isFocused();
+        boolean hovered = state.isHovered();
 
-        if (state.isHovered()) {
-            if (!select) {
-                setBorder(HOVER_BORDER);
-                setBackground(HOVER_COLOR);
-            } else {
-                setBackground(HOVER_SELECTED_COLOR);
-            }
+        if (focused) {
+            setBorder(SELECT_BORDER);
+            if(hovered) setBackground(HOVER_SELECTED_COLOR);
+            else setBackground(SELECT_COLOR);
+        } else if (hovered) {
+            setBorder(HOVER_BORDER);
+            setBackground(HOVER_COLOR);
         } else {
-            if (!select) {
-                setBorder(DEFAULT_BORDER);
-                setBackground(DEFAULT_COLOR);
-            } else {
-                setBackground(SELECTED_COLOR);
-            }
-        }
-
-        if (select && !wasSelected) {
-            setBorder(RESIZE_BORDER);
-        } else if (!select && wasSelected) {
             setBorder(DEFAULT_BORDER);
+            setBackground(DEFAULT_COLOR);
         }
     }
 

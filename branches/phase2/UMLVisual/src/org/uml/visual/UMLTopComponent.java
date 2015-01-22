@@ -9,12 +9,14 @@ package org.uml.visual;
 //import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.*;
 import javax.swing.JScrollPane;
-import org.dom4j.*;
-import org.dom4j.io.*;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.api.visual.widget.EventProcessingType;
 import org.netbeans.spi.actions.AbstractSavable;
@@ -36,9 +38,6 @@ import org.uml.visual.palette.PaletteSupport;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 
-/**
- * Top component which displays something.
- */
 @ConvertAsProperties(
         dtd = "-//org.uml.visual//UML//EN",
         autostore = false)
@@ -57,24 +56,26 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
     "CTL_UMLTopComponent=UML Class Diagram Window",
     "HINT_UMLTopComponent=This is a UML Class Diagram window"
 })
-public final class UMLTopComponent extends TopComponent implements ExplorerManager.Provider {
-    
-    private ClassDiagramScene classDiagramScene;
-    private JScrollPane classDiagramPanel;
-    private FileObject fileObject;
-    private InstanceContent content = new InstanceContent();
-    private ExplorerManager explorerManager = new ExplorerManager();
+public final class UMLTopComponent extends TopComponent
+implements ExplorerManager.Provider 
+{
 
-    // should never be called
+    private final ClassDiagramScene classDiagramScene;
+    private final JScrollPane classDiagramPanel;
+    private FileObject fileObject;
+    private final InstanceContent content = new InstanceContent();
+    private final ExplorerManager explorerManager = new ExplorerManager();
+
+    // should never be called, except from Window -> UML Designer
     public UMLTopComponent() {
         this(new ClassDiagram());
     }
-    
+
     public UMLTopComponent(ClassDiagram classDiagram) {
         initComponents();
-        setName(classDiagram.getName()); // samo se ime razlikuje, Bundle.CTL_UMLTopComponent(), da li je bitno?
+        setName(classDiagram.getName());
         setToolTipText(Bundle.HINT_UMLTopComponent());
-        
+
         classDiagramScene = new ClassDiagramScene(classDiagram, this);
         classDiagramPanel = new JScrollPane();
         classDiagramPanel.setViewportView(classDiagramScene.createView());
@@ -83,28 +84,29 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         classDiagramScene.validate();
         classDiagramScene.setCheckClipping(true);
         classDiagramScene.setKeyEventProcessingType(EventProcessingType.FOCUSED_WIDGET_AND_ITS_CHILDREN);
-        
+
         add(classDiagramPanel, BorderLayout.CENTER);
-        
+
         classDiagramScene.validate();
-        
+
         explorerManager.setRootContext(new ClassDiagramNode(classDiagram));
-        
+
         Lookup fixedLookup = Lookups.fixed(
                 classDiagramScene, // for saving of diagram
                 PaletteSupport.getPalette(), // palette
                 new UMLNavigatorLookupHint() // navigator
         );
-        
+
         AbstractLookup abstrLookup = new AbstractLookup(content);
-        
+
         ProxyLookup jointLookup = new ProxyLookup(
                 fixedLookup,
-                ExplorerUtils.createLookup(explorerManager, getActionMap()),
-                classDiagramScene.getLookup(), // node selection in explorer
-                abstrLookup
+                abstrLookup, // for modifying (adding UMLTopComponentSavable to Lookup)
+                classDiagramScene.getLookup() // node creation and selection in explorer
+                ,ExplorerUtils.createLookup(explorerManager, getActionMap()) // nodes for properties from UMLTopComponent
+//                , ((ExplorerTopComponent)WindowManager.getDefault().findTopComponent("ExplorerTopComponent")).getLookup()
         );
-        
+
         associateLookup(jointLookup);
 
         //classDiagramScene.getMainLayer().bringToFront();
@@ -112,17 +114,28 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         //GraphLayout graphLayout = GraphLayoutFactory.createOrthogonalGraphLayout(classDiagramScene, true);
         //graphLayout.layoutGraph(classDiagramScene);
     }
-    
+
+    @Override
+    public void componentOpened() {
+        WindowManager.getDefault().findTopComponent("ExplorerTopComponent").open();
+        WindowManager.getDefault().findTopComponent("properties").open();
+    }
+
     @Override
     public void componentActivated() {
         super.componentActivated();
-        requestActive();
+        classDiagramScene.selectScene();
     }
-    
+
     @Override
     protected void componentDeactivated() {
-        super.componentDeactivated(); //To change body of generated methods, choose Tools | Templates.
-        classDiagramScene.setFocusedObject(null);
+        super.componentDeactivated();
+        classDiagramScene.selectScene();
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return explorerManager;
     }
 
     /**
@@ -142,32 +155,22 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
     private javax.swing.JScrollPane viewPane;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void componentOpened() {
-        WindowManager.getDefault().findTopComponent("ExplorerTopComponent").open();
-        WindowManager.getDefault().findTopComponent("properties").open();
-    }
-    
-    @Override
-    public void componentClosed() {
-    }
-    
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
         // TODO store your settings
     }
-    
+
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
-    
+
     public ClassDiagramScene getClassDiagramScene() {
         return classDiagramScene;
     }
-    
+
     public void modify() {
         // in other case, when we are doing reverse engineering, modify is called before the lookup is
         // associated with TopComponent, so there is an exception when we associate it later, because it already exists
@@ -177,32 +180,27 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
             }
         }
     }
-    
+
     public void setFileObject(FileObject fileObject) {
         this.fileObject = fileObject;
     }
-    
-    @Override
-    public ExplorerManager getExplorerManager() {
-        return explorerManager;
-    }
-    
+
     class UMLTopComponentSavable extends AbstractSavable {
-        
+
         private final UMLTopComponent topComponent;
         private final InstanceContent ic;
-        
+
         public UMLTopComponentSavable(UMLTopComponent topComponent, InstanceContent instanceContent) {
             this.topComponent = topComponent;
             this.ic = instanceContent;
             register();
         }
-        
+
         @Override
         protected String findDisplayName() {
             return "Diagram " + topComponent.getName(); // get display name somehow
         }
-        
+
         @Override
         protected void handleSave() throws IOException {
             Confirmation msg = new NotifyDescriptor.Confirmation(
@@ -217,12 +215,12 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
             if (NotifyDescriptor.OK_OPTION.equals(result)) {
                 //Implement your save functionality here.
                 doSave();
-                
+
                 ic.remove(this);
                 unregister();
             }
         }
-        
+
         @Override
         public boolean equals(Object other) {
             if (other instanceof UMLTopComponentSavable) {
@@ -230,12 +228,12 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
             }
             return false;
         }
-        
+
         @Override
         public int hashCode() {
             return topComponent.hashCode();
         }
-        
+
         public void doSave() {
             FileOutputStream fileOut = null;
             XMLWriter writer = null;
@@ -243,7 +241,7 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
                 FileObject fo = fileObject;
                 String putanja = fo.getPath();
                 fileOut = new FileOutputStream(putanja);
-                
+
                 ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
                 serializer.setClassDiagram(classDiagramScene.getClassDiagram());
                 serializer.setClassDiagramScene(classDiagramScene);
@@ -277,7 +275,7 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
 //                });
 ////                xstream.setMode(XStream.NO_REFERENCES);
 //                System.out.println(xstream.toXML(classDiagramScene.getClassDiagram()));
-                
+
                 Document document = DocumentHelper.createDocument();
                 // document.setXMLEncoding("UTF-8");
                 Element root = document.addElement("ClassDiagram");
