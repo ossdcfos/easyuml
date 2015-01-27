@@ -1,6 +1,5 @@
 package org.uml.visual.widgets.components;
 
-import java.awt.Dimension;
 import org.uml.visual.widgets.members.ConstructorWidget;
 import org.uml.visual.widgets.members.MethodWidget;
 import org.uml.visual.widgets.members.FieldWidget;
@@ -53,12 +52,13 @@ public class ClassWidget extends ComponentWidgetBase {
         } else {
             setMinimumSize(MIN_DIMENSION_1ROW);
         }
-        
-        nameLabel.setLabel(component.getName());
         headerWidget.addChild(nameLabel);
         addChild(headerWidget);
 
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+        SeparatorWidget separatorWidget = new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL);
+        separatorWidget.setForeground(getColorTheme().getDefaultBorderColor());
+        separators.add(separatorWidget);
+        addChild(separatorWidget);
 
         // Fields
         fieldsContainer = new MemberContainerWidget(scene, "field");
@@ -70,8 +70,11 @@ public class ClassWidget extends ComponentWidgetBase {
             }
         });
         addChild(fieldsContainer);
-
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+        
+        separatorWidget = new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL);
+        separatorWidget.setForeground(getColorTheme().getDefaultBorderColor());
+        separators.add(separatorWidget);
+        addChild(separatorWidget);
 
         // Methods
         methodsContainer = new MemberContainerWidget(scene, "method");

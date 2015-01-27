@@ -3,14 +3,12 @@ package org.uml.visual.widgets.members;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.layout.LayoutFactory;
 import org.openide.util.WeakListeners;
 import org.uml.model.members.Constructor;
 import org.uml.visual.parser.MemberParser;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ISignedUMLWidget;
 import org.uml.visual.widgets.actions.MemberNameEditor;
-import org.uml.visual.widgets.popups.MemberBasePopupProvider;
 
 /**
  *
@@ -20,18 +18,15 @@ public class ConstructorWidget extends MemberWidgetBase implements ISignedUMLWid
 
     public ConstructorWidget(ClassDiagramScene scene, Constructor constructor) {
         super(scene, constructor);
-        this.component.getDeclaringComponent().addPropertyChangeListener(WeakListeners.propertyChange(this, this.component.getDeclaringComponent()));
-        this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
-        this.setLayout(LayoutFactory.createHorizontalFlowLayout());
+        this.member.getDeclaringComponent().addPropertyChangeListener(WeakListeners.propertyChange(this, this.member.getDeclaringComponent()));
         
         updateVisibilityLabel();
         this.addChild(visibilityLabel);
 
-        nameLabel.setLabel(((Constructor)component).getLabelText());
-        this.addChild(nameLabel);
+        nameLabel.setLabel(((Constructor)member).getLabelText());
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new MemberNameEditor(this)));
-
-        getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
+        this.addChild(nameLabel);
+        setChildConstraint(nameLabel, 1);   // any number, as it defines weight by which it will occupy the parent space
     }
 
     @Override
@@ -39,7 +34,7 @@ public class ConstructorWidget extends MemberWidgetBase implements ISignedUMLWid
         // from parent
         String propName = evt.getPropertyName();
         if ("name".equals(propName) || "arguments".equals(propName)) {
-            nameLabel.setLabel(((Constructor) component).getLabelText());
+            nameLabel.setLabel(((Constructor) member).getLabelText());
         }
         else if ("visibility".equals(propName)) {
             updateVisibilityLabel();
@@ -50,18 +45,18 @@ public class ConstructorWidget extends MemberWidgetBase implements ISignedUMLWid
 
     @Override
     public void setSignature(String signature) {
-        String oldSignature = component.getSignature();
+        String oldSignature = member.getSignature();
         if (!signature.equals(oldSignature)) {
-            if (component.getDeclaringComponent().signatureExists(signature)) {
+            if (member.getDeclaringComponent().signatureExists(signature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
             } else {
-                MemberParser.fillConstructorComponents((Constructor) component, signature);
+                MemberParser.fillConstructorComponents((Constructor) member, signature);
             }
         }
     }
 
     @Override
     public String getSignature() {
-        return component.getSignature();
+        return member.getSignature();
     }
 }

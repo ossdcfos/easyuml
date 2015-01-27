@@ -56,9 +56,7 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
     "CTL_UMLTopComponent=UML Class Diagram Window",
     "HINT_UMLTopComponent=This is a UML Class Diagram window"
 })
-public final class UMLTopComponent extends TopComponent
-implements ExplorerManager.Provider 
-{
+public final class UMLTopComponent extends TopComponent implements ExplorerManager.Provider {
 
     private final ClassDiagramScene classDiagramScene;
     private final JScrollPane classDiagramPanel;
@@ -102,9 +100,8 @@ implements ExplorerManager.Provider
         ProxyLookup jointLookup = new ProxyLookup(
                 fixedLookup,
                 abstrLookup, // for modifying (adding UMLTopComponentSavable to Lookup)
-                classDiagramScene.getLookup() // node creation and selection in explorer
-                ,ExplorerUtils.createLookup(explorerManager, getActionMap()) // nodes for properties from UMLTopComponent
-//                , ((ExplorerTopComponent)WindowManager.getDefault().findTopComponent("ExplorerTopComponent")).getLookup()
+                classDiagramScene.getLookup(), // node creation and selection in explorer
+                ExplorerUtils.createLookup(explorerManager, getActionMap()) // nodes for properties from UMLTopComponent
         );
 
         associateLookup(jointLookup);
@@ -130,7 +127,22 @@ implements ExplorerManager.Provider
     @Override
     protected void componentDeactivated() {
         super.componentDeactivated();
-        classDiagramScene.selectScene();
+        // When deactivating UMLTopComponent, deselect everything from scene,
+        // except when we are accessing linked TCs
+        if (!isActivatedLinkedTC()) {
+            classDiagramScene.deselectAll();
+        }
+    }
+
+    public boolean isActivatedLinkedTC() {
+        TopComponent activatedTC = WindowManager.getDefault().getRegistry().getActivated();
+        TopComponent propertiesTC = WindowManager.getDefault().findTopComponent("properties");
+        TopComponent explorerTC = WindowManager.getDefault().findTopComponent("ExplorerTopComponent");
+        if (activatedTC == propertiesTC || activatedTC == explorerTC || activatedTC == this) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -171,7 +183,7 @@ implements ExplorerManager.Provider
         return classDiagramScene;
     }
 
-    public void modify() {
+    public void notifyModified() {
         // in other case, when we are doing reverse engineering, modify is called before the lookup is
         // associated with TopComponent, so there is an exception when we associate it later, because it already exists
         if (fileObject != null) {

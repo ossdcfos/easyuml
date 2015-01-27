@@ -2,13 +2,18 @@ package org.uml.visual.widgets.members;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
-import org.netbeans.api.visual.border.Border;
+import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.border.BorderFactory;
+import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.WeakListeners;
 import org.uml.model.members.MemberBase;
+import org.uml.visual.colorthemes.ColorTheme;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import static org.uml.visual.widgets.members.MemberParentAlignWithMoveStrategyProvider.ALIGN_WITH_MOVE_DECORATOR_DEFAULT;
+import org.uml.visual.widgets.popups.MemberBasePopupProvider;
 
 /**
  *
@@ -16,42 +21,41 @@ import org.uml.visual.widgets.ClassDiagramScene;
  */
 public abstract class MemberWidgetBase extends LabelWidget implements PropertyChangeListener {
 
-    protected MemberBase component;
+    protected MemberBase member;
     protected LabelWidget visibilityLabel = new LabelWidget(getScene());
     protected LabelWidget nameLabel = new LabelWidget(getScene());
 
-    /* Visual */
-    protected static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(1);
-    protected static final Border HOVER_BORDER = BorderFactory.createLineBorder(1, Color.GRAY);
-    protected static final Border SELECT_BORDER = BorderFactory.createLineBorder(1, new Color(0x0000A1)); //0x0096FF33
-
-    protected static final Color DEFAULT_COLOR = new Color(0, 0, 0, 1);
-    protected static final Color HOVER_COLOR = new Color(0xD4DCFF);
-    protected static final Color SELECT_COLOR = new Color(0x00, 0x00, 0xA1, 0x4D);
-
-    protected static final Color DEFAULT_FONT_COLOR = Color.BLACK;
-    protected static final Color SELECT_FONT_COLOR = new Color(0xFFFFFF);
-    /* End Visual */
-
     public MemberWidgetBase(ClassDiagramScene scene, MemberBase member) {
         super(scene);
-        this.component = member;
+        this.member = member;
         scene.addObject(member, this);
         setOpaque(true);
-        setBackground(DEFAULT_COLOR);
-        setBorder(DEFAULT_BORDER);
+        setBackground(getColorTheme().getMemberDefaultColor());
+        setBorder(getColorTheme().getMemberDefaultBorder());
+
+        this.member.addPropertyChangeListener(WeakListeners.propertyChange(this, this.member));
+        this.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
         // To support hovering and selecting (in notifyStateChanged), otherwise a Provider is needed
-        getActions().addAction(scene.createWidgetHoverAction());
         getActions().addAction(scene.createSelectAction());
+        getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
+
+        MemberParentAlignWithMoveStrategyProvider mpsp = new MemberParentAlignWithMoveStrategyProvider(new SingleLayerAlignWithWidgetCollector(scene.getMainLayer(), false), scene.getInterractionLayer(), ALIGN_WITH_MOVE_DECORATOR_DEFAULT, false);
+        getActions().addAction(ActionFactory.createMoveAction(mpsp, mpsp));
+
+        getActions().addAction(scene.createWidgetHoverAction());
     }
 
     public final MemberBase getMember() {
-        return component;
+        return member;
     }
 
     public final ClassDiagramScene getClassDiagramScene() {
         return (ClassDiagramScene) getScene();
+    }
+
+    public static final ColorTheme getColorTheme() {
+        return ClassDiagramScene.colorTheme;
     }
 
     // used for InplaceEditorAction
@@ -60,7 +64,7 @@ public abstract class MemberWidgetBase extends LabelWidget implements PropertyCh
     }
 
     protected void notifyTopComponentModified() {
-        getClassDiagramScene().getUmlTopComponent().modify();
+        getClassDiagramScene().getUmlTopComponent().notifyModified();
     }
 
     @Override
@@ -71,31 +75,31 @@ public abstract class MemberWidgetBase extends LabelWidget implements PropertyCh
         // in case it has not yet been initialized return (adding to the scene calls notifyStateChanged, before the full object has been initialized)
         if (getParentWidget() == null) return;
 
-        Widget componentWidget = getParentWidget().getParentWidget();
+        ComponentWidgetBase componentWidget = (ComponentWidgetBase) getParentWidget().getParentWidget();
 
         boolean focused = state.isFocused();
         boolean hovered = state.isHovered();
 
         if (focused) {
-            setSelectedLook(true);
-            setBorder(SELECT_BORDER);
-            setBackground(SELECT_COLOR);
+            setSelectedLook(state);
+            setBorder(getColorTheme().getMemberSelectBorder());
+            setBackground(getColorTheme().getMemberSelectColor());
             if (hovered) componentWidget.setState(componentWidget.getState().deriveWidgetHovered(true));
         } else if (hovered) {
-            setSelectedLook(false);
-            setBorder(HOVER_BORDER);
-            setBackground(HOVER_COLOR);
+            setSelectedLook(state);
+            setBorder(getColorTheme().getMemberHoverBorder());
+            setBackground(getColorTheme().getMemberHoverColor());
             componentWidget.setState(componentWidget.getState().deriveWidgetHovered(true));
         } else {
-            setSelectedLook(false);
-            setBorder(DEFAULT_BORDER);
-            setBackground(DEFAULT_COLOR);
+            setSelectedLook(state);
+            setBorder(getColorTheme().getMemberDefaultBorder());
+            setBackground(getColorTheme().getMemberDefaultColor());
             componentWidget.setState(componentWidget.getState().deriveWidgetHovered(false));
         }
     }
 
     public final void updateVisibilityLabel() {
-        switch (component.getVisibility()) {
+        switch (member.getVisibility()) {
             case PUBLIC:
                 visibilityLabel.setLabel("+");
                 break;
@@ -112,13 +116,23 @@ public abstract class MemberWidgetBase extends LabelWidget implements PropertyCh
     }
 
     // used for setting the font etc.
-    protected void setSelectedLook(boolean isSelected) {
-        if (isSelected) {
-            visibilityLabel.setForeground(SELECT_FONT_COLOR);
-            nameLabel.setForeground(SELECT_FONT_COLOR);
+    protected void setSelectedLook(ObjectState state) {
+        boolean focused = state.isFocused();
+        boolean hovered = state.isHovered();
+
+        if (focused) {
+            visibilityLabel.setForeground(getColorTheme().getSelectFontColor());
+            nameLabel.setForeground(getColorTheme().getSelectFontColor());
+        } else if (hovered) {
+            visibilityLabel.setForeground(getColorTheme().getHoverFontColor());
+            nameLabel.setForeground(getColorTheme().getHoverFontColor());
         } else {
-            visibilityLabel.setForeground(DEFAULT_FONT_COLOR);
-            nameLabel.setForeground(DEFAULT_FONT_COLOR);
+            visibilityLabel.setForeground(getColorTheme().getDefaultFontColor());
+            nameLabel.setForeground(getColorTheme().getDefaultFontColor());
         }
+    }
+
+    public void updateColor() {
+        notifyStateChanged(getState(), getState());
     }
 }

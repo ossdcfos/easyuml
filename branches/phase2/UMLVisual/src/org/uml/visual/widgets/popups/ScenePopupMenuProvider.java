@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -44,6 +45,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem miGenerateCode;
     private JMenuItem miExportAsImage;
     private JMenuItem miApplyJUNGLayout;
+    private JMenu mColorTheme;
     private ClassDiagramScene scene;
     private Point popupPoint;
 
@@ -116,7 +118,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             }
         });
 
-        miGenerateCode = new JMenuItem("Generate Code");
+        miGenerateCode = new JMenuItem("Generate code");
         miGenerateCode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {        
@@ -126,7 +128,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             }
         });
 
-        miExportAsImage = new JMenuItem("Export as Image");
+        miExportAsImage = new JMenuItem("Export as image");
         miExportAsImage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -163,6 +165,26 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 je.applyJUNGLayout();
             }
         });
+        
+        mColorTheme = new JMenu("Color theme");
+        JMenuItem miBlueGray = new JMenuItem("Blue-gray");
+        miBlueGray.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scene.setColorTheme("blue-gray");
+            }
+        });
+        mColorTheme.add(miBlueGray);
+        JMenuItem miSand = new JMenuItem("Sand");
+        miSand.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scene.setColorTheme("sand");
+            }
+        });
+        mColorTheme.add(miSand);
 
         sceneMenu.add(miCreateClass);
 
@@ -183,5 +205,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         sceneMenu.addSeparator();
 
         sceneMenu.add(miApplyJUNGLayout);
+        
+        sceneMenu.add(mColorTheme);
     }
 }
