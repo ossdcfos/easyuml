@@ -31,16 +31,18 @@ public class EnumWidget extends ComponentWidgetBase {
         Widget headerWidget = new Widget(scene);
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
         headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
-
+        
         LabelWidget enumerationLabel = new LabelWidget(scene, "<<enumeration>>");
         enumerationLabel.setAlignment(LabelWidget.Alignment.CENTER);
         headerWidget.addChild(enumerationLabel);
-
-        nameLabel.setLabel(component.getName());
+        
         headerWidget.addChild(nameLabel);
         addChild(headerWidget);
 
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+        SeparatorWidget separatorWidget = new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL);
+        separatorWidget.setForeground(getColorTheme().getDefaultBorderColor());
+        separators.add(separatorWidget);
+        addChild(separatorWidget);
 
         literalsContainer = new MemberContainerWidget(scene, "literal");
         literalsContainer.addAddAction(new Callable<Void>() {

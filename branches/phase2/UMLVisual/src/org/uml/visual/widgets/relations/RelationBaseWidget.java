@@ -51,11 +51,11 @@ public class RelationBaseWidget extends ConnectionWidget {
         name.getActions().addAction(ActionFactory.createInplaceEditorAction(new RelationLabelTextFieldEditorAction(relation)));
         // Right-click action
         getActions().addAction(ActionFactory.createPopupMenuAction(new RelationPopupMenuProvider(this, relation)));
-        // Selection and hover action
-        getActions().addAction(scene.createWidgetHoverAction());
-        getActions().addAction(scene.createSelectAction());
         // Control points actions
         getActions().addAction(ActionFactory.createAddRemoveControlPointAction());
         getActions().addAction(ActionFactory.createMoveControlPointAction(ActionFactory.createFreeMoveControlPointProvider(), ConnectionWidget.RoutingPolicy.UPDATE_END_POINTS_ONLY));
+        // Selection and hover action
+        getActions().addAction(scene.createSelectAction());
+        getActions().addAction(scene.createWidgetHoverAction());
     }
 }

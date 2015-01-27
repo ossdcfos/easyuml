@@ -37,12 +37,14 @@ public class InterfaceWidget extends ComponentWidgetBase {
         LabelWidget interfaceLabel = new LabelWidget(scene, "<<interface>>");
         interfaceLabel.setAlignment(LabelWidget.Alignment.CENTER);
         headerWidget.addChild(interfaceLabel);
-
-        nameLabel.setLabel(component.getName());
+        
         headerWidget.addChild(nameLabel);
         addChild(headerWidget);
 
-        addChild(new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL));
+        SeparatorWidget separatorWidget = new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL);
+        separatorWidget.setForeground(getColorTheme().getDefaultBorderColor());
+        separators.add(separatorWidget);
+        addChild(separatorWidget);
 
         methodsContainer = new MemberContainerWidget(scene, "method");
         methodsContainer.addAddAction(new Callable<Void>() {
@@ -83,6 +85,5 @@ public class InterfaceWidget extends ComponentWidgetBase {
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(methodWidget.getNameLabel());
         MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
-
     }
 }

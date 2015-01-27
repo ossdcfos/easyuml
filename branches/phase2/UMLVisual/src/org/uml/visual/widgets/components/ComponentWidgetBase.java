@@ -1,7 +1,6 @@
 package org.uml.visual.widgets.components;
 
 import org.uml.visual.widgets.members.MemberWidgetBase;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,6 +9,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.border.Border;
@@ -17,13 +17,12 @@ import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.WeakListeners;
-import org.openide.windows.WindowManager;
-import org.uml.explorer.ExplorerTopComponent;
 import org.uml.model.components.ComponentBase;
+import org.uml.visual.colorthemes.ColorTheme;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.TranslucentCompositeBorder;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
@@ -36,44 +35,29 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 
     protected ComponentBase component;
     protected LabelWidget nameLabel;
+    
+    protected LinkedList<SeparatorWidget> separators = new LinkedList<>();
 
-    protected static final int EMPTY_BORDER_SIZE = 5;
-    protected static final int SELECT_BORDER_SIZE = 5;
+    public static final int EMPTY_BORDER_SIZE = 5;
+    public static final int SELECT_BORDER_SIZE = 5;
     protected static final int OUTER_BORDER_SIZE = 2 * EMPTY_BORDER_SIZE + 2 * (SELECT_BORDER_SIZE + 1);
 
     protected static final int DEFAULT_LABEL_FONT_SIZE = 12;
     protected static final int ADD_LABEL_FONT_SIZE = 11;
+
     public static int getLabelSizeForFont(int fontSize) {
         return fontSize + 5;
     }
-    protected static final Dimension MIN_DIMENSION_1ROW = new Dimension(130, OUTER_BORDER_SIZE + getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
-    protected static final Dimension MIN_DIMENSION_2ROW = new Dimension(130, OUTER_BORDER_SIZE + 2 * getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
-
-    // Gray theme
-    public static final Color DEFAULT_COLOR = new Color(0xFBFBFB);
-    public static final Color HOVER_COLOR = new Color(0xF2F2F2);
-    public static final Color HOVER_SELECTED_COLOR = new Color(0xF7F7F7);
-    public static final Color SELECT_COLOR = new Color(0xFAFAFA);
-
-    // Sand theme
-//    public static final Color DEFAULT_COLOR = new Color(0xF2D8A0);
-//    public static final Color HOVER_COLOR = new Color(0xF27272);
-//    public static final Color HOVER_SELECTED_COLOR = new Color(0x70F27272, true);
-//    public static final Color SELECTED_COLOR = new Color(0x7FF27272, true);
-    // Blue theme
-//    public static final Color DEFAULT_COLOR = new Color(0x7FCCCCCC, true);
-//    public static final Color HOVER_COLOR = new Color(0x7F003366, true);
-//    public static final Color HOVER_SELECTED_COLOR = new Color(0x7003366, true);
-//    public static final Color SELECTED_COLOR = new Color(0x7F03366, true);
     
-//    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createRoundedBorder(RESIZE_SIZE, RESIZE_SIZE, DEFAULT_COLOR, Color.BLACK));
-//    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createRoundedBorder(RESIZE_SIZE, RESIZE_SIZE, HOVER_COLOR, new Color(0x000047)));
-    
+    protected static final int MIN_WIDTH = 170;
+    protected static final Dimension MIN_DIMENSION_1ROW = new Dimension(MIN_WIDTH, OUTER_BORDER_SIZE + getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
+    protected static final Dimension MIN_DIMENSION_2ROW = new Dimension(MIN_WIDTH, OUTER_BORDER_SIZE + 2 * getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
+
     // Borders are +1, because dashed line from resize falls into the widget (thickness of resize border is RESIZE_SIZE+1)
-    public static final Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(SELECT_BORDER_SIZE), BorderFactory.createLineBorder());
-    public static final Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(SELECT_BORDER_SIZE), BorderFactory.createLineBorder(1, new Color(0x0000BB)));
-    public static final Border SELECT_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(SELECT_BORDER_SIZE, new Color(0x0000BB), false), BorderFactory.createEmptyBorder(1));
-    
+//    public static Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(SELECT_BORDER_SIZE), BorderFactory.createLineBorder());
+//    public static Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(SELECT_BORDER_SIZE), BorderFactory.createLineBorder(1, getColorTheme().getHoverBorderColor()));
+//    public static Border SELECT_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(SELECT_BORDER_SIZE, getColorTheme().getSelectBorderColor(), false), BorderFactory.createEmptyBorder(1));
+
     public static final Border EMPTY_CONTAINER_BORDER = BorderFactory.createEmptyBorder(EMPTY_BORDER_SIZE);
 
     public ComponentWidgetBase(final ClassDiagramScene scene, ComponentBase component) {
@@ -83,13 +67,14 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         this.component.setParentDiagram(scene.getClassDiagram());
 
         // Layout
-        setBorder(DEFAULT_BORDER);
+        setBorder(getColorTheme().getDefaultBorder());
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setOpaque(true);
         setCheckClipping(true);
-        setBackground(DEFAULT_COLOR);
+        setBackground(getColorTheme().getDefaultColor());
 
         nameLabel = new LabelWidget(scene);
+        nameLabel.setLabel(component.getName());
         nameLabel.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
         nameLabel.setAlignment(LabelWidget.Alignment.CENTER);
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new ComponentNameEditor(this)));
@@ -100,10 +85,10 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         // Keybord actions over components
         getActions().addAction(new ComponentWidgetKeyboardAction());
         // Hover, select and resize
-        getActions().addAction(scene.createWidgetHoverAction());
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
+        getActions().addAction(scene.createWidgetHoverAction());
 
 //        // TODO: Change detection - check how this works
 //        // Too slow, should find another solution
@@ -143,15 +128,24 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         boolean hovered = state.isHovered();
 
         if (focused) {
-            setBorder(SELECT_BORDER);
-            if(hovered) setBackground(HOVER_SELECTED_COLOR);
-            else setBackground(SELECT_COLOR);
+            setBorder(getColorTheme().getSelectBorder());
+            if (hovered) setBackground(getColorTheme().getHoverSelectColor());
+            else setBackground(getColorTheme().getSelectColor());
+            for(SeparatorWidget separator : separators){
+                separator.setForeground(getColorTheme().getSelectBorderColor());
+            }
         } else if (hovered) {
-            setBorder(HOVER_BORDER);
-            setBackground(HOVER_COLOR);
+            setBorder(getColorTheme().getHoverBorder());
+            setBackground(getColorTheme().getHoverColor());
+            for(SeparatorWidget separator : separators){
+                separator.setForeground(getColorTheme().getHoverBorderColor());
+            }
         } else {
-            setBorder(DEFAULT_BORDER);
-            setBackground(DEFAULT_COLOR);
+            setBorder(getColorTheme().getDefaultBorder());
+            setBackground(getColorTheme().getDefaultColor());
+            for(SeparatorWidget separator : separators){
+                separator.setForeground(getColorTheme().getDefaultBorderColor());
+            }
         }
     }
 
@@ -174,6 +168,20 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         }
     }
 
+    public static final ColorTheme getColorTheme() {
+        return ClassDiagramScene.colorTheme;
+    }
+
+    public void updateColor() {
+        notifyStateChanged(getState(), getState());
+        for (Widget widget : getChildren()) {
+            if (widget instanceof MemberContainerWidget) {
+                MemberContainerWidget containerWidget = (MemberContainerWidget) widget;
+                containerWidget.updateColor();
+            }
+        }
+    }
+
     // already has getScene in widget, but this is casted, so it's easier
     public ClassDiagramScene getClassDiagramScene() {
         return (ClassDiagramScene) getScene();
@@ -192,7 +200,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
     }
 
     protected void notifyTopComponentModified() {
-        getClassDiagramScene().getUmlTopComponent().modify();
+        getClassDiagramScene().getUmlTopComponent().notifyModified();
     }
 
     @Override

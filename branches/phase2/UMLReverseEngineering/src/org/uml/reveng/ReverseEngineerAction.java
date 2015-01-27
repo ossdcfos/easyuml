@@ -37,7 +37,7 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 //    @ActionReference(path = "Menu/Source", position = 50),
     @ActionReference(path = "Projects/org-netbeans-modules-java-j2seproject/Actions", position = 1050)
 })
-@Messages("CTL_ReverseEngineerAction=easyUML Reverse Engineer")
+@Messages("CTL_ReverseEngineerAction=easyUML Create Class Diagram")
 /**
  * Class that responds to Reverse Engineer command from the main window
  *

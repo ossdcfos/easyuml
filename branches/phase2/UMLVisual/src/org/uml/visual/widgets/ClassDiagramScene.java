@@ -2,6 +2,7 @@ package org.uml.visual.widgets;
 
 import com.timboudreau.vl.jung.ObjectSceneAdapter;
 import java.beans.PropertyVetoException;
+import java.util.Collection;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.ComponentWidgetBase;
@@ -12,8 +13,6 @@ import org.uml.model.components.InterfaceComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.HasBaseRelation;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
@@ -40,6 +39,8 @@ import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.UseRelation;
 import org.uml.visual.UMLTopComponent;
+import org.uml.visual.colorthemes.ColorTheme;
+import org.uml.visual.colorthemes.ColorThemesStore;
 import org.uml.visual.widgets.anchors.ParallelNodeAnchor;
 import org.uml.visual.widgets.providers.*;
 import org.uml.visual.widgets.popups.ScenePopupMenuProvider;
@@ -72,15 +73,18 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     private final HashMap<ComponentWidgetBase, Anchor> anchorMap = new HashMap<>();
     private Router selfLinkRouter;
 
-    private final Lookup.Result<ClassDiagramNode> selectedExplorerDiagram;
-    private final Lookup.Result<ComponentNode> selectedExplorerComponent;
-    private final Lookup.Result<MemberNode> selectedExplorerMember;
+    public static ColorTheme colorTheme = ColorThemesStore.DEFAULT_COLOR_THEME;
+
+    private final Lookup.Result<ClassDiagramNode> focusedExplorerDiagram;
+    private final Lookup.Result<ComponentNode> focusedExplorerComponent;
+    private final Lookup.Result<MemberNode> focusedExplorerMember;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public ClassDiagramScene(ClassDiagram umlClassDiagram, final UMLTopComponent umlTopComponent) {
 
         classDiagram = umlClassDiagram;
-
+        // TODO selection of scene
+        addObject(classDiagram, this);
         classDiagram.addDeleteListener(new IComponentDeleteListener() {
             @Override
             public void componentDeleted(INameable component) {
@@ -127,12 +131,10 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             addRelationToScene(rel, rel.getSource(), rel.getTarget());
         }
 
-        selectedExplorerDiagram = Utilities.actionsGlobalContext().lookupResult(ClassDiagramNode.class);
-        selectedExplorerDiagram.addLookupListener(this);
-        selectedExplorerComponent = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
-        selectedExplorerComponent.addLookupListener(this);
-        selectedExplorerMember = Utilities.actionsGlobalContext().lookupResult(MemberNode.class);
-        selectedExplorerMember.addLookupListener(this);
+        focusedExplorerDiagram = Utilities.actionsGlobalContext().lookupResult(ClassDiagramNode.class);
+        focusedExplorerComponent = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
+        focusedExplorerMember = Utilities.actionsGlobalContext().lookupResult(MemberNode.class);
+        addLookupListeners();
     }
 
     public LayerWidget getMainLayer() {
@@ -151,8 +153,37 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         return umlTopComponent;
     }
 
+    public ExplorerManager getExplorerManager() {
+        return getUmlTopComponent().getExplorerManager();
+    }
+
     public ClassDiagram getClassDiagram() {
         return classDiagram;
+    }
+
+    public void setColorTheme(String name) {
+        ColorTheme theme = ColorThemesStore.getColorTheme(name);
+        ClassDiagramScene.colorTheme = theme;
+        for (Widget widget : mainLayer.getChildren()) {
+            if (widget instanceof ComponentWidgetBase) {
+                ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;
+                componentWidget.updateColor();
+            }
+        }
+    }
+
+    // Used to enable selection detection from ClassDiagramScene
+    private void addLookupListeners() {
+        focusedExplorerDiagram.addLookupListener(this);
+        focusedExplorerComponent.addLookupListener(this);
+        focusedExplorerMember.addLookupListener(this);
+    }
+
+    // Used to disable selection detection from ClassDiagramScene, while changing selection in explorer (avoid loop selections)
+    private void removeLookupListeners() {
+        focusedExplorerDiagram.removeLookupListener(this);
+        focusedExplorerComponent.removeLookupListener(this);
+        focusedExplorerMember.removeLookupListener(this);
     }
 
     @Override
@@ -271,26 +302,6 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         validate();
     }
 
-    public void selectScene() {
-        setFocusedObject(null);
-        // de-select
-        setSelectedObjects(Collections.EMPTY_SET);
-        // focus root in explorer window
-        setDiagramFocusForExplorer();
-
-        getUmlTopComponent().requestFocusInWindow();
-    }
-
-    public void setDiagramFocusForExplorer() {
-        try {
-            ExplorerManager em = umlTopComponent.getExplorerManager();
-            em.setSelectedNodes(new Node[]{em.getRootContext()});
-        content.add(classDiagram);
-        } catch (PropertyVetoException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }
-
     @Override
     @SuppressWarnings("rawtypes")
     public void resultChanged(LookupEvent ev) {
@@ -300,36 +311,61 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             for (Object instance : instances) {
                 // Set focused object based on the selection of a Node in Explorer
                 if (instance instanceof ClassDiagramNode) {
-                    setFocusedObject(null);
+                    selectScene();
                 } else if (instance instanceof ComponentNode) {
                     ComponentBase component = ((ComponentNode) instance).getComponent();
-                    if (isNode(component))
-                        setFocusedObject(component);
+                    if (isNode(component)) {
+                        setFocusedObjectAndToggleListeners(component);
+                    }
                 } else if (instance instanceof MemberNode) {
                     MemberBase member = ((MemberNode) instance).getMember();
-                    if (isObject(member))
-                        setFocusedObject(member);
+                    if (isObject(member)) {
+                        setFocusedObjectAndToggleListeners(member);
+                    }
                 }
                 // Process only the first of the instances (selection limited do 1)
                 break;
             }
+        } else {
+            // No component or member selected in explorer, or some other TopComponent is focused, clear selection
+            // this doesn't work, because sometimes there is empty instances event, when we have actually just selected some node
+            // ExplorerTopComponent
+            if (!umlTopComponent.isActivatedLinkedTC()) {
+                selectScene();
+            }
         }
-//        else {
-//            // No component or member selected in explorer -> root is selected
-//            // this doesn't work, because sometimes there is empty instances event, when we have actually just selected some node
-//            setFocusedObject(null);
-//        }
-
         repaint();
         validate();
     }
 
+    public void deselectAll() {
+        setFocusedObjectAndToggleListeners(null);
+    }
+
+    // Selection and content.add need to be here, because on the first opening of class diagram
+    // oldFocus and newFocus are null, so the event doesn't trigger
+    public void selectScene() {
+        // Select classDiagram (deselect all)
+        // This does not work when selecting outside the scene. That case is supported in umlTopComponent.componentDeactivated()
+        setFocusedObjectAndToggleListeners(classDiagram);
+
+        // Focus UMLTopComponent when scene is selected
+        getUmlTopComponent().requestFocusInWindow();
+    }
+
+    public void setFocusedObjectAndToggleListeners(Object object) {
+        removeLookupListeners();
+        setFocusedObject(object);
+        addLookupListeners();
+    }
+
     private class FocusAdapter extends ObjectSceneAdapter {
 
+        // Nodes are selected in order for properties to show the sheet from UMLTopComponent ExplorerManager lookup
+        // Content is used so that ExplorerTopComponent can synchronize selection through listening to lookup
         @Override
         public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-            ExplorerManager em = umlTopComponent.getExplorerManager();
-            try {
+            // For selection inside the Explorer
             if (previousFocusedObject != null) {
                 content.remove(previousFocusedObject);
             } else {
@@ -337,50 +373,70 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             }
 
             if (newFocusedObject != null) {
-                // for selection inside the Explorer
-                content.add(newFocusedObject);
+                // For properties
+                if (newFocusedObject instanceof ComponentBase) {
+                    selectComponentNode((ComponentBase) newFocusedObject);
+                } else if (newFocusedObject instanceof MemberBase) {
+                    selectMemberNode((MemberBase) newFocusedObject);
+                } else if (newFocusedObject instanceof ClassDiagram) {
+                    selectNode(getExplorerManager().getRootContext());
+                }
 
-                    // for properties
-                    if (newFocusedObject instanceof ComponentBase) {
-                        for (Node cn : em.getRootContext().getChildren().getNodes()) {
-                            ComponentNode componentNode = (ComponentNode) cn;
-                            if (componentNode.getComponent() == newFocusedObject) {
-                                em.setSelectedNodes(new Node[]{componentNode});
-                                break;
-                            }
-                        }
-                    } else if (newFocusedObject instanceof MemberBase) {
-                        boolean found = false;
-                        for (Node cn : em.getRootContext().getChildren().getNodes()) {
-                            for (Node mn : cn.getChildren().getNodes()) {
-                                MemberNode memberNode = (MemberNode) mn;
-                                if (memberNode.getMember() == newFocusedObject) {
-                                    em.setSelectedNodes(new Node[]{memberNode});
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (found) break;
-                        }
-                    }
+                // For selection inside the Explorer
+                content.add(newFocusedObject);
             } else {
-//                    // If new focus is null, select classDiagram
-//                    em.setSelectedNodes(new Node[]{em.getRootContext()});
-//                    content.add(classDiagram);
-            }
-            } catch (PropertyVetoException ex) {
-                Exceptions.printStackTrace(ex);
+                deselectAllNodes();
             }
         }
 
         @Override
         public void objectAdded(ObjectSceneEvent event, Object addedObject) {
-            umlTopComponent.modify();
+            umlTopComponent.notifyModified();
         }
 
         @Override
         public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
-            umlTopComponent.modify();
+            umlTopComponent.notifyModified();
         }
+    }
+
+    private void selectComponentNode(ComponentBase component) {
+        for (Node cn : getExplorerManager().getRootContext().getChildren().getNodes()) {
+            ComponentNode componentNode = (ComponentNode) cn;
+            if (componentNode.getComponent() == component) {
+                selectNode(componentNode);
+                return;
+            }
+        }
+    }
+
+    private void selectMemberNode(MemberBase member) {
+        for (Node cn : getExplorerManager().getRootContext().getChildren().getNodes()) {
+            for (Node mn : cn.getChildren().getNodes()) {
+                MemberNode memberNode = (MemberNode) mn;
+                if (memberNode.getMember() == member) {
+                    selectNode(memberNode);
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * Select node in the tree. If null is passed, selection is cleared.
+     *
+     * @param node
+     */
+    private void selectNode(Node node) {
+        try {
+            if (node != null) getExplorerManager().setSelectedNodes(new Node[]{node});
+            else getExplorerManager().setSelectedNodes(new Node[]{});
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
+    private void deselectAllNodes(){
+        selectNode(null);
     }
 }

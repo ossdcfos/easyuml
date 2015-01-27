@@ -63,7 +63,7 @@ public class SceneAcceptProvider implements AcceptProvider {
 //                w.setPreferredBounds(bounds);
 //                w.resolveBounds(point, bounds);
 //                component.setBounds(w.getPreferredBounds());
-                classDiagramScene.setFocusedObject(component);
+                classDiagramScene.setFocusedObjectAndToggleListeners(component);
 
                 // TODO open inplace editor - throws NPE because nameLabel does not have its bounds set
 //                WidgetAction editorAction = ((ComponentWidgetBase) w).getNameEditorAction();

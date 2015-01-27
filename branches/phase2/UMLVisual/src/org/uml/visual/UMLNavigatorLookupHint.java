@@ -8,5 +8,4 @@ public class UMLNavigatorLookupHint implements NavigatorLookupHint {
     public String getContentType() {
         return "application/uml";
     }
-    
 }

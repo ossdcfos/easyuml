@@ -7,13 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.layout.LayoutFactory;
-import org.openide.util.WeakListeners;
 import org.uml.model.members.Field;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ISignedUMLWidget;
 import org.uml.visual.widgets.actions.MemberNameEditor;
-import org.uml.visual.widgets.popups.MemberBasePopupProvider;
 
 /**
  *
@@ -23,35 +20,31 @@ public class FieldWidget extends MemberWidgetBase implements ISignedUMLWidget {
 
     public FieldWidget(ClassDiagramScene scene, Field field) {
         super(scene, field);
-        this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
-        this.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
         updateVisibilityLabel();
         this.addChild(visibilityLabel);
 
         nameLabel.setLabel(field.getLabelText());
-        // this has to be invoked because of setStatic changes to font. Otherwise there is a NPE
-        nameLabel.setFont(scene.getDefaultFont());
-        setStatic(field.isStatic());
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new MemberNameEditor(this)));
         this.addChild(nameLabel);
-
-        getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
+        setChildConstraint(nameLabel, 1);   // any number, as it defines weight by which it will occupy the parent space
+        nameLabel.setFont(scene.getDefaultFont()); // this has to be invoked because of setStatic changes to font. Otherwise there is a NPE
+        setStatic(field.isStatic());
     }
 
     @Override
     public String getSignature() {
-        return component.getSignature();
+        return member.getSignature();
     }
 
     @Override
     public void setSignature(String signature) {
-        String oldSignature = component.getSignature();
+        String oldSignature = member.getSignature();
         if (!signature.equals(oldSignature)) {
-            if (component.getDeclaringComponent().signatureExists(signature)) {
+            if (member.getDeclaringComponent().signatureExists(signature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
             } else {
-                MemberParser.fillFieldComponents((Field) component, signature);
+                MemberParser.fillFieldComponents((Field) member, signature);
             }
         }
     }
@@ -72,7 +65,7 @@ public class FieldWidget extends MemberWidgetBase implements ISignedUMLWidget {
         if ("isStatic".equals(propName)) {
             setStatic((boolean) evt.getNewValue());
         } else if ("isFinal".equals(propName) || "isTransient".equals(propName) || "isVolatile".equals(propName) || "name".equals(propName) || "type".equals(propName)) {
-            nameLabel.setLabel(((Field) component).getLabelText());
+            nameLabel.setLabel(((Field) member).getLabelText());
         } else if ("visibility".equals(evt.getPropertyName())) {
             updateVisibilityLabel();
         }

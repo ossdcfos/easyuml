@@ -59,8 +59,6 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     private final ExplorerManager explorerManager = new ExplorerManager();
     private final BeanTreeView explorerTree;
 
-    private boolean activated;
-
     private Result<ClassDiagram> resultCD;
     private Result<ComponentBase> resultC;
     private Result<MemberBase> resultM;
@@ -103,33 +101,52 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     // End of variables declaration//GEN-END:variables
 
     @Override
-    protected void componentActivated() {
-        super.componentActivated();
-        activated = true;
-    }
-
-    @Override
     protected void componentDeactivated() {
         super.componentDeactivated();
-        activated = false;
+        // When deactivating ExplorerTopComponent, deselect all nodes,
+        // except when we are accessing linked TCs
+        if (!isActivatedLinkedTC()) {
+            deselectAllNodes();
+        }
+    }
+
+    private boolean isActivatedLinkedTC() {
+        TopComponent activatedTC = WindowManager.getDefault().getRegistry().getActivated();
+        TopComponent propertiesTC = WindowManager.getDefault().findTopComponent("properties");
+        if (activatedTC == propertiesTC
+                // TODO tight coupling. Can this be done better?
+                || (activatedTC.getClass().getSimpleName().equals("UMLTopComponent") && activatedTC.getName().equals(explorerManager.getRootContext().getDisplayName()))
+                || activatedTC == this) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void componentOpened() {
         resultCD = Utilities.actionsGlobalContext().lookupResult(ClassDiagram.class);
-        resultCD.addLookupListener(this);
+        resultC = Utilities.actionsGlobalContext().lookupResult(ComponentBase.class);
+        resultM = Utilities.actionsGlobalContext().lookupResult(MemberBase.class);
         // calls result changed on its own, no need for: 
 //        resultChanged(new LookupEvent(resultCD));
-
-        resultC = Utilities.actionsGlobalContext().lookupResult(ComponentBase.class);
-        resultC.addLookupListener(this);
-
-        resultM = Utilities.actionsGlobalContext().lookupResult(MemberBase.class);
-        resultM.addLookupListener(this);
+        addLookupListeners();
     }
 
     @Override
     public void componentClosed() {
+        removeLookupListeners();
+    }
+
+    // Used to enable selection detection from ClassDiagramScene
+    private void addLookupListeners() {
+        resultCD.addLookupListener(this);
+        resultC.addLookupListener(this);
+        resultM.addLookupListener(this);
+    }
+
+    // Used to disable selection detection from ClassDiagramScene, while changing selection in explorer (avoid loop selections)
+    private void removeLookupListeners() {
         resultCD.removeLookupListener(this);
         resultC.removeLookupListener(this);
         resultM.removeLookupListener(this);
@@ -150,55 +167,20 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     public void resultChanged(LookupEvent ev) {
         Lookup.Result source = (Lookup.Result) ev.getSource();
         Collection instances = source.allInstances();
-        if (instances.isEmpty()) {
-            // When user opens new scene while some is already open, instances are empty
-            // Or when user closes all scenes, instances are empty
-            boolean someSceneOpen = false;
-            boolean currentSceneOpen = false;
-            Set<TopComponent> tcs = WindowManager.getDefault().getRegistry().getOpened();
-            for (TopComponent tc : tcs) {
-                // TODO maybe rework
-                if (tc.getClass().getSimpleName().equals("UMLTopComponent")) { // Class name is hardcoded, because we cannot access UMLTopComponent from here because of cyclic dependency
-                    someSceneOpen = true;
-                    if (tc.getName().equals(explorerManager.getRootContext().getDisplayName())) {
-                        currentSceneOpen = true;
-                    }
-                }
-            }
-            // If no scenes are open, clear the Explorer
-            if (!someSceneOpen) {
-                explorerManager.setRootContext(Node.EMPTY);
-                explorerTree.setRootVisible(false);
-            } else {
-                // if some are open, clear the selection
-                if (!activated) {
-                    if (currentSceneOpen){
-                        selectNode(null);
-                    } else {
-                        explorerManager.setRootContext(Node.EMPTY);
-                        explorerTree.setRootVisible(false);
-                    }
-                }
-            }
-            repaint();
-            validate();
-        } else {
+        if (!instances.isEmpty()) {
             for (Object instance : instances) {
                 if (instance instanceof ClassDiagram) {
-                    ClassDiagram diagram = (ClassDiagram) instance;
-                    // If the rootContext is empty
-                    if (!(explorerManager.getRootContext() instanceof ClassDiagramNode)) {
-                        createRootNode(diagram);
+                    ClassDiagram selectedDiagram = (ClassDiagram) instance;
+                    Node currentRoot = explorerManager.getRootContext();
+                    if (isValidDiagram(currentRoot, selectedDiagram)) {
+                        // If diagrams are the same select the root
+                        selectNode(currentRoot);
                     } else {
-                        // If the rootContext exists
-                        ClassDiagramNode currentRoot = (ClassDiagramNode) explorerManager.getRootContext();
-                        // If the root diagram differs from the one in the lookup, replace
-                        if (diagram != currentRoot.getClassDiagram()) {
-                            Node newRoot = createRootNode(diagram);
-                            selectNode(newRoot);
-                        } else {    // else select the root
-                            selectNode(currentRoot);
-                        }
+                        // else the root diagram differs from the one in the lookup,
+
+                        // deselect all in order for scene to clear selection and replace root
+                        Node newRoot = createRootNode(selectedDiagram);
+                        selectNode(newRoot);
                     }
                 } else if (instance instanceof ComponentBase) {
                     selectComponentNode((ComponentBase) instance);
@@ -208,9 +190,39 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
                 // Process only the first of the instances (selection limited do 1)
                 break;
             }
+        } else {
+            // When a user closes all scenes, instances are empty
+            // Or when a user deselects UMLTopComponent
+
+            // Check if the current scene shown in Explorer is opened
+            boolean currentSceneOpen = false;
+            Set<TopComponent> tcs = WindowManager.getDefault().getRegistry().getOpened();
+            for (TopComponent tc : tcs) {
+                if (tc.getClass().getSimpleName().equals("UMLTopComponent")) { // Class name is hardcoded, because we cannot access UMLTopComponent from here because of cyclic dependency
+                    if (tc.getName().equals(explorerManager.getRootContext().getDisplayName())) {
+                        currentSceneOpen = true;
+                        break;
+                    }
+                }
+            }
+
+            // If the current scene shown in Explorer is closed, empty Explorer
+            if (!currentSceneOpen) {
+                emptyTree();
+            } else {
+                // If it is open and linked TCs are not activated, deselect all
+                if (!isActivatedLinkedTC()) {
+                    deselectAllNodes();
+                }
+            }
         }
         repaint();
         validate();
+    }
+
+    private void emptyTree() {
+        explorerManager.setRootContext(Node.EMPTY);
+        explorerTree.setRootVisible(false);
     }
 
     private Node createRootNode(ClassDiagram diagram) {
@@ -220,14 +232,22 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
         return node;
     }
 
-    private void selectComponentNode(ComponentBase component) {
-        if (explorerManager.getRootContext() instanceof ClassDiagramNode) {
-            ClassDiagramNode root = (ClassDiagramNode) explorerManager.getRootContext();
-            if (root.getClassDiagram() != component.getParentDiagram()) {
-                createRootNode(component.getParentDiagram());
+    private boolean isValidDiagram(Node rootNode, ClassDiagram diagram) {
+        if (rootNode instanceof ClassDiagramNode) { // on opening of file, root is AbstractNode, that's why we need this check
+            ClassDiagramNode root = (ClassDiagramNode) getExplorerManager().getRootContext();
+            if (root.getClassDiagram() == diagram) {
+                return true;
             }
         }
-        for (Node cn : explorerManager.getRootContext().getChildren().getNodes()) {
+        deselectAllNodes();
+        return false;
+    }
+
+    private void selectComponentNode(ComponentBase component) {
+        if (!isValidDiagram(getExplorerManager().getRootContext(), component.getParentDiagram())) {
+            createRootNode(component.getParentDiagram());
+        }
+        for (Node cn : getExplorerManager().getRootContext().getChildren().getNodes()) {
             ComponentNode componentNode = (ComponentNode) cn;
             if (componentNode.getComponent() == component) {
                 selectNode(componentNode);
@@ -237,13 +257,10 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     }
 
     private void selectMemberNode(MemberBase member) {
-        if (explorerManager.getRootContext() instanceof ClassDiagramNode) {
-            ClassDiagramNode root = (ClassDiagramNode) explorerManager.getRootContext();
-            if (root.getClassDiagram() != member.getDeclaringComponent().getParentDiagram()) {
-                createRootNode(member.getDeclaringComponent().getParentDiagram());
-            }
+        if (!isValidDiagram(getExplorerManager().getRootContext(), member.getDeclaringComponent().getParentDiagram())) {
+            createRootNode(member.getDeclaringComponent().getParentDiagram());
         }
-        for (Node cn : explorerManager.getRootContext().getChildren().getNodes()) {
+        for (Node cn : getExplorerManager().getRootContext().getChildren().getNodes()) {
             for (Node mn : cn.getChildren().getNodes()) {
                 MemberNode memberNode = (MemberNode) mn;
                 if (memberNode.getMember() == member) {
@@ -260,11 +277,17 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
      * @param node
      */
     private void selectNode(Node node) {
+        removeLookupListeners();
         try {
-            if (node != null) explorerManager.setSelectedNodes(new Node[]{node});
-            else explorerManager.setSelectedNodes(new Node[]{});
+            if (node != null) getExplorerManager().setSelectedNodes(new Node[]{node});
+            else getExplorerManager().setSelectedNodes(new Node[]{});
         } catch (PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
         }
+        addLookupListeners();
+    }
+
+    private void deselectAllNodes() {
+        selectNode(null);
     }
 }
