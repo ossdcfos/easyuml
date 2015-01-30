@@ -30,6 +30,7 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.*;
+import org.openide.windows.WindowManager;
 import org.uml.explorer.ClassDiagramNode;
 import org.uml.explorer.ComponentNode;
 import org.uml.explorer.MemberNode;
@@ -137,6 +138,24 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         addLookupListeners();
     }
 
+//    @Override
+//    public JComponent createView() {
+//        super.createView();
+//        getView().setFocusable(true);
+//        addKeyboardActions();
+//        return getView();
+//    }
+//    
+//    private void addKeyboardActions(){
+//        String SAVE_ACTION = "mySaveAction";
+//        getView().getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F, 0), SAVE_ACTION);
+//        getView().getActionMap().put(SAVE_ACTION, new AbstractAction() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                getUmlTopComponent().saveTopComponent();
+//            }
+//        });
+//    }
     public LayerWidget getMainLayer() {
         return mainLayer;
     }
@@ -349,8 +368,16 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         // This does not work when selecting outside the scene. That case is supported in umlTopComponent.componentDeactivated()
         setFocusedObjectAndToggleListeners(classDiagram);
 
-        // Focus UMLTopComponent when scene is selected
-        getUmlTopComponent().requestFocusInWindow();
+//         Focus UMLTopComponent when scene is selected
+        
+//          // Creates bugs - changing tabs
+//        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+//            @Override
+//            public void run() {
+//                getUmlTopComponent().requestActive();
+//            }
+//        });
+        getUmlTopComponent().requestFocus();
     }
 
     public void setFocusedObjectAndToggleListeners(Object object) {
@@ -435,8 +462,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             Exceptions.printStackTrace(ex);
         }
     }
-    
-    private void deselectAllNodes(){
+
+    private void deselectAllNodes() {
         selectNode(null);
     }
 }

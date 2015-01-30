@@ -2,22 +2,12 @@ package org.uml.filetype.cdg;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 import org.netbeans.api.actions.Openable;
-import org.netbeans.api.actions.Savable;
-import org.netbeans.api.visual.graph.GraphScene;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -35,9 +25,7 @@ import org.openide.windows.WindowManager;
 import org.uml.explorer.ExplorerTopComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.visual.UMLTopComponent;
-import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.xmlDeserialization.ClassDiagramDeserializer;
-import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
 
 @Messages({
     "LBL_ClassDiagram_LOADER=Files of ClassDiagram"
@@ -82,12 +70,12 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
             position = 700,
             separatorAfter = 800
     ),
-    @ActionReference(
-            path = "Loaders/text/x-cdg/Actions",
-            id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
-            position = 900,
-            separatorAfter = 1000
-    ),
+//    @ActionReference(
+//            path = "Loaders/text/x-cdg/Actions",
+//            id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
+//            position = 900,
+//            separatorAfter = 1000
+//    ),
     @ActionReference(
             path = "Loaders/text/x-cdg/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
@@ -105,7 +93,9 @@ import org.uml.xmlSerialization.ClassDiagramXmlSerializer;
             position = 1400
     )
 })
-public class ClassDiagramDataObject extends MultiDataObject implements Openable, Savable {
+public class ClassDiagramDataObject extends MultiDataObject implements Openable
+//, Savable 
+{
 
     FileObject fileObject;
     ClassDiagram classDiagram;
@@ -173,51 +163,51 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
         return classDiag;
     }
 
-    public static void saveDiagram(FileObject fileObject, UMLTopComponent topComponent) {
-        NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(
-                "Do you want to save \"" + fileObject.getNameExt() + "\"?",
-                NotifyDescriptor.OK_CANCEL_OPTION,
-                NotifyDescriptor.QUESTION_MESSAGE);
-
-        Object result = DialogDisplayer.getDefault().notify(msg);
-        if (result.equals(NotifyDescriptor.OK_OPTION)) {
-            FileOutputStream fileOut = null;
-            XMLWriter writer = null;
-            try {
-                FileObject fo = fileObject;
-                String putanja = fo.getPath();
-                fileOut = new FileOutputStream(putanja);
-
-                ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
-                ClassDiagramScene cdScene = topComponent.getLookup().lookup(ClassDiagramScene.class);
-                ClassDiagram diagram = cdScene.getClassDiagram();
-                
-                diagram.setName(fo.getName());
-                serializer.setClassDiagram(diagram);
-                serializer.setClassDiagramScene(cdScene);
-                Document document = DocumentHelper.createDocument();
-                // document.setXMLEncoding("UTF-8");
-                Element root = document.addElement("ClassDiagram");
-                serializer.serialize(root);
-                OutputFormat format = OutputFormat.createPrettyPrint();
-                writer = new XMLWriter(fileOut, format);
-                writer.write(document);
-            } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
-            } finally {
-                try {
-                    if (fileOut != null) {
-                        fileOut.close();
-                    }
-                    if (writer != null) {
-                        writer.close();
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-    }
+//    public static void saveDiagram(FileObject fileObject, UMLTopComponent topComponent) {
+//        NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(
+//                "Do you want to save \"" + fileObject.getNameExt() + "\"?",
+//                NotifyDescriptor.OK_CANCEL_OPTION,
+//                NotifyDescriptor.QUESTION_MESSAGE);
+//
+//        Object result = DialogDisplayer.getDefault().notify(msg);
+//        if (result.equals(NotifyDescriptor.OK_OPTION)) {
+//            FileOutputStream fileOut = null;
+//            XMLWriter writer = null;
+//            try {
+//                FileObject fo = fileObject;
+//                String putanja = fo.getPath();
+//                fileOut = new FileOutputStream(putanja);
+//
+//                ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
+//                ClassDiagramScene cdScene = topComponent.getLookup().lookup(ClassDiagramScene.class);
+//                ClassDiagram diagram = cdScene.getClassDiagram();
+//                
+//                diagram.setName(fo.getName());
+//                serializer.setClassDiagram(diagram);
+//                serializer.setClassDiagramScene(cdScene);
+//                Document document = DocumentHelper.createDocument();
+//                // document.setXMLEncoding("UTF-8");
+//                Element root = document.addElement("ClassDiagram");
+//                serializer.serialize(root);
+//                OutputFormat format = OutputFormat.createPrettyPrint();
+//                writer = new XMLWriter(fileOut, format);
+//                writer.write(document);
+//            } catch (Exception ex) {
+//                Exceptions.printStackTrace(ex);
+//            } finally {
+//                try {
+//                    if (fileOut != null) {
+//                        fileOut.close();
+//                    }
+//                    if (writer != null) {
+//                        writer.close();
+//                    }
+//                } catch (IOException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     protected void handleDelete() throws IOException {
@@ -241,8 +231,8 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
         }
     }
 
-    @Override
-    public void save() throws IOException {
-        saveDiagram(fileObject, topComponent);
-    }
+//    @Override
+//    public void save() throws IOException {
+//        saveDiagram(fileObject, topComponent);
+//    }
 }

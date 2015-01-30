@@ -27,6 +27,7 @@ import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.SaveAsCapable;
 import org.openide.util.*;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
@@ -73,6 +74,7 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         initComponents();
         setName(classDiagram.getName());
         setToolTipText(Bundle.HINT_UMLTopComponent());
+        setFocusable(true);
 
         classDiagramScene = new ClassDiagramScene(classDiagram, this);
         classDiagramPanel = new JScrollPane();
@@ -92,7 +94,8 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         Lookup fixedLookup = Lookups.fixed(
                 classDiagramScene, // for saving of diagram
                 PaletteSupport.getPalette(), // palette
-                new UMLNavigatorLookupHint() // navigator
+                new UMLNavigatorLookupHint(), // navigator
+                new UMLTopComponentSaveAs(this) // SaveAs always enabled    
         );
 
         AbstractLookup abstrLookup = new AbstractLookup(content);
@@ -110,6 +113,14 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         // pomereno iz konstruktora class diagram scene
         //GraphLayout graphLayout = GraphLayoutFactory.createOrthogonalGraphLayout(classDiagramScene, true);
         //graphLayout.layoutGraph(classDiagramScene);
+//        String SAVE_ACTION = "mySaveAction";
+//        getInputMap().put(KeyStroke.getKeyStroke("q"), SAVE_ACTION);
+//        getActionMap().put(SAVE_ACTION, new AbstractAction(SAVE_ACTION) {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                saveTopComponent();
+//            }
+//        });
     }
 
     @Override
@@ -187,9 +198,12 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         // in other case, when we are doing reverse engineering, modify is called before the lookup is
         // associated with TopComponent, so there is an exception when we associate it later, because it already exists
         if (fileObject != null) {
-            if (getLookup().lookup(UMLTopComponentSavable.class) == null && content != null) {
-                content.add(new UMLTopComponentSavable(this, content));
+            if (getLookup().lookup(UMLTopComponentSave.class) != null) {
+                // Can do this as UMLTopComponentSave equals method compares TCs, which are the same
+                // Could be better to have a private field which holds current UMLTopComponentSave, in order not avoid unnecessary object creation
+                content.remove(new UMLTopComponentSave(this, content));
             }
+            content.add(new UMLTopComponentSave(this, content));
         }
     }
 
@@ -197,66 +211,24 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         this.fileObject = fileObject;
     }
 
-    class UMLTopComponentSavable extends AbstractSavable {
+    public FileObject getFileObject() {
+        return fileObject;
+    }
 
-        private final UMLTopComponent topComponent;
-        private final InstanceContent ic;
+    /**
+     * Serialises given UMLTopComponent to .cdg XML file.
+     *
+     * @param path to save (serialise) to
+     */
+    void saveTopComponentToPath(String path) {
+        FileOutputStream fileOut = null;
+        XMLWriter writer = null;
+        try {
+            fileOut = new FileOutputStream(path);
 
-        public UMLTopComponentSavable(UMLTopComponent topComponent, InstanceContent instanceContent) {
-            this.topComponent = topComponent;
-            this.ic = instanceContent;
-            register();
-        }
-
-        @Override
-        protected String findDisplayName() {
-            return "Diagram " + topComponent.getName(); // get display name somehow
-        }
-
-        @Override
-        protected void handleSave() throws IOException {
-            Confirmation msg = new NotifyDescriptor.Confirmation(
-                    "Do you want to save \"" + fileObject.getNameExt() + "\"?",
-                    NotifyDescriptor.OK_CANCEL_OPTION,
-                    NotifyDescriptor.QUESTION_MESSAGE);
-            Object result = DialogDisplayer.getDefault().notify(msg);
-            //When user clicks "Yes", indicating they really want to save,
-            //we need to disable the Save button and Save menu item,
-            //so that it will only be usable when the next change is made
-            // save 'obj' somehow
-            if (NotifyDescriptor.OK_OPTION.equals(result)) {
-                //Implement your save functionality here.
-                doSave();
-
-                ic.remove(this);
-                unregister();
-            }
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            if (other instanceof UMLTopComponentSavable) {
-                return ((UMLTopComponentSavable) other).topComponent.equals(topComponent);
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return topComponent.hashCode();
-        }
-
-        public void doSave() {
-            FileOutputStream fileOut = null;
-            XMLWriter writer = null;
-            try {
-                FileObject fo = fileObject;
-                String putanja = fo.getPath();
-                fileOut = new FileOutputStream(putanja);
-
-                ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
-                serializer.setClassDiagram(classDiagramScene.getClassDiagram());
-                serializer.setClassDiagramScene(classDiagramScene);
+            ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
+            serializer.setClassDiagram(classDiagramScene.getClassDiagram());
+            serializer.setClassDiagramScene(classDiagramScene);
 //                XStream xstream = new XStream(new StaxDriver());
 //                xstream.autodetectAnnotations(true);
 //                xstream.registerConverter(new Converter() {
@@ -288,27 +260,95 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
 ////                xstream.setMode(XStream.NO_REFERENCES);
 //                System.out.println(xstream.toXML(classDiagramScene.getClassDiagram()));
 
-                Document document = DocumentHelper.createDocument();
-                // document.setXMLEncoding("UTF-8");
-                Element root = document.addElement("ClassDiagram");
-                serializer.serialize(root);
-                OutputFormat format = OutputFormat.createPrettyPrint();
-                writer = new XMLWriter(fileOut, format);
-                writer.write(document);
-            } catch (Exception ex) {
+            Document document = DocumentHelper.createDocument();
+            // document.setXMLEncoding("UTF-8");
+            Element root = document.addElement("ClassDiagram");
+            serializer.serialize(root);
+            OutputFormat format = OutputFormat.createPrettyPrint();
+            writer = new XMLWriter(fileOut, format);
+            writer.write(document);
+            System.out.println("Diagram file saved to " + path);
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            try {
+                if (fileOut != null) fileOut.close();
+                if (writer != null) writer.close();
+            } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
-            } finally {
-                try {
-                    if (fileOut != null) {
-                        fileOut.close();
-                    }
-                    if (writer != null) {
-                        writer.close();
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
             }
+        }
+    }
+
+    public void saveTopComponent() {
+        saveTopComponentToPath(fileObject.getPath());
+    }
+
+    class UMLTopComponentSaveAs implements SaveAsCapable {
+
+        UMLTopComponent umlTopComponent;
+
+        public UMLTopComponentSaveAs(UMLTopComponent umlTopComponent) {
+            this.umlTopComponent = umlTopComponent;
+        }
+
+        @Override
+        public void saveAs(FileObject folder, String name) throws IOException {
+            String path = folder.getPath() + "/" + name;
+            umlTopComponent.saveTopComponentToPath(path);
+        }
+    }
+
+    class UMLTopComponentSave extends AbstractSavable {
+
+        private final UMLTopComponent umlTopComponent;
+        private final InstanceContent ic;
+//        private static int maxID = 0;
+//        private final int ID = maxID++;
+
+        public UMLTopComponentSave(UMLTopComponent topComponent, InstanceContent instanceContent) {
+            this.umlTopComponent = topComponent;
+            this.ic = instanceContent;
+            register();
+        }
+
+        @Override
+        protected String findDisplayName() {
+            return "Diagram " + umlTopComponent.getName(); // get display name somehow
+        }
+
+        @Override
+        protected void handleSave() throws IOException {
+//            Confirmation msg = new NotifyDescriptor.Confirmation(
+//                    "Do you want to save \"" + umlTopComponent.getName() + "\"?",
+//                    NotifyDescriptor.OK_CANCEL_OPTION,
+//                    NotifyDescriptor.QUESTION_MESSAGE);
+//            Object result = DialogDisplayer.getDefault().notify(msg);
+//            //When user clicks "Yes", indicating they really want to save,
+//            //we need to disable the Save button and Save menu item,
+//            //so that it will only be usable when the next change is made
+//            // save 'obj' somehow
+//            if (NotifyDescriptor.OK_OPTION.equals(result)) {
+            umlTopComponent.saveTopComponent();
+
+            ic.remove(this);
+//            } else {
+//                throw new IOException();
+//            }
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (other instanceof UMLTopComponentSave) {
+                return ((UMLTopComponentSave) other).umlTopComponent.equals(umlTopComponent);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return umlTopComponent.hashCode();
+//            return ID;
         }
     }
 

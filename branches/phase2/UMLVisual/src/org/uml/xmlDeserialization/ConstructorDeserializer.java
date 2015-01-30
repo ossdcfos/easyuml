@@ -1,6 +1,6 @@
 package org.uml.xmlDeserialization;
 
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import org.dom4j.Element;
 import org.uml.model.members.Constructor;
@@ -30,12 +30,19 @@ public class ConstructorDeserializer implements XmlDeserializer{
         String returnType = node.attributeValue("returnType");
         if (name != null) constructor.setName(name);
         if (visibility != null) constructor.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
-        if (!node.elements().isEmpty()) {
-            LinkedHashSet<MethodArgument> arguments = new LinkedHashSet<>();
-            MethodArgumentsDeserializer mad = new MethodArgumentsDeserializer(arguments);
-            mad.deserialize(node);
-            constructor.setArguments(arguments);
+        
+        LinkedHashSet<MethodArgument> arguments = new LinkedHashSet<>();
+        Iterator<?> argumentIterator = node.elementIterator("Argument");
+        while (argumentIterator != null && argumentIterator.hasNext()) {
+            Element argumentElement = (Element) argumentIterator.next();
+            String argumentType = argumentElement.attributeValue("type");
+            String argumentName = argumentElement.attributeValue("name");
+            if (argumentType != null && argumentName != null) {
+                MethodArgument methodArgument = new MethodArgument(argumentType, argumentName);
+                arguments.add(methodArgument);
+            }
         }
+        constructor.setArguments(arguments);
     }
     
 }

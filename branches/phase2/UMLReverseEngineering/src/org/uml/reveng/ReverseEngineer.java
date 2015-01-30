@@ -18,14 +18,17 @@ import java.awt.Point;
 import java.io.File;
 import static java.io.File.separator;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.netbeans.api.project.Project;
-import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataFolder;
 import org.openide.util.Exceptions;
 import org.uml.model.ClassDiagram;
 import org.uml.model.Visibility;
@@ -54,14 +57,18 @@ import org.uml.newcode.renaming.MemberRenameTable;
 public class ReverseEngineer {
 
     @SuppressWarnings("unchecked")
-    public static ClassDiagram createClassDiagram(Project project) {
+    public static ClassDiagram createClassDiagramFromPath(String path, String name) {
         ClassDiagram classDiagram = new ClassDiagram();
-        FileObject projectFile = project.getProjectDirectory();
-        String projectSourcePath = projectFile.getPath() + separator + "src";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH-mm-ss-SSS");
+        Date date = new Date();
+//        String diagramName = "Reverse engineered Class Diagram " + dateFormat.format(date);
+        String diagramName = "Reverse engineered " + name + " " + dateFormat.format(date);
+        classDiagram.setName(diagramName);
+
         String extension = "java";
 
         //Generating an array of filepaths corresponding to found files
-        Collection<File> files = FileUtils.listFiles(new File(projectSourcePath), new String[]{extension}, true);
+        Collection<File> files = FileUtils.listFiles(new File(path), new String[]{extension}, true);
 
         // First pass - generate components
         for (File file : files) {
@@ -79,6 +86,7 @@ public class ReverseEngineer {
             }
         }
 
+        resetNextComponentPosition();
         return classDiagram;
     }
 
@@ -274,19 +282,6 @@ public class ReverseEngineer {
         return literal;
     }
 
-    static Point nextComponentPosition = new Point(50, 90);
-
-    private static Point getNextComponentPosition() {
-        Point oldPoint = new Point();
-        if (nextComponentPosition.getX() > 1000) {
-            nextComponentPosition.move(50, (int) nextComponentPosition.getY() + 400);
-        }
-        oldPoint.x = (int) nextComponentPosition.getX();
-        oldPoint.y = (int) nextComponentPosition.getY();
-        nextComponentPosition.translate(250, 0);
-        return oldPoint;
-    }
-
     private static List<RelationBase> createRelations(File file, ClassDiagram classDiagram) {
         List<RelationBase> relations = new LinkedList<>();
         try {
@@ -398,9 +393,25 @@ public class ReverseEngineer {
         return relations;
     }
 
+    static Point nextComponentPosition = new Point(20, 20);
+
+    private static Point getNextComponentPosition() {
+        Point oldPoint = new Point();
+        if (nextComponentPosition.getX() > 1000) {
+            nextComponentPosition.move(20, (int) nextComponentPosition.getY() + 400);
+        }
+        oldPoint.x = (int) nextComponentPosition.getX();
+        oldPoint.y = (int) nextComponentPosition.getY();
+        nextComponentPosition.translate(300, 0);
+        return oldPoint;
+    }
+
+    private static void resetNextComponentPosition() {
+        nextComponentPosition = new Point(20, 20);
+    }
+
     @SuppressWarnings("unchecked")
     private static <T> List<T> safe(List<T> other) {
         return other == null ? Collections.EMPTY_LIST : other;
     }
-
 }

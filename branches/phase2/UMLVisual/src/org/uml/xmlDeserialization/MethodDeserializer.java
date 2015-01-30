@@ -1,6 +1,5 @@
 package org.uml.xmlDeserialization;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import org.dom4j.Element;
@@ -47,7 +46,7 @@ public class MethodDeserializer implements XmlDeserializer{
             Element argumentElement = (Element) argumentIterator.next();
             String argumentType = argumentElement.attributeValue("type");
             String argumentName = argumentElement.attributeValue("name");
-            if (type != null && name != null) {
+            if (argumentType != null && argumentName != null) {
                 MethodArgument methodArgument = new MethodArgument(argumentType, argumentName);
                 arguments.add(methodArgument);
             }
