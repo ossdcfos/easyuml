@@ -3,6 +3,7 @@ package org.uml.filetype.cdg;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Collection;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -13,13 +14,21 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
+import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import org.uml.explorer.ExplorerTopComponent;
@@ -93,13 +102,16 @@ import org.uml.xmlDeserialization.ClassDiagramDeserializer;
             position = 1400
     )
 })
-public class ClassDiagramDataObject extends MultiDataObject implements Openable
-//, Savable 
+public class ClassDiagramDataObject extends MultiDataObject implements Openable, LookupListener 
 {
 
     FileObject fileObject;
     ClassDiagram classDiagram;
-    UMLTopComponent topComponent;
+    UMLTopComponent umlTopComponent;
+    private final InstanceContent content = new InstanceContent();
+    private final AbstractLookup aLookup = new AbstractLookup(content);
+    private Lookup.Result<UMLTopComponent.Save> savable;
+    private UMLTopComponent.Save oldSave;
 
     public ClassDiagramDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(fo, loader);
@@ -110,7 +122,7 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable
                 if (evt.getPropertyName().equals("name")) {
                     Object o = evt.getNewValue();
                     classDiagram.setName((String) o);
-                    topComponent.setName((String) o);
+                    umlTopComponent.setName((String) o);
                 }
             }
         });
@@ -120,7 +132,7 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable
     protected int associateLookup() {
         return 1;
     }
-
+    
     @Override
     public void open() {
         classDiagram = readFromFile(fileObject);
@@ -130,12 +142,14 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable
             classDiagram.setName(fileObject.getName());
         }
 
-        if (topComponent == null || !topComponent.isOpened()) {
-            topComponent = new UMLTopComponent(classDiagram);
-            topComponent.setFileObject(fileObject);
-            topComponent.open();
+        if (umlTopComponent == null || !umlTopComponent.isOpened()) {
+            umlTopComponent = new UMLTopComponent(classDiagram);
+            umlTopComponent.setFileObject(fileObject);
+            umlTopComponent.open();
         }
-        topComponent.requestActive();
+        savable = umlTopComponent.getLookup().lookupResult(UMLTopComponent.Save.class);
+        savable.addLookupListener(this);
+        umlTopComponent.requestActive();
     }
 
     private ClassDiagram readFromFile(FileObject fileObject) {
@@ -208,7 +222,6 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable
 //            }
 //        }
 //    }
-
     @Override
     protected void handleDelete() throws IOException {
         super.handleDelete();
@@ -220,7 +233,7 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable
                     public void run() {
                         UMLTopComponent umlTopComponent = (UMLTopComponent) tc;
                         umlTopComponent.close();
-                        
+
                         ExplorerTopComponent explorerTopComponent = (ExplorerTopComponent) WindowManager.getDefault().findTopComponent("ExplorerTopComponent");
                         explorerTopComponent.getExplorerManager().setRootContext(Node.EMPTY);
                         explorerTopComponent.getExplorerTree().setRootVisible(false);
@@ -231,8 +244,37 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable
         }
     }
 
+    @Override
+    protected Node createNodeDelegate() {
+        return new DataNode(this, Children.LEAF, new ProxyLookup(getLookup(), aLookup));
+    }
+
 //    @Override
 //    public void save() throws IOException {
 //        saveDiagram(fileObject, topComponent);
+//    }
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        Lookup.Result source = (Lookup.Result) ev.getSource();
+        Collection instances = source.allInstances();
+        if (!instances.isEmpty()) {
+            for (Object instance : instances) {
+                if (instance instanceof UMLTopComponent.Save) {
+                    oldSave = (UMLTopComponent.Save) instance;
+                    content.add(instance);
+                }
+                break;
+            }
+        } else {
+            if (oldSave != null) {
+                content.remove(oldSave);
+                oldSave = null;
+            }
+        }
+    }
+
+//    @Override
+//    public void save() throws IOException {
+//        umlTopComponent.saveTopComponent();
 //    }
 }
