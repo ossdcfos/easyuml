@@ -12,6 +12,8 @@ import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
+import org.netbeans.api.visual.action.MoveProvider;
+import org.netbeans.api.visual.action.MoveStrategy;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -35,7 +37,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 
     protected ComponentBase component;
     protected LabelWidget nameLabel;
-    
+
     protected LinkedList<SeparatorWidget> separators = new LinkedList<>();
 
     public static final int EMPTY_BORDER_SIZE = 5;
@@ -48,7 +50,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
     public static int getLabelSizeForFont(int fontSize) {
         return fontSize + 5;
     }
-    
+
     protected static final int MIN_WIDTH = 170;
     protected static final Dimension MIN_DIMENSION_1ROW = new Dimension(MIN_WIDTH, OUTER_BORDER_SIZE + getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
     protected static final Dimension MIN_DIMENSION_2ROW = new Dimension(MIN_WIDTH, OUTER_BORDER_SIZE + 2 * getLabelSizeForFont(DEFAULT_LABEL_FONT_SIZE));
@@ -57,7 +59,6 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 //    public static Border DEFAULT_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(SELECT_BORDER_SIZE), BorderFactory.createLineBorder());
 //    public static Border HOVER_BORDER = new TranslucentCompositeBorder(BorderFactory.createEmptyBorder(SELECT_BORDER_SIZE), BorderFactory.createLineBorder(1, getColorTheme().getHoverBorderColor()));
 //    public static Border SELECT_BORDER = new TranslucentCompositeBorder(BorderFactory.createResizeBorder(SELECT_BORDER_SIZE, getColorTheme().getSelectBorderColor(), false), BorderFactory.createEmptyBorder(1));
-
     public static final Border EMPTY_CONTAINER_BORDER = BorderFactory.createEmptyBorder(EMPTY_BORDER_SIZE);
 
     public ComponentWidgetBase(final ClassDiagramScene scene, ComponentBase component) {
@@ -88,7 +89,9 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
         getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
-        getActions().addAction(scene.createWidgetHoverAction());
+//        MoveModifyProvider mmp = new MoveModifyProvider();
+//        getActions().addAction(ActionFactory.createMoveAction(null, mmp));
+//        getActions().addAction(scene.createWidgetHoverAction());
 
 //        // TODO: Change detection - check how this works
 //        // Too slow, should find another solution
@@ -115,6 +118,27 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 //        });
     }
 
+    class MoveModifyProvider implements MoveProvider {
+
+        @Override
+        public void movementStarted(Widget widget) {
+        }
+
+        @Override
+        public void movementFinished(Widget widget) {
+            getClassDiagramScene().getUmlTopComponent().notifyModified();
+        }
+
+        @Override
+        public Point getOriginalLocation(Widget widget) {
+            return null;
+        }
+
+        @Override
+        public void setNewLocation(Widget widget, Point location) {
+        }
+    }
+
     //    @Override
 //    public Lookup getLookup() {
 //        return Lookups.fixed(this, this.getScene());
@@ -131,19 +155,19 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
             setBorder(getColorTheme().getSelectBorder());
             if (hovered) setBackground(getColorTheme().getHoverSelectColor());
             else setBackground(getColorTheme().getSelectColor());
-            for(SeparatorWidget separator : separators){
+            for (SeparatorWidget separator : separators) {
                 separator.setForeground(getColorTheme().getSelectBorderColor());
             }
         } else if (hovered) {
             setBorder(getColorTheme().getHoverBorder());
             setBackground(getColorTheme().getHoverColor());
-            for(SeparatorWidget separator : separators){
+            for (SeparatorWidget separator : separators) {
                 separator.setForeground(getColorTheme().getHoverBorderColor());
             }
         } else {
             setBorder(getColorTheme().getDefaultBorder());
             setBackground(getColorTheme().getDefaultColor());
-            for(SeparatorWidget separator : separators){
+            for (SeparatorWidget separator : separators) {
                 separator.setForeground(getColorTheme().getDefaultBorderColor());
             }
         }

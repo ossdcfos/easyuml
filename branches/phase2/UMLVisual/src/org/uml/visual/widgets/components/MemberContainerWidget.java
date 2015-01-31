@@ -87,8 +87,12 @@ public class MemberContainerWidget extends Widget {
     public void addMemberWidget(MemberWidgetBase memberWidget) {
         ComponentWidgetBase component = (ComponentWidgetBase) this.getParentWidget();
         if (component instanceof ClassWidget && memberWidget instanceof ConstructorWidget) {
-            ClassWidget classComponent = (ClassWidget) component;
-            int index = classComponent.getComponent().getConstructors().size() - 1;
+            int index = 0;
+            for(Widget methodOrConstructorWidget : this.getChildren()){
+                if(!(methodOrConstructorWidget instanceof ConstructorWidget)){
+                    break;
+                } else index++;
+            }
             addChild(index, memberWidget);
         } else {
             addChild(getChildren().size() - 1, memberWidget); // add so it's 1 before "add" LabelWidget

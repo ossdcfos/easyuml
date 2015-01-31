@@ -95,14 +95,14 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
                 classDiagramScene, // for saving of diagram
                 PaletteSupport.getPalette(), // palette
                 new UMLNavigatorLookupHint(), // navigator
-                new UMLTopComponentSaveAs(this) // SaveAs always enabled    
+                new SaveAs(this) // SaveAs always enabled    
         );
 
         AbstractLookup abstrLookup = new AbstractLookup(content);
 
         ProxyLookup jointLookup = new ProxyLookup(
                 fixedLookup,
-                abstrLookup, // for modifying (adding UMLTopComponentSavable to Lookup)
+                abstrLookup, // for modifying (adding UMLTopComponent.Save to Lookup)
                 classDiagramScene.getLookup(), // node creation and selection in explorer
                 ExplorerUtils.createLookup(explorerManager, getActionMap()) // nodes for properties from UMLTopComponent
         );
@@ -198,12 +198,12 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         // in other case, when we are doing reverse engineering, modify is called before the lookup is
         // associated with TopComponent, so there is an exception when we associate it later, because it already exists
         if (fileObject != null) {
-            if (getLookup().lookup(UMLTopComponentSave.class) != null) {
+            if (getLookup().lookup(Save.class) != null) {
                 // Can do this as UMLTopComponentSave equals method compares TCs, which are the same
                 // Could be better to have a private field which holds current UMLTopComponentSave, in order not avoid unnecessary object creation
-                content.remove(new UMLTopComponentSave(this, content));
+                content.remove(new Save(this, content));
             }
-            content.add(new UMLTopComponentSave(this, content));
+            content.add(new Save(this, content));
         }
     }
 
@@ -284,11 +284,11 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         saveTopComponentToPath(fileObject.getPath());
     }
 
-    class UMLTopComponentSaveAs implements SaveAsCapable {
+    class SaveAs implements SaveAsCapable {
 
         UMLTopComponent umlTopComponent;
 
-        public UMLTopComponentSaveAs(UMLTopComponent umlTopComponent) {
+        public SaveAs(UMLTopComponent umlTopComponent) {
             this.umlTopComponent = umlTopComponent;
         }
 
@@ -299,14 +299,14 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
         }
     }
 
-    class UMLTopComponentSave extends AbstractSavable {
+    public class Save extends AbstractSavable {
 
         private final UMLTopComponent umlTopComponent;
         private final InstanceContent ic;
 //        private static int maxID = 0;
 //        private final int ID = maxID++;
 
-        public UMLTopComponentSave(UMLTopComponent topComponent, InstanceContent instanceContent) {
+        public Save(UMLTopComponent topComponent, InstanceContent instanceContent) {
             this.umlTopComponent = topComponent;
             this.ic = instanceContent;
             register();
@@ -339,8 +339,8 @@ public final class UMLTopComponent extends TopComponent implements ExplorerManag
 
         @Override
         public boolean equals(Object other) {
-            if (other instanceof UMLTopComponentSave) {
-                return ((UMLTopComponentSave) other).umlTopComponent.equals(umlTopComponent);
+            if (other instanceof Save) {
+                return ((Save) other).umlTopComponent.equals(umlTopComponent);
             }
             return false;
         }
