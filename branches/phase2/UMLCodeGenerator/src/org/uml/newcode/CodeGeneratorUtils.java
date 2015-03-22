@@ -6,18 +6,19 @@ import japa.parser.ast.body.BodyDeclaration;
 import japa.parser.ast.body.FieldDeclaration;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
-import java.util.LinkedList;
-import java.util.List;
 import org.openide.util.Exceptions;
-import org.uml.model.components.ComponentBase;
-import org.uml.model.relations.RelationBase;
 
 /**
- *
- * @author Boris
+ * Utility methods used in code generation.
+ * @author Boris Perović
  */
 public class CodeGeneratorUtils {
 
+    /**
+     * Parses the type string to type class from JavaParser.
+     * @param typeString to be parsed
+     * @return parsed Type
+     */
     public static Type parseType(String typeString) {
         Type type = null;
 
@@ -33,15 +34,5 @@ public class CodeGeneratorUtils {
         }
 
         return type;
-    }
-
-    public static List<RelationBase> getRelevantRelations(ComponentBase component) {
-        List<RelationBase> relevantRelations = new LinkedList<>();
-        for (RelationBase rc : component.getParentDiagram().getRelations()) {
-            if (rc.getSource().equals(component)) {
-                relevantRelations.add(rc);
-            }
-        }
-        return relevantRelations;
     }
 }

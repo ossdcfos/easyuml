@@ -1,23 +1,42 @@
 package org.uml.model.members;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.lang.reflect.Modifier;
 
 /**
+ * Represents a method (methods inside a class or an interface).
  *
- * @author Boris
+ * @author Boris Perović
+ * @see MethodBase
+ * @see Field
+ * @see Constructor
+ * @see Literal
  */
-//@XStreamAlias("Method")
 public class Method extends MethodBase {
 
+    /**
+     * Constructor that sets the name, return type and visibility of the method.
+     *
+     * @param name of the method
+     * @param returnType of the method
+     */
     public Method(String name, String returnType) {
         super(name, returnType);
     }
 
+    /**
+     * Returns true if abstract modifier bit is set, false if not.
+     *
+     * @return true if method is abstract
+     */
     public boolean isAbstract() {
         return Modifier.isAbstract(modifiers);
     }
 
+    /**
+     * Sets the abstract modifier to true or false. Fires "isAbstract" property change event.
+     *
+     * @param isAbstract true if the method is abstract, false if not
+     */
     public void setAbstract(boolean isAbstract) {
         int oldModifiers = modifiers;
         if (isAbstract) {
@@ -29,18 +48,18 @@ public class Method extends MethodBase {
     }
 
     /**
-     * Returns true if the field has static modifier, false if it is not static
+     * Returns true if static modifier bit is set, false if not.
      *
-     * @return true if field is static, false if it isn't
+     * @return true if method is static
      */
     public boolean isStatic() {
         return Modifier.isStatic(modifiers);
     }
 
     /**
-     * Set this field's static modifier to true or false
+     * Sets the static modifier to true or false. Fires "isStatic" property change event.
      *
-     * @param isStatic - set true if the field is static, false if it isn't
+     * @param isStatic true if the method is static, false if not
      */
     public void setStatic(boolean isStatic) {
         int oldModifiers = modifiers;
@@ -53,18 +72,18 @@ public class Method extends MethodBase {
     }
 
     /**
-     * Returns true if the field has final modifier, false if it is not final
+     * Returns true if final modifier bit is set, false if not.
      *
-     * @return true if field is final, false if it isn't
+     * @return true if method is final
      */
     public boolean isFinal() {
         return Modifier.isFinal(modifiers);
     }
 
     /**
-     * Set this field's final modifier to true or false
+     * Sets the final modifier to true or false. Fires "isFinal" property change event.
      *
-     * @param isFinal - set true if the field is final, false if it isn't
+     * @param isFinal true if the method is final, false if not
      */
     public void setFinal(boolean isFinal) {
         int oldModifiers = modifiers;
@@ -77,20 +96,18 @@ public class Method extends MethodBase {
     }
 
     /**
-     * Returns true if the field has synchronized modifier, false if it is not
-     * synchronized
+     * Returns true if synchronized modifier bit is set, false if not.
      *
-     * @return true if field is synchronized, false if it isn't
+     * @return true if method is synchronized
      */
     public boolean isSynchronized() {
         return Modifier.isSynchronized(modifiers);
     }
 
     /**
-     * Set this field's final synchronized to true or false
+     * Sets the method modifier to true or false. Fires "isSynchronized" property change event.
      *
-     * @param isSynchronized - set true if the field is synchronized, false if
-     * it isn't
+     * @param isSynchronized true if the method is synchornized, false if not
      */
     public void setSynchronized(boolean isSynchronized) {
         int oldModifiers = modifiers;
@@ -101,9 +118,10 @@ public class Method extends MethodBase {
         }
         pcs.firePropertyChange("isSynchronized", Modifier.isSynchronized(oldModifiers), isSynchronized());
     }
-    
+
     @Override
     public boolean allowedToAddModifier(int modifier) {
+        if ((modifier & Modifier.methodModifiers()) == 0) return false;
         switch (modifier) {
             case Modifier.STATIC:
                 if (isAbstract()) return false;
@@ -117,27 +135,19 @@ public class Method extends MethodBase {
             case Modifier.SYNCHRONIZED:
                 if (isAbstract()) return false;
                 break;
+            default:
+                return false;
         }
         return true;
     }
 
-//    /**
-//     * Creates a string that represents Method's signature.
-//     * <p>
-//     * By concatenating strings a text is created, which can be used to
-//     * represent this Field in the UML diagram's class that holds it e.g.
-//     * "public static String firstMethod(int theNumber)". THIS IS VERSION FOR
-//     * INTERFACES
-//     *
-//     * @return specially formed Method's String representation
-//     */
-//    public String getSignatureForInterfaces() {
-//        StringBuffer result = new StringBuffer();
-//        if (visibility != null && !Visibility.PACKAGE.equals(visibility)) {
-//            result = result.append(getVisibility().toString()).append(" ");
-//        }
-//        result.append(getSignatureForLabel());
-//        result.append(";\n");
-//        return result.toString();
-//    }
+    @Override
+    public String getLabelText(boolean isSimpleTypeNames) {
+        StringBuilder result = new StringBuilder();
+        // removes static because it is rendered as underline
+        if (isStatic()) result.append(Modifier.toString(modifiers).replace("static ", "").trim().replace("\\s+", " ")).append(" ");
+        if (isSimpleTypeNames) result.append(getSimpleTypeSignature());
+        else result.append(getSignature());
+        return result.toString();
+    }
 }

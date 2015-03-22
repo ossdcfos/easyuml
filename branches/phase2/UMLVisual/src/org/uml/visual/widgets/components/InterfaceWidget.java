@@ -30,15 +30,12 @@ public class InterfaceWidget extends ComponentWidgetBase {
         super(scene, interfaceComponent);
         setMinimumSize(MIN_DIMENSION_2ROW);
 
-        Widget headerWidget = new Widget(scene);
-        headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
-
         LabelWidget interfaceLabel = new LabelWidget(scene, "<<interface>>");
-        interfaceLabel.setAlignment(LabelWidget.Alignment.CENTER);
         headerWidget.addChild(interfaceLabel);
         
-        headerWidget.addChild(nameLabel);
+        iconNameContainer.addChild(iconWidget);
+        iconNameContainer.addChild(nameLabel);
+        headerWidget.addChild(iconNameContainer);
         addChild(headerWidget);
 
         SeparatorWidget separatorWidget = new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL);
@@ -81,6 +78,7 @@ public class InterfaceWidget extends ComponentWidgetBase {
         addMember(methodsContainer, methodWidget);
         getScene().validate();
 
+        // Temp renamer
         WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(methodWidget));
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(methodWidget.getNameLabel());
         MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);

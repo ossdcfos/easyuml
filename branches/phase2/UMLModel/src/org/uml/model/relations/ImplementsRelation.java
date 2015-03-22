@@ -1,27 +1,21 @@
 package org.uml.model.relations;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.Objects;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.InterfaceComponent;
 
 /**
- * Implements relation in UML class diagrams. Describes
- * relation used usually when an object <i>implements</i> another objects
- * behavior; fields, methods, etc.
+ * Implements relation in UML class diagrams. 
+ * Describes relation used when an object <i>implements</i> another objects
+ * behaviour e.g. a class implements an interface.
  *
- * @author "NUGS"
- * @see RelationBase
- * @see HasRelationComponent
- * @see IsRelationComponent
- * @see UseRelationComponent
+ * @author NUGS
  */
-//@XStreamAlias("ImplementsRelation")
 public class ImplementsRelation extends RelationBase {
 
     /**
-     * Returns the name of relation.
+     * Returns the name of the relation.
      *
      * @return "Implements"
      */
@@ -41,10 +35,28 @@ public class ImplementsRelation extends RelationBase {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 53 * hash + Objects.hashCode(this.source);
-        hash = 53 * hash + Objects.hashCode(this.target);
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.source);
+        hash = 17 * hash + Objects.hashCode(this.target);
         return hash;
     }
-    
+
+    // Implements relation is the same if source and target are the same.
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RelationBase other = (RelationBase) obj;
+        if (!Objects.equals(this.source, other.source)) {
+            return false;
+        }
+        if (!Objects.equals(this.target, other.target)) {
+            return false;
+        }
+        return true;
+    }    
 }

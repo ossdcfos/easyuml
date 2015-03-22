@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.JOptionPane;
+import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
 import org.uml.model.ClassDiagram;
-import org.uml.project.UMLProject;
 
 /**
  *
@@ -14,7 +14,7 @@ import org.uml.project.UMLProject;
  */
 public class ClassDiagramFilesFactory {
 
-    UMLProject currentProject;
+    Project currentProject;
     ClassDiagram classDiagram;
     String classDiagramName; // we should use/have some network ID instead name, since name may not be unigue
     // we need it to select that node in project tree upon network creation
@@ -51,7 +51,7 @@ public class ClassDiagramFilesFactory {
                 createdFilePath = null;
                 stream.writeObject(this.classDiagram);
                 createdFilePath = filePath;
-                currentProject.refresh();
+                currentProject.getProjectDirectory().refresh();
             } finally {
                 stream.close();
             }
@@ -65,7 +65,7 @@ public class ClassDiagramFilesFactory {
         return createdFilePath;
     }
 
-    void setProject(UMLProject project) {
+    void setProject(Project project) {
         currentProject = project;
     }
 }

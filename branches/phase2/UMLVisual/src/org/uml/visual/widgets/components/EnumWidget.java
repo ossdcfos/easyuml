@@ -18,7 +18,7 @@ import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
 
 /**
  *
- * @author "NUGS"
+ * @author NUGS
  */
 public class EnumWidget extends ComponentWidgetBase {
 
@@ -27,16 +27,13 @@ public class EnumWidget extends ComponentWidgetBase {
     public EnumWidget(ClassDiagramScene scene, EnumComponent enumComponent) {
         super(scene, enumComponent);
         setMinimumSize(MIN_DIMENSION_2ROW);
-
-        Widget headerWidget = new Widget(scene);
-        headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
         
         LabelWidget enumerationLabel = new LabelWidget(scene, "<<enumeration>>");
-        enumerationLabel.setAlignment(LabelWidget.Alignment.CENTER);
         headerWidget.addChild(enumerationLabel);
         
-        headerWidget.addChild(nameLabel);
+        iconNameContainer.addChild(iconWidget);
+        iconNameContainer.addChild(nameLabel);
+        headerWidget.addChild(iconNameContainer);
         addChild(headerWidget);
 
         SeparatorWidget separatorWidget = new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL);
@@ -78,6 +75,7 @@ public class EnumWidget extends ComponentWidgetBase {
         addMember(literalsContainer, literalWidget);
         getScene().validate();
 
+        // Temp renamer
         WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(literalWidget));
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(literalWidget.getNameLabel());
         MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);

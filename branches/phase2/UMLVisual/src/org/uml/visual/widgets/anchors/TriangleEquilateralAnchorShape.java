@@ -6,7 +6,7 @@ import org.netbeans.api.visual.anchor.AnchorShape;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class TriangleEquilateralAnchorShape implements AnchorShape {
 

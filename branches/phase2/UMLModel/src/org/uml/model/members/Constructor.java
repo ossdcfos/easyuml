@@ -1,6 +1,5 @@
 package org.uml.model.members;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 
@@ -16,26 +15,35 @@ import org.uml.model.components.EnumComponent;
  * @see ClassComponent
  * @see EnumComponent
  */
-//@XStreamAlias("Constructor")
 public class Constructor extends MethodBase {
-    
+
     /**
-     * Constructor with parameter for setting constructor's name. Only sets the
-     * name parameter.
+     * Constructor with parameter for setting constructor's name.
+     * Name is the type for the constructor, so the type is set to null.
      * <p>
      * Calls super constructor.
      *
-     * @param name
-     * @see MemberBase
+     * @param name of the constructor
      */
     public Constructor(String name) {
-        // name is the type for constructor
         super(name, null);
     }
 
+    /**
+     * Always returns false. Cannot add any non-access modifier to constructor.
+     * @param modifier
+     * @return 
+     */
     @Override
     public boolean allowedToAddModifier(int modifier) {
         return false;
     }
-    
+
+    @Override
+    public String getLabelText(boolean isSimpleTypeNames) {
+        StringBuilder result = new StringBuilder();
+        if (isSimpleTypeNames) result.append(getSimpleTypeSignature());
+        else result.append(getSignature());
+        return result.toString();
+    }
 }

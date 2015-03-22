@@ -1,6 +1,6 @@
 package org.uml.visual.widgets.members;
 
-import org.uml.visual.parser.MemberParser;
+import org.uml.memberparser.MemberParser;
 import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
@@ -21,15 +21,18 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
     public MethodWidget(ClassDiagramScene scene, Method method) {
         super(scene, method);
 
+        updateIcon();
+        this.addChild(iconWidget);
+
         updateVisibilityLabel();
         this.addChild(visibilityLabel);
 
-        nameLabel.setLabel(method.getLabelText());
+        nameLabel.setLabel(method.getLabelText(getClassDiagramScene().isShowSimpleTypes()));
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new MemberNameEditor(this)));
+        nameLabel.setFont(scene.getFont());
+        setStatic(method.isStatic());
         this.addChild(nameLabel);
         setChildConstraint(nameLabel, 1);   // any number, as it defines weight by which it will occupy the parent space
-        nameLabel.setFont(scene.getDefaultFont());
-        setStatic(method.isStatic());
     }
 
     @Override
@@ -39,7 +42,11 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
             if (member.getDeclaringComponent().signatureExists(signature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
             } else {
-                MemberParser.fillMethodComponents((Method) member, signature);
+                try {
+                    MemberParser.fillMethodComponents((Method) member, signature);
+                } catch (IllegalArgumentException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Illegal format error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
@@ -63,12 +70,12 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
     public void propertyChange(PropertyChangeEvent evt) {
         String propName = evt.getPropertyName();
         if ("isStatic".equals(propName)) {
+            updateIcon();
             setStatic((boolean) evt.getNewValue());
-        }
-        else if ("isFinal".equals(propName) || "isAbstract".equals(propName) || "isSynchronized".equals(propName) || "name".equals(propName) || "type".equals(propName) || "arguments".equals(propName)) {
-            nameLabel.setLabel(((Method) member).getLabelText());
-        }
-        else if ("visibility".equals(evt.getPropertyName())) {
+        } else if ("isFinal".equals(propName) || "isAbstract".equals(propName) || "isSynchronized".equals(propName) || "name".equals(propName) || "type".equals(propName) || "arguments".equals(propName)) {
+            nameLabel.setLabel(((Method) member).getLabelText(getClassDiagramScene().isShowSimpleTypes()));
+        } else if ("visibility".equals(evt.getPropertyName())) {
+            updateIcon();
             updateVisibilityLabel();
         }
         notifyTopComponentModified();

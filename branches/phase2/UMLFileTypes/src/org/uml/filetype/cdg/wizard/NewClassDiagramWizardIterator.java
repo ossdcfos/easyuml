@@ -19,7 +19,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 import org.uml.model.ClassDiagram;
-import org.uml.project.UMLProject;
 
 // TODO define position attribute
 @TemplateRegistration(folder = "UML", displayName = "#NewClassDiagramWizardIterator_displayName", iconBase = "org/uml/filetype/cdg/classDiagramIcon.png", description = "newClassDiagram.html")
@@ -69,9 +68,10 @@ public final class NewClassDiagramWizardIterator implements WizardDescriptor.Ins
 //                CurrentProject.getInstance().setCurrentProject(project);
 //            }
             
-            if (project instanceof UMLProject) {
+            // TODO redo this not to have tight coupling
+            if (project.getClass().getSimpleName().equals("UMLProject")) {
                 ClassDiagramFilesFactory fileFactory = ClassDiagramFilesFactory.getDefault();
-                fileFactory.setProject((UMLProject)project);
+                fileFactory.setProject(project);
 
                 String classDiagramName = (String) wizard.getProperty("classDiagramName");
 

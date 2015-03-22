@@ -11,7 +11,7 @@ import org.uml.visual.widgets.components.ComponentWidgetBase;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 // TODO not detecting key events
 public class ComponentWidgetKeyboardAction extends WidgetAction.Adapter {
@@ -49,7 +49,7 @@ public class ComponentWidgetKeyboardAction extends WidgetAction.Adapter {
                 newX = newX - 20;
             } else if (event.getKeyCode() == KeyEvent.VK_DELETE) {
                 ClassDiagram classDiagram = ((ComponentWidgetBase) widget).getComponent().getParentDiagram();
-                classDiagram.removePartFromContainer(((ComponentWidgetBase) widget).getComponent());
+                classDiagram.removeComponentFromContainer(((ComponentWidgetBase) widget).getComponent());
             }
             provider.movementStarted(widget);
             provider.setNewLocation(widget, new Point(newX, newY));

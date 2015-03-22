@@ -31,7 +31,7 @@ import org.uml.visual.widgets.components.InterfaceWidget;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class ConnectRelationPanel extends javax.swing.JPanel {
 
@@ -198,7 +198,7 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
         relation.setSource(source.getComponent());
         relation.setTarget(target.getComponent());
 
-        source.getClassDiagramScene().addRelationToScene(relation, source.getComponent(), target.getComponent());
+        source.getClassDiagramScene().addRelationToScene(relation);
     }
 
     /**

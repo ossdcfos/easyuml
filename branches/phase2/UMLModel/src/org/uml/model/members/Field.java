@@ -1,29 +1,20 @@
 package org.uml.model.members;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.lang.reflect.Modifier;
 import org.uml.model.Visibility;
-import org.uml.model.components.ClassComponent;
-import org.uml.model.components.EnumComponent;
 
 /**
- * Represents a class field (variables inside a class). It extends Member class
- * and it is one of four possible Members.
+ * Represents a field (fields inside a class).
  *
  * @author Uros
- * @see MemberBase
- * @see Literal
- * @see Method
  * @see Constructor
- * @see ClassComponent
- * @see EnumComponent
- *
+ * @see Method
+ * @see Literal
  */
-//@XStreamAlias("Field")
 public class Field extends MemberBase {
 
     /**
-     * Constructor that sets the name, type and visibility of the Field.
+     * Constructor that sets the name, type and visibility of the field.
      *
      * @param name of the field
      * @param type of the field
@@ -36,18 +27,18 @@ public class Field extends MemberBase {
     }
 
     /**
-     * Returns true if the field has static modifier, false if it is not static
+     * Returns true if static modifier bit is set, false if not.
      *
-     * @return true if field is static, false if it isn't
+     * @return true if field is static
      */
     public boolean isStatic() {
         return Modifier.isStatic(modifiers);
     }
 
     /**
-     * Set this field's static modifier to true or false
+     * Sets the static modifier to true or false. Fires "isStatic" property change event.
      *
-     * @param isStatic - set true if the field is static, false if it isn't
+     * @param isStatic true if the field is static, false if not
      */
     public void setStatic(boolean isStatic) {
         int oldModifiers = modifiers;
@@ -60,18 +51,18 @@ public class Field extends MemberBase {
     }
 
     /**
-     * Returns true if the field has final modifier, false if it is not final
+     * Returns true if final modifier bit is set, false if not.
      *
-     * @return true if field is final, false if it isn't
+     * @return true if field is final
      */
     public boolean isFinal() {
         return Modifier.isFinal(modifiers);
     }
 
     /**
-     * Set this field's final modifier to true or false
+     * Sets the final modifier to true or false. Fires "isFinal" property change event.
      *
-     * @param isFinal - set true if the field is final, false if it isn't
+     * @param isFinal true if the field is final, false if not
      */
     public void setFinal(boolean isFinal) {
         int oldModifiers = modifiers;
@@ -84,20 +75,18 @@ public class Field extends MemberBase {
     }
 
     /**
-     * Returns true if the field has transient modifier, false if it is not
-     * transient
+     * Returns true if transient modifier bit is set, false if not.
      *
-     * @return true if field is transient, false if it isn't
+     * @return true if field is transient
      */
     public boolean isTransient() {
         return Modifier.isTransient(modifiers);
     }
 
     /**
-     * Set this field's final transient to true or false
+     * Sets the transient modifier to true or false. Fires "isTransient" property change event.
      *
-     * @param isTransient - set true if the field is transient, false if it
-     * isn't
+     * @param isTransient true if the field is transient, false if not
      */
     public void setTransient(boolean isTransient) {
         int oldModifiers = modifiers;
@@ -110,19 +99,18 @@ public class Field extends MemberBase {
     }
 
     /**
-     * Returns true if the field has volatile modifier, false if it is not
-     * volatile
+     * Returns true if volatile modifier bit is set, false if not.
      *
-     * @return true if field is volatile, false if it isn't
+     * @return true if field is volatile
      */
     public boolean isVolatile() {
         return Modifier.isVolatile(modifiers);
     }
 
     /**
-     * Set this field's final volatile to true or false
+     * Sets the volatile modifier to true or false. Fires "isVolatile" property change event.
      *
-     * @param isVolatile - set true if the field is volatile, false if it isn't
+     * @param isVolatile true if the field is volatile, false if not
      */
     public void setVolatile(boolean isVolatile) {
         int oldModifiers = modifiers;
@@ -134,6 +122,12 @@ public class Field extends MemberBase {
         pcs.firePropertyChange("isVolatile", Modifier.isVolatile(oldModifiers), isVolatile());
     }
 
+    /**
+     * Returns the unique signature of this field.
+     * Consists of type and name.
+     *
+     * @return unique signature of this member
+     */
     @Override
     public String getSignature() {
         StringBuilder result = new StringBuilder();
@@ -142,42 +136,25 @@ public class Field extends MemberBase {
         return result.toString();
     }
 
-    /**
-     * Creates a string that can be used to represent Field inside UML model.
-     * <p>
-     * By concatenating strings a text is created, which can be used to
-     * represent this Field in the UML diagram's class that holds it e.g.
-     * "static int fieldNumberOne".
-     *
-     * @return specially formed String representation of the Field
-     */
     @Override
-    public String getLabelText() {
+    protected String getSimpleTypeSignature() {
         StringBuilder result = new StringBuilder();
-        // removes static because it is rendered as underline
-        if ((modifiers & ~Modifier.STATIC) != 0) result.append(Modifier.toString(modifiers).replace("static ", "").replace("static", "")).append(" ");
-        result.append(getSignature());
+        String simpleType = getSimpleType(type);
+        result = result.append(simpleType).append(" ");
+        result = result.append(getName());
         return result.toString();
     }
 
-//    /**
-//     * Creates a string that represents Field's signature.
-//     * <p>
-//     * By concatenating strings a text is created, which can be used to
-//     * represent this Field in the UML diagram's class that holds it e.g.
-//     * "static int fieldNuberOne".
-//     *
-//     * @return specially formed Field's String representation
-//     */
-//    public String getFullSignature() {
-//        StringBuilder result = new StringBuilder();
-//        if (visibility != null && !visibility.equals(Visibility.PACKAGE)) {
-//            result = result.append(getVisibility().toString()).append(" ");
-//        }
-//        if(modifiers != 0) result.append(Modifier.toString(modifiers)).append(" ");
-//        result.append(getSignature());
-//        return result.toString();
-//    }
+    @Override
+    public String getLabelText(boolean isSimpleTypeNames) {
+        StringBuilder result = new StringBuilder();
+        // removes static because it is rendered as underline
+        if (isStatic()) result.append(Modifier.toString(modifiers).replace("static ", "").trim().replace("\\s+", " ")).append(" ");
+        if (isSimpleTypeNames) result.append(getSimpleTypeSignature());
+        else result.append(getSignature());
+        return result.toString();
+    }
+
     @Override
     public String deriveSignatureFromName(String newName) {
         StringBuilder result = new StringBuilder();
@@ -194,46 +171,9 @@ public class Field extends MemberBase {
         return result.toString();
     }
 
-    // TODO use or remove
-//    /**
-//     * Another way to set static, final or synchronized modifiers. Parses string
-//     * provided and sets adjacent bool modifier e.g. "static" sets isStatic to
-//     * true.
-//     *
-//     * @param modifier name to be set
-//     */
-//    public void setModifier(String modifier) {
-//        switch (modifier) {
-//            case "static":
-//                setStatic(true);
-//                break;
-//            case "final":
-//                setFinal(true);
-//                break;
-//            case "transient":
-//                setTransient(true);
-//                break;
-//            case "volatile":
-//                setVolatile(true);
-//                break;
-//        }
-//    }
-    
-    
     @Override
     public boolean allowedToAddModifier(int modifier) {
-        return true;
-//        switch (modifier) {
-//            case Modifier.STATIC:
-//                break;
-//            case Modifier.FINAL:
-//                break;
-//            case Modifier.TRANSIENT:
-//                break;
-//            case Modifier.VOLATILE:
-//                break;
-//        }
-//        return false;
+        if ((modifier & Modifier.fieldModifiers()) == 0) return false;
+        else return true;
     }
-
 }

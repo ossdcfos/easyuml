@@ -13,7 +13,7 @@ import org.uml.visual.dialogs.CardinalityChangePanel;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class CardinalityPopupMenuProvider implements PopupMenuProvider {
 

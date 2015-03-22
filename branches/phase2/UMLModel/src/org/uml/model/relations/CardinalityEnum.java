@@ -1,8 +1,5 @@
 package org.uml.model.relations;
 
-//import com.thoughtworks.xstream.annotations.XStreamConverter;
-//import com.thoughtworks.xstream.converters.SingleValueConverter;
-
 /**
  * Defines all four combinations of cardinalities.
  *
@@ -13,7 +10,6 @@ package org.uml.model.relations;
  * @see UseRelationComponent
  * @see ImplementsRelationComponent
  */
-//@XStreamConverter(CardinalityEnum.CardinalityEnumConverter.class)
 public enum CardinalityEnum {
 
     /**

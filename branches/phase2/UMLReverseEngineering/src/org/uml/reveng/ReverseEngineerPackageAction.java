@@ -2,40 +2,44 @@ package org.uml.reveng;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.NbBundle.Messages;
-import org.uml.model.ClassDiagram;
-import org.uml.visual.UMLTopComponent;
 import org.openide.filesystems.FileObject;
-import org.openide.awt.ActionReferences;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.NbBundle.Messages;
 import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
+import org.uml.model.ClassDiagram;
 
 @ActionID(
         category = "Source",
-        id = "org.uml.reveng.ReverseEngineerPackageAction")
+        id = "org.uml.reveng.ReverseEngineerPackageAction"
+)
 @ActionRegistration(
-        displayName = "#CTL_ReverseEngineerPackageAction")
-@ActionReferences({
-    @ActionReference(path = "Projects/package/Actions", position = 1050)
-})
+        displayName = "#CTL_ReverseEngineerPackageAction"
+)
+@ActionReference(path = "Projects/package/Actions", position = 1050)
 @Messages("CTL_ReverseEngineerPackageAction=easyUML Create Class Diagram")
 /**
  * Class that responds to Reverse Engineer command from package context menu
  *
- * @author Boris
+ * @author Boris Perović
  */
 public final class ReverseEngineerPackageAction extends ReverseEngineerActionBase implements ActionListener {
 
-    private final DataFolder context;
+    private final List<DataFolder> context;
 
     /**
      * Default constructor
      *
      * @param context in which the command is issued
      */
-    public ReverseEngineerPackageAction(DataFolder context) {
+    public ReverseEngineerPackageAction(List<DataFolder> context) {
         this.context = context;
     }
 
@@ -52,20 +56,30 @@ public final class ReverseEngineerPackageAction extends ReverseEngineerActionBas
      */
     @Override
     public void actionPerformed(ActionEvent ev) {
-        String path = context.getPrimaryFile().getPath();  // folders are separated with forward slashes (/), system separator is backslash \
-        String name = path.substring(path.lastIndexOf("src") + 4).replace("/", ".");
-        ClassDiagram classDiagram = ReverseEngineer.createClassDiagramFromPath(path, name);
-        UMLTopComponent umlTopComponent = new UMLTopComponent(classDiagram);
-//        arrangeDiagram(umlTopComponent);
-        
-        // Find root folder
-        FileObject parent = context.getPrimaryFile().getParent();
-        while(!parent.getName().equals("src")){
-            parent = parent.getParent();
+        List<File> files = new LinkedList<>();
+        for (DataObject dataObject : context) {
+            String path = dataObject.getPrimaryFile().getPath();  // folders are separated with forward slashes (/), system separator is backslash \
+            String extension = "java";
+            files.addAll(FileUtils.listFiles(new File(path), new String[]{extension}, true));
         }
-        
+
+        String diagramName;
+        if (context.size() == 1) {
+            String path = context.get(0).getPrimaryFile().getPath();
+            diagramName = path.substring(path.lastIndexOf("src") + 4).replace("/", ".");;
+        } else {
+            diagramName = "Multi-package class diagram";
+        }
+        ClassDiagram classDiagram = ReverseEngineer.createClassDiagramFromFiles(files, diagramName);
+
         //Save the diagram into project's path
-        FileObject projectFolder = parent.getParent();
-        saveDiagramAndOpenTopComponent(projectFolder, umlTopComponent);
+        // Find root folder path
+        DataObject firstDataObject = context.get(0);
+        String fdoPath = firstDataObject.getPrimaryFile().getPath();  // folders are separated with forward slashes (/), system separator is backslash \
+        String folderPath = fdoPath.substring(0, fdoPath.lastIndexOf("src") - 1);
+        // Save diagram into project root folder
+        FileObject projectFolder = FileUtil.toFileObject(new File(folderPath));
+        
+        openReverseEngineerDialog(projectFolder, classDiagram);
     }
 }

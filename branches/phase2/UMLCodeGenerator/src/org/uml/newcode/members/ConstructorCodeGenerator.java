@@ -7,18 +7,17 @@ import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.body.Parameter;
 import japa.parser.ast.body.VariableDeclaratorId;
 import japa.parser.ast.stmt.BlockStmt;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import org.uml.filetype.cdg.renaming.MyMembersRenameTable;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.MethodArgument;
 import org.uml.newcode.CodeGeneratorUtils;
-import org.uml.newcode.renaming.MemberRenameTable;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class ConstructorCodeGenerator {
 
@@ -26,60 +25,51 @@ public class ConstructorCodeGenerator {
         List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
 
         for (Constructor constructor : component.getConstructors()) {
-            // add rename listener if it doesn't exist
-            if (!constructor.listenerTypeExists(MemberRenameTable.class)) {
-                constructor.addPropertyChangeListener(new MemberRenameTable());
-            }
             // create and add constructor declaration
             ConstructorDeclaration declaration = createConstructorDeclaration(constructor);
             members.add(declaration);
         }
     }
 
-    public static void updateConstructors(ClassComponent component, CompilationUnit cu) {
+    public static void updateConstructors(ClassComponent component, MyMembersRenameTable renames, CompilationUnit cu) {
         List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
-        HashMap<String, String> oldToNew = MemberRenameTable.members.get(component.getSignature());
-        // generate or update all direct constructors
+        // Generate or update all direct constructors
         for (Constructor constructor : component.getConstructors()) {
-            // add rename listener if it doesn't exist
-            if (!constructor.listenerTypeExists(MemberRenameTable.class)) {
-                constructor.addPropertyChangeListener(new MemberRenameTable());
-            }
-            // if the constructor has been renamed update or generate
-            if (oldToNew.containsKey(constructor.getSignature())) {
-                String oldSignature = oldToNew.get(constructor.getSignature());
-                boolean found = false;
-                for (BodyDeclaration member : members) {
-                    if (member instanceof ConstructorDeclaration) {
-                        ConstructorDeclaration declaration = (ConstructorDeclaration) member;
-                        if (oldSignature.equals(getConstructorDeclarationSignature(declaration))) {
-                            declaration.setName(constructor.getName());
-                            if (!constructor.getArguments().isEmpty()) {
-                                List<Parameter> parameters = new LinkedList<>();
-                                for (MethodArgument argument : constructor.getArguments()) {
-                                    Parameter parameter = new Parameter();
-                                    String type = argument.getType();
-                                    parameter.setType(CodeGeneratorUtils.parseType(type));
-                                    parameter.setId(new VariableDeclaratorId(argument.getName()));
-                                    parameters.add(parameter);
+            ConstructorDeclaration existingDeclaration = findExistingDeclaration(members, constructor);
+            if (existingDeclaration == null) { // If there is not existing declaration in the class body
+                if (renames.contains(constructor)) { // If the constructor has been renamed
+                    // Find the old constructor declaration
+                    String oldSignature = renames.getOriginalSignature(constructor);
+                    boolean found = false;
+                    for (BodyDeclaration member : members) {
+                        if (member instanceof ConstructorDeclaration) {
+                            ConstructorDeclaration declaration = (ConstructorDeclaration) member;
+                            if (oldSignature.equals(getConstructorDeclarationSignature(declaration))) {
+                                // Update the old constructor declaration
+                                declaration.setName(constructor.getName());
+                                if (!constructor.getArguments().isEmpty()) {
+                                    List<Parameter> parameters = new LinkedList<>();
+                                    for (MethodArgument argument : constructor.getArguments()) {
+                                        Parameter parameter = new Parameter();
+                                        String type = argument.getType();
+                                        parameter.setType(CodeGeneratorUtils.parseType(type));
+                                        parameter.setId(new VariableDeclaratorId(argument.getName()));
+                                        parameters.add(parameter);
+                                    }
+                                    declaration.setParameters(parameters);
                                 }
-                                declaration.setParameters(parameters);
+                                // Finish updating the old constructor declaration
+                                found = true;
+                                break;
                             }
-                            found = true;
-                            break;
                         }
                     }
-                }
-                if (!found) {
+                    if (!found) { // If the old constructor declaration has not been found and updated, create it and add it
+                        ConstructorDeclaration declaration = createConstructorDeclaration(constructor);
+                        members.add(declaration);
+                    }
+                } else { // If the constructor has not been renamed, there is nothing to update, so create and add it
                     ConstructorDeclaration declaration = createConstructorDeclaration(constructor);
-                    members.add(declaration);
-                }
-            } else {
-                // if it has not been renamed, confirm it exists
-                ConstructorDeclaration declaration = findExistingDeclaration(members, constructor);
-                // if it doesn't exits, create and add it
-                if (declaration == null) {
-                    declaration = createConstructorDeclaration(constructor);
                     members.add(declaration);
                 }
             }
@@ -93,22 +83,6 @@ public class ConstructorCodeGenerator {
             }
         }
         return null;
-    }
-
-    private static String getConstructorDeclarationSignature(ConstructorDeclaration declaration) {
-        StringBuilder result = new StringBuilder();
-        result.append(declaration.getName()).append("(");
-        String args = "";
-        if (declaration.getParameters() != null) {
-            for (Parameter parameter : declaration.getParameters()) {
-                args += parameter.getType() + " " + parameter.getId().getName() + ", ";
-            }
-            if (!args.equals("")) {
-                args = args.substring(0, args.length() - 2);
-            }
-        }
-        result.append(args).append(")");
-        return result.toString();
     }
 
     private static ConstructorDeclaration createConstructorDeclaration(Constructor constructor) {
@@ -138,5 +112,21 @@ public class ConstructorCodeGenerator {
         }
         declaration.setBlock(new BlockStmt());
         return declaration;
+    }
+
+    private static String getConstructorDeclarationSignature(ConstructorDeclaration declaration) {
+        StringBuilder result = new StringBuilder();
+        result.append(declaration.getName()).append("(");
+        String args = "";
+        if (declaration.getParameters() != null) {
+            for (Parameter parameter : declaration.getParameters()) {
+                args += parameter.getType() + " " + parameter.getId().getName() + ", ";
+            }
+            if (!args.equals("")) {
+                args = args.substring(0, args.length() - 2);
+            }
+        }
+        result.append(args).append(")");
+        return result.toString();
     }
 }

@@ -1,11 +1,9 @@
 package org.uml.visual.widgets.relations;
 
-import java.awt.BasicStroke;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.anchor.AnchorShapeFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Scene;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.UseRelation;
 import org.uml.visual.widgets.ClassDiagramScene;
@@ -13,7 +11,7 @@ import org.uml.visual.widgets.popups.CardinalityPopupMenuProvider;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class UseRelationWidget extends RelationBaseWidget {
 

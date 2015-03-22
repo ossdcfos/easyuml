@@ -42,7 +42,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassDiagram classDiagram = classWidget.getComponent().getParentDiagram();
-            classDiagram.removePartFromContainer(classWidget.getComponent());
+            classDiagram.removeComponentFromContainer(classWidget.getComponent());
         }
     };
 
@@ -62,7 +62,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     ActionListener addConstructorListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            classWidget.addConstructorWidget();
+            classWidget.addDefaultConstructorWidget();
         }
     };
 

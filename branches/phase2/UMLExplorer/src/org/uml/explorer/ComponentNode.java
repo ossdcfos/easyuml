@@ -4,10 +4,12 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.concurrent.Callable;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import org.openide.actions.DeleteAction;
+import org.openide.actions.RenameAction;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport;
@@ -34,9 +36,11 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
 //    http://bits.netbeans.org/dev/javadoc/org-openide-nodes/org/openide/nodes/PropertySupport.html
     private ComponentBase component;
     private static String iconFolderPath = "org/uml/explorer/icons/";
+    private PropertyChangeListener listener;
 
     public ComponentNode(ComponentBase component) {
         this(component, new InstanceContent());
+        this.displayFormat = new MessageFormat("{0}");
     }
 
     private ComponentNode(ComponentBase component, InstanceContent content) {
@@ -45,7 +49,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         content.add(this);
 
         this.component = component;
-        this.setDisplayName(component.getName());
+        super.setName(component.getName());
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
     }
 
@@ -57,7 +61,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
     public Action[] getActions(boolean context) {
         return new Action[]{
             SystemAction.get(DeleteAction.class),
-//            SystemAction.get(RenameAction.class)
+            SystemAction.get(RenameAction.class)
         };
     }
 
@@ -67,26 +71,33 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
     }
 
     @Override
-    public boolean canRename() {
-        return false;
+    public void destroy() throws IOException {
+        component.getParentDiagram().removeComponentFromContainer(component);
     }
-    
 
     @Override
-    public void destroy() throws IOException {
-        component.getParentDiagram().removePartFromContainer(component);
+    public boolean canRename() {
+        return true;
+    }
+
+    // Only sets the name in the model, the event is fired if it is successful,
+    // and then the name of the node will be updated correspondignly.
+    // Use super.setName(String s) to set the name directly.
+    @Override
+    public void setName(String s) {
+        setComponentName(s);
     }
 
     @Override
     public Image getIcon(int type) {
         if (component instanceof ClassComponent) {
-            return ImageUtilities.loadImage(iconFolderPath + "classIcon.png");
+            return ImageUtilities.loadImage(iconFolderPath + "class.png");
         }
         if (component instanceof InterfaceComponent) {
-            return ImageUtilities.loadImage(iconFolderPath + "interfaceIcon.png");
+            return ImageUtilities.loadImage(iconFolderPath + "interface.png");
         }
         if (component instanceof EnumComponent) {
-            return ImageUtilities.loadImage(iconFolderPath + "enumIcon.png");
+            return ImageUtilities.loadImage(iconFolderPath + "enum.png");
         }
         return super.getIcon(type);
     }
@@ -163,7 +174,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
      */
     public void setComponentName(String newName) {
         if (!getName().equals(newName)) {
-            if (component.getParentDiagram().signatureExists(component.deriveSignatureFromName(newName))) {
+            if (component.getParentDiagram().signatureExists(component.deriveSignatureFromNewName(newName))) {
                 JOptionPane.showMessageDialog(null, "Name \"" + newName + "\" already exists!");
             } else {
                 component.setName(newName);
@@ -182,7 +193,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
      */
     public void setParentPackage(String parentPackage) {
         if (!parentPackage.equals(getParentPackage())) {
-            if (component.getParentDiagram().signatureExists(component.deriveSignatureFromPackage(parentPackage))) {
+            if (component.getParentDiagram().signatureExists(component.deriveSignatureFromNewPackage(parentPackage))) {
                 JOptionPane.showMessageDialog(null, "Component \"" + component.getName() + "\" already exists in package " + parentPackage + "!");
             } else {
                 component.setParentPackage(parentPackage);
@@ -195,23 +206,23 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         if (null != evt.getPropertyName()) {
             switch (evt.getPropertyName()) {
                 case "name":
-                    setName((String) evt.getNewValue());
+                    super.setName((String) evt.getNewValue());
                     break;
-                case "ADD":
-                    // create children only when the first member is added, it is refreshed in ComponentChildrenFactory when others are added
+                case "ADD_COMPONENT":
+                    // create children only when the first member is added, it is refreshed in ComponentChildFactory when others are added
                     if (component.getMembers().size() == 1) {
                         setChildren(Children.create(new ComponentChildFactory(component), false));
                     }
                     break;
-                case "REMOVE":
+                case "REMOVE_COMPONENT":
                     if (component.getMembers().isEmpty()) {
                         setChildren(Children.LEAF);
                     }
                     break;
             }
         }
-//        // updating Properties window when for example renaming the node
-//        firePropertySetsChange(null, this.getPropertySets());
+        // updating Properties window when for example renaming the node
+        firePropertySetsChange(null, this.getPropertySets());
     }
 
     // To enable creating leaf nodes at start, otherwise we need to pass a factory,

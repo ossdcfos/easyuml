@@ -17,6 +17,9 @@ public class LiteralWidget extends MemberWidgetBase implements ISignedUMLWidget 
     public LiteralWidget(ClassDiagramScene scene, Literal literal) {
         super(scene, literal);
 
+        updateIcon();
+        this.addChild(iconWidget);
+        
         nameLabel.setLabel(literal.getName());
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new MemberNameEditor(this)));
         this.addChild(nameLabel);
@@ -33,7 +36,7 @@ public class LiteralWidget extends MemberWidgetBase implements ISignedUMLWidget 
                 member.setName(signature);
             }
         }
-        nameLabel.setLabel(((Literal) member).getLabelText());
+        nameLabel.setLabel(member.getLabelText(getClassDiagramScene().isShowSimpleTypes()));
     }
 
     @Override
@@ -45,7 +48,7 @@ public class LiteralWidget extends MemberWidgetBase implements ISignedUMLWidget 
     public void propertyChange(PropertyChangeEvent evt) {
         String propName = evt.getPropertyName();
         if ("name".equals(propName)) {
-            nameLabel.setLabel(((Literal) member).getLabelText());
+            nameLabel.setLabel(member.getLabelText(getClassDiagramScene().isShowSimpleTypes()));
         }
         notifyTopComponentModified();
         getScene().validate();

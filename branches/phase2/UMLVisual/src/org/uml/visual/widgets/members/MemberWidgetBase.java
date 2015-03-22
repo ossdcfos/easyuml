@@ -1,29 +1,39 @@
 package org.uml.visual.widgets.members;
 
-import java.awt.Color;
+import org.uml.visual.widgets.providers.MemberParentAlignWithMoveStrategyProvider;
+import java.awt.Font;
 import java.beans.PropertyChangeListener;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.model.ObjectState;
+import org.netbeans.api.visual.widget.ImageWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
+import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
+import org.uml.model.members.Constructor;
+import org.uml.model.members.Field;
+import org.uml.model.members.Literal;
 import org.uml.model.members.MemberBase;
-import org.uml.visual.colorthemes.ColorTheme;
+import org.uml.model.members.Method;
+import org.uml.visual.themes.Theme;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.components.ComponentWidgetBase;
-import static org.uml.visual.widgets.members.MemberParentAlignWithMoveStrategyProvider.ALIGN_WITH_MOVE_DECORATOR_DEFAULT;
 import org.uml.visual.widgets.popups.MemberBasePopupProvider;
 
 /**
  *
  * @author Jelena
  */
-public abstract class MemberWidgetBase extends LabelWidget implements PropertyChangeListener {
+public abstract class MemberWidgetBase extends Widget implements PropertyChangeListener {
 
     protected MemberBase member;
     protected LabelWidget visibilityLabel = new LabelWidget(getScene());
     protected LabelWidget nameLabel = new LabelWidget(getScene());
+
+    protected static String iconFolderPath = "org/uml/visual/widgets/icons/";
+    protected ImageWidget iconWidget = new ImageWidget(getScene());
 
     public MemberWidgetBase(ClassDiagramScene scene, MemberBase member) {
         super(scene);
@@ -32,15 +42,23 @@ public abstract class MemberWidgetBase extends LabelWidget implements PropertyCh
         setOpaque(true);
         setBackground(getColorTheme().getMemberDefaultColor());
         setBorder(getColorTheme().getMemberDefaultBorder());
+        setLayout(LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0));
+
+        iconWidget.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3));
+        updateIcon();
+        updateIconDisplay(scene.isShowIcons());
+        
+        visibilityLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 1));
+        visibilityLabel.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
+        updateVisibilityLabel();
 
         this.member.addPropertyChangeListener(WeakListeners.propertyChange(this, this.member));
-        this.setLayout(LayoutFactory.createHorizontalFlowLayout());
 
         // To support hovering and selecting (in notifyStateChanged), otherwise a Provider is needed
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(ActionFactory.createPopupMenuAction(new MemberBasePopupProvider(this)));
 
-        MemberParentAlignWithMoveStrategyProvider mpsp = new MemberParentAlignWithMoveStrategyProvider(new SingleLayerAlignWithWidgetCollector(scene.getMainLayer(), false), scene.getInterractionLayer(), ALIGN_WITH_MOVE_DECORATOR_DEFAULT, false);
+        MemberParentAlignWithMoveStrategyProvider mpsp = new MemberParentAlignWithMoveStrategyProvider(scene, false);
         getActions().addAction(ActionFactory.createMoveAction(mpsp, mpsp));
 
         getActions().addAction(scene.createWidgetHoverAction());
@@ -54,8 +72,8 @@ public abstract class MemberWidgetBase extends LabelWidget implements PropertyCh
         return (ClassDiagramScene) getScene();
     }
 
-    public static final ColorTheme getColorTheme() {
-        return ClassDiagramScene.colorTheme;
+    public final Theme getColorTheme() {
+        return getClassDiagramScene().getColorTheme();
     }
 
     // used for InplaceEditorAction
@@ -115,6 +133,24 @@ public abstract class MemberWidgetBase extends LabelWidget implements PropertyCh
         }
     }
 
+    public final void updateIcon() {
+        String lowercaseVisibility = member.getVisibility().toString().toLowerCase();
+        String suffix = lowercaseVisibility.substring(0, 1).toUpperCase() + lowercaseVisibility.substring(1);
+        if (member instanceof Field) {
+            Field field = (Field) member;
+            if (field.isStatic()) suffix = "Static" + suffix;
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "fields/field" + suffix + ".png"));
+        } else if (member instanceof Method) {
+            Method method = (Method) member;
+            if (method.isStatic()) suffix = "Static" + suffix;
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "methods/method" + suffix + ".png"));
+        } else if (member instanceof Constructor) {
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "constructors/constructor" + suffix + ".png"));
+        } else if (member instanceof Literal) {
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "other/literal.png"));
+        }
+    }
+
     // used for setting the font etc.
     protected void setSelectedLook(ObjectState state) {
         boolean focused = state.isFocused();
@@ -134,5 +170,14 @@ public abstract class MemberWidgetBase extends LabelWidget implements PropertyCh
 
     public void updateColor() {
         notifyStateChanged(getState(), getState());
+    }
+
+    public final void updateIconDisplay(boolean iconDisplayEnabled) {
+        if (iconDisplayEnabled) iconWidget.setVisible(true);
+        else iconWidget.setVisible(false);
+    }
+
+    public void updateTypeNamesDisplay(boolean simpleTypeNamesDisplayEnabled) {
+        nameLabel.setLabel(member.getLabelText(simpleTypeNamesDisplayEnabled));
     }
 }

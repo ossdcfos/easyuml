@@ -1,23 +1,24 @@
 package org.uml.model.relations;
 
-//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.util.Objects;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 
 /**
- * Has relation in UML class diagrams. Describes relation used usually when an
- * object has another object as its field.
+ * Base relation for has relations in UML class diagrams. Describes relation
+ * used when an object has another object as its field.
  *
- * @author "NUGS"
- * @see RelationBase
- * @see IsRelationComponent
- * @see UseRelationComponent
- * @see ImplementsRelationComponent
+ * @author NUGS
+ * @see AggregationRelation
+ * @see CompositionRelation
+ * @see HasRelation
  */
 public abstract class HasBaseRelation extends RelationBase {
-    //Usually 0..*
 
+    /**
+     * Enum describing the type of Has relation. Can be Default, Aggregation or
+     * Composition.
+     */
     public static enum Type {
 
         DEFAULT {
@@ -40,30 +41,48 @@ public abstract class HasBaseRelation extends RelationBase {
                 }
     }
 
-//    @XStreamAsAttribute
-    private CardinalityEnum cardinalitySource;
-    //Usually 0..1
-
-//    @XStreamAsAttribute
-    private CardinalityEnum cardinalityTarget;
     /**
-     * Can be List, ArrayList or LinkedList
+     * Type of the has relation.
      */
-//    @XStreamAsAttribute
+    private final Type type;
+
+    /**
+     * Cardinality of the source component in the relation.
+     */
+    private CardinalityEnum cardinalitySource;
+
+    /**
+     * Cardinality of the target component in the relation.
+     */
+    private CardinalityEnum cardinalityTarget;
+
+    /**
+     * Type of the collection if cardinality >1 is used. Can be List, ArrayList
+     * or LinkedList by default, TODO but we should also enable other types.
+     */
     private String collectionType;
-    private transient Type type;
 
-    public Type getType() {
-        return type;
-    }
-
-    // if not composition, than it is aggregation
+    /**
+     * Protected constructor used in subclasses to create a new Has relation.
+     * Sets the type of relation to the given type.
+     *
+     * @param type of has relation
+     */
     protected HasBaseRelation(Type type) {
         this.type = type;
     }
 
     /**
-     * Returns the name of relation.
+     * Returns type of has relation.
+     *
+     * @return type of has relation
+     */
+    public Type getType() {
+        return type;
+    }
+
+    /**
+     * Returns the name of the relation.
      *
      * @return "Has"
      */
@@ -74,7 +93,7 @@ public abstract class HasBaseRelation extends RelationBase {
 
     /**
      * Returns a CardinalityEnum element that describes the cardinality at
-     * source side of a relation
+     * source side of the relation.
      *
      * @return cardinality at source
      * @see CardinalityEnum
@@ -84,18 +103,21 @@ public abstract class HasBaseRelation extends RelationBase {
     }
 
     /**
-     * Sets the Cardinality at source side of a relation
+     * Sets the Cardinality at source side of the relation
      *
-     * @param cardinalitySource cardinality at source of a relation
+     * @param newCardinalitySource cardinality at source of a relation
      * @see CardinalityEnum
      */
-    public void setCardinalitySource(CardinalityEnum cardinalitySource) {
-        this.cardinalitySource = cardinalitySource;
+    public void setCardinalitySource(CardinalityEnum newCardinalitySource) {
+        CardinalityEnum oldCardinalitySource = this.cardinalitySource;
+        this.cardinalitySource = newCardinalitySource;
+        pcs.firePropertyChange("cardinalitySource", oldCardinalitySource, newCardinalitySource);
+
     }
 
     /**
      * Returns a CardinalityEnum element that describes the cardinality at
-     * target side of a relation
+     * target side of the relation
      *
      * @return cardinality at target
      * @see CardinalityEnum
@@ -105,13 +127,15 @@ public abstract class HasBaseRelation extends RelationBase {
     }
 
     /**
-     * Sets the Cardinality at target side of a relation
+     * Sets the Cardinality at target side of the relation
      *
-     * @param cardinalityTarget cardinality at target of a relation
+     * @param newCardinalityTarget cardinality at target of a relation
      * @see CardinalityEnum
      */
-    public void setCardinalityTarget(CardinalityEnum cardinalityTarget) {
-        this.cardinalityTarget = cardinalityTarget;
+    public void setCardinalityTarget(CardinalityEnum newCardinalityTarget) {
+        CardinalityEnum oldCardinalityTarget = this.cardinalityTarget;
+        this.cardinalityTarget = newCardinalityTarget;
+        pcs.firePropertyChange("cardinalityTarget", oldCardinalityTarget, newCardinalityTarget);
     }
 
     /**
@@ -128,49 +152,107 @@ public abstract class HasBaseRelation extends RelationBase {
     }
 
     /**
-     * Sets string representation of a collection in which target class type
-     * field is contained in source class, described by this relation.
+     * Sets string representation of a collection in which the target class type
+     * field is contained in source class.
      * <p>
      * For example, if ClassOne has a List of ClassTwo objects as a field,
      * "List" should be passed as a parameter.
      *
-     * @param collectionType
+     * @param newCollectionType
      */
-    public void setCollectionType(String collectionType) {
-        this.collectionType = collectionType;
+    public void setCollectionType(String newCollectionType) {
+        String oldCollectionType = this.collectionType;
+        this.collectionType = newCollectionType;
+        pcs.firePropertyChange("collectionType", oldCollectionType, newCollectionType);
     }
 
     @Override
     public boolean canConnect(ComponentBase source, ComponentBase target) {
         Class<?> sc = source.getClass();
 
-        if (sc == ClassComponent.class) return true;
+        if (sc == ClassComponent.class) {
+            return true;
+        }
 
         return false;
     }
 
-    // TODO see hashes
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 53 * hash + Objects.hashCode(this.source);
-        hash = 53 * hash + Objects.hashCode(this.target);
-        hash = 53 * hash + Objects.hashCode(this.cardinalitySource);
-        hash = 53 * hash + Objects.hashCode(this.cardinalityTarget);
-        hash = 53 * hash + Objects.hashCode(this.collectionType);
-        hash = 53 * hash + Objects.hashCode(this.type);
+        hash = 67 * hash + Objects.hashCode(this.source);
+        hash = 67 * hash + Objects.hashCode(this.target);
+        hash = 67 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (!super.equals(obj)) return false;
-        HasBaseRelation other = (HasBaseRelation) obj;
-        if (!Objects.equals(this.name, other.name)) return false;
-        if (getClass() != obj.getClass()) return false;
-        if (this.type != other.type) return false;
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof HasBaseRelation)) {
+            return false;
+        }
+        final RelationBase other = (RelationBase) obj;
+        if (!Objects.equals(this.source, other.source)) {
+            return false;
+        }
+        if (!Objects.equals(this.target, other.target)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
         return true;
     }
 
+    public String getFieldSignature() {
+        String fieldType = getFieldType();
+        String fieldName;
+        // Field name is relation name if it exists
+        if (!getName().equals("")) {
+            fieldName = getName();
+        } // Else field name is lowercase type (class name)
+        else {
+            fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1);
+        }
+
+        StringBuilder fieldSignature = new StringBuilder();
+        fieldSignature.append(fieldType).append(" ").append(fieldName);
+        // If the cardinality is multiple add an s to the end of the name.
+        if (getCardinalityTarget().equals(CardinalityEnum.One2Many) || getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
+            if (!getName().equals("")) {
+                fieldSignature.append("s");
+            }
+        }
+        return fieldSignature.toString();
+    }
+
+    public String deriveFieldSignatureFromName(String name) {
+        String fieldType = getFieldType();
+        String fieldName = name;
+
+        StringBuilder fieldSignature = new StringBuilder();
+        fieldSignature.append(fieldType).append(" ").append(fieldName);
+        // If the cardinality is multiple add an s to the end of the name.
+        if (getCardinalityTarget().equals(CardinalityEnum.One2Many) || getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
+            if (!getName().equals("")) {
+                fieldSignature.append("s");
+            }
+        }
+        return fieldSignature.toString();
+    }
+
+    private String getFieldType() {
+        StringBuilder fieldType = new StringBuilder();
+        // If the cardinality is multiple, generate appropriate collection
+        if (getCardinalityTarget().equals(CardinalityEnum.One2Many) || getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
+            fieldType.append(getCollectionType()).append("<").append(target.getName()).append(">");
+        } // Else generate the ordinary type
+        else {
+            fieldType.append(fieldType);
+        }
+        return fieldType.toString();
+    }
 }

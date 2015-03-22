@@ -1,6 +1,5 @@
 package org.uml.model.members;
 
-//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
@@ -11,55 +10,59 @@ import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
 
 /**
- * Represents a class member.
+ * Represents a member of a component. Can be Field, Constructor, Method or Literal.
  *
  * @author zoran
- * @see Literal
  * @see Field
- * @see Method
  * @see Constructor
+ * @see Method
+ * @see Literal
  * @see ComponentBase
- *
  */
 public abstract class MemberBase implements INameable, IHasSignature {
 
-//    @XStreamAsAttribute
+    /**
+     * Declaring component which contains this member. It is set when the member is added to the component,
+     * but could be moved as a constructor parameter to be obligatory. TODO
+     */
+    private transient ComponentBase declaringComponent;
+
+    /**
+     * Name of the member.
+     */
     protected String name;
-    // sta ako je niz? da li treba koristiti Type?
-//    @XStreamAsAttribute
+
+    /**
+     * Type of the container.
+     */
     protected String type;
 
-//    @XStreamAsAttribute
-    protected Visibility visibility;
     /**
-     * Modifier is a int value representing access and non-access modifier in
-     * Java e.g. public is represented as 0x00000001, static as 0x00000008.
+     * Visibility of the member. Can be public, private, package, protected.
+     */
+    protected Visibility visibility;
+
+    /**
+     * Modifiers integer which stores non-access modifiers as bits,
+     * as defined in java.lang.reflect.Modifier.
      *
      * @see java.lang.reflect.Modifier
      */
-//    @XStreamAsAttribute
     protected int modifiers;
-    private transient ComponentBase declaringComponent;
-    protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
+    /**
+     * Property change support and related methods.
+     */
+    protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         pcs.addPropertyChangeListener(pcl);
     }
-
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         pcs.removePropertyChangeListener(pcl);
     }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public boolean listenerTypeExists(Class clazz) {
-        for (PropertyChangeListener pcl : pcs.getPropertyChangeListeners()) {
-            if (clazz.isAssignableFrom(pcl.getClass())) return true;
-        }
-        return false;
-    }
-
+    
     /**
-     * Default constructor. Only sets the name of a Member.
+     * Default constructor. Sets the name of a Member.
      *
      * @param name of a member
      */
@@ -67,11 +70,21 @@ public abstract class MemberBase implements INameable, IHasSignature {
         this.name = name;
     }
 
+    /**
+     * Return the name of the member.
+     *
+     * @return name of the member
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the member name to newName. Fires "name" property change event.
+     *
+     * @param newName of the member
+     */
     @Override
     public void setName(String newName) {
         String oldName = getName();
@@ -79,10 +92,20 @@ public abstract class MemberBase implements INameable, IHasSignature {
         pcs.firePropertyChange("name", oldName, newName);
     }
 
+    /**
+     * Return the type of the member.
+     *
+     * @return type of the member
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Set the member type to newType. Fires "type" property change event.
+     *
+     * @param newType of the member
+     */
     public void setType(String newType) {
         String oldType = this.type;
         this.type = newType;
@@ -90,74 +113,117 @@ public abstract class MemberBase implements INameable, IHasSignature {
     }
 
     /**
-     * Adds numerical representation of java Modifier enum's constants into
-     * modifiers array.
-     * <p>
-     * Modifiers array can hold up to four modifier constants. Modifiers are
-     * thoroughly explained in Member class.
+     * Adds a modifier bit of java Modifier enum into the modifiers array.
      *
-     * @param modifier to be added to modifiers array
+     * @param modifier to be added to the modifiers array
      * @see java.lang.reflect.Modifier
-     * @see MemberBase
      */
     public void addModifier(int modifier) //throws Exception 
     {
-        if (((this instanceof Field && (Modifier.fieldModifiers() & modifier) != 0)
-                || (this instanceof Method && (Modifier.methodModifiers() & modifier) != 0)
-                || (this instanceof Constructor && (Modifier.constructorModifiers() & modifier) != 0))
-                && allowedToAddModifier(modifier)) {
+        if (allowedToAddModifier(modifier)) {
             modifiers |= modifier;
         } else {
             // TODO should not be here, model without GUI
-            JOptionPane.showMessageDialog(null, "Illegal modifier combination \""+Modifier.toString(modifiers | modifier)+"\"!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Illegal modifier combination \"" + Modifier.toString(modifiers | modifier) + "\"!", "Warning", JOptionPane.WARNING_MESSAGE);
             //throw new Exception("Modifier " + Modifier.toString(modifier) + " not allowed for " + this.getClass().getSimpleName() + ".");
         }
     }
 
     /**
-     * Removes given modifier integer from modifiers array.
-     * <p>
-     * Modifiers are thoroughly explained in Member class.
+     * Removes the given modifier bit from the modifiers array. Use modifiers
+     * defined in java.lang.reflect.Modifier class.
      *
      * @param modifier to be removed
-     * @see Modifier
+     * @see java.lang.reflect.Modifier
      */
     public void removeModifier(int modifier) {
         modifiers &= ~modifier;
     }
 
+    /**
+     * Returns true if the modifier can be added to the member (does not conflict with other modifiers).
+     * @param modifier
+     * @return 
+     */
     public abstract boolean allowedToAddModifier(int modifier);
 
+    /**
+     * Returns the visibility of this member.
+     *
+     * @return visibility of this member
+     * @see Visibility
+     */
     public Visibility getVisibility() {
         return visibility;
     }
 
+    /**
+     * Sets the visibility of this member. Fires "visibility" property change event.
+     *
+     * @param visibility to be set
+     * @see Visibility
+     */
     public void setVisibility(Visibility visibility) {
         Visibility oldValue = this.visibility;
         this.visibility = visibility;
         pcs.firePropertyChange("visibility", oldValue, this.visibility);
     }
 
+    /**
+     * Returns the declaringComponent of this member.
+     * Declaring component is a ComponentBase object that contains this member.
+     *
+     * @return ComponentBase containing this member
+     * @see ComponentBase
+     */
     public ComponentBase getDeclaringComponent() {
         return declaringComponent;
     }
 
+    /**
+     * Sets the declaring component of this member.
+     * Declaring component is a ComponentBase object that contains this member.
+     *
+     * @param declaringComponent
+     * @see ComponentBase
+     */
     public void setDeclaringComponent(ComponentBase declaringComponent) {
         this.declaringComponent = declaringComponent;
     }
 
-    @Override
-    // signature without modifiers
-    public abstract String getSignature();
+    /**
+     * Returns a signature with simple type names and without modifiers.
+     * @return simple signature of this member
+     */
+    protected abstract String getSimpleTypeSignature();
 
-    public abstract String getLabelText();
+    /**
+     * Returns the text which is shown to the user in the GUI.
+     * @param isSimpleTypeNames - if simple type names are used or not
+     * @return 
+     */
+    public abstract String getLabelText(boolean isSimpleTypeNames);
 
+    /**
+     * Abstract method which should make a signature with a potential new name, 
+     * so that we can check if the member with the same signature already exists.
+     *
+     * @param newName to make a signature from
+     * @return
+     */
     public abstract String deriveSignatureFromName(String newName);
 
+    /**
+  
+     * Abstract method which should make a signature with a potential new type, 
+     * so that we can check if the member with the same signature already exists.
+     * 
+     * @param newType to make a signature from
+     * @return
+     */
     public abstract String deriveSignatureFromType(String newType);
-
-//    @Override
-//    public String toString(){
-//        return getSignature();
-//    }
+    
+    protected String getSimpleType(String curType){
+        return curType.contains(".") ? curType.substring(curType.lastIndexOf(".") + 1) : curType;
+    }
 }

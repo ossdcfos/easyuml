@@ -5,24 +5,44 @@ import java.io.File;
 import java.util.ArrayList;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.project.Project;
+import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;
 import org.uml.model.ClassDiagram;
 
 /**
- *
+ * Dialog which allows for selection of the Java project in which the code
+ * should be generated.
  * @author Uros
  */
 public class GenerateCodeDialog extends javax.swing.JDialog {
 
-    private ClassDiagram classDiagram;
-    private ArrayList<Project> projectsList = new ArrayList<>();
+    /**
+     * Class diagram for which we should generate code.
+     */
+    private final ClassDiagram classDiagram;
+    private final MyClassDiagramRenameTable renames;
+    
+    /**
+     * List of all open Java projects.
+     */
+    private final ArrayList<Project> projectsList = new ArrayList<>();
 
-    public GenerateCodeDialog(ClassDiagram classDiagram) {
+    /**
+     * Constructor specifying the class diagram to generate the code from.
+     * Initalizes the GUI.
+     * @param classDiagram 
+     */
+    public GenerateCodeDialog(ClassDiagram classDiagram, MyClassDiagramRenameTable renames) {
         super((Frame) null, true);
         initComponents();
         buildComboBoxModel();
         this.classDiagram = classDiagram;
+        this.renames = renames;
+        if(projectsList.isEmpty()) btnGenerateCode.setEnabled(false);
     }
 
+    /**
+     * Fills the projects combo box wich all open Java projects.
+     */
     public final void buildComboBoxModel() {
         cbxProjects.removeAllItems();
         Project[] projects = OpenProjects.getDefault().getOpenProjects();
@@ -75,14 +95,15 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnGenerateCode, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblProject)
                         .addGap(18, 18, 18)
-                        .addComponent(cbxProjects, 0, 326, Short.MAX_VALUE)))
+                        .addComponent(cbxProjects, 0, 300, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnGenerateCode)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -96,18 +117,26 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGenerateCode)
                     .addComponent(btnCancel))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Generates code into the selected Java project's path.
+     * @param evt 
+     */
     private void btnGenerateCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateCodeActionPerformed
         String projectPath = projectsList.get(cbxProjects.getSelectedIndex()).getProjectDirectory().getPath() + File.separator;
-        ClassDiagramCodeGenerator.generateOrUpdateCode(classDiagram, projectPath);
+        ClassDiagramCodeGenerator.generateOrUpdateCode(classDiagram, renames, projectPath);
         dispose();
     }//GEN-LAST:event_btnGenerateCodeActionPerformed
 
+    /**
+     * Closes the dialog.
+     * @param evt 
+     */
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         dispose();
     }//GEN-LAST:event_btnCancelActionPerformed

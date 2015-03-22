@@ -1,26 +1,20 @@
 package org.uml.model.relations;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.Objects;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.InterfaceComponent;
 
 /**
- * Is relation in UML class diagrams. Describes relation used usually
- * when an object <i>extends</i> another one.
+ * Is relation in UML class diagrams.
+ * Describes relation used when an object <i>extends</i> another one.
  *
- * @author "NUGS"
- * @see RelationBase
- * @see HasRelationComponent
- * @see UseRelationComponent
- * @see ImplementsRelationComponent
+ * @author NUGS
  */
-//@XStreamAlias("IsRelation")
 public class IsRelation extends RelationBase {
 
     /**
-     * Returns the name of relation.
+     * Returns the name of the relation.
      *
      * @return "Is"
      */
@@ -33,17 +27,38 @@ public class IsRelation extends RelationBase {
     public boolean canConnect(ComponentBase source, ComponentBase target) {
         Class<?> sc = source.getClass();
         Class<?> tc = target.getClass();
-        if(source == target) return false;
-        if(sc == ClassComponent.class && tc == ClassComponent.class) return true;
-        if(sc == InterfaceComponent.class && tc == InterfaceComponent.class) return true;
+        if (source == target) {
+            return false;
+        }
+        if (sc == ClassComponent.class && tc == ClassComponent.class) {
+            return true;
+        }
+        if (sc == InterfaceComponent.class && tc == InterfaceComponent.class) {
+            return true;
+        }
         return false;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 53 * hash + Objects.hashCode(this.source);
-        hash = 53 * hash + Objects.hashCode(this.target);
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.source);
         return hash;
+    }
+
+    // Is relation is the same if the source is the same.
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RelationBase other = (RelationBase) obj;
+        if (!Objects.equals(this.source, other.source)) {
+            return false;
+        }
+        return true;
     }
 }

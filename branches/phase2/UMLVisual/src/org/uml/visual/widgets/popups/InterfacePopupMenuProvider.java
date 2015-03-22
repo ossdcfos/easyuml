@@ -3,20 +3,12 @@ package org.uml.visual.widgets.popups;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
-import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.ClassDiagram;
-import org.uml.model.members.Method;
 import org.uml.visual.widgets.components.InterfaceWidget;
-import org.uml.visual.widgets.members.MethodWidget;
-import org.uml.visual.widgets.actions.MemberNameEditor;
-import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
 
 /**
  *
@@ -52,7 +44,7 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassDiagram classDiagram = interfaceWidget.getComponent().getParentDiagram();
-            classDiagram.removePartFromContainer(interfaceWidget.getComponent());
+            classDiagram.removeComponentFromContainer(interfaceWidget.getComponent());
         }
     };
 

@@ -1,25 +1,35 @@
 package org.uml.model;
 
-//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 /**
- *
- * @author netlink
- * @param <T>
+ * Abstract class representing a container which can contain some components.
+ * Examples/uses: 1) ClassDiagram is a container, with ComponentBase objects as contained components
+ *                2) ComponentBase is a container, with MemberBase objects as contained components.
+ * Parts implement INameable, as they need to be renamed in case of an existing signature (see link). 
+ * Parts implement IHasSignature, as they need to be uniquely identified.
+ * 
+ * @see signatureExists(String componentSignature)
+ * @author Boris Perović Perović
+ * @param <T> type of contained components.
  */
-public abstract class ContainerBase<T extends INameable & IHasSignature> implements INameable, IHasSignature {
+public abstract class ContainerBase<T extends INameable & IHasSignature> implements INameable {
 
-//    @XStreamAsAttribute
+    /**
+     * Name of the container.
+     */
     protected String name;
-    
-    protected LinkedHashSet<T> parts; // contains components or members
-    protected transient List<IComponentDeleteListener> deleteListeners = new ArrayList<>();
-    
+    /**
+     * Components contained in the container.
+     */
+    protected LinkedHashSet<T> components = new LinkedHashSet<>();
+        
+    /**
+     * Property change support and related methods.
+     */
     protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         pcs.addPropertyChangeListener(pcl);
@@ -27,82 +37,75 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         pcs.removePropertyChangeListener(pcl);
     }
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public boolean listenerTypeExists(Class clazz){
-        for(PropertyChangeListener pcl : pcs.getPropertyChangeListeners()){
-            if(clazz.isAssignableFrom(pcl.getClass())) return true;
+    public void addPropertyChangeListenerIfNotExisting(PropertyChangeListener listener){
+        if(!listenerExists(listener)){
+            addPropertyChangeListener(listener);
         }
-        return false;
+    }
+    private boolean listenerExists(PropertyChangeListener listener) {
+        return Arrays.asList(pcs.getPropertyChangeListeners()).contains(listener);
     }
     
+    /**
+     * Constructs a new empty container, with the specified name.
+     * 
+     * @param name 
+     */
     public ContainerBase(String name) {
         this.name = name;
-        this.parts = new LinkedHashSet<>();
-    }
-
-    public void addDeleteListener(IComponentDeleteListener icdl) {
-        deleteListeners.add(icdl);
     }
 
     /**
-     * Adds new ClassDiagramComponent into collection of existing components. If
-     * component with that name already exists in this collection, new one will
-     * be added with it's name concatenated with current component counter
-     * number.
+     * Adds a component into the container. If a component with the same signature 
+     * already exists in the container, a smallest possible integer will be appended 
+     * to component's name, such that component's signature becomes unique.
+     * Fires "ADD_COMPONENT" property change event.
      *
-     * @param part to be added to collection
+     * @param component to be added to the container
      */
-    public void addPartToContainter(T part) {
-        String componentName = part.getName();
+    protected void addComponentToContainter(T component) {
+        String componentName = component.getName();
         int suffix = 1;
-        while (signatureExists(part.getSignature())) {
-            part.setName(componentName + suffix);
+        while (signatureExists(component.getSignature())) {
+            component.setName(componentName + suffix);
             suffix++;
         }
-        parts.add(part);
-        pcs.firePropertyChange("ADD", null, part);
+        components.add(component);
+        pcs.firePropertyChange("ADD_COMPONENT", null, component);
     }
 
     /**
-     * Removes the given component from this diagram's collection of components.
-     *
-     * @param part to be removed
+     * Removes the given component from the container.
+     * Fires "REMOVE_COMPONENT" property change event.
+     * 
+     * @param component to be removed from the container
      */
-    public void removePartFromContainer(T part) {
-        for (IComponentDeleteListener icdl : deleteListeners) {
-            icdl.componentDeleted(part);
-        }
-        parts.remove(part);
-        pcs.firePropertyChange("REMOVE", null, part);
+    public void removeComponentFromContainer(T component) {
+        components.remove(component);
+        pcs.firePropertyChange("REMOVE_COMPONENT", null, component);
     }
 
     /**
-     * Checks if component with provided name exists in collection of
-     * components.
+     * Checks if the component with the provided signature exists 
+     * in the container.
      *
-     * @param componentString of the component
-     * @return if that component exists in collection
+     * @param componentSignature of the component
+     * @return if that component exists in the container
      */
-    public boolean signatureExists(String componentString) {
-        for (T component : parts) {
-            if(component.getSignature().equals(componentString)) return true;
+    public boolean signatureExists(String componentSignature) {
+        for (T component : components) {
+            if(component.getSignature().equals(componentSignature)) return true;
         }
         return false;
     }
 
     /**
-     * Returns name of this Container
+     * Returns the name of this Container.
      *
      * @return name of the Container
      */
     @Override
     public String getName() {
         return name;
-    }
-
-    // TODO temporary solution, add package
-    @Override
-    public String getSignature(){
-        return getName();
     }
 }

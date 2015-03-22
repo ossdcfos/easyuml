@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.uml.filetype
 OpenIDE-Module-Localizing-Bundle: org/uml/filetype/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Specification-Version: 1.1
 

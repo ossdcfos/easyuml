@@ -21,7 +21,7 @@ import org.uml.visual.widgets.components.InterfaceWidget;
 
 /**
  *
- * @author "NUGS"
+ * @author NUGS
  */
 public class ComponentWidgetAcceptProvider implements AcceptProvider {
 
@@ -35,7 +35,7 @@ public class ComponentWidgetAcceptProvider implements AcceptProvider {
 
         view.paintImmediately(view.getVisibleRect());
         
-        g2.drawImage(dragImage, widget.getLocation().x + point.getLocation().x, widget.getLocation().y + point.getLocation().y, view);
+        g2.drawImage(dragImage, widget.getLocation().x + point.x, widget.getLocation().y + point.y, view);
 
         return canAccept(widget, droppedClass) ? ConnectorState.ACCEPT : ConnectorState.REJECT;
     }
