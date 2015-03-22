@@ -7,7 +7,7 @@ import org.openide.nodes.Node;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 class PaletteItemChildFactory extends ChildFactory<PaletteItem> {
 

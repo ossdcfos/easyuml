@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Collection;
+import javax.swing.JOptionPane;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -29,9 +30,8 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
-import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
-import org.uml.explorer.ExplorerTopComponent;
+import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;
 import org.uml.model.ClassDiagram;
 import org.uml.visual.UMLTopComponent;
 import org.uml.xmlDeserialization.ClassDiagramDeserializer;
@@ -102,12 +102,12 @@ import org.uml.xmlDeserialization.ClassDiagramDeserializer;
             position = 1400
     )
 })
-public class ClassDiagramDataObject extends MultiDataObject implements Openable, LookupListener 
-{
+public class ClassDiagramDataObject extends MultiDataObject implements Openable, LookupListener {
 
-    FileObject fileObject;
-    ClassDiagram classDiagram;
-    UMLTopComponent umlTopComponent;
+    private ClassDiagram classDiagram;
+    private UMLTopComponent umlTopComponent;
+    private final MyClassDiagramRenameTable classDiagramRenameTable;
+    
     private final InstanceContent content = new InstanceContent();
     private final AbstractLookup aLookup = new AbstractLookup(content);
     private Lookup.Result<UMLTopComponent.Save> savable;
@@ -115,14 +115,23 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
 
     public ClassDiagramDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(fo, loader);
-        fileObject = fo;
+        // Load here for explorer (access through lookup)
+        classDiagram = readFromFile(getPrimaryFile());
+        content.add(classDiagram);
+
+        // Create rename tables
+        classDiagramRenameTable = new MyClassDiagramRenameTable(classDiagram);
+
         this.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(final PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("name")) {
-                    Object o = evt.getNewValue();
-                    classDiagram.setName((String) o);
-                    umlTopComponent.setName((String) o);
+                    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                        @Override
+                        public void run() {
+                            umlTopComponent.setName(getPrimaryFile().getNameExt());
+                        }
+                    });
                 }
             }
         });
@@ -132,134 +141,103 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
     protected int associateLookup() {
         return 1;
     }
-    
-    @Override
-    public void open() {
-        classDiagram = readFromFile(fileObject);
-
-        if (classDiagram == null) {
-            classDiagram = new ClassDiagram();
-            classDiagram.setName(fileObject.getName());
-        }
-
-        if (umlTopComponent == null || !umlTopComponent.isOpened()) {
-            umlTopComponent = new UMLTopComponent(classDiagram);
-            umlTopComponent.setFileObject(fileObject);
-            umlTopComponent.open();
-        }
-        savable = umlTopComponent.getLookup().lookupResult(UMLTopComponent.Save.class);
-        savable.addLookupListener(this);
-        umlTopComponent.requestActive();
-    }
-
-    private ClassDiagram readFromFile(FileObject fileObject) {
-        ClassDiagram classDiag = new ClassDiagram();
-        try {
-            SAXReader reader = new SAXReader();
-            //System.out.println(fileObject.asLines().get(0));
-            classDiag.setName(fileObject.getName());
-            if (!fileObject.asLines().isEmpty() && fileObject.asLines().get(0).startsWith("<?xml")) {
-                String path = fileObject.getPath();
-
-                Document document = reader.read(path);
-                //System.out.println("Fajl ucitan");
-
-                Element root = document.getRootElement();
-                ClassDiagramDeserializer cdd = new ClassDiagramDeserializer(classDiag);
-                cdd.deserialize(root);
-
-                System.out.println("Deserialized");
-            }
-        } catch (IOException | DocumentException ex) {
-            System.err.println(ex.getMessage());
-            Exceptions.printStackTrace(ex);
-        }
-        return classDiag;
-    }
-
-//    public static void saveDiagram(FileObject fileObject, UMLTopComponent topComponent) {
-//        NotifyDescriptor.Confirmation msg = new NotifyDescriptor.Confirmation(
-//                "Do you want to save \"" + fileObject.getNameExt() + "\"?",
-//                NotifyDescriptor.OK_CANCEL_OPTION,
-//                NotifyDescriptor.QUESTION_MESSAGE);
-//
-//        Object result = DialogDisplayer.getDefault().notify(msg);
-//        if (result.equals(NotifyDescriptor.OK_OPTION)) {
-//            FileOutputStream fileOut = null;
-//            XMLWriter writer = null;
-//            try {
-//                FileObject fo = fileObject;
-//                String putanja = fo.getPath();
-//                fileOut = new FileOutputStream(putanja);
-//
-//                ClassDiagramXmlSerializer serializer = ClassDiagramXmlSerializer.getInstance();
-//                ClassDiagramScene cdScene = topComponent.getLookup().lookup(ClassDiagramScene.class);
-//                ClassDiagram diagram = cdScene.getClassDiagram();
-//                
-//                diagram.setName(fo.getName());
-//                serializer.setClassDiagram(diagram);
-//                serializer.setClassDiagramScene(cdScene);
-//                Document document = DocumentHelper.createDocument();
-//                // document.setXMLEncoding("UTF-8");
-//                Element root = document.addElement("ClassDiagram");
-//                serializer.serialize(root);
-//                OutputFormat format = OutputFormat.createPrettyPrint();
-//                writer = new XMLWriter(fileOut, format);
-//                writer.write(document);
-//            } catch (Exception ex) {
-//                Exceptions.printStackTrace(ex);
-//            } finally {
-//                try {
-//                    if (fileOut != null) {
-//                        fileOut.close();
-//                    }
-//                    if (writer != null) {
-//                        writer.close();
-//                    }
-//                } catch (IOException ex) {
-//                    Exceptions.printStackTrace(ex);
-//                }
-//            }
-//        }
-//    }
-    @Override
-    protected void handleDelete() throws IOException {
-        super.handleDelete();
-        for (final TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
-            // TODO maybe rework
-            if (classDiagram != null && tc.getName().equals(classDiagram.getName())) {
-                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                    @Override
-                    public void run() {
-                        UMLTopComponent umlTopComponent = (UMLTopComponent) tc;
-                        umlTopComponent.close();
-
-                        ExplorerTopComponent explorerTopComponent = (ExplorerTopComponent) WindowManager.getDefault().findTopComponent("ExplorerTopComponent");
-                        explorerTopComponent.getExplorerManager().setRootContext(Node.EMPTY);
-                        explorerTopComponent.getExplorerTree().setRootVisible(false);
-                    }
-                });
-                break;
-            }
-        }
-    }
 
     @Override
     protected Node createNodeDelegate() {
         return new DataNode(this, Children.LEAF, new ProxyLookup(getLookup(), aLookup));
     }
 
-//    @Override
-//    public void save() throws IOException {
-//        saveDiagram(fileObject, topComponent);
-//    }
+    public ClassDiagram getClassDiagram() {
+        return classDiagram;
+    }
+
+    public UMLTopComponent getUmlTopComponent() {
+        return umlTopComponent;
+    }
+
+    public MyClassDiagramRenameTable getRenames() {
+        return classDiagramRenameTable;
+    }
+
+    @Override
+    public void open() {
+        // Needs to read here, to reload on each opening
+        if (umlTopComponent == null || !umlTopComponent.isOpened()) {
+            content.remove(classDiagram);
+            classDiagram = readFromFile(getPrimaryFile());
+            content.add(classDiagram);
+
+            classDiagramRenameTable.updateClassDiagram(classDiagram);
+
+            if (classDiagram == null) {
+                classDiagram = new ClassDiagram();
+                classDiagram.setName(getPrimaryFile().getName());
+            }
+            umlTopComponent = new UMLTopComponent(classDiagram, getPrimaryFile().getNameExt());
+            umlTopComponent.setFileObject(getPrimaryFile());
+            umlTopComponent.open();
+//            // For Navigator panel
+//            content.add(umlTopComponent.getClassDiagramScene());
+            savable = umlTopComponent.getLookup().lookupResult(UMLTopComponent.Save.class);
+            savable.addLookupListener(this);
+        }
+        umlTopComponent.requestActive();
+    }
+
+    public void notifyDispose() {
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                if (umlTopComponent != null && umlTopComponent.isOpened()) {
+                    umlTopComponent.close();
+                }
+            }
+        });
+        dispose();
+    }
+
+    private ClassDiagram readFromFile(FileObject fileObject) {
+        ClassDiagram classDiag = new ClassDiagram();
+        classDiag.setName(fileObject.getName());
+        try {
+            if (!fileObject.asLines().isEmpty() && fileObject.asLines().get(0).startsWith("<?xml")) {
+                SAXReader xmlReader = new SAXReader();
+                String filePath = fileObject.getPath();
+
+                Document document = xmlReader.read(filePath);
+
+                Element root = document.getRootElement();
+                ClassDiagramDeserializer cdd = new ClassDiagramDeserializer(classDiag);
+                cdd.deserialize(root);
+            }
+        } catch (IOException | DocumentException ex) {
+            JOptionPane.showMessageDialog(null, "Malformed or unreadable .cdg file!", "Error loading file", JOptionPane.ERROR_MESSAGE);
+            Exceptions.printStackTrace(ex);
+        }
+        return classDiag;
+    }
+
+    @Override
+    protected void handleDelete() throws IOException {
+        super.handleDelete();
+        if (umlTopComponent != null) umlTopComponent.close();
+//                        ExplorerTopComponent explorerTopComponent = (ExplorerTopComponent) WindowManager.getDefault().findTopComponent("easyUMLExplorerTopComponent");
+//                        explorerTopComponent.getExplorerManager().setRootContext(Node.EMPTY);
+//                        explorerTopComponent.getExplorerTree().setRootVisible(false);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
+
     @Override
     public void resultChanged(LookupEvent ev) {
         Lookup.Result source = (Lookup.Result) ev.getSource();
         Collection instances = source.allInstances();
         if (!instances.isEmpty()) {
             for (Object instance : instances) {
-                if (instance instanceof UMLTopComponent.Save) {
+                if (instance instanceof UMLTopComponent.Save && oldSave == null) {
                     oldSave = (UMLTopComponent.Save) instance;
                     content.add(instance);
                 }
@@ -272,9 +250,4 @@ public class ClassDiagramDataObject extends MultiDataObject implements Openable,
             }
         }
     }
-
-//    @Override
-//    public void save() throws IOException {
-//        umlTopComponent.saveTopComponent();
-//    }
 }

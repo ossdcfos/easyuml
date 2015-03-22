@@ -1,13 +1,13 @@
 package org.uml.visual.widgets.relations;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.anchor.PointShape;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
-import org.netbeans.api.visual.widget.Scene;
 import org.uml.model.relations.RelationBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.RelationLabelTextFieldEditorAction;
@@ -15,7 +15,7 @@ import org.uml.visual.widgets.popups.RelationPopupMenuProvider;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class RelationBaseWidget extends ConnectionWidget {
 
@@ -34,6 +34,8 @@ public class RelationBaseWidget extends ConnectionWidget {
 
         name = new LabelWidget(scene, relation.getName());
         name.setOpaque(true);
+        int transparentSceneRGBA = 0x00FFFFFF & ((Color) scene.getBackground()).getRGB();
+        name.setBackground(new Color(0x7FFFFFFF | transparentSceneRGBA, true));
 
         // Layout
         addChild(name);
@@ -50,12 +52,16 @@ public class RelationBaseWidget extends ConnectionWidget {
         // Double-click name editor action
         name.getActions().addAction(ActionFactory.createInplaceEditorAction(new RelationLabelTextFieldEditorAction(relation)));
         // Right-click action
-        getActions().addAction(ActionFactory.createPopupMenuAction(new RelationPopupMenuProvider(this, relation)));
+        getActions().addAction(ActionFactory.createPopupMenuAction(new RelationPopupMenuProvider(this)));
         // Control points actions
         getActions().addAction(ActionFactory.createAddRemoveControlPointAction());
         getActions().addAction(ActionFactory.createMoveControlPointAction(ActionFactory.createFreeMoveControlPointProvider(), ConnectionWidget.RoutingPolicy.UPDATE_END_POINTS_ONLY));
         // Selection and hover action
         getActions().addAction(scene.createSelectAction());
         getActions().addAction(scene.createWidgetHoverAction());
+    }
+
+    public RelationBase getRelation() {
+        return relation;
     }
 }

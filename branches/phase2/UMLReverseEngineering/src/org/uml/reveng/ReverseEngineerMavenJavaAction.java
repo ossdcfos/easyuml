@@ -2,31 +2,31 @@ package org.uml.reveng;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import static java.io.File.separator;
+import java.util.Collection;
+import org.apache.commons.io.FileUtils;
 import org.netbeans.api.project.Project;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 import org.uml.model.ClassDiagram;
-import org.uml.visual.UMLTopComponent;
 import org.openide.filesystems.FileObject;
-import org.openide.awt.ActionReferences;
 
 @ActionID(
         category = "Source",
-        id = "org.uml.reveng.ReverseEngineerMavenJavaAction")
+        id = "org.uml.reveng.ReverseEngineerMavenJavaAction"
+)
 @ActionRegistration(
-        displayName = "#CTL_ReverseEngineerMavenJavaAction")
-@ActionReferences({
-//    @ActionReference(path = "Menu/Source", position = 50),
-    @ActionReference(path = "Projects/org-netbeans-modules-maven/Actions", position = 1050)
-})
+        displayName = "#CTL_ReverseEngineerMavenJavaAction"
+)
+@ActionReference(path = "Projects/org-netbeans-modules-maven/Actions", position = 1050)
 @Messages("CTL_ReverseEngineerMavenJavaAction=easyUML Create Class Diagram")
 /**
  * Class that responds to Reverse Engineer command from Java Project context menu
  *
- * @author Boris
+ * @author Boris Perović
  */
 public final class ReverseEngineerMavenJavaAction extends ReverseEngineerActionBase implements ActionListener {
 
@@ -55,13 +55,17 @@ public final class ReverseEngineerMavenJavaAction extends ReverseEngineerActionB
     @Override
     public void actionPerformed(ActionEvent ev) {
         String path = context.getProjectDirectory().getPath() + separator + "src" + separator + "main";
-        String name = context.getProjectDirectory().getName();        
-        ClassDiagram classDiagram = ReverseEngineer.createClassDiagramFromPath(path, name);
-        UMLTopComponent umlTopComponent = new UMLTopComponent(classDiagram);
-//        arrangeDiagram(umlTopComponent);
+        String name = context.getProjectDirectory().getName();
+        String extension = "java";
+        Collection<File> files = FileUtils.listFiles(new File(path), new String[]{extension}, true);
+
+        String diagramName = name;
         
+        ClassDiagram classDiagram = ReverseEngineer.createClassDiagramFromFiles(files, diagramName);
+
         //Save the diagram into project's path
         FileObject projectFolder = context.getProjectDirectory();
-        saveDiagramAndOpenTopComponent(projectFolder, umlTopComponent);
+        
+        openReverseEngineerDialog(projectFolder, classDiagram);
     }
 }

@@ -1,45 +1,65 @@
 package org.uml.model.relations;
 
-//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
-import java.util.Objects;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ComponentBase;
 
 /**
- * Relation between two UML Class Diagram components. 
- * Currently supports Has, Is, Uses and Implements relations using its subclasses.
+ * Relation between two UML Class Diagram components.
+ * Currently supports Is, Implements, Has (aggregation, composition, default)
+ * and Uses relations using its subclasses.
  *
- * @author "NUGS"
- * @see HasRelationComponent
+ * @author NUGS
  * @see IsRelationComponent
- * @see UseRelationComponent
  * @see ImplementsRelationComponent
+ * @see HasRelationComponent
+ * @see UseRelationComponent
  * @see ClassDiagram
  * @see ComponentBase
  */
 public abstract class RelationBase implements Serializable {
 
-//    @XStreamAsAttribute
+    /**
+     * Source component for this relation.
+     */
     ComponentBase source;
-//    @XStreamAsAttribute
+
+    /**
+     * Target component for this relation.
+     */
     ComponentBase target;
-//    @XStreamAsAttribute
+
+    /**
+     * Name of the relation.
+     */
     protected String name;
 
     /**
-     * Default constructor without parameters used to create Relation object.
+     * Property change support and related methods.
+     */
+    protected transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        pcs.addPropertyChangeListener(pcl);
+    }
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        pcs.removePropertyChangeListener(pcl);
+    }
+
+    /**
+     * Default constructor without parameters used to create a new instance of relation object.
      */
     public RelationBase() {
     }
 
     /**
-     * Constructor with three parameters used to create Relation object and set
-     * its name, source and target.
+     * Constructor with three parameters used to create relation object
+     * and set its name, source and target.
      *
-     * @param source - from which ClassDiagramComponent does relation start
-     * @param target - to which ClassDiagramComponent does relation go
-     * @param name of the Relation
+     * @param source component
+     * @param target component
+     * @param name of the relation
      * @see ComponentBase
      */
     public RelationBase(ComponentBase source, ComponentBase target, String name) {
@@ -48,55 +68,82 @@ public abstract class RelationBase implements Serializable {
         this.name = name;
     }
 
+    /**
+     * Returns source of the relation.
+     *
+     * @return source of the relation
+     */
     public ComponentBase getSource() {
         return source;
     }
 
-    public ComponentBase getTarget() {
-        return target;
-    }
-
+    /**
+     * Sets source of the relation.
+     *
+     * @param source to be set
+     */
     public void setSource(ComponentBase source) {
         this.source = source;
     }
 
+    /**
+     * Returns target of the relation.
+     *
+     * @return target of the relation
+     */
+    public ComponentBase getTarget() {
+        return target;
+    }
+
+    /**
+     * Sets target of the relation.
+     *
+     * @param target to be set
+     */
     public void setTarget(ComponentBase target) {
         this.target = target;
     }
 
+    /**
+     * Returns the name of the relation.
+     *
+     * @return name of the relation
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Set the relation name to newName. Fires "name" property change event.
+     *
+     * @param newName to be set
+     */
+    public void setName(String newName) {
+        String oldName = getName();
+        name = newName;
+        pcs.firePropertyChange("name", oldName, newName);
     }
 
-    public String getXmlRepresentation() {
-        return "Subclass should override this method";
-    }
-    
+    /**
+     * Checks if source and target can be connected by this relation.
+     * @param source component
+     * @param target component
+     * @return true if can connect, false otherwise
+     */
     public abstract boolean canConnect(ComponentBase source, ComponentBase target);
-    
+
+    /**
+     * Hash code of the relation. Used to compare for equality.
+     * @return hash code
+     */
     @Override
     public abstract int hashCode();
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final RelationBase other = (RelationBase) obj;
-        if (!Objects.equals(this.source, other.source)) {
-            return false;
-        }
-        if (!Objects.equals(this.target, other.target)) {
-            return false;
-        }
-        return true;
-    }
     
+    /**
+     * Compares obj to this relation. Overriden for specific comparison for equality.
+     * @param obj to compare to this
+     * @return true if same, false otherwise
+     */
+    @Override
+    public abstract boolean equals(Object obj);
 }

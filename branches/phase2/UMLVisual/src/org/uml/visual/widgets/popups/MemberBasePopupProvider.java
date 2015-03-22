@@ -12,7 +12,7 @@ import org.uml.visual.widgets.members.MemberWidgetBase;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class MemberBasePopupProvider implements PopupMenuProvider {
         
@@ -33,7 +33,6 @@ public class MemberBasePopupProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             MemberBase member = widget.getMember();
-            member.getDeclaringComponent().removePartFromContainer(widget.getMember());
             member.getDeclaringComponent().removeMember(member);
             widget.getClassDiagramScene().removeObject(member);
             widget.removeFromParent();

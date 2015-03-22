@@ -10,16 +10,13 @@ import java.util.concurrent.Callable;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
-import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.SeparatorWidget;
-import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
 import org.uml.model.Visibility;
 import org.uml.model.members.Method;
-import org.uml.visual.parser.MemberParser;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.MemberNameEditor;
 import org.uml.visual.widgets.popups.ClassPopupMenuProvider;
@@ -32,7 +29,6 @@ import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
  */
 public class ClassWidget extends ComponentWidgetBase {
 
-    private final Widget headerWidget;
     private final MemberContainerWidget fieldsContainer;
     private final MemberContainerWidget methodsContainer;
 
@@ -40,19 +36,17 @@ public class ClassWidget extends ComponentWidgetBase {
         super(scene, classComponent);
 
         // Header
-        headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
-        headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout());
-        headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
         if (classComponent.isAbstract()) {
             LabelWidget abstractLabel = new LabelWidget(headerWidget.getScene(), "<<abstract>>");
-            abstractLabel.setFont(headerWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC, 11));
-            abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
+            abstractLabel.setFont(headerWidget.getScene().getFont().deriveFont(Font.ITALIC));
             headerWidget.addChild(abstractLabel);
             setMinimumSize(MIN_DIMENSION_2ROW);
         } else {
             setMinimumSize(MIN_DIMENSION_1ROW);
         }
-        headerWidget.addChild(nameLabel);
+        iconNameContainer.addChild(iconWidget);
+        iconNameContainer.addChild(nameLabel);
+        headerWidget.addChild(iconNameContainer);
         addChild(headerWidget);
 
         SeparatorWidget separatorWidget = new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL);
@@ -70,7 +64,7 @@ public class ClassWidget extends ComponentWidgetBase {
             }
         });
         addChild(fieldsContainer);
-        
+
         separatorWidget = new SeparatorWidget(scene, SeparatorWidget.Orientation.HORIZONTAL);
         separatorWidget.setForeground(getColorTheme().getDefaultBorderColor());
         separators.add(separatorWidget);
@@ -121,6 +115,7 @@ public class ClassWidget extends ComponentWidgetBase {
         addMember(fieldsContainer, fieldWidget);
         getScene().validate();
 
+        // Temp renamer
         WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(fieldWidget));
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(fieldWidget.getNameLabel());
         MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
@@ -138,25 +133,24 @@ public class ClassWidget extends ComponentWidgetBase {
         addMember(methodsContainer, methodWidget);
         getScene().validate();
 
+        // Temp renamer
         WidgetAction nameEditorAction = ActionFactory.createInplaceEditorAction(new MemberNameEditor(methodWidget));
         ActionFactory.getInplaceEditorController(nameEditorAction).openEditor(methodWidget.getNameLabel());
         MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
     }
 
-    public final void addConstructorWidget() {
+    public final void addDefaultConstructorWidget() {
         Constructor constructor = new Constructor(getName());
         String signature = constructor.getSignature();
 
         if (component.signatureExists(signature)) {
-            JOptionPane.showMessageDialog(null, "Member \"" + signature + "\" already exists!");
+            JOptionPane.showMessageDialog(null, "Constructor \"" + signature + "\" already exists!");
         } else {
-            MemberParser.fillConstructorComponents(constructor, signature);
             getComponent().addConstructor(constructor);
             ConstructorWidget constructorWidget = new ConstructorWidget(getClassDiagramScene(), constructor);
             addMember(methodsContainer, constructorWidget);
         }
-
         getScene().validate();
     }
 
@@ -176,7 +170,7 @@ public class ClassWidget extends ComponentWidgetBase {
     private void updateAbstractLabel(boolean isAbstract) {
         if (isAbstract) {
             LabelWidget abstractLabel = new LabelWidget(headerWidget.getScene(), "<<abstract>>");
-            abstractLabel.setFont(headerWidget.getScene().getDefaultFont().deriveFont(Font.ITALIC));
+            abstractLabel.setFont(headerWidget.getScene().getFont().deriveFont(Font.ITALIC));
             abstractLabel.setAlignment(LabelWidget.Alignment.CENTER);
             headerWidget.addChild(0, abstractLabel);
             setMinimumSize(MIN_DIMENSION_2ROW);

@@ -13,7 +13,7 @@ import org.openide.nodes.Node;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 @NodeFactory.Registration(projectType = "org-uml-project", position = 10)
 public class UMLProjectNodeFactory implements NodeFactory {
@@ -37,10 +37,10 @@ public class UMLProjectNodeFactory implements NodeFactory {
         public List<Node> keys() {
             List<Node> result = new ArrayList<>();
 
-            FileObject umlDiagramProjectFileObject = project.getProjectDirectory();
-            DataFolder umlDiagramProjectFolder = DataFolder.findFolder(umlDiagramProjectFileObject.getFileObject("//Class Diagrams//"));
-            Node umlDiagNode = umlDiagramProjectFolder.getNodeDelegate();
-            result.add(umlDiagNode);
+            FileObject umlProjectFileObject = project.getProjectDirectory();
+            DataFolder umlClassDiagramFolder = DataFolder.findFolder(umlProjectFileObject.getFileObject(UMLProject.CLASS_DIAGRAMS_FOLDER));
+            Node umlClassDiagramFolderNode = umlClassDiagramFolder.getNodeDelegate();
+            result.add(umlClassDiagramFolderNode);
 
 //            if (umlDiagramProjectFileObject != null) {
 //                for (FileObject diagramFolder : umlDiagramProjectFileObject.getChildren()) {

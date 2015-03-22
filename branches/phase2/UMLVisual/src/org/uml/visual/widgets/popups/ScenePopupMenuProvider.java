@@ -1,29 +1,31 @@
 package org.uml.visual.widgets.popups;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.WidgetAction;
+import org.netbeans.api.visual.export.SceneExporter;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.Exceptions;
 import org.openide.windows.WindowManager;
 import org.uml.jung.JUNGEngine;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.visual.dialogs.ConnectRelationPanel;
-import org.uml.newcode.GenerateCodeDialog;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.components.ClassWidget;
@@ -37,16 +39,22 @@ import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
  */
 public class ScenePopupMenuProvider implements PopupMenuProvider {
 
+    private final ClassDiagramScene scene;
     private final JPopupMenu sceneMenu;
     private JMenuItem miCreateClass;
     private JMenuItem miCreateInterface;
     private JMenuItem miCreateEnum;
     private JMenuItem miCreateRelationship;
-    private JMenuItem miGenerateCode;
-    private JMenuItem miExportAsImage;
+//    private JMenuItem miGenerateCode;
+    private JMenu mExportAsImage;
     private JMenuItem miApplyJUNGLayout;
+    private JMenu mVisualOptions;
+    private JCheckBoxMenuItem miShowIcons;
+    private JCheckBoxMenuItem miShowMembers;
+    private JCheckBoxMenuItem miShowSimpleTypeNames;
+    private final JRadioButtonMenuItem miBlueGray = new JRadioButtonMenuItem("Blue-gray");
+    private final JRadioButtonMenuItem miSand = new JRadioButtonMenuItem("Sand-red");
     private JMenu mColorTheme;
-    private ClassDiagramScene scene;
     private Point popupPoint;
 
     public ScenePopupMenuProvider(ClassDiagramScene scene) {
@@ -58,6 +66,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         popupPoint = point;
+        updateMenu();
         return sceneMenu;
     }
 
@@ -74,7 +83,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 widget.getComponent().setLocation(popupPoint);
                 scene.validate();
 
-                // open editor for class name
+                // Temp renamer
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(widget));
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
@@ -89,6 +98,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 widget.getComponent().setLocation(popupPoint);
                 scene.validate();
 
+                // Temp renamer
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(widget));
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
@@ -103,6 +113,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 widget.getComponent().setLocation(popupPoint);
                 scene.validate();
 
+                // Temp renamer
                 WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(widget));
                 ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
                 scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
@@ -118,46 +129,35 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
             }
         });
 
-        miGenerateCode = new JMenuItem("Generate code");
-        miGenerateCode.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {        
-                GenerateCodeDialog dialog = new GenerateCodeDialog(scene.getClassDiagram());
-                dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-                dialog.setVisible(true);
-            }
-        });
+//        miGenerateCode = new JMenuItem("Generate code");
+//        miGenerateCode.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                GenerateCodeDialog dialog = new GenerateCodeDialog(scene.getClassDiagram());
+//                dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+//                dialog.setVisible(true);
+//            }
+//        });
 
-        miExportAsImage = new JMenuItem("Export as image");
-        miExportAsImage.addActionListener(new ActionListener() {
+        mExportAsImage = new JMenu("Export as image");
+        JMenuItem miExportAsImageCurrent = new JMenuItem("Current view");
+        miExportAsImageCurrent.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BufferedImage img = new BufferedImage(
-                        scene.getView().getWidth(),
-                        scene.getView().getHeight(),
-                        BufferedImage.TYPE_4BYTE_ABGR);
-                Graphics2D graphics = img.createGraphics();
-                scene.paint(graphics);
-                graphics.dispose();
-                JFileChooser chooser = new JFileChooser();
-                chooser.setFileFilter(new FileNameExtensionFilter(
-                        "Portable Network Graphics (.png)", "png"));
-                if (chooser.showSaveDialog(scene.getView()) == JFileChooser.APPROVE_OPTION) {
-                    File f = chooser.getSelectedFile();
-                    if (!f.getName().toLowerCase().endsWith(".png")) {
-                        f = new File(f.getParentFile(), f.getName() + ".png");
-
-                        try {
-                            ImageIO.write(img, "png", f);
-                        } catch (IOException ex) {
-                            //Logger.getLogger(getName()).warning(ex.toString());
-                        }
-                    }
-                }
+                exportAsImage(true);
             }
         });
+        mExportAsImage.add(miExportAsImageCurrent);
+        JMenuItem miExportAsImageWhole = new JMenuItem("Whole diagram");
+        miExportAsImageWhole.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exportAsImage(false);
+            }
+        });
+        mExportAsImage.add(miExportAsImageWhole);
 
-        miApplyJUNGLayout = new JMenuItem("Arrange diagram");
+        miApplyJUNGLayout = new JMenuItem("Arrange diagram (experimental)");
         miApplyJUNGLayout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -165,25 +165,63 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 je.applyJUNGLayout();
             }
         });
-        
+
+        mVisualOptions = new JMenu("Visual options");
+
+        miShowIcons = new JCheckBoxMenuItem("Show icons");
+        miShowIcons.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scene.setShowIcons(!scene.isShowIcons());
+                WindowManager.getDefault().findTopComponent("properties").repaint();
+            }
+        });
+        mVisualOptions.add(miShowIcons);
+
+        miShowMembers = new JCheckBoxMenuItem("Show members");
+        miShowMembers.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scene.setShowMembers(!scene.isShowMembers());
+                WindowManager.getDefault().findTopComponent("properties").repaint();
+            }
+        });
+        mVisualOptions.add(miShowMembers);
+
+        miShowSimpleTypeNames = new JCheckBoxMenuItem("Show simple class names");
+        miShowSimpleTypeNames.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scene.setShowSimpleTypes(!scene.isShowSimpleTypes());
+                WindowManager.getDefault().findTopComponent("properties").repaint();
+            }
+        });
+        mVisualOptions.add(miShowSimpleTypeNames);
+
+        ButtonGroup themeButtonGroup = new ButtonGroup();
         mColorTheme = new JMenu("Color theme");
-        JMenuItem miBlueGray = new JMenuItem("Blue-gray");
         miBlueGray.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 scene.setColorTheme("blue-gray");
+                miBlueGray.setSelected(true);
             }
         });
+        themeButtonGroup.add(miBlueGray);
         mColorTheme.add(miBlueGray);
-        JMenuItem miSand = new JMenuItem("Sand");
         miSand.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                scene.setColorTheme("sand");
+                scene.setColorTheme("sand-red");
+                miSand.setSelected(true);
             }
         });
+        themeButtonGroup.add(miSand);
         mColorTheme.add(miSand);
 
         sceneMenu.add(miCreateClass);
@@ -198,14 +236,69 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
         sceneMenu.addSeparator();
 
-        sceneMenu.add(miGenerateCode);
+//        sceneMenu.add(miGenerateCode);
 
-        sceneMenu.add(miExportAsImage);
+        sceneMenu.add(mExportAsImage);
 
         sceneMenu.addSeparator();
 
         sceneMenu.add(miApplyJUNGLayout);
-        
+
+        sceneMenu.add(mVisualOptions);
+
         sceneMenu.add(mColorTheme);
+    }
+
+    private void updateMenu() {
+        miShowIcons.setSelected(scene.isShowIcons());
+        miShowMembers.setSelected(scene.isShowMembers());
+        miShowSimpleTypeNames.setSelected(scene.isShowSimpleTypes());
+        switch(scene.getColorTheme().getName()){
+            case "blue-gray":
+                miBlueGray.setSelected(true);
+                break;
+            case "sand-red":
+                miSand.setSelected(true);
+                break;
+        }
+    }
+
+    private void exportAsImage(boolean onlyVisiblePart) {
+        JFileChooser chooser = new JFileChooser() {
+            @Override
+            public void approveSelection() {
+                File f = getSelectedFile();
+                if (!f.getName().toLowerCase().endsWith(".png")) {
+                    f = new File(f.getParentFile(), f.getName() + ".png");
+                }
+                if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                    int result = JOptionPane.showConfirmDialog(this, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_OPTION);
+                    switch (result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+                        case JOptionPane.NO_OPTION:
+                            return;
+                        case JOptionPane.CLOSED_OPTION:
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
+        chooser.setFileFilter(new FileNameExtensionFilter("Portable Network Graphics (.png)", "png"));
+        if (chooser.showSaveDialog(scene.getView()) == JFileChooser.APPROVE_OPTION) {
+            File f = chooser.getSelectedFile();
+            if (!f.getName().toLowerCase().endsWith(".png")) {
+                f = new File(f.getParentFile(), f.getName() + ".png");
+            }
+            try {
+                // Zoom type is overriden if onlyVisiblePart is set
+                SceneExporter.createImage(scene, f, SceneExporter.ImageType.PNG, SceneExporter.ZoomType.ACTUAL_SIZE, onlyVisiblePart, false, 0, 0, 0);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Cannot export scene as image!", "Input-output error!", JOptionPane.ERROR_MESSAGE);
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }
 }

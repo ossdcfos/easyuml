@@ -1,12 +1,9 @@
 package org.uml.model.relations;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
- *
- * @author Boris
+ * Default has relation, subclassed from base relation.
+ * @author Boris Perović
  */
-//@XStreamAlias("HasRelation")
 public class HasRelation extends HasBaseRelation {
 
     public HasRelation() {

@@ -8,115 +8,123 @@ import japa.parser.ast.body.FieldDeclaration;
 import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.body.VariableDeclarator;
 import japa.parser.ast.body.VariableDeclaratorId;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import org.openide.util.Exceptions;
+import org.uml.filetype.cdg.renaming.MyMembersRenameTable;
+import org.uml.filetype.cdg.renaming.MyRelationsRenameTable;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Field;
-import org.uml.model.relations.CardinalityEnum;
 import org.uml.model.relations.HasBaseRelation;
-import org.uml.model.relations.RelationBase;
 import org.uml.newcode.CodeGeneratorUtils;
-import org.uml.newcode.renaming.MemberRenameTable;
 
 /**
+ * Code generator for fields.
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class FieldCodeGenerator {
 
     public static void createFields(ClassComponent component, CompilationUnit cu) {
         List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
 
-        // generate direct fields
+        // Generate direct fields
         for (Field field : component.getFields()) {
-            // add rename listener if it doesn't exist
-            if (!field.listenerTypeExists(MemberRenameTable.class)) {
-                field.addPropertyChangeListener(new MemberRenameTable());
-            }
-            // create and add field declaration
+            // Create and add field declaration
             FieldDeclaration declaration = createFieldDeclaration(field);
             members.add(declaration);
         }
 
-        // generate fields from has relations
-        for (RelationBase relation : CodeGeneratorUtils.getRelevantRelations(component)) {
-            if (relation instanceof HasBaseRelation) {
-                HasBaseRelation hasRelation = (HasBaseRelation) relation;
-                String fieldType = hasRelation.getTarget().getName();
-                String fieldName;
-                if (!hasRelation.getName().equals("")) fieldName = hasRelation.getName();
-                else fieldName = (fieldType.substring(0, 1)).toLowerCase() + fieldType.substring(1);
-
-                StringBuilder fieldSignature = new StringBuilder();
-                if (hasRelation.getCardinalityTarget().equals(CardinalityEnum.One2Many) || hasRelation.getCardinalityTarget().equals(CardinalityEnum.Zero2Many)) {
-                    fieldSignature.append(hasRelation.getCollectionType()).append("<").append(fieldType).append("> ").append(fieldName);
-                    if (!hasRelation.getName().equals("")) fieldSignature.append("s");
-                    fieldSignature.append(";");
-                } else {
-                    fieldSignature.append(fieldType).append(" ").append(fieldName).append(";");
-                }
-                String signature = fieldSignature.toString();
-
-                try {
-                    BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature);
-                    FieldDeclaration declaration = (FieldDeclaration) bd;
-                    members.add(declaration);
-                } catch (ParseException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-
-////        fields += getFieldsFromUseRelations(relevantRelations);
+        // Generate fields from has relations
+        // TODO disabled, because of Has relations don't yet have field modifiers etc.
+        // Should explore how the standard deals with this and decide on a solution.
+//        for (RelationBase relation : component.getRelevantRelations()) {
+//            if (relation instanceof HasBaseRelation) {
+//                HasBaseRelation hasRelation = (HasBaseRelation) relation;
+//                FieldDeclaration declaration = createFieldDeclaration(hasRelation);
+//                members.add(declaration);
+//            }
+//        }
     }
 
-    public static void updateFields(ClassComponent component, CompilationUnit cu) {
+    public static void updateFields(ClassComponent component, MyMembersRenameTable memberRenames, MyRelationsRenameTable relationRenames, CompilationUnit cu) {
         List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
-        HashMap<String, String> oldToNew = MemberRenameTable.members.get(component.getSignature());
-        // generate or update all direct fields
+        // Generate or update all direct fields
         for (Field field : component.getFields()) {
-            // add rename listener if it doesn't exist
-            if (!field.listenerTypeExists(MemberRenameTable.class)) {
-                field.addPropertyChangeListener(new MemberRenameTable());
-            }
-            // if the field has been renamed update or generate
-            if (oldToNew.containsKey(field.getSignature())) {
-                String oldSignature = oldToNew.get(field.getSignature());
-                boolean found = false;
-                for (BodyDeclaration member : members) {
-                    if (member instanceof FieldDeclaration) {
-                        FieldDeclaration declaration = (FieldDeclaration) member;
-                        if (oldSignature.equals(getFieldDeclarationSignature(declaration))) {
-                            declaration.setType(CodeGeneratorUtils.parseType(field.getType()));
-                            declaration.getVariables().get(0).getId().setName(field.getName());
-                            found = true;
-                            break;
+            FieldDeclaration existingDeclaration = findExistingDeclaration(members, field.getSignature());
+            if (existingDeclaration == null) { // If there is not existing declaration in the class body
+                if (memberRenames.contains(field)) { // If the field has been renamed
+                    // Find the old field declaration
+                    String oldSignature = memberRenames.getOriginalSignature(field);
+                    boolean found = false;
+                    for (BodyDeclaration member : members) {
+                        if (member instanceof FieldDeclaration) {
+                            FieldDeclaration declaration = (FieldDeclaration) member;
+                            if (oldSignature.equals(getFieldDeclarationSignature(declaration))) {
+                                // Update the old field declaration
+                                declaration.setType(CodeGeneratorUtils.parseType(field.getType()));
+                                declaration.getVariables().get(0).getId().setName(field.getName());
+                                // Finish updating the old field declaration
+                                found = true;
+                                break;
+                            }
                         }
                     }
-                }
-                if (!found) {
+                    if (!found) { // If the old field declaration has not been found and updated, create it and add it
+                        FieldDeclaration declaration = createFieldDeclaration(field);
+                        members.add(declaration);
+                    }
+                } else { // If the field has not been renamed, there is nothing to update, so create and add it
                     FieldDeclaration declaration = createFieldDeclaration(field);
                     members.add(declaration);
                 }
-            } else {
-                // if it has not been renamed, confirm it exists
-                FieldDeclaration declaration = findExistingDeclaration(members, field);
-                // if it doesn't exits, create and add it
-                if (declaration == null) {
-                    declaration = createFieldDeclaration(field);
-                    members.add(declaration);
-                }
             }
         }
-        
-        // generate or update fields from has relations
+
+        // Generate or update fields from has relations
+        // TODO disabled, because of Has relations don't yet have field modifiers etc.
+        // Should explore how the standard deals with this and decide on a solution.
+//        for (RelationBase relation : component.getRelevantRelations()) {
+//            if (relation instanceof HasBaseRelation) {
+//                HasBaseRelation hasRelation = (HasBaseRelation) relation;
+//
+//                // If the field has been renamed update or generate
+//                if (relationRenames.contains(hasRelation)) {
+//                    // Find the original parsed field
+//                    String oldSignature = relationRenames.getOriginalSignature(hasRelation);
+//                    boolean found = false;
+//                    for (BodyDeclaration member : members) {
+//                        if (member instanceof FieldDeclaration) {
+//                            FieldDeclaration declaration = (FieldDeclaration) member;
+//                            // Update the original parsed field
+//                            if (oldSignature.equals(getFieldDeclarationSignature(declaration))) {
+//                                declaration.getVariables().get(0).getId().setName(hasRelation.getName());
+//                                found = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    // If the field has not been updated, generate it
+//                    if (!found) {
+//                        FieldDeclaration declaration = createFieldDeclaration(hasRelation);
+//                        members.add(declaration);
+//                    }
+//                } // If it has not been renamed, confirm it exists
+//                else {
+//                    FieldDeclaration declaration = findExistingDeclaration(members, hasRelation.getFieldSignature());
+//                    // If it doesn't exits, create and add it
+//                    if (declaration == null) {
+//                        declaration = createFieldDeclaration(hasRelation);
+//                        members.add(declaration);
+//                    }
+//                }
+//            }
+//        }
     }
 
-    private static FieldDeclaration findExistingDeclaration(List<BodyDeclaration> declarations, Field field) {
+    private static FieldDeclaration findExistingDeclaration(List<BodyDeclaration> declarations, String signature) {
         for (BodyDeclaration declaration : declarations) {
-            if (declaration instanceof FieldDeclaration && field.getSignature().equals(getFieldDeclarationSignature((FieldDeclaration) declaration))) {
+            if (declaration instanceof FieldDeclaration && signature.equals(getFieldDeclarationSignature((FieldDeclaration) declaration))) {
                 return (FieldDeclaration) declaration;
             }
         }
@@ -142,11 +150,31 @@ public class FieldCodeGenerator {
                 declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PRIVATE));
                 break;
         }
-        if (field.isStatic()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
-        if (field.isFinal()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.FINAL));
-        if (field.isVolatile()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.VOLATILE));
-        if (field.isTransient()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.TRANSIENT));
+        if (field.isStatic()) {
+            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
+        }
+        if (field.isFinal()) {
+            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.FINAL));
+        }
+        if (field.isVolatile()) {
+            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.VOLATILE));
+        }
+        if (field.isTransient()) {
+            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.TRANSIENT));
+        }
         return declaration;
+    }
+
+    private static FieldDeclaration createFieldDeclaration(HasBaseRelation hasRelation) {
+        try {
+            String signature = hasRelation.getFieldSignature() + ";";
+            BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature);
+            FieldDeclaration declaration = (FieldDeclaration) bd;
+            return declaration;
+        } catch (ParseException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return null;
     }
 
     private static String getFieldDeclarationSignature(FieldDeclaration declaration) {

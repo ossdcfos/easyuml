@@ -1,12 +1,9 @@
 package org.uml.model.relations;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
- *
- * @author Boris
+ * Composition has relation, subclassed from base relation.
+ * @author Boris Perović
  */
-//@XStreamAlias("CompositionRelation")
 public class CompositionRelation extends HasBaseRelation {
 
     public CompositionRelation() {

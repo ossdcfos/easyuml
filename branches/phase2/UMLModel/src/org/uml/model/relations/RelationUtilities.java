@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class RelationUtilities {
 

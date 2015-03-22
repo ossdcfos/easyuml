@@ -19,7 +19,7 @@ import org.uml.visual.palette.PaletteSupport;
 
 /**
  *
- * @author "NUGS"
+ * @author NUGS
  */
 public class ComponentConnectProvider implements ConnectProvider {
 
@@ -90,6 +90,6 @@ public class ComponentConnectProvider implements ConnectProvider {
         relation.setSource(source.getComponent());
         relation.setTarget(target.getComponent());
 
-        source.getClassDiagramScene().addRelationToScene(relation, source.getComponent(), target.getComponent());
+        source.getClassDiagramScene().addRelationToScene(relation);
     }
 }

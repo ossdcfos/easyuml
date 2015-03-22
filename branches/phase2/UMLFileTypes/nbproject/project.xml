@@ -121,23 +121,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.uml.explorer</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.uml.model</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.uml.project</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
@@ -154,9 +138,9 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>org.uml.filetype.cdg</package>
+                <package>org.uml.filetype.cdg.renaming</package>
                 <package>org.uml.filetype.cdg.wizard</package>
-                <package>org.uml.filetype.cdgfiletype</package>
-                <package>org.uml.newfiletype.cdg</package>
             </public-packages>
         </data>
     </configuration>

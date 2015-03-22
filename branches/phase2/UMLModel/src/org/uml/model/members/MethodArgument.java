@@ -1,8 +1,5 @@
 package org.uml.model.members;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
-//import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-
 /**
  * An input argument (variable) which is used to describe Methods or
  * Constructors.
@@ -14,12 +11,9 @@ package org.uml.model.members;
  * @see Method
  * @see Constructor
  */
-//@XStreamAlias("MethodArgument")
 public class MethodArgument {
 
-//    @XStreamAsAttribute
     String type;
-//    @XStreamAsAttribute
     String name;
 
     public MethodArgument(String type, String name) {

@@ -4,11 +4,12 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.text.MessageFormat;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import org.openide.actions.DeleteAction;
 import org.openide.nodes.AbstractNode;
-import org.openide.nodes.FilterNode;
+import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
@@ -17,6 +18,7 @@ import org.openide.util.WeakListeners;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.uml.memberparser.MemberParser;
 import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.InterfaceComponent;
@@ -36,12 +38,12 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
     }
 
     private MemberNode(MemberBase member, InstanceContent content) {
-        super(FilterNode.Children.LEAF, new AbstractLookup(content));
+        super(Children.LEAF, new AbstractLookup(content));
         content.add(this);
 
         this.member = member;
-        setName(member.getName());
-        setDisplayName(member.getName());
+        this.displayFormat = new MessageFormat("{0}");
+        super.setName(member.getName());
         this.member.addPropertyChangeListener(WeakListeners.propertyChange(this, this.member));
     }
 
@@ -62,25 +64,44 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
     }
 
     @Override
+    public boolean canRename() {
+        return true;
+    }
+
+    // Only sets the name in the model, the event is fired if it is successful,
+    // and then the name of the node will be updated correspondignly.
+    // Use super.setName(String s) to set the name directly.
+    @Override
+    public void setName(String s) {
+        setMemberName(s);
+    }
+
+    @Override
     public void destroy() throws IOException {
         ComponentBase parent = member.getDeclaringComponent();
-        parent.removePartFromContainer(member);
         parent.removeMember(member);
     }
 
     @Override
     public Image getIcon(int type) {
+        String lowercaseVisibility = member.getVisibility().toString().toLowerCase();
+        String suffix = lowercaseVisibility.substring(0, 1).toUpperCase() + lowercaseVisibility.substring(1);
         if (member instanceof Field) {
-            return ImageUtilities.loadImage(iconFolderPath + "attributePublicIcon.png");
-        }
-        if (member instanceof MethodBase) {
-            return ImageUtilities.loadImage(iconFolderPath + "methodPublicIcon.png");
-        }
-        if (member instanceof Constructor) {
-            return ImageUtilities.loadImage(iconFolderPath + "constructorPublicIcon.png");
-        }
-        if (member instanceof Literal) {
-            return ImageUtilities.loadImage(iconFolderPath + "literalIcon.png");
+            Field field = (Field) member;
+            if (field.isStatic()) {
+                suffix = "Static" + suffix;
+            }
+            return ImageUtilities.loadImage(iconFolderPath + "fields/field" + suffix + ".png");
+        } else if (member instanceof Method) {
+            Method method = (Method) member;
+            if (method.isStatic()) {
+                suffix = "Static" + suffix;
+            }
+            return ImageUtilities.loadImage(iconFolderPath + "methods/method" + suffix + ".png");
+        } else if (member instanceof Constructor) {
+            return ImageUtilities.loadImage(iconFolderPath + "constructors/constructor" + suffix + ".png");
+        } else if (member instanceof Literal) {
+            return ImageUtilities.loadImage(iconFolderPath + "other/literal.png");
         }
         return super.getIcon(type);
     }
@@ -197,13 +218,19 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
     }
 
     public InterfaceMethodVisibility getInterfaceMethodVisibility() {
-        if (member.getVisibility() == Visibility.PUBLIC) return InterfaceMethodVisibility.PUBLIC;
-        else return InterfaceMethodVisibility.PACKAGE;
+        if (member.getVisibility() == Visibility.PUBLIC) {
+            return InterfaceMethodVisibility.PUBLIC;
+        } else {
+            return InterfaceMethodVisibility.PACKAGE;
+        }
     }
 
     public void setInterfaceMethodVisibility(InterfaceMethodVisibility interfaceMethodVisibility) {
-        if (interfaceMethodVisibility == InterfaceMethodVisibility.PUBLIC) member.setVisibility(Visibility.PUBLIC);
-        else member.setVisibility(Visibility.PACKAGE);
+        if (interfaceMethodVisibility == InterfaceMethodVisibility.PUBLIC) {
+            member.setVisibility(Visibility.PUBLIC);
+        } else {
+            member.setVisibility(Visibility.PACKAGE);
+        }
     }
 
     public String getMemberName() {
@@ -221,7 +248,19 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
             if (member.getDeclaringComponent().signatureExists(newSignature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + newSignature + "\" already exists!");
             } else {
-                member.setName(newName);
+                try {
+                    if (member instanceof Field) {
+                        MemberParser.fillFieldComponents((Field) member, newSignature);
+                    } else if (member instanceof Method) {
+                        MemberParser.fillMethodComponents((Method) member, newSignature);
+                    } else if (member instanceof Constructor) {
+                        MemberParser.fillConstructorComponents((Constructor) member, newSignature);
+                    } else if (member instanceof Literal) {
+                        member.setName(newName);
+                    }
+                } catch (IllegalArgumentException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Illegal format error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
@@ -236,7 +275,19 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
             if (member.getDeclaringComponent().signatureExists(newSignature)) {
                 JOptionPane.showMessageDialog(null, "Member \"" + newSignature + "\" already exists!");
             } else {
-                member.setType(newType);
+                try {
+                    if (member instanceof Field) {
+                        MemberParser.fillFieldComponents((Field) member, newSignature);
+                    } else if (member instanceof Method) {
+                        MemberParser.fillMethodComponents((Method) member, newSignature);
+                    } else if (member instanceof Constructor) {
+                        MemberParser.fillConstructorComponents((Constructor) member, newSignature);
+                    } else if (member instanceof Literal) {
+                        member.setType(newType);
+                    }
+                } catch (IllegalArgumentException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "Illegal format error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
@@ -246,7 +297,13 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
         if (null != evt.getPropertyName()) {
             switch (evt.getPropertyName()) {
                 case "name":
-                    setName((String) evt.getNewValue());
+                    super.setName((String) evt.getNewValue());
+                    break;
+                case "visibility":
+                    fireIconChange();
+                    break;
+                case "isStatic":
+                    fireIconChange();
                     break;
             }
         }

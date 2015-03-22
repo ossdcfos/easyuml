@@ -1,13 +1,11 @@
 package org.uml.model.relations;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
+ * Aggregation has relation, subclassed from base relation.
  *
- * @author Boris
+ * @author Boris Perović
  */
-//@XStreamAlias("AggregationRelation")
-public class AggregationRelation extends HasBaseRelation{
+public class AggregationRelation extends HasBaseRelation {
 
     public AggregationRelation() {
         super(Type.AGGREGATION);

@@ -17,7 +17,7 @@ public class UMLProjectFactory implements ProjectFactory {
     public static final String PROJECT_FILE = "umlproject";
 
     //Specifies when a project is a project, i.e.,
-    //if "customer.txt" is present in a folder:
+    //if "umlproject" is present in the folder:
     @Override
     public boolean isProject(FileObject projectDirectory) {
         return projectDirectory.getFileObject(PROJECT_FILE) != null;

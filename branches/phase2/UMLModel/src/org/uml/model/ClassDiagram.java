@@ -1,9 +1,8 @@
 package org.uml.model;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
+import java.io.Serializable;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.RelationBase;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -11,61 +10,65 @@ import java.util.List;
 
 /**
  * UML Class Diagrams which can contain class, interface and enum components,
- * along with relations among them.
+ * along with relations between them.
+ * Implements Serializable because it is needed in file creation wizard.
  *
  * @author Uros
- * @version 1.0
  * @see ComponentBase
  * @see RelationBase
  */
-//@XStreamAlias("ClassDiagram")
 public class ClassDiagram extends ContainerBase<ComponentBase> implements Serializable {
 
-//    @XStreamAlias("ClassDiagramRelations")
-    private HashSet<RelationBase> relations;
-//    private HashMap<String, PackageComponent> packages;
+    /**
+     * Set of relations between components in the diagram.
+     */
+    private final HashSet<RelationBase> relations;
 
     /**
-     * Standard ClassDiagram constructor without arguments.
-     * <p>
-     * Sets name to default value and instantiates components, relations and
-     * packages hash maps.
+     * Constructs a ClassDiagram object with name set to "UML ClassDiagram"
+     * and an empty relations set.
      */
     public ClassDiagram() {
         super("UML Class Diagram");
         this.relations = new HashSet<>();
-//        this.packages = new HashMap<>();
-    }
-
-    @Override
-    public void addPartToContainter(ComponentBase component) {
-        super.addPartToContainter(component);
-        component.setParentDiagram(this);
     }
 
     /**
-     * Adds new RealtionComponent into collection of existing relations. If
-     * relationComponent with same name already exists in relations, a counter
-     * is concatenated to its name and is then added. The counter is then
-     * incremented by one.
-     *
-     * @param relationComponent that will be added to the collection of
-     * relations
+     * Adds a component to the diagram by adding it to the container
+     * and setting this diagram as component's parent diagram.
+     * 
+     * @param component that will be added to the ClassDiagram
      */
-    public void addRelation(RelationBase relationComponent) {
-        relations.add(relationComponent);
+    public void addComponent(ComponentBase component){
+        component.setParentDiagram(this);
+        addComponentToContainter(component);
     }
 
     /**
-     * Removes the given relation from this diagram's collection of relations.
+     * Adds a relation to the diagram if not already present.
      *
-     * @param relation relation to be removed
+     * @param relation that will be added to the ClassDiagram
+     */
+    public void addRelation(RelationBase relation) {
+        relations.add(relation);
+        pcs.firePropertyChange("ADD_RELATION", null, relation);
+    }
+
+    /**
+     * Removes the given relation from the diagram.
+     *
+     * @param relation to be removed
      */
     public void removeRelation(RelationBase relation) {
         relations.remove(relation);
+        pcs.firePropertyChange("REMOVE_RELATION", null, relation);
     }
 
-    public void removeRelationsForAComponent(INameable component) {
+    /**
+     * Removes all relations that have the given component as a source or a target.
+     * @param component for which all the relations will be removed
+     */
+    public void removeRelationsForAComponent(ComponentBase component) {
         List<RelationBase> toRemove = new LinkedList<>();
         for (RelationBase relation : relations) {
             if (relation.getSource().equals(component) || relation.getTarget().equals(component)) {
@@ -73,18 +76,18 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
             }
         }
         for (RelationBase rc : toRemove) {
-            relations.remove(rc);
+            removeRelation(rc);
         }
     }
 
     /**
-     * Returns the collection of components that this diagram has.
+     * Returns the collection of this diagram's components.
      *
      * @return collection of components
      */
     @SuppressWarnings("unchecked")
     public LinkedHashSet<ComponentBase> getComponents() {
-        return new LinkedHashSet<>(parts);
+        return new LinkedHashSet<>(components);
     }
 
     /**
@@ -95,20 +98,11 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
     public HashSet<RelationBase> getRelations() {
         return relations;
     }
-
-    /**
-     * Sets the collection of relations that exist in this diagram.
-     *
-     * @param relations to be set
-     */
-    public void setRelations(HashSet<RelationBase> relations) {
-        this.relations = relations;
-    }    
     
     /**
-     * Sets the name of this Container
+     * Sets the name of the diagram. Fires "name" property change event.
      *
-     * @param newName of Container
+     * @param newName of the diagram
      */
     @Override
     public void setName(String newName) {
@@ -116,35 +110,4 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
         name = newName;
         pcs.firePropertyChange("name", oldName, newName);
     }
-
-//    /**
-//     * Adds the PackageComponent into package collection.
-//     *
-//     * @param pc package to be added
-//     */
-//    public void addPackage(PackageComponent pc) {
-//        packages.put(pc.getName(), pc);
-//    }
-//
-//    /**
-//     * Removes the package from package collection.
-//     *
-//     * @param pc package to be removed
-//     */
-//    public void removePackage(PackageComponent pc) {
-//        packages.remove(pc.getName());
-//    }
-//
-//    /**
-//     * Gets the packages collection of this ClassDiagram.
-//     *
-//     * @return packages collection
-//     */
-//    public HashMap<String, PackageComponent> getPackages() {
-//        return packages;
-//    }
-//    @Override
-//    public String toString() {
-//        return getName();
-//    }
 }

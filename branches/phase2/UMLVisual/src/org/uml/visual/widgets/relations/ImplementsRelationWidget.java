@@ -1,13 +1,12 @@
 package org.uml.visual.widgets.relations;
 
-import org.netbeans.api.visual.widget.Scene;
 import org.uml.model.relations.RelationBase;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.anchors.TriangleEquilateralAnchorShape;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class ImplementsRelationWidget extends RelationBaseWidget {
 

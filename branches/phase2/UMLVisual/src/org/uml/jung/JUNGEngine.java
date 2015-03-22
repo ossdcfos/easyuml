@@ -94,7 +94,7 @@ public class JUNGEngine {
             Layout<ComponentWidgetBase, RelationBase> layout = new CircleLayout<>(graph);
 //            Layout<ComponentWidgetBase, RelationComponent> layout = new SpringLayout<>(graph); // ovaj layout isto moze da radi
 
-            layout.setSize(new Dimension(700, 700));
+            layout.setSize(new Dimension(2000, 2000));
             BasicVisualizationServer<ComponentWidgetBase, RelationBase> vv = new BasicVisualizationServer<>(layout);
 //            vv.setPreferredSize(new Dimension(1350, 1350));
 

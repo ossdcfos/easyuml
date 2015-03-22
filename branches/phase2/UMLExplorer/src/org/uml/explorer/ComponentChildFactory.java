@@ -41,10 +41,10 @@ public class ComponentChildFactory extends ChildFactory<MemberBase> implements P
     public void propertyChange(PropertyChangeEvent evt) {
         if (null != evt.getPropertyName()) {
             switch (evt.getPropertyName()) {
-                case "ADD":
+                case "ADD_COMPONENT":
                     refresh(true);
                     break;
-                case "REMOVE":
+                case "REMOVE_COMPONENT":
                     refresh(true);
                     break;
             }

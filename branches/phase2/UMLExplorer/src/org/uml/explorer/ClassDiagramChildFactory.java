@@ -11,7 +11,7 @@ import org.uml.model.components.ComponentBase;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class ClassDiagramChildFactory extends ChildFactory<ComponentBase> implements PropertyChangeListener {
 
@@ -41,10 +41,10 @@ public class ClassDiagramChildFactory extends ChildFactory<ComponentBase> implem
     public void propertyChange(PropertyChangeEvent evt) {
         if (null != evt.getPropertyName()) {
             switch (evt.getPropertyName()) {
-                case "ADD":
+                case "ADD_COMPONENT":
                     refresh(true);
                     break;
-                case "REMOVE":
+                case "REMOVE_COMPONENT":
                     refresh(true);
                     break;
             }

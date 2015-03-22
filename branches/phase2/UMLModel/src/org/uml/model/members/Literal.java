@@ -1,6 +1,5 @@
 package org.uml.model.members;
 
-//import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.uml.model.Visibility;
 
 /**
@@ -13,7 +12,6 @@ import org.uml.model.Visibility;
  * @see Method
  * @see Constructor
  */
-//@XStreamAlias("Literal")
 public class Literal extends MemberBase {
 
     /**
@@ -31,9 +29,14 @@ public class Literal extends MemberBase {
     public String getSignature() {
         return name;
     }
+    
+    @Override
+    public String getSimpleTypeSignature() {
+        return getSignature();
+    }
 
     @Override
-    public String getLabelText() {
+    public String getLabelText(boolean isShort) {
         return getSignature();
     }
 
@@ -52,5 +55,4 @@ public class Literal extends MemberBase {
     public boolean allowedToAddModifier(int modifier) {
         return false;
     }
-
 }

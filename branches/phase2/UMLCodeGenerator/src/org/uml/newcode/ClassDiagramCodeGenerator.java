@@ -4,46 +4,41 @@ import org.uml.newcode.components.InterfaceCodeGenerator;
 import org.uml.newcode.components.ClassCodeGenerator;
 import org.uml.newcode.components.EnumCodeGenerator;
 import java.io.File;
-import java.util.HashMap;
+import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
-import org.uml.newcode.renaming.ComponentRenameTable;
-import org.uml.newcode.renaming.MemberRenameTable;
 
 /**
+ * Code generator for the class diagram.
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class ClassDiagramCodeGenerator {
 
-    public static void generateOrUpdateCode(ClassDiagram classDiagram, String projectPath) {
-        String sourcePath = projectPath + "src" + File.separator;
+    /**
+     * Generates class diagram code if it does not exist in the selected project
+     * or updates the existing code.
+     *
+     * @param classDiagram to generate code from
+     * @param renames table of renamed components for updating of the existing code
+     * @param projectPath to save generated code to
+     */
+    public static void generateOrUpdateCode(ClassDiagram classDiagram, MyClassDiagramRenameTable renames, String projectPath) {
+        String srcPath = projectPath + "src" + File.separator;
         for (ComponentBase component : classDiagram.getComponents()) {
-            // add listener to component, if non-existant
-            if(!component.listenerTypeExists(ComponentRenameTable.class)){
-                component.addPropertyChangeListener(new ComponentRenameTable());
-            }
-            
-            // add member rename table for component, if non-existant
-            String signature = component.getSignature();
-            if (!MemberRenameTable.members.containsKey(signature)) {
-                MemberRenameTable.members.put(signature, new HashMap<String, String>());
-            }
-
-            // generate code
+            // Generate code
             if (component instanceof ClassComponent) {
-                ClassCodeGenerator.generateOrUpdateCode((ClassComponent) component, sourcePath);
+                ClassCodeGenerator.getInstance().generateOrUpdateCode((ClassComponent) component, renames, srcPath);
             } else if (component instanceof InterfaceComponent) {
-                InterfaceCodeGenerator.generateOrUpdateCode((InterfaceComponent) component, sourcePath);
+                InterfaceCodeGenerator.getInstance().generateOrUpdateCode((InterfaceComponent) component, renames, srcPath);
             } else if (component instanceof EnumComponent) {
-                EnumCodeGenerator.generateOrUpdateCode((EnumComponent) component, sourcePath);
+                EnumCodeGenerator.getInstance().generateOrUpdateCode((EnumComponent) component, renames, srcPath);
             }
         }
-        // clear tables after everything has been generated, because the data in them has already been applied to code
-        ComponentRenameTable.clear();
-        MemberRenameTable.clear();
+        // Clear tables after everything has been generated, because the data in them has already been applied to code
+        renames.clear();
     }
 }

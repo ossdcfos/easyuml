@@ -82,5 +82,9 @@ public class PackageComponent extends ComponentBase {
         // TODO: fix this when redoing the model!
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    @Override
+    public String getName() {
+        return name;
+    }
 }

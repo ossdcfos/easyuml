@@ -16,19 +16,12 @@ import japa.parser.ast.body.TypeDeclaration;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import java.awt.Point;
 import java.io.File;
-import static java.io.File.separator;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
-import org.netbeans.api.project.Project;
-import org.openide.loaders.DataFolder;
 import org.openide.util.Exceptions;
 import org.uml.model.ClassDiagram;
 import org.uml.model.Visibility;
@@ -39,42 +32,33 @@ import org.uml.model.components.InterfaceComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
 import org.uml.model.members.Literal;
+import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
 import org.uml.model.relations.AggregationRelation;
 import org.uml.model.relations.CardinalityEnum;
+import org.uml.model.relations.HasBaseRelation;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.UseRelation;
-import org.uml.newcode.renaming.ComponentRenameTable;
-import org.uml.newcode.renaming.MemberRenameTable;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class ReverseEngineer {
 
     @SuppressWarnings("unchecked")
-    public static ClassDiagram createClassDiagramFromPath(String path, String name) {
+    public static ClassDiagram createClassDiagramFromFiles(Collection<File> files, String diagramName) {
         ClassDiagram classDiagram = new ClassDiagram();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH-mm-ss-SSS");
-        Date date = new Date();
-//        String diagramName = "Reverse engineered Class Diagram " + dateFormat.format(date);
-        String diagramName = "Reverse engineered " + name + " " + dateFormat.format(date);
         classDiagram.setName(diagramName);
-
-        String extension = "java";
-
-        //Generating an array of filepaths corresponding to found files
-        Collection<File> files = FileUtils.listFiles(new File(path), new String[]{extension}, true);
 
         // First pass - generate components
         for (File file : files) {
             List<ComponentBase> components = createComponents(file);
             for (ComponentBase component : components) {
-                classDiagram.addPartToContainter(component);
+                classDiagram.addComponent(component);
             }
         }
 
@@ -83,6 +67,22 @@ public class ReverseEngineer {
             List<RelationBase> relations = createRelations(file, classDiagram);
             for (RelationBase relation : relations) {
                 classDiagram.addRelation(relation);
+                // Remove a field from the source which corresponds to the relation
+                // Relation fields are exclusively represented by relations in the class diagram
+                if(relation instanceof HasBaseRelation){
+                    HasBaseRelation hasRelation = (HasBaseRelation) relation;
+                    ComponentBase source = hasRelation.getSource();
+                    for(MemberBase member : source.getMembers()){
+                        if(member instanceof Field){
+                            Field field = (Field) member;
+                            if(hasRelation.getFieldSignature().equals(field.getSignature())){
+                                source.removeMember(field);
+                                // One field per relation
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -109,9 +109,6 @@ public class ReverseEngineer {
                     component = createEnum(edecl);
                 }
                 if (component != null) {
-                    if (!component.listenerTypeExists(ComponentRenameTable.class)) {
-                        component.addPropertyChangeListener(new ComponentRenameTable());
-                    }
                     components.add(component);
                 }
             }
@@ -204,9 +201,6 @@ public class ReverseEngineer {
         field.setVolatile(ModifierSet.isVolatile(modifiers));
         field.setTransient(ModifierSet.isTransient(modifiers));
 
-        if (!field.listenerTypeExists(MemberRenameTable.class)) {
-            field.addPropertyChangeListener(new MemberRenameTable());
-        }
         return field;
     }
 
@@ -236,9 +230,6 @@ public class ReverseEngineer {
             arguments.add(arg);
         }
 
-        if (!method.listenerTypeExists(MemberRenameTable.class)) {
-            method.addPropertyChangeListener(new MemberRenameTable());
-        }
         return method;
     }
 
@@ -262,9 +253,6 @@ public class ReverseEngineer {
             arguments.add(arg);
         }
 
-        if (!constructor.listenerTypeExists(MemberRenameTable.class)) {
-            constructor.addPropertyChangeListener(new MemberRenameTable());
-        }
         return constructor;
     }
 
@@ -348,6 +336,7 @@ public class ReverseEngineer {
                                     String type = declaration.getType().toString();
                                     if (type.contains("List") || type.contains("Set") || type.contains("Map") || type.contains("Queue") || type.contains("Deque")) {
                                         relation.setCardinalityTarget(CardinalityEnum.Zero2Many);
+                                        relation.setCollectionType(type);
                                     } else {
                                         relation.setCardinalityTarget(CardinalityEnum.One2One);
                                     }
@@ -397,7 +386,7 @@ public class ReverseEngineer {
 
     private static Point getNextComponentPosition() {
         Point oldPoint = new Point();
-        if (nextComponentPosition.getX() > 1000) {
+        if (nextComponentPosition.getX() > 2120) {
             nextComponentPosition.move(20, (int) nextComponentPosition.getY() + 400);
         }
         oldPoint.x = (int) nextComponentPosition.getX();

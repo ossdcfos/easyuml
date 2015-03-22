@@ -1,8 +1,13 @@
 package org.uml.visual.widgets;
 
+import org.uml.visual.widgets.anchors.SelfLinkRouter;
 import com.timboudreau.vl.jung.ObjectSceneAdapter;
+import java.awt.Font;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.util.Collection;
+import java.util.Collections;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.ComponentWidgetBase;
@@ -14,13 +19,13 @@ import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.HasBaseRelation;
 import java.util.HashMap;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.anchor.*;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.model.ObjectSceneEvent;
 import org.netbeans.api.visual.model.ObjectSceneEventType;
-import org.netbeans.api.visual.router.Router;
 import org.netbeans.api.visual.widget.*;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
@@ -30,7 +35,6 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.*;
-import org.openide.windows.WindowManager;
 import org.uml.explorer.ClassDiagramNode;
 import org.uml.explorer.ComponentNode;
 import org.uml.explorer.MemberNode;
@@ -40,8 +44,8 @@ import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.UseRelation;
 import org.uml.visual.UMLTopComponent;
-import org.uml.visual.colorthemes.ColorTheme;
-import org.uml.visual.colorthemes.ColorThemesStore;
+import org.uml.visual.themes.Theme;
+import org.uml.visual.themes.ColorThemesStore;
 import org.uml.visual.widgets.anchors.ParallelNodeAnchor;
 import org.uml.visual.widgets.providers.*;
 import org.uml.visual.widgets.popups.ScenePopupMenuProvider;
@@ -52,6 +56,12 @@ import org.uml.visual.widgets.relations.RelationBaseWidget;
 import org.uml.visual.widgets.relations.UseRelationWidget;
 
 /**
+ * ClassDiagramScene is a GraphScene, where nodes are components derived from
+ * ComponentBase class (classes, interfaces and enums) and edges are relations
+ * derived from RelationBase class. It listens to lookup from node lookup from
+ * the Explorer, in order to select appropriate nodes in graph and listens to
+ * property changes on underlying class diagram, to catch REMOVE events and
+ * appropriately remove the widgets.
  *
  * https://blogs.oracle.com/geertjan/entry/how_to_serialize_visual_library
  * https://platform.netbeans.org/graph/examples.html layout, serijalizacija,
@@ -59,23 +69,53 @@ import org.uml.visual.widgets.relations.UseRelationWidget;
  *
  * @author NUGS
  */
-public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> implements LookupListener {
+public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> implements LookupListener, PropertyChangeListener {
 
+    /**
+     * Layer holding all the node widgets.
+     */
     private final LayerWidget mainLayer;
+    /**
+     * Layer holding all the relation widgets.
+     */
     private final LayerWidget connectionLayer;
+    /**
+     * Layer holding all the things being interacted with (drag and drop etc.).
+     */
     private final LayerWidget interractionLayer;
 
+    /**
+     * Underlying class diagram.
+     */
     private final ClassDiagram classDiagram;
+    /**
+     * Parent UMLTopComponent.
+     */
     private final UMLTopComponent umlTopComponent;
 
+    /**
+     * Abstract lookup used to publish selected objects.
+     */
     private final InstanceContent content = new InstanceContent();
     private final AbstractLookup aLookup = new AbstractLookup(content);
 
+    /**
+     * Translate widget -> anchor. Every widget uses one anchor, as that is a
+     * prerequisite to use the ParallelNodeAnchor.
+     */
     private final HashMap<ComponentWidgetBase, Anchor> anchorMap = new HashMap<>();
-    private Router selfLinkRouter;
 
-    public static ColorTheme colorTheme = ColorThemesStore.DEFAULT_COLOR_THEME;
+    /**
+     * Visual options flags and themes.
+     */
+    private boolean showIcons = true;
+    private boolean showMembers = true;
+    private boolean showSimpleTypes = false;
+    private Theme colorTheme = ColorThemesStore.DEFAULT_COLOR_THEME;
 
+    /**
+     * Nodes lookup to listen to the selection in the UMLExplorer.
+     */
     private final Lookup.Result<ClassDiagramNode> focusedExplorerDiagram;
     private final Lookup.Result<ComponentNode> focusedExplorerComponent;
     private final Lookup.Result<MemberNode> focusedExplorerMember;
@@ -84,19 +124,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     public ClassDiagramScene(ClassDiagram umlClassDiagram, final UMLTopComponent umlTopComponent) {
 
         classDiagram = umlClassDiagram;
-        // TODO selection of scene
-        addObject(classDiagram, this);
-        classDiagram.addDeleteListener(new IComponentDeleteListener() {
-            @Override
-            public void componentDeleted(INameable component) {
-                removeNodeWithEdges((ComponentBase) component);
-
-                classDiagram.removeRelationsForAComponent(component);
-
-                repaint();
-                validate();
-            }
-        });
+        addObject(classDiagram, this); // seleciton of scene
+        classDiagram.addPropertyChangeListener(this);
 
         this.umlTopComponent = umlTopComponent;
         mainLayer = new LayerWidget(this);
@@ -117,45 +146,31 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         // To support right-click on the scene
         getActions().addAction(ActionFactory.createPopupMenuAction(new ScenePopupMenuProvider(this)));
 
+        setFont(new Font("Default", Font.PLAIN, 12));
+
+        // ObjectSceneAdapter to support the selection events
         addObjectSceneListener(new FocusAdapter(),
-                ObjectSceneEventType.OBJECT_ADDED,
-                ObjectSceneEventType.OBJECT_REMOVED,
                 ObjectSceneEventType.OBJECT_FOCUS_CHANGED);
 
-        for (ComponentBase comp : umlClassDiagram.getComponents()) {
+        // Add all the components to the diagram
+        for (ComponentBase comp : classDiagram.getComponents()) {
             Widget w = addNode(comp);
             w.setPreferredLocation(convertLocalToScene(comp.getLocation()));
-            w.setPreferredBounds(comp.getBounds());
+//            w.setPreferredBounds(comp.getBounds());
         }
 
-        for (RelationBase rel : umlClassDiagram.getRelations()) {
-            addRelationToScene(rel, rel.getSource(), rel.getTarget());
+        // Add all the relations to the diagram
+        for (RelationBase rel : classDiagram.getRelations()) {
+            addRelationToScene(rel);
         }
 
+        // Listen to node lookup from the Explorer
         focusedExplorerDiagram = Utilities.actionsGlobalContext().lookupResult(ClassDiagramNode.class);
         focusedExplorerComponent = Utilities.actionsGlobalContext().lookupResult(ComponentNode.class);
         focusedExplorerMember = Utilities.actionsGlobalContext().lookupResult(MemberNode.class);
         addLookupListeners();
     }
 
-//    @Override
-//    public JComponent createView() {
-//        super.createView();
-//        getView().setFocusable(true);
-//        addKeyboardActions();
-//        return getView();
-//    }
-//    
-//    private void addKeyboardActions(){
-//        String SAVE_ACTION = "mySaveAction";
-//        getView().getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F, 0), SAVE_ACTION);
-//        getView().getActionMap().put(SAVE_ACTION, new AbstractAction() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                getUmlTopComponent().saveTopComponent();
-//            }
-//        });
-//    }
     public LayerWidget getMainLayer() {
         return mainLayer;
     }
@@ -180,9 +195,12 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         return classDiagram;
     }
 
+    public Theme getColorTheme() {
+        return colorTheme;
+    }
+
     public void setColorTheme(String name) {
-        ColorTheme theme = ColorThemesStore.getColorTheme(name);
-        ClassDiagramScene.colorTheme = theme;
+        colorTheme = ColorThemesStore.getColorTheme(name);
         for (Widget widget : mainLayer.getChildren()) {
             if (widget instanceof ComponentWidgetBase) {
                 ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;
@@ -191,14 +209,67 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         }
     }
 
-    // Used to enable selection detection from ClassDiagramScene
+    public boolean isShowIcons() {
+        return showIcons;
+    }
+
+    public void setShowIcons(boolean showIcons) {
+        this.showIcons = showIcons;
+        for (Widget widget : mainLayer.getChildren()) {
+            if (widget instanceof ComponentWidgetBase) {
+                ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;
+                componentWidget.updateIconDisplay(showIcons);
+            }
+        }
+        repaint();
+        validate();
+    }
+
+    public boolean isShowMembers() {
+        return showMembers;
+    }
+
+    public void setShowMembers(boolean showMembers) {
+        this.showMembers = showMembers;
+        for (Widget widget : mainLayer.getChildren()) {
+            if (widget instanceof ComponentWidgetBase) {
+                ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;
+                componentWidget.updateMemberDisplay(showMembers);
+            }
+        }
+        repaint();
+        validate();
+    }
+
+    public boolean isShowSimpleTypes() {
+        return showSimpleTypes;
+    }
+
+    public void setShowSimpleTypes(boolean showSimpleTypes) {
+        this.showSimpleTypes = showSimpleTypes;
+        for (Widget widget : mainLayer.getChildren()) {
+            if (widget instanceof ComponentWidgetBase) {
+                ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;
+                componentWidget.updateTypeNamesDisplay(showSimpleTypes);
+            }
+        }
+        repaint();
+        validate();
+    }
+
+    /**
+     * Used to enable selection detection from ClassDiagramScene
+     */
     private void addLookupListeners() {
         focusedExplorerDiagram.addLookupListener(this);
         focusedExplorerComponent.addLookupListener(this);
         focusedExplorerMember.addLookupListener(this);
     }
 
-    // Used to disable selection detection from ClassDiagramScene, while changing selection in explorer (avoid loop selections)
+    /**
+     * Used to disable selection detection from ClassDiagramScene, while
+     * changing selection in explorer (avoid loop selections)
+     */
     private void removeLookupListeners() {
         focusedExplorerDiagram.removeLookupListener(this);
         focusedExplorerComponent.removeLookupListener(this);
@@ -215,7 +286,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     protected Widget attachNodeWidget(ComponentBase component) {
         // if adding new component, add it to the diagram
         if (!classDiagram.getComponents().contains(component)) {
-            classDiagram.addPartToContainter(component);
+            classDiagram.addComponent(component);
         }
 
         // Initialization
@@ -227,7 +298,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         } else if (component instanceof EnumComponent) {
             widget = new EnumWidget(this, (EnumComponent) component);
         } else {
-            throw new RuntimeException("Unknown component!");
+//            throw new RuntimeException("Unknown component!");
         }
 
         mainLayer.addChild(widget);
@@ -253,7 +324,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         } else if (relation instanceof UseRelation) {
             widget = new UseRelationWidget(relation, this);
         } else {
-            throw new RuntimeException("Unknown component!");
+//            throw new RuntimeException("Unknown relation!");
         }
 
         connectionLayer.addChild(widget);
@@ -267,8 +338,6 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         if (nodeWidget != null) {
             edgeWidget.setSourceAnchor(getAnchorForWidget(nodeWidget));
         }
-        if (isSelfLink(edgeWidget))
-            setSelfLinkRouter(edgeWidget);
     }
 
     @Override
@@ -278,8 +347,9 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         if (nodeWidget != null) {
             edgeWidget.setTargetAnchor(getAnchorForWidget(nodeWidget));
         }
-        if (isSelfLink(edgeWidget))
-            setSelfLinkRouter(edgeWidget);
+        if (isSelfLink(edgeWidget)) {
+            edgeWidget.setRouter(new SelfLinkRouter());
+        }
     }
 
     // Each widget must always return the same anchor in order for ParallelNodeAnchor to work
@@ -296,24 +366,18 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     private boolean isSelfLink(ConnectionWidget connection) {
         Anchor sourceAnchor = connection.getSourceAnchor();
         Anchor targetAnchor = connection.getTargetAnchor();
-        if (sourceAnchor != null && targetAnchor != null && sourceAnchor.getRelatedWidget() == targetAnchor.getRelatedWidget())
+        if (sourceAnchor != null && targetAnchor != null && sourceAnchor.getRelatedWidget() == targetAnchor.getRelatedWidget()) {
             return true;
-        else
+        } else {
             return false;
-    }
-
-    private void setSelfLinkRouter(ConnectionWidget connection) {
-        if (selfLinkRouter == null) {
-            selfLinkRouter = new SelfLinkRouter();
         }
-        connection.setRouter(selfLinkRouter);
     }
 
-    public final void addRelationToScene(RelationBase relation, ComponentBase source, ComponentBase target) {
+    public final void addRelationToScene(RelationBase relation) {
         if (!getObjects().contains(relation)) {
             addEdge(relation);
-            setEdgeSource(relation, source);
-            setEdgeTarget(relation, target);
+            setEdgeSource(relation, relation.getSource());
+            setEdgeTarget(relation, relation.getTarget());
         } else {
             JOptionPane.showMessageDialog(null, "Relation already exists!");
         }
@@ -321,6 +385,11 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         validate();
     }
 
+    /**
+     * Lookup listener which listens to Node selection from UMLExplorer.
+     *
+     * @param ev
+     */
     @Override
     @SuppressWarnings("rawtypes")
     public void resultChanged(LookupEvent ev) {
@@ -330,7 +399,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             for (Object instance : instances) {
                 // Set focused object based on the selection of a Node in Explorer
                 if (instance instanceof ClassDiagramNode) {
-                    selectScene();
+                    setFocusedObjectAndToggleListeners(classDiagram);
+//                    selectScene();
                 } else if (instance instanceof ComponentNode) {
                     ComponentBase component = ((ComponentNode) instance).getComponent();
                     if (isNode(component)) {
@@ -350,11 +420,12 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             // this doesn't work, because sometimes there is empty instances event, when we have actually just selected some node
             // ExplorerTopComponent
             if (!umlTopComponent.isActivatedLinkedTC()) {
-                selectScene();
+                setFocusedObjectAndToggleListeners(classDiagram);
+//                selectScene();
             }
         }
-        repaint();
         validate();
+        repaint();
     }
 
     public void deselectAll() {
@@ -369,21 +440,45 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         setFocusedObjectAndToggleListeners(classDiagram);
 
 //         Focus UMLTopComponent when scene is selected
-        
-//          // Creates bugs - changing tabs
-//        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-//            @Override
-//            public void run() {
-//                getUmlTopComponent().requestActive();
-//            }
-//        });
         getUmlTopComponent().requestFocus();
     }
 
     public void setFocusedObjectAndToggleListeners(Object object) {
         removeLookupListeners();
+        Set selection;
+        if (object != null) {
+            selection = Collections.singleton(object);
+        } else {
+            selection = Collections.EMPTY_SET;
+        }
+        setSelectedObjects(selection);
         setFocusedObject(object);
         addLookupListeners();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (null != evt.getPropertyName()) {
+            switch (evt.getPropertyName()) {
+                case "name":
+                    break;
+                case "ADD_COMPONENT":
+                    break;
+                case "REMOVE_COMPONENT":
+                    ComponentBase component = (ComponentBase) evt.getNewValue();
+                    removeNodeWithEdges(component);
+                    classDiagram.removeRelationsForAComponent(component);
+                    break;
+                case "ADD_RELATION":
+                    break;
+                case "REMOVE_RELATION":
+                    RelationBase relation = (RelationBase) evt.getNewValue();
+                    removeEdge(relation);
+                    break;
+            }
+            umlTopComponent.notifyModified();
+        }
+        repaint();
     }
 
     private class FocusAdapter extends ObjectSceneAdapter {
@@ -392,57 +487,53 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         // Content is used so that ExplorerTopComponent can synchronize selection through listening to lookup
         @Override
         public void focusChanged(ObjectSceneEvent event, Object previousFocusedObject, Object newFocusedObject) {
-            // For selection inside the Explorer
+            // Deselect the old one
             if (previousFocusedObject != null) {
                 content.remove(previousFocusedObject);
             } else {
-                content.remove(classDiagram);
+                System.out.println("Previous focus null!");
+//                content.remove(classDiagram);
             }
 
+            // Select the new one
             if (newFocusedObject != null) {
                 // For properties
-                if (newFocusedObject instanceof ComponentBase) {
-                    selectComponentNode((ComponentBase) newFocusedObject);
+                if (newFocusedObject instanceof ClassDiagram) {
+                    selectBackgrundSceneNode();
+                } else if (newFocusedObject instanceof ComponentBase) {
+                    selectBackgroundComponentNode((ComponentBase) newFocusedObject);
                 } else if (newFocusedObject instanceof MemberBase) {
-                    selectMemberNode((MemberBase) newFocusedObject);
-                } else if (newFocusedObject instanceof ClassDiagram) {
-                    selectNode(getExplorerManager().getRootContext());
+                    selectBackgroundMemberNode((MemberBase) newFocusedObject);
                 }
 
                 // For selection inside the Explorer
                 content.add(newFocusedObject);
             } else {
-                deselectAllNodes();
+                deselectAllBackgroundNodes();
             }
-        }
-
-        @Override
-        public void objectAdded(ObjectSceneEvent event, Object addedObject) {
-            umlTopComponent.notifyModified();
-        }
-
-        @Override
-        public void objectRemoved(ObjectSceneEvent event, Object removedObject) {
-            umlTopComponent.notifyModified();
         }
     }
 
-    private void selectComponentNode(ComponentBase component) {
+    private void selectBackgrundSceneNode() {
+        selectBackgroundNode(getExplorerManager().getRootContext());
+    }
+
+    private void selectBackgroundComponentNode(ComponentBase component) {
         for (Node cn : getExplorerManager().getRootContext().getChildren().getNodes()) {
             ComponentNode componentNode = (ComponentNode) cn;
             if (componentNode.getComponent() == component) {
-                selectNode(componentNode);
+                selectBackgroundNode(componentNode);
                 return;
             }
         }
     }
 
-    private void selectMemberNode(MemberBase member) {
+    private void selectBackgroundMemberNode(MemberBase member) {
         for (Node cn : getExplorerManager().getRootContext().getChildren().getNodes()) {
             for (Node mn : cn.getChildren().getNodes()) {
                 MemberNode memberNode = (MemberNode) mn;
                 if (memberNode.getMember() == member) {
-                    selectNode(memberNode);
+                    selectBackgroundNode(memberNode);
                     return;
                 }
             }
@@ -454,16 +545,19 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
      *
      * @param node
      */
-    private void selectNode(Node node) {
+    private void selectBackgroundNode(Node node) {
         try {
-            if (node != null) getExplorerManager().setSelectedNodes(new Node[]{node});
-            else getExplorerManager().setSelectedNodes(new Node[]{});
+            if (node != null) {
+                getExplorerManager().setSelectedNodes(new Node[]{node});
+            } else {
+                getExplorerManager().setSelectedNodes(new Node[]{});
+            }
         } catch (PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
 
-    private void deselectAllNodes() {
-        selectNode(null);
+    private void deselectAllBackgroundNodes() {
+        selectBackgroundNode(null);
     }
 }

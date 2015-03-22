@@ -20,7 +20,7 @@ import org.uml.model.relations.UseRelation;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class CardinalityChangePanel extends javax.swing.JPanel {
 

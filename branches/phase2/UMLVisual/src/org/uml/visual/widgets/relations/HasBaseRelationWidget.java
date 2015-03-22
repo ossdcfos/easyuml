@@ -12,7 +12,7 @@ import org.uml.visual.widgets.popups.CardinalityPopupMenuProvider;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class HasBaseRelationWidget extends RelationBaseWidget {
 

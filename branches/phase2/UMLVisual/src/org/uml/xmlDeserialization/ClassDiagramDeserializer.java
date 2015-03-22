@@ -1,5 +1,12 @@
 package org.uml.xmlDeserialization;
 
+import org.uml.xmlDeserialization.relations.ImplementsRelationDeserializer;
+import org.uml.xmlDeserialization.relations.HasRelationDeserializer;
+import org.uml.xmlDeserialization.relations.UseRelationDeserializer;
+import org.uml.xmlDeserialization.relations.IsRelationDeserializer;
+import org.uml.xmlDeserialization.components.InterfaceDeserializer;
+import org.uml.xmlDeserialization.components.EnumDeserializer;
+import org.uml.xmlDeserialization.components.ClassDeserializer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.dom4j.Element;
@@ -10,7 +17,6 @@ import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.HasBaseRelation;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.components.InterfaceComponent;
-import org.uml.model.relations.AggregationRelation;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.UseRelation;
 
@@ -20,7 +26,7 @@ import org.uml.model.relations.UseRelation;
  */
 public class ClassDiagramDeserializer implements XmlDeserializer {
 
-    private ClassDiagram classDiagram;
+    private final ClassDiagram classDiagram;
 
     public ClassDiagramDeserializer(ClassDiagram classDiagram) {
         this.classDiagram = classDiagram;
@@ -45,7 +51,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             ClassComponent component = new ClassComponent();
             ClassDeserializer cd = new ClassDeserializer(component);
             cd.deserialize(componentNode);
-            classDiagram.addPartToContainter(component);
+            classDiagram.addComponent(component);
         }
 
         Iterator<?> interfaceIterator = classDiagramComponents.elementIterator("Interface");
@@ -55,7 +61,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             InterfaceComponent component = new InterfaceComponent();
             InterfaceDeserializer id = new InterfaceDeserializer(component);
             id.deserialize(interfaceNode);
-            classDiagram.addPartToContainter(component);
+            classDiagram.addComponent(component);
         }
         
         Iterator<?> enumIterator = classDiagramComponents.elementIterator("Enum");
@@ -65,7 +71,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             EnumComponent component = new EnumComponent();
             EnumDeserializer ed = new EnumDeserializer(component);
             ed.deserialize(enumNode);
-            classDiagram.addPartToContainter(component);
+            classDiagram.addComponent(component);
         }
         
         ArrayList<ComponentBase> components = new ArrayList<>(classDiagram.getComponents());
@@ -84,10 +90,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
         while (hasRelationIterator != null && hasRelationIterator.hasNext()) {
             Element hasRelationNode = (Element) hasRelationIterator.next();
             
-            // TODO needs to support composition
-            HasBaseRelation relation = new AggregationRelation();
-            HasRelationDeserializer deserializer = new HasRelationDeserializer(relation, components);
-            deserializer.deserialize(hasRelationNode);
+            HasBaseRelation relation = HasRelationDeserializer.deserialize(hasRelationNode, components);
             classDiagram.addRelation(relation);
         }
         

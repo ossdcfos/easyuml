@@ -6,10 +6,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.visual.action.PopupMenuProvider;
-import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.uml.model.relations.RelationBase;
-import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.model.ClassDiagram;
+import org.uml.visual.widgets.relations.RelationBaseWidget;
 
 /**
  *
@@ -17,15 +16,13 @@ import org.uml.visual.widgets.ClassDiagramScene;
  */
 public class RelationPopupMenuProvider implements PopupMenuProvider {
 
-    ClassDiagramScene cdScene;
-    RelationBase relationComponent;
+    private RelationBaseWidget relationWidget;
     private JPopupMenu menu;
     private JMenuItem removeRelation;
 
-    public RelationPopupMenuProvider(ConnectionWidget widget, RelationBase relationComponent) {
-        cdScene = (ClassDiagramScene)widget.getScene();
-       
-        this.relationComponent = relationComponent;
+    public RelationPopupMenuProvider(RelationBaseWidget relationWidget) {
+        this.relationWidget = relationWidget;
+
         menu = new JPopupMenu("Connection Menu");
 
         (removeRelation = new JMenuItem("Remove relation")).addActionListener(removeRelationListener);
@@ -35,8 +32,8 @@ public class RelationPopupMenuProvider implements PopupMenuProvider {
     ActionListener removeRelationListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            cdScene.removeEdge(relationComponent);
-            cdScene.getClassDiagram().removeRelation(relationComponent);
+            ClassDiagram classDiagram = relationWidget.getRelation().getSource().getParentDiagram();
+            classDiagram.removeRelation(relationWidget.getRelation());
         }
     };
 

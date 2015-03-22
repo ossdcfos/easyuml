@@ -11,10 +11,10 @@ import org.uml.model.relations.RelationBase;
  */
 public class RelationLabelTextFieldEditorAction implements TextFieldInplaceEditor {
 
-    RelationBase relationComponent;
+    RelationBase relation;
 
     public RelationLabelTextFieldEditorAction(RelationBase relationComponent) {
-        this.relationComponent = relationComponent;
+        this.relation = relationComponent;
     }
 
     @Override
@@ -24,13 +24,12 @@ public class RelationLabelTextFieldEditorAction implements TextFieldInplaceEdito
 
     @Override
     public String getText(Widget widget) {
-        return relationComponent.getName();
+        return relation.getName();
     }
 
     @Override
     public void setText(Widget widget, String string) {
-        relationComponent.setName(string);
+        relation.setName(string);
         ((LabelWidget) widget).setLabel(string);
     }
-
 }

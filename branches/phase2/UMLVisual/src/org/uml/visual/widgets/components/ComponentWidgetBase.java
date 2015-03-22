@@ -1,5 +1,7 @@
 package org.uml.visual.widgets.components;
 
+import org.uml.visual.widgets.providers.ComponentAlignWithResizeStrategyProvider;
+import org.uml.visual.widgets.providers.ComponentAlignWithMoveStrategyProvider;
 import org.uml.visual.widgets.members.MemberWidgetBase;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -12,18 +14,21 @@ import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
-import org.netbeans.api.visual.action.MoveProvider;
-import org.netbeans.api.visual.action.MoveStrategy;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.model.ObjectState;
+import org.netbeans.api.visual.widget.ImageWidget;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
+import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
-import org.uml.visual.colorthemes.ColorTheme;
+import org.uml.model.components.EnumComponent;
+import org.uml.model.components.InterfaceComponent;
+import org.uml.visual.themes.Theme;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
@@ -31,11 +36,16 @@ import org.uml.visual.widgets.providers.ComponentConnectProvider;
 
 /**
  *
- * @author "NUGS"
+ * @author NUGS
  */
 abstract public class ComponentWidgetBase extends Widget implements PropertyChangeListener {
 
     protected ComponentBase component;
+
+    protected final Widget headerWidget;
+    protected Widget iconNameContainer = new Widget(getScene());
+    protected static String iconFolderPath = "org/uml/visual/widgets/icons/";
+    protected ImageWidget iconWidget = new ImageWidget(getScene());
     protected LabelWidget nameLabel;
 
     protected LinkedList<SeparatorWidget> separators = new LinkedList<>();
@@ -65,7 +75,6 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         super(scene);
         this.component = component;
         this.component.addPropertyChangeListener(WeakListeners.propertyChange(this, this.component));
-        this.component.setParentDiagram(scene.getClassDiagram());
 
         // Layout
         setBorder(getColorTheme().getDefaultBorder());
@@ -74,10 +83,24 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         setCheckClipping(true);
         setBackground(getColorTheme().getDefaultColor());
 
+        headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
+        headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0));
+        headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
+
+        iconWidget.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 3));
+        iconWidget.setVisible(scene.isShowIcons());
+        if (component instanceof ClassComponent) {
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "class.png"));
+        } else if (component instanceof InterfaceComponent) {
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "interface.png"));
+        } else if (component instanceof EnumComponent) {
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "enum.png"));
+        }
+        iconNameContainer.setLayout(LayoutFactory.createHorizontalFlowLayout());
         nameLabel = new LabelWidget(scene);
         nameLabel.setLabel(component.getName());
-        nameLabel.setFont(scene.getDefaultFont().deriveFont(Font.BOLD));
-        nameLabel.setAlignment(LabelWidget.Alignment.CENTER);
+        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12 + 3));
+        nameLabel.setFont(scene.getFont().deriveFont(Font.BOLD));
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new ComponentNameEditor(this)));
 
         // **** Actions ****
@@ -85,13 +108,16 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ComponentConnectProvider()));
         // Keybord actions over components
         getActions().addAction(new ComponentWidgetKeyboardAction());
-        // Hover, select and resize
+        // Select, resize, moveo and hover
         getActions().addAction(scene.createSelectAction());
-        getActions().addAction(ActionFactory.createAlignWithResizeAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
-        getActions().addAction(ActionFactory.createAlignWithMoveAction(scene.getMainLayer(), scene.getInterractionLayer(), null, false));
-//        MoveModifyProvider mmp = new MoveModifyProvider();
-//        getActions().addAction(ActionFactory.createMoveAction(null, mmp));
-//        getActions().addAction(scene.createWidgetHoverAction());
+        
+        ComponentAlignWithResizeStrategyProvider crsp = new ComponentAlignWithResizeStrategyProvider(scene, false);
+        getActions().addAction(ActionFactory.createResizeAction(crsp, crsp));
+        
+        ComponentAlignWithMoveStrategyProvider csp = new ComponentAlignWithMoveStrategyProvider(scene, false);
+        getActions().addAction(ActionFactory.createMoveAction(csp, csp));
+        
+        getActions().addAction(scene.createWidgetHoverAction());
 
 //        // TODO: Change detection - check how this works
 //        // Too slow, should find another solution
@@ -117,28 +143,6 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 //            }
 //        });
     }
-
-    class MoveModifyProvider implements MoveProvider {
-
-        @Override
-        public void movementStarted(Widget widget) {
-        }
-
-        @Override
-        public void movementFinished(Widget widget) {
-            getClassDiagramScene().getUmlTopComponent().notifyModified();
-        }
-
-        @Override
-        public Point getOriginalLocation(Widget widget) {
-            return null;
-        }
-
-        @Override
-        public void setNewLocation(Widget widget, Point location) {
-        }
-    }
-
     //    @Override
 //    public Lookup getLookup() {
 //        return Lookups.fixed(this, this.getScene());
@@ -192,8 +196,8 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         }
     }
 
-    public static final ColorTheme getColorTheme() {
-        return ClassDiagramScene.colorTheme;
+    public final Theme getColorTheme() {
+        return getClassDiagramScene().getColorTheme();
     }
 
     public void updateColor() {
@@ -202,6 +206,35 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
             if (widget instanceof MemberContainerWidget) {
                 MemberContainerWidget containerWidget = (MemberContainerWidget) widget;
                 containerWidget.updateColor();
+            }
+        }
+    }
+
+    public void updateIconDisplay(boolean iconDisplayEnabled) {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof MemberContainerWidget) {
+                iconWidget.setVisible(iconDisplayEnabled);
+                nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, iconDisplayEnabled ? 12 + 3 : 0));
+                MemberContainerWidget containerWidget = (MemberContainerWidget) widget;
+                containerWidget.updateIconDisplay(iconDisplayEnabled);
+            }
+        }
+    }
+
+    public void updateMemberDisplay(boolean memberDisplayEnabled) {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof MemberContainerWidget) {
+                MemberContainerWidget mcw = (MemberContainerWidget) widget;
+                mcw.updateMemberDisplay(memberDisplayEnabled);
+            }
+        }
+    }
+    
+    public void updateTypeNamesDisplay(boolean simpleTypeNamesDisplayEnabled) {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof MemberContainerWidget) {
+                MemberContainerWidget mcw = (MemberContainerWidget) widget;
+                mcw.updateTypeNamesDisplay(simpleTypeNamesDisplayEnabled);
             }
         }
     }

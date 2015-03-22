@@ -1,15 +1,11 @@
 package org.uml.model;
 
-//import com.thoughtworks.xstream.annotations.XStreamConverter;
-//import com.thoughtworks.xstream.converters.SingleValueConverter;
-
 /**
- * Enumeration which implements all possible types of access modifiers -
+ * Enumeration which represent all types of access modifiers -
  * private, protected, public and package.
  *
  * @author Uros
  */
-//@XStreamConverter(Visibility.VisibilityConverter.class)
 public enum Visibility {
 
     PRIVATE {
@@ -40,36 +36,19 @@ public enum Visibility {
                 }
             };
 
-//    /**
-//     * Converts a String object into adjacent Visibility element (element with 
-//     * the same name). Case insensitive.
-//     * 
-//     * @param value - string representation of modifier e.g. "public"
-//     * @return Visibility enumeration component
-//     */
-//    public static Visibility stringToVisibility(String value) {
-//        if("public".equalsIgnoreCase(value)) return PUBLIC;
-//        if("private".equalsIgnoreCase(value)) return PRIVATE;
-//        if("protected".equalsIgnoreCase(value)) return PROTECTED;
-//        if("package".equalsIgnoreCase(value)) return PACKAGE;
-//        return null;
-//    }
-//    public static class VisibilityConverter implements SingleValueConverter {
-//
-//        @Override
-//        public String toString(Object o) {
-//            Visibility visiblity = (Visibility) o;
-//            return visiblity.toString();
-//        }
-//
-//        @Override
-//        public Object fromString(String string) {
-//            return Visibility.valueOf(string);
-//        }
-//
-//        @Override
-//        public boolean canConvert(Class type) {
-//            return type.equals(Visibility.class);
-//        }
-//    }
+    /**
+     * Converts a String object into the corresponding Visibility element 
+     * (element with the same name). Case insensitive. Used here, as Enum.valueOf(String string)
+     * is case sensitive, so this provides more flexibility and cleaner code.
+     * 
+     * @param value - string representation of a modifier e.g. "public"
+     * @return Visibility enumeration component. Returns PACKAGE as default value.
+     */
+    public static Visibility stringToVisibility(String value) {
+        if(value.equalsIgnoreCase(PUBLIC.toString())) return PUBLIC;
+        else if(value.equalsIgnoreCase(PRIVATE.toString())) return PRIVATE;
+        else if(value.equalsIgnoreCase(PROTECTED.toString())) return PROTECTED;
+        else if(value.equalsIgnoreCase(PACKAGE.toString())) return PACKAGE;
+        else return PACKAGE;
+    }
 }
