@@ -25,7 +25,7 @@ import org.uml.visual.widgets.ClassDiagramScene;
 public class ReverseEngineerUtils {
 
     public static void saveDiagramAndOpenTopComponent(FileObject projectFolder, ClassDiagram classDiagram) {
-        String defaultPath = projectFolder.getPath().replace("/", "\\") + File.separator + UMLProject.CLASS_DIAGRAMS_FOLDER;
+        String defaultPath = projectFolder.getPath().replace("/", File.separator) + File.separator + UMLProject.CLASS_DIAGRAMS_FOLDER;
         String fileName = "";
         String fileExt = ".cdg";
         UMLTopComponent umlTopComponent;

@@ -2,6 +2,7 @@ package org.uml.newcode;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import org.openide.loaders.DataObject;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -29,8 +30,11 @@ public final class GenerateCodeAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        GenerateCodeDialog dialog = new GenerateCodeDialog(context.getClassDiagram(), context.getRenames());
-        dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-        dialog.setVisible(true);
+        try (GenerateCodeDialog dialog = new GenerateCodeDialog(context.getClassDiagram(), context.getRenames())) {
+            dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+            dialog.setVisible(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }

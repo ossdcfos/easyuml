@@ -1,6 +1,6 @@
 package org.uml.reveng;
 
-import org.openide.filesystems.FileObject;
+import javax.swing.JOptionPane;
 import org.openide.windows.WindowManager;
 import org.uml.model.ClassDiagram;
 
@@ -10,10 +10,12 @@ import org.uml.model.ClassDiagram;
  */
 class ReverseEngineerActionBase {
 
-    public void openReverseEngineerDialog(FileObject projectFolder, ClassDiagram classDiagram) {
-
-        ReverseEngineerDialog dialog = new ReverseEngineerDialog(projectFolder, classDiagram);
-        dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-        dialog.setVisible(true);
+    public void openReverseEngineerDialog(ClassDiagram classDiagram) {
+        try (ReverseEngineerDialog dialog = new ReverseEngineerDialog(classDiagram)) {
+            dialog.setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
+            dialog.setVisible(true);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Warning", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }

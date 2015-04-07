@@ -13,7 +13,7 @@ import org.uml.model.ClassDiagram;
  * should be generated.
  * @author Uros
  */
-public class GenerateCodeDialog extends javax.swing.JDialog {
+public class GenerateCodeDialog extends javax.swing.JDialog implements AutoCloseable {
 
     /**
      * Class diagram for which we should generate code.
@@ -30,14 +30,18 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
      * Constructor specifying the class diagram to generate the code from.
      * Initalizes the GUI.
      * @param classDiagram 
+     * @param renames 
+     * @throws java.lang.Exception 
      */
-    public GenerateCodeDialog(ClassDiagram classDiagram, MyClassDiagramRenameTable renames) {
+    public GenerateCodeDialog(ClassDiagram classDiagram, MyClassDiagramRenameTable renames) throws Exception {
         super((Frame) null, true);
-        initComponents();
-        buildComboBoxModel();
         this.classDiagram = classDiagram;
         this.renames = renames;
-        if(projectsList.isEmpty()) btnGenerateCode.setEnabled(false);
+        initComponents();
+        buildComboBoxModel();
+        if(projectsList.isEmpty()) {
+            throw new Exception("Java code must be generated to a Java project. Please open a Java project.");
+        }        
     }
 
     /**
@@ -53,6 +57,11 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
                 projectsList.add(project);
             }
         }
+    }
+    
+    @Override
+    public void close() throws Exception {
+        dispose();
     }
 
     /**
@@ -147,4 +156,5 @@ public class GenerateCodeDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> cbxProjects;
     private javax.swing.JLabel lblProject;
     // End of variables declaration//GEN-END:variables
+
 }

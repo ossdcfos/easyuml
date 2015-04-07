@@ -9,7 +9,6 @@ import org.openide.loaders.DataObject;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
-import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle.Messages;
 import org.uml.model.ClassDiagram;
@@ -50,13 +49,7 @@ public final class ReverseEngineerMultiFileAction extends ReverseEngineerActionB
             diagramName = "Multi-file class diagram";
         }
         ClassDiagram classDiagram = ReverseEngineer.createClassDiagramFromFiles(files, diagramName);
-
-        //Save the diagram into project's path
-        DataObject firstDataObject = context.get(0);
-        String fdoPath = firstDataObject.getPrimaryFile().getPath();  // folders are separated with forward slashes (/), system separator is backslash \
-        String folderPath = fdoPath.substring(0, fdoPath.lastIndexOf("src") - 1);
-        FileObject projectFolder = FileUtil.toFileObject(new File(folderPath));
         
-        openReverseEngineerDialog(projectFolder, classDiagram);
+        openReverseEngineerDialog(classDiagram);
     }
 }
