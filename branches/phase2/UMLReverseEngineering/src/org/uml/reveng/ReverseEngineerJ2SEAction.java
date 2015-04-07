@@ -12,7 +12,6 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 import org.uml.model.ClassDiagram;
-import org.openide.filesystems.FileObject;
 import org.openide.awt.ActionReferences;
 
 @ActionID(
@@ -66,10 +65,7 @@ public final class ReverseEngineerJ2SEAction extends ReverseEngineerActionBase i
         String diagramName = name;
         
         ClassDiagram classDiagram = ReverseEngineer.createClassDiagramFromFiles(files, diagramName);
-
-        //Save the diagram into project's path
-        FileObject projectFolder = context.getProjectDirectory();
         
-        openReverseEngineerDialog(projectFolder, classDiagram);
+        openReverseEngineerDialog(classDiagram);
     }
 }

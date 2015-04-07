@@ -14,12 +14,11 @@ import org.uml.project.UMLProject;
  *
  * @author Uros
  */
-public class ReverseEngineerDialog extends javax.swing.JDialog {
+public class ReverseEngineerDialog extends javax.swing.JDialog implements AutoCloseable {
 
     /**
-     * Class diagram for which we should generate code.
+     * Class diagram which we should save to UMLProject.
      */
-    private final FileObject projectFolder;
     private final ClassDiagram classDiagram;
 
     /**
@@ -33,13 +32,14 @@ public class ReverseEngineerDialog extends javax.swing.JDialog {
      *
      * @param classDiagram
      */
-    public ReverseEngineerDialog(FileObject projectFolder, ClassDiagram classDiagram) {
+    public ReverseEngineerDialog(ClassDiagram classDiagram) throws Exception  {
         super((Frame) null, true);
-        this.projectFolder = projectFolder;
+        this.classDiagram = classDiagram;
         initComponents();
         buildComboBoxModel();
-        this.classDiagram = classDiagram;
-        if (projectsList.isEmpty()) btnReverseEngineer.setEnabled(false);
+        if (projectsList.isEmpty()) {
+            throw new Exception("Class diagram must be generated to a UML project. Please open a UML project.");
+        }
     }
 
     /**
@@ -57,7 +57,10 @@ public class ReverseEngineerDialog extends javax.swing.JDialog {
         }
     }
     
-    
+    @Override
+    public void close() throws Exception {
+        dispose();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
