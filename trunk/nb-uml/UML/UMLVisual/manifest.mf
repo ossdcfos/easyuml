@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.uml.visual
-OpenIDE-Module-Layer: org/uml/visual/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/uml/visual/Bundle.properties
-OpenIDE-Module-Requires: 
-  cnb.org.netbeans.spi.palette,
-  org.openide.windows.WindowManager
-OpenIDE-Module-Specification-Version: 1.0
-
