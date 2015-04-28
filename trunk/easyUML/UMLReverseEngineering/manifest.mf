@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: org.uml.reveng
-OpenIDE-Module-Localizing-Bundle: org/uml/reveng/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.1.1
-
