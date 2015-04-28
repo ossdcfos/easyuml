@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MSM-Preparation" basedir=".">
+    <description>Prepares the environment to build the module suite MSM.</description>
+    <!--Don't modify this file unless you know what you are doing-->
+    <property name="ant-contrib-filename" value="ant-contrib-1.0b3.jar"/>
+    <property file="nbproject/project.properties"/>
+    <property file="nbproject/platform.properties"/>
+    <property name="platform.dir" value="../netbeans/"/>
+    <property name="lib.dir" value="${suite.dir}/../"/>
+    
+    <scriptdef name="substring" language="javascript">
+        <attribute name="text" />
+        <attribute name="start" />
+        <attribute name="end" />
+        <attribute name="property" />
+     <![CDATA[
+       var text = attributes.get("text");
+       var start = attributes.get("start");
+       var end = attributes.get("end") || text.length;
+       project.setProperty(attributes.get("property"), text.substring(start, end));
+     ]]>
+    </scriptdef>
+
+    <target name="-check-env" depends="-getAntContribJar">
+        <condition property="isNetbeans">
+            <not>
+                <isset property="Hudson"/>
+            </not>
+        </condition>
+<!--        <property name="xmltasks-loc" value="${lib.dir}/xmltask.jar"/>
+        <available file="${xmltasks-loc}" property="xmltasks.present"/>
+        <fail unless="xmltasks.present" message="The xmltasks jar doesn't exist at: ${xmltasks-loc}, can't build. Check your settings!" />
+        <taskdef name="xmltask" 
+                 classname="com.oopsconsultancy.xmltask.ant.XmlTask">
+            <classpath>
+                <pathelement location="${xmltasks-loc}"/>
+            </classpath>
+        </taskdef>-->
+    </target>
+
+    <target name="-getAntContribJar">
+        <fileset id="ant-contrib-jar" dir="${lib.dir}">
+            <include name="ant-contrib-*.jar" />
+        </fileset>
+        <pathconvert property="ant-contrib-jar" refid="ant-contrib-jar" pathsep="," />
+        <basename property="ant-contrib-filename" file="${ant-contrib-jar}"/>
+    </target>
+
+    <target name="-init-netbeans" depends="-check-env" if="isNetbeans">
+        <echo>Configuring ant-contrib for Netbeans use...</echo>
+        <property name="ant-contrib-loc" value="${lib.dir}/${ant-contrib-filename}"/>
+        <available file="${ant-contrib-loc}" property="ant-contrib.present"/>
+        <fail unless="ant-contrib.present" message="The ant-contrib jar doesn't exist at: ${ant-contrib-loc}, can't build. Check your settings!" />
+        <!--We are in not Hudson-->
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+            <classpath>
+                <pathelement location="${ant-contrib-loc}"/>
+            </classpath>
+        </taskdef>
+    </target>
+
+    <target name="-init-hudson" depends="-check-env" unless="isNetbeans">
+        <echo>Configuring ant-contrib for Hudson use...</echo>
+        <!--Import Hudson environment variables-->
+        <property environment="env"/>
+        <property name="ant-contrib-loc" value="${env.ANT_HOME}/lib/${ant-contrib-filename}"/>
+        <available file="${ant-contrib-loc}" property="ant-contrib.present"/>
+        <fail unless="ant-contrib.present" message="The ant-contrib jar doesn't exist at: ${ant-contrib-loc}, can't build. Check your settings!" />
+        <!--Define it. For some reason the approach in -init-netbeans doesn't work in Hudson.-->
+        <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask">
+            <classpath>
+                <pathelement location="${ant-contrib-loc}"/>
+            </classpath>
+        </taskdef>
+        <taskdef name="propertyregex" classname="net.sf.antcontrib.property.RegexTask">
+            <classpath>
+                <pathelement location="${ant-contrib-loc}"/>
+            </classpath>
+        </taskdef>
+        <taskdef name="if" classname="net.sf.antcontrib.logic.IfTask">
+            <classpath>
+                <pathelement location="${ant-contrib-loc}"/>
+            </classpath>
+        </taskdef>
+        <taskdef name="math" classname="net.sf.antcontrib.math.MathTask">
+            <classpath>
+                <pathelement location="${ant-contrib-loc}"/>
+            </classpath>
+        </taskdef>
+        <taskdef name="var" classname="net.sf.antcontrib.property.Variable">
+            <classpath>
+                <pathelement location="${ant-contrib-loc}"/>
+            </classpath>
+        </taskdef>
+        <taskdef name="foreach" classname="net.sf.antcontrib.logic.ForEach">
+            <classpath>
+                <pathelement location="${ant-contrib-loc}"/>
+            </classpath>
+        </taskdef>
+    </target>
+    
+    <target name="module-fix-dependencies">
+        <ant antfile= "${suite.dir}/versions.xml" target="fix"/>
+    </target>
+    
+    <!-- iterate finds all build files, excluding this one and invokes the named target -->
+    <macrodef name="iterate">
+        <attribute name="target"/>
+        <sequential>
+            <subant target="@{target}">
+                <fileset dir="." 
+                         includes="**/*/build.xml"
+                         excludes="build.xml"/>
+            </subant>
+        </sequential>
+    </macrodef>
+</project>
