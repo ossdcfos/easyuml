@@ -1,10 +1,10 @@
 package org.uml.memberparser;
 
-import japa.parser.JavaParser;
-import japa.parser.ParseException;
-import japa.parser.ast.body.AnnotationMemberDeclaration;
-import japa.parser.ast.body.BodyDeclaration;
-import japa.parser.ast.body.FieldDeclaration;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseException;
+import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
+import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import java.util.LinkedHashSet;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;

@@ -11,6 +11,7 @@ import org.uml.model.ClassDiagram;
 /**
  * Dialog which allows for selection of the Java project in which the code
  * should be generated.
+ *
  * @author Uros
  */
 public class GenerateCodeDialog extends javax.swing.JDialog implements AutoCloseable {
@@ -20,7 +21,7 @@ public class GenerateCodeDialog extends javax.swing.JDialog implements AutoClose
      */
     private final ClassDiagram classDiagram;
     private final MyClassDiagramRenameTable renames;
-    
+
     /**
      * List of all open Java projects.
      */
@@ -29,9 +30,10 @@ public class GenerateCodeDialog extends javax.swing.JDialog implements AutoClose
     /**
      * Constructor specifying the class diagram to generate the code from.
      * Initalizes the GUI.
-     * @param classDiagram 
-     * @param renames 
-     * @throws java.lang.Exception 
+     *
+     * @param classDiagram
+     * @param renames
+     * @throws java.lang.Exception
      */
     public GenerateCodeDialog(ClassDiagram classDiagram, MyClassDiagramRenameTable renames) throws Exception {
         super((Frame) null, true);
@@ -39,9 +41,9 @@ public class GenerateCodeDialog extends javax.swing.JDialog implements AutoClose
         this.renames = renames;
         initComponents();
         buildComboBoxModel();
-        if(projectsList.isEmpty()) {
+        if (projectsList.isEmpty()) {
             throw new Exception("Java code must be generated to a Java project. Please open a Java project.");
-        }        
+        }
     }
 
     /**
@@ -52,13 +54,14 @@ public class GenerateCodeDialog extends javax.swing.JDialog implements AutoClose
         Project[] projects = OpenProjects.getDefault().getOpenProjects();
 
         for (Project project : projects) {
-            if (project.getClass().getSimpleName().equals("J2SEProject")) {
+            String projectClass = project.getClass().getSimpleName();
+            if (projectClass.equals("J2SEProject") || projectClass.equals("NbMavenProjectImpl")) {
                 cbxProjects.addItem(project.getProjectDirectory().getName());
                 projectsList.add(project);
             }
         }
     }
-    
+
     @Override
     public void close() throws Exception {
         dispose();
@@ -134,17 +137,25 @@ public class GenerateCodeDialog extends javax.swing.JDialog implements AutoClose
 
     /**
      * Generates code into the selected Java project's path.
-     * @param evt 
+     *
+     * @param evt
      */
     private void btnGenerateCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateCodeActionPerformed
-        String projectPath = projectsList.get(cbxProjects.getSelectedIndex()).getProjectDirectory().getPath() + File.separator;
-        ClassDiagramCodeGenerator.generateOrUpdateCode(classDiagram, renames, projectPath);
+        Project project = projectsList.get(cbxProjects.getSelectedIndex());
+        String projectPath = project.getProjectDirectory().getPath() + File.separator;
+        String projectSourcePath = projectPath + "src" + File.separator;
+        String projectClass = project.getClass().getSimpleName();
+        if (projectClass.equals("NbMavenProjectImpl")) {
+            projectSourcePath += "main" + File.separator + "java" + File.separator;
+        }
+        ClassDiagramCodeGenerator.generateOrUpdateCode(classDiagram, renames, projectSourcePath);
         dispose();
     }//GEN-LAST:event_btnGenerateCodeActionPerformed
 
     /**
      * Closes the dialog.
-     * @param evt 
+     *
+     * @param evt
      */
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         dispose();

@@ -1,13 +1,13 @@
 package org.uml.newcode.components;
 
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.body.EnumConstantDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.body.ModifierSet;
+import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.expr.NameExpr;
 import org.uml.newcode.members.LiteralCodeGenerator;
-import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.PackageDeclaration;
-import japa.parser.ast.body.EnumConstantDeclaration;
-import japa.parser.ast.body.EnumDeclaration;
-import japa.parser.ast.body.ModifierSet;
-import japa.parser.ast.body.TypeDeclaration;
-import japa.parser.ast.expr.NameExpr;
 import java.util.LinkedList;
 import java.util.List;
 import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;

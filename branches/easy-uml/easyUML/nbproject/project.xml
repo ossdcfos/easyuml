@@ -7,7 +7,7 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>japa.parser</code-name-base>
+                    <code-name-base>com.github.javaparser</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
