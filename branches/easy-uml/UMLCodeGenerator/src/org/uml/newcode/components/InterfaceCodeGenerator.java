@@ -1,13 +1,13 @@
 package org.uml.newcode.components;
 
-import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.PackageDeclaration;
-import japa.parser.ast.body.BodyDeclaration;
-import japa.parser.ast.body.ClassOrInterfaceDeclaration;
-import japa.parser.ast.body.ModifierSet;
-import japa.parser.ast.body.TypeDeclaration;
-import japa.parser.ast.expr.NameExpr;
-import japa.parser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.ModifierSet;
+import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import java.util.LinkedList;
 import java.util.List;
 import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;

@@ -1,13 +1,13 @@
 package org.uml.newcode.members;
 
-import japa.parser.JavaParser;
-import japa.parser.ParseException;
-import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.body.BodyDeclaration;
-import japa.parser.ast.body.FieldDeclaration;
-import japa.parser.ast.body.ModifierSet;
-import japa.parser.ast.body.VariableDeclarator;
-import japa.parser.ast.body.VariableDeclaratorId;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseException;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.ModifierSet;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.body.VariableDeclaratorId;
 import java.util.LinkedList;
 import java.util.List;
 import org.openide.util.Exceptions;

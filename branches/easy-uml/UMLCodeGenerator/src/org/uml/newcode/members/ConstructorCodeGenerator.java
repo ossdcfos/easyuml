@@ -1,12 +1,12 @@
 package org.uml.newcode.members;
 
-import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.body.BodyDeclaration;
-import japa.parser.ast.body.ConstructorDeclaration;
-import japa.parser.ast.body.ModifierSet;
-import japa.parser.ast.body.Parameter;
-import japa.parser.ast.body.VariableDeclaratorId;
-import japa.parser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.ModifierSet;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.VariableDeclaratorId;
+import com.github.javaparser.ast.stmt.BlockStmt;
 import java.util.LinkedList;
 import java.util.List;
 import org.uml.filetype.cdg.renaming.MyMembersRenameTable;

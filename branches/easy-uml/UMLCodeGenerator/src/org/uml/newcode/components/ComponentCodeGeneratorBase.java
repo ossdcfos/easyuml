@@ -1,9 +1,9 @@
 package org.uml.newcode.components;
 
-import japa.parser.JavaParser;
-import japa.parser.ParseException;
-import japa.parser.Token;
-import japa.parser.ast.CompilationUnit;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseException;
+import com.github.javaparser.Token;
+import com.github.javaparser.ast.CompilationUnit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

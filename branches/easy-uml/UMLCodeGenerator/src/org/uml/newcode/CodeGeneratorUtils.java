@@ -1,11 +1,11 @@
 package org.uml.newcode;
 
-import japa.parser.JavaParser;
-import japa.parser.ParseException;
-import japa.parser.ast.body.BodyDeclaration;
-import japa.parser.ast.body.FieldDeclaration;
-import japa.parser.ast.type.Type;
-import japa.parser.ast.type.VoidType;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseException;
+import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.ast.type.VoidType;
 import org.openide.util.Exceptions;
 
 /**

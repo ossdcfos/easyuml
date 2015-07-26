@@ -24,10 +24,9 @@ public class ClassDiagramCodeGenerator {
      *
      * @param classDiagram to generate code from
      * @param renames table of renamed components for updating of the existing code
-     * @param projectPath to save generated code to
+     * @param srcPath to save generated code to
      */
-    public static void generateOrUpdateCode(ClassDiagram classDiagram, MyClassDiagramRenameTable renames, String projectPath) {
-        String srcPath = projectPath + "src" + File.separator;
+    public static void generateOrUpdateCode(ClassDiagram classDiagram, MyClassDiagramRenameTable renames, String srcPath) {
         for (ComponentBase component : classDiagram.getComponents()) {
             // Generate code
             if (component instanceof ClassComponent) {

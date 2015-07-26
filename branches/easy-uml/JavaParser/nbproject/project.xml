@@ -3,18 +3,19 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>japa.parser</code-name-base>
+            <code-name-base>com.github.javaparser</code-name-base>
             <suite-component/>
             <module-dependencies/>
             <public-packages>
-                <package>japa.parser</package>
-                <package>japa.parser.ast</package>
-                <package>japa.parser.ast.body</package>
-                <package>japa.parser.ast.comments</package>
-                <package>japa.parser.ast.expr</package>
-                <package>japa.parser.ast.stmt</package>
-                <package>japa.parser.ast.type</package>
-                <package>japa.parser.ast.visitor</package>
+                <package>com.github.javaparser</package>
+                <package>com.github.javaparser.ast</package>
+                <package>com.github.javaparser.ast.body</package>
+                <package>com.github.javaparser.ast.comments</package>
+                <package>com.github.javaparser.ast.expr</package>
+                <package>com.github.javaparser.ast.internal</package>
+                <package>com.github.javaparser.ast.stmt</package>
+                <package>com.github.javaparser.ast.type</package>
+                <package>com.github.javaparser.ast.visitor</package>
             </public-packages>
         </data>
     </configuration>

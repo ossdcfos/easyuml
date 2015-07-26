@@ -1,9 +1,9 @@
 package org.uml.newcode.members;
 
-import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.body.BodyDeclaration;
-import japa.parser.ast.body.EnumConstantDeclaration;
-import japa.parser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.EnumConstantDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
 import java.util.List;
 import org.uml.filetype.cdg.renaming.MyMembersRenameTable;
 import org.uml.model.components.EnumComponent;
