@@ -69,13 +69,13 @@ public class ReverseEngineer {
                 classDiagram.addRelation(relation);
                 // Remove a field from the source which corresponds to the relation
                 // Relation fields are exclusively represented by relations in the class diagram
-                if(relation instanceof HasBaseRelation){
+                if (relation instanceof HasBaseRelation) {
                     HasBaseRelation hasRelation = (HasBaseRelation) relation;
                     ComponentBase source = hasRelation.getSource();
-                    for(MemberBase member : source.getMembers()){
-                        if(member instanceof Field){
+                    for (MemberBase member : source.getMembers()) {
+                        if (member instanceof Field) {
                             Field field = (Field) member;
-                            if(hasRelation.getFieldSignature().equals(field.getSignature())){
+                            if (hasRelation.getFieldSignature().equals(field.getSignature())) {
                                 source.removeMember(field);
                                 // One field per relation
                                 break;
@@ -207,11 +207,15 @@ public class ReverseEngineer {
     private static Visibility getVisibility(FieldDeclaration declaration) {
         int modifiers = declaration.getModifiers();
 
-        if (ModifierSet.isPublic(modifiers)) return Visibility.PUBLIC;
-        else if (ModifierSet.isProtected(modifiers))
+        if (ModifierSet.isPublic(modifiers)) {
+            return Visibility.PUBLIC;
+        } else if (ModifierSet.isProtected(modifiers)) {
             return Visibility.PROTECTED;
-        else if (ModifierSet.isPrivate(modifiers)) return Visibility.PRIVATE;
-        else return Visibility.PACKAGE;
+        } else if (ModifierSet.isPrivate(modifiers)) {
+            return Visibility.PRIVATE;
+        } else {
+            return Visibility.PACKAGE;
+        }
     }
 
     private static Method createMethod(MethodDeclaration declaration) {
@@ -235,11 +239,15 @@ public class ReverseEngineer {
 
     private static Visibility getVisibility(MethodDeclaration declaration) {
         int modifiers = declaration.getModifiers();
-        if (ModifierSet.isPublic(modifiers)) return Visibility.PUBLIC;
-        else if (ModifierSet.isProtected(modifiers))
+        if (ModifierSet.isPublic(modifiers)) {
+            return Visibility.PUBLIC;
+        } else if (ModifierSet.isProtected(modifiers)) {
             return Visibility.PROTECTED;
-        else if (ModifierSet.isPrivate(modifiers)) return Visibility.PRIVATE;
-        else return Visibility.PACKAGE;
+        } else if (ModifierSet.isPrivate(modifiers)) {
+            return Visibility.PRIVATE;
+        } else {
+            return Visibility.PACKAGE;
+        }
     }
 
     private static Constructor createConstructor(ConstructorDeclaration declaration) {
@@ -258,11 +266,15 @@ public class ReverseEngineer {
 
     private static Visibility getVisibility(ConstructorDeclaration declaration) {
         int modifiers = declaration.getModifiers();
-        if (ModifierSet.isPublic(modifiers)) return Visibility.PUBLIC;
-        else if (ModifierSet.isProtected(modifiers))
+        if (ModifierSet.isPublic(modifiers)) {
+            return Visibility.PUBLIC;
+        } else if (ModifierSet.isProtected(modifiers)) {
             return Visibility.PROTECTED;
-        else if (ModifierSet.isPrivate(modifiers)) return Visibility.PRIVATE;
-        else return Visibility.PACKAGE;
+        } else if (ModifierSet.isPrivate(modifiers)) {
+            return Visibility.PRIVATE;
+        } else {
+            return Visibility.PACKAGE;
+        }
     }
 
     private static Literal createLiteral(EnumConstantDeclaration declaration) {
@@ -284,9 +296,14 @@ public class ReverseEngineer {
                         ComponentBase childComponent = null;
                         ComponentBase parentComponent = null;
                         for (ComponentBase component : classDiagram.getComponents()) {
-                            if (component.getName().equals(cidecl.getName())) childComponent = component;
-                            else if (component.getName().equals(parent.getName())) parentComponent = component;
-                            if (childComponent != null && parentComponent != null) break;
+                            if (component.getName().equals(cidecl.getName())) {
+                                childComponent = component;
+                            } else if (component.getName().equals(parent.getName())) {
+                                parentComponent = component;
+                            }
+                            if (childComponent != null && parentComponent != null) {
+                                break;
+                            }
                         }
                         if (childComponent != null && parentComponent != null) {
                             IsRelation relation = new IsRelation();
@@ -303,9 +320,14 @@ public class ReverseEngineer {
                             ComponentBase childComponent = null;
                             ComponentBase parentComponent = null;
                             for (ComponentBase component : classDiagram.getComponents()) {
-                                if (component.getName().equals(cidecl.getName())) childComponent = component;
-                                else if (component.getName().equals(parent.getName())) parentComponent = component;
-                                if (childComponent != null && parentComponent != null) break;
+                                if (component.getName().equals(cidecl.getName())) {
+                                    childComponent = component;
+                                } else if (component.getName().equals(parent.getName())) {
+                                    parentComponent = component;
+                                }
+                                if (childComponent != null && parentComponent != null) {
+                                    break;
+                                }
                             }
                             if (childComponent != null && parentComponent != null) {
                                 ImplementsRelation relation = new ImplementsRelation();
@@ -322,8 +344,11 @@ public class ReverseEngineer {
                                 ComponentBase containedComponent = null;
                                 FieldDeclaration declaration = (FieldDeclaration) member;
                                 for (ComponentBase component : classDiagram.getComponents()) {
-                                    if (cidecl.getName().equals(component.getName())) containerComponent = component;
-                                    if (declaration.getType().toString().contains(component.getName())) {
+                                    if (cidecl.getName().equals(component.getName())) {
+                                        containerComponent = component;
+                                    }
+                                    String fieldType = declaration.getType().toString();
+                                    if (fieldType.equals(component.getName()) || fieldType.matches(".*[<\\,\\s]" + component.getName() + "[>\\,\\s].*")) {
                                         containedComponent = component;
                                     }
                                 }
@@ -353,7 +378,9 @@ public class ReverseEngineer {
                             ComponentBase usedComponent = null;
                             MethodDeclaration declaration = (MethodDeclaration) member;
                             for (ComponentBase component : classDiagram.getComponents()) {
-                                if (cidecl.getName().equals(component.getName())) containerComponent = component;
+                                if (cidecl.getName().equals(component.getName())) {
+                                    containerComponent = component;
+                                }
                                 if (declaration.getType().toString().contains(component.getName())) {
                                     usedComponent = component;
                                 } else {
