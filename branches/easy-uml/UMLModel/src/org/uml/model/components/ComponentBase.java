@@ -251,7 +251,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @return
      */
     public String deriveSignatureFromNewPackage(String newParentPackage) {
-        if (getParentPackage().equals("")) {
+        if (newParentPackage.equals("")) {
             return getName();
         } else {
             return newParentPackage + "." + getName();
