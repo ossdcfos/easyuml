@@ -25,7 +25,7 @@ import org.uml.model.ClassDiagram;
 /**
  * Class that responds to Reverse Engineer command from multi Java file selection
  *
- * @author Boris Perović Perović
+ * @author Boris Perović
  */
 public final class ReverseEngineerMultiFileAction extends ReverseEngineerActionBase implements ActionListener {
 

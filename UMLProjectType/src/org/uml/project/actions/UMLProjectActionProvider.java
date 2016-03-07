@@ -7,7 +7,7 @@ import org.uml.project.UMLProject;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class UMLProjectActionProvider implements ActionProvider {
 

@@ -15,7 +15,7 @@ import org.openide.filesystems.FileObject;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public final class UMLProjectMoveOrRenameOperation implements MoveOrRenameOperationImplementation {
 

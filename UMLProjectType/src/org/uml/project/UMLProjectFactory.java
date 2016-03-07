@@ -9,7 +9,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 @ServiceProvider(service=ProjectFactory.class)
 public class UMLProjectFactory implements ProjectFactory {

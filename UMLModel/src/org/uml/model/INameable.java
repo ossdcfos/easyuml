@@ -6,7 +6,7 @@ package org.uml.model;
  *          <br>2) Each ComponentBase has a name, used in ContainerBase to rename if the component with the same signature exists.
  *          <br>3) Each MemberBase has a name, used in ComponentBase to rename if the member with the same signature exists.
  * 
- * @author Boris Perović Perović
+ * @author Boris Perović
  */
 public interface INameable {
 

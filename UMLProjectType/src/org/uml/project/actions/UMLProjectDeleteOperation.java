@@ -9,7 +9,7 @@ import org.uml.project.UMLProject;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class UMLProjectDeleteOperation implements DeleteOperationImplementation {
 

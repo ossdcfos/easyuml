@@ -13,7 +13,7 @@ import java.util.LinkedHashSet;
  * Parts implement IHasSignature, as they need to be uniquely identified.
  * 
  * @see signatureExists(String componentSignature)
- * @author Boris Perović Perović
+ * @author Boris Perović
  * @param <T> type of contained components.
  */
 public abstract class ContainerBase<T extends INameable & IHasSignature> implements INameable {

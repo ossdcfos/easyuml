@@ -6,7 +6,7 @@ package org.uml.model;
  * Example: 1) ComponentBase has a unique signature within a ClassDiagram
  *          2) MemberBase has a unique signature within a ComponentBase
  * 
- * @author Boris Perović Perović
+ * @author Boris Perović
  */
 public interface IHasSignature {
 

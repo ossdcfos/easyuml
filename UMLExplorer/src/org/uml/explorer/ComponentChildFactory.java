@@ -11,7 +11,7 @@ import org.uml.model.members.MemberBase;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class ComponentChildFactory extends ChildFactory<MemberBase> implements PropertyChangeListener {
 

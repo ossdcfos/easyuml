@@ -13,7 +13,7 @@ import org.uml.project.UMLProject;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class UMLProjectOpenedHook extends ProjectOpenedHook {
 

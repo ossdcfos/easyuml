@@ -9,7 +9,7 @@ import org.uml.model.relations.RelationBase;
 
 /**
  *
- * @author Boris
+ * @author Boris Perović
  */
 public class MyRelationsRenameTable implements PropertyChangeListener {
 
