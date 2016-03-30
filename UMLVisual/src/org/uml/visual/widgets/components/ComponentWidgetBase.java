@@ -81,7 +81,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setOpaque(true);
         setCheckClipping(true);
-        setBackground(getColorTheme().getDefaultColor());
+//        setBackground(getColorTheme().getDefaultColor()); //ovo je visak
 
         headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
         headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0));

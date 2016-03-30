@@ -1,6 +1,7 @@
 package org.uml.visual.themes;
 
 import java.awt.Color;
+import java.awt.Paint;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import static org.uml.visual.widgets.components.ComponentWidgetBase.SELECT_BORDER_SIZE;
@@ -45,6 +46,8 @@ public class BlueGrayTheme implements Theme {
     protected static final Color DEFAULT_FONT_COLOR = Color.BLACK;
     protected static final Color HOVER_FONT_COLOR = DEFAULT_FONT_COLOR;
     protected static final Color SELECT_FONT_COLOR = Color.WHITE;
+    
+    protected static final Color SCENE_BACKGROUND_COLOR = Color.WHITE;
 
     @Override
     public String getName() {
@@ -164,5 +167,10 @@ public class BlueGrayTheme implements Theme {
     @Override
     public Color getSelectFontColor() {
         return SELECT_FONT_COLOR;
+    }
+
+    @Override
+    public Paint getSceneBackgroundColor() {
+        return SCENE_BACKGROUND_COLOR;
     }
 }
