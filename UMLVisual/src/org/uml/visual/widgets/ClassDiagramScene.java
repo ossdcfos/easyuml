@@ -466,8 +466,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
                     break;
                 case "REMOVE_COMPONENT":
                     ComponentBase component = (ComponentBase) evt.getNewValue();
-                    removeNode(component);
                     classDiagram.removeRelationsForAComponent(component);
+                    removeNode(component);
                     break;
                 case "ADD_RELATION":
                     break;
