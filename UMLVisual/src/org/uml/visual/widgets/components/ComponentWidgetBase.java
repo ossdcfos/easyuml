@@ -31,7 +31,7 @@ import org.uml.model.components.InterfaceComponent;
 import org.uml.visual.themes.Theme;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
-import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
+//import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
 
 /**
@@ -106,8 +106,8 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         // **** Actions ****
         // Connect action - CTRL + click
         getActions().addAction(ActionFactory.createExtendedConnectAction(scene.getInterractionLayer(), new ComponentConnectProvider()));
-        // Keybord actions over components
-        getActions().addAction(new ComponentWidgetKeyboardAction());
+//        // Keybord actions over components
+//        getActions().addAction(new ComponentWidgetKeyboardAction());
         // Select, resize, moveo and hover
         getActions().addAction(scene.createSelectAction());
         
