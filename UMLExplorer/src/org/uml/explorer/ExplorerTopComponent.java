@@ -229,6 +229,7 @@ public final class ExplorerTopComponent extends TopComponent implements Explorer
     private boolean isActivatedLinkedTC() {
         // current activated
         TopComponent activatedTC = WindowManager.getDefault().getRegistry().getActivated();
+        if (activatedTC == null) return false;
         // linked
         // TODO tight coupling. Can this be done better?
         TopComponent projectsLogicalTC = WindowManager.getDefault().findTopComponent("projectTabLogical_tc");
