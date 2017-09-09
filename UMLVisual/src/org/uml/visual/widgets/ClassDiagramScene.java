@@ -134,7 +134,9 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         addChild(connectionLayer);
         interractionLayer = new LayerWidget(this);
         addChild(interractionLayer);
-
+        
+        setBackground(colorTheme.getSceneBackgroundColor());
+        
         // middle-click + drag  Scene.getInputBindings().getPanActionButton()
         getActions().addAction(ActionFactory.createPanAction());
         // ctrl + scroll        Scene.getInputBindings().getZoomActionModifiers()
@@ -201,6 +203,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
 
     public void setColorTheme(String name) {
         colorTheme = ColorThemesStore.getColorTheme(name);
+        setBackground(colorTheme.getSceneBackgroundColor());
         for (Widget widget : mainLayer.getChildren()) {
             if (widget instanceof ComponentWidgetBase) {
                 ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;

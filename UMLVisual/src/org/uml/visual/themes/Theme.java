@@ -1,6 +1,7 @@
 package org.uml.visual.themes;
 
 import java.awt.Color;
+import java.awt.Paint;
 import org.netbeans.api.visual.border.Border;
 
 /**
@@ -42,4 +43,6 @@ public interface Theme {
     public Color getSelectFontColor();
 
     public String getName();
+
+    public Paint getSceneBackgroundColor();
 }

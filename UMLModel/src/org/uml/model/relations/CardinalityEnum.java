@@ -18,7 +18,7 @@ public enum CardinalityEnum {
     One2One {
                 @Override
                 public String toString() {
-                    return "1..1";
+                    return "1";
                 }
             },
     /**
@@ -45,7 +45,7 @@ public enum CardinalityEnum {
     Zero2Many {
                 @Override
                 public String toString() {
-                    return "0..*";
+                    return "*";
                 }
             };
     
@@ -57,7 +57,7 @@ public enum CardinalityEnum {
      * @return
      */
     public static CardinalityEnum parseString(String cardinalityEnum) {
-        if (cardinalityEnum.equalsIgnoreCase("1..1")) {
+        if (cardinalityEnum.equalsIgnoreCase("1")) {
             return CardinalityEnum.One2One;
         }
         if (cardinalityEnum.equalsIgnoreCase("0..1")) {
@@ -66,7 +66,7 @@ public enum CardinalityEnum {
         if (cardinalityEnum.equalsIgnoreCase("1..*")) {
             return CardinalityEnum.One2Many;
         }
-        if (cardinalityEnum.equalsIgnoreCase("0..*")) {
+        if (cardinalityEnum.equalsIgnoreCase("*")) {
             return CardinalityEnum.Zero2Many;
         }
         return CardinalityEnum.Zero2One;
