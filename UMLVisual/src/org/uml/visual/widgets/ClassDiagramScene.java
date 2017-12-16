@@ -2,6 +2,7 @@ package org.uml.visual.widgets;
 
 import org.uml.visual.widgets.anchors.SelfLinkRouter;
 import com.timboudreau.vl.jung.ObjectSceneAdapter;
+import java.awt.Color;
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -123,6 +124,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     @SuppressWarnings("LeakingThisInConstructor")
     public ClassDiagramScene(ClassDiagram umlClassDiagram, final UMLTopComponent umlTopComponent) {
 
+        setBackground(Color.WHITE); 
+        
         classDiagram = umlClassDiagram;
         addObject(classDiagram, this); // seleciton of scene
         classDiagram.addPropertyChangeListener(this);
