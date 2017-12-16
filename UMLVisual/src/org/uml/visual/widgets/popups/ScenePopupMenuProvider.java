@@ -26,6 +26,7 @@ import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.visual.dialogs.ConnectRelationPanel;
+import org.uml.visual.dialogs.CustomSizePanel;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.components.ClassWidget;
@@ -144,7 +145,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         miExportAsImageCurrent.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                exportAsImage(true);
+                exportAsImage(true,false);
             }
         });
         mExportAsImage.add(miExportAsImageCurrent);
@@ -152,11 +153,18 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         miExportAsImageWhole.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                exportAsImage(false);
+                exportAsImage(false,false);
             }
         });
         mExportAsImage.add(miExportAsImageWhole);
-
+        miExportAsImageWhole = new JMenuItem("Whole diagram (custom size)");
+        miExportAsImageWhole.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exportAsImage(false,true);
+            }
+        });
+        mExportAsImage.add(miExportAsImageWhole);
         miApplyJUNGLayout = new JMenuItem("Arrange diagram (experimental)");
         miApplyJUNGLayout.addActionListener(new ActionListener() {
             @Override
@@ -263,7 +271,17 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         }
     }
 
-    private void exportAsImage(boolean onlyVisiblePart) {
+    private File currentSaveDirectory;
+    private void exportAsImage(boolean onlyVisiblePart,boolean customSize) {    
+        int customWidth = 4*scene.getPreferredBounds().width;
+        int customHeight = 4*scene.getPreferredBounds().height;
+        if (customSize) {
+            CustomSizePanel customSizePanel = new CustomSizePanel(customWidth,customHeight);
+            if (!customSizePanel.openDialog())
+                return;
+            customWidth = customSizePanel.getWidth();
+            customHeight = customSizePanel.getHeight();            
+        }
         JFileChooser chooser = new JFileChooser() {
             @Override
             public void approveSelection() {
@@ -286,15 +304,21 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 super.approveSelection();
             }
         };
+        if (currentSaveDirectory != null) {
+            chooser.setCurrentDirectory(currentSaveDirectory);
+        }
         chooser.setFileFilter(new FileNameExtensionFilter("Portable Network Graphics (.png)", "png"));
         if (chooser.showSaveDialog(scene.getView()) == JFileChooser.APPROVE_OPTION) {
             File f = chooser.getSelectedFile();
+            if (f != null && f.getParentFile() != null) {
+                currentSaveDirectory = f;
+            }
             if (!f.getName().toLowerCase().endsWith(".png")) {
                 f = new File(f.getParentFile(), f.getName() + ".png");
             }
             try {
                 // Zoom type is overriden if onlyVisiblePart is set
-                SceneExporter.createImage(scene, f, SceneExporter.ImageType.PNG, SceneExporter.ZoomType.ACTUAL_SIZE, onlyVisiblePart, false, 0, 0, 0);
+                SceneExporter.createImage(scene, f, SceneExporter.ImageType.PNG, customSize?SceneExporter.ZoomType.CUSTOM_SIZE:SceneExporter.ZoomType.ACTUAL_SIZE, onlyVisiblePart, false, 0, customWidth, customHeight);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Cannot export scene as image!", "Input-output error!", JOptionPane.ERROR_MESSAGE);
                 Exceptions.printStackTrace(ex);
