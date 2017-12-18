@@ -198,6 +198,12 @@ public abstract class MemberBase implements INameable, IHasSignature {
     protected abstract String getSimpleTypeSignature();
 
     /**
+     * Returns an UML signature with simple type names and without modifiers.
+     * @return simple signature of this member
+     */
+    protected abstract String getSimpleTypeUMLSignature();
+    
+    /**
      * Returns the text which is shown to the user in the GUI.
      * @param isSimpleTypeNames - if simple type names are used or not
      * @return 

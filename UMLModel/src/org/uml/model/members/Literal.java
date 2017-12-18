@@ -36,6 +36,15 @@ public class Literal extends MemberBase {
     }
 
     @Override
+    public String getUMLSignature() {
+        return name;
+    }
+    
+    @Override
+    public String getSimpleTypeUMLSignature() {
+        return getSignature();
+    }    
+    @Override
     public String getLabelText(boolean isShort) {
         return getSignature();
     }

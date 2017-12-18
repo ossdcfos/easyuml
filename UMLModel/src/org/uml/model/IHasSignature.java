@@ -11,4 +11,5 @@ package org.uml.model;
 public interface IHasSignature {
 
     public String getSignature();
+    public String getUMLSignature();
 }

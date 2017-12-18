@@ -146,8 +146,8 @@ public class Method extends MethodBase {
         StringBuilder result = new StringBuilder();
         // removes static because it is rendered as underline
         if (isStatic()) result.append(Modifier.toString(modifiers).replace("static ", "").trim().replace("\\s+", " ")).append(" ");
-        if (isSimpleTypeNames) result.append(getSimpleTypeSignature());
-        else result.append(getSignature());
+        if (isSimpleTypeNames) result.append(getSimpleTypeUMLSignature());
+        else result.append(getUMLSignature());
         return result.toString();
     }
 }

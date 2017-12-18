@@ -227,6 +227,11 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
             return getParentPackage() + "." + getName();
         }
     }
+    
+    @Override
+    public String getUMLSignature() {
+        return getSignature();
+    }    
 
     /**
      * Makes a signature with a potential new name so that we can check if the component
