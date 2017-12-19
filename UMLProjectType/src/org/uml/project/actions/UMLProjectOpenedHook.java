@@ -38,8 +38,10 @@ public class UMLProjectOpenedHook extends ProjectOpenedHook {
         // Close UMLTopComponents corresponding to diagram data objects and dispose diagram data objects
         for (Node node : classDiagramNodes) {
             ClassDiagramDataObject cddo = node.getLookup().lookup(ClassDiagramDataObject.class);
-            cddo.notifyDispose();
-        }
+            if (cddo != null) {
+                cddo.notifyDispose();
+            }
+        }           
         // Check if there is some open UMLProject remaining
         boolean someUmlProjectOpen = false;
         for (Project openProject : OpenProjects.getDefault().getOpenProjects()) {
