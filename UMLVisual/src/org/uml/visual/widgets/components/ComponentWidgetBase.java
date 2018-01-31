@@ -30,6 +30,7 @@ import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.visual.themes.Theme;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.ResampledImageWidget;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
 //import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
@@ -45,7 +46,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
     protected final Widget headerWidget;
     protected Widget iconNameContainer = new Widget(getScene());
     protected static String iconFolderPath = "org/uml/visual/widgets/icons/";
-    protected ImageWidget iconWidget = new ImageWidget(getScene());
+    protected ResampledImageWidget iconWidget = new ResampledImageWidget(getScene());
     protected LabelWidget nameLabel;
 
     protected LinkedList<SeparatorWidget> separators = new LinkedList<>();
@@ -89,6 +90,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 
         iconWidget.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 3));
         iconWidget.setVisible(scene.isShowIcons());
+        iconWidget.setMaximumSize(new Dimension(12,12));
         if (component instanceof ClassComponent) {
             iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "class.png"));
         } else if (component instanceof InterfaceComponent) {
