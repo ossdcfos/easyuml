@@ -40,10 +40,42 @@ public class Constructor extends MethodBase {
     }
 
     @Override
+    public String getUMLSignature() {
+        StringBuilder result = new StringBuilder();
+        result.append(getName()).append("(");
+        if (getArguments() != null) {
+            result.append(getUMLArgumentsString(false));
+        }
+        result.append(")");
+        return result.toString();
+    }
+
+    @Override
+    public String getSimpleTypeUMLSignature() {
+        StringBuilder result = new StringBuilder();
+        result.append(getName()).append("(");
+        if (getArguments() != null) {
+            result.append(getUMLArgumentsString(true));
+        }
+        result.append(")");
+        return result.toString();
+    }    
+    
+    private String getUMLArgumentsString(boolean isSimple) {
+        StringBuilder args = new StringBuilder();
+        String delimiter = "";
+        for (MethodArgument argument : getArguments()) {
+            String argType = isSimple ? getSimpleType(argument.getType()) : argument.getType();
+            args.append(delimiter).append(argument.getName()).append(": ").append(argType);
+            delimiter = ", ";
+        }
+        return args.toString();
+    }        
+    @Override
     public String getLabelText(boolean isSimpleTypeNames) {
         StringBuilder result = new StringBuilder();
-        if (isSimpleTypeNames) result.append(getSimpleTypeSignature());
-        else result.append(getSignature());
+        if (isSimpleTypeNames) result.append(getSimpleTypeUMLSignature());
+        else result.append(getUMLSignature());
         return result.toString();
     }
 }
