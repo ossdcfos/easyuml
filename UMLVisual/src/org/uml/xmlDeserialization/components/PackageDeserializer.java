@@ -37,12 +37,14 @@ public class PackageDeserializer implements XmlDeserializer {
         if (name != null) packageComponent.setName(name);
         if (packageName != null) packageComponent.setParentPackage(packageName);
         if (visibility != null) packageComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
-        packageComponent.setLocation(new Point(xPos, yPos));
+        //packageComponent.setLocation(new Point(xPos, yPos));
+        int width = 0;
+        int height = 0;
         if (node.attribute("width") != null && node.attribute("height") != null) {
-            int width = (int) Double.parseDouble(node.attributeValue("width"));
-            int height = (int) Double.parseDouble(node.attributeValue("height"));
-            Rectangle bounds = new Rectangle(0,0,width,height);
-            packageComponent.setBounds(bounds);
+            width = (int) Double.parseDouble(node.attributeValue("width"));
+            height = (int) Double.parseDouble(node.attributeValue("height"));
         }
+        Rectangle bounds = new Rectangle(xPos,yPos,width,height);
+        packageComponent.setBounds(bounds);
     }
 }

@@ -39,7 +39,11 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
     protected String generateCode(ClassComponent component) {
         CompilationUnit cu = new CompilationUnit();
         cu.setTypes(new LinkedList<TypeDeclaration>());
-        if (!component.getParentPackage().isEmpty()) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            System.out.println(parentPackage);
+            cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));
+        }
         createSkeleton(component, cu);
         FieldCodeGenerator.createFields(component, cu);
         ConstructorCodeGenerator.createConstructors(component, cu);
@@ -107,7 +111,10 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
 
     @Override
     protected String updateCode(ClassComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
-        if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));
+        }
         updateSkeleton(component, cu);
         FieldCodeGenerator.updateFields(component, renames.getComponentRenames().getMembersRenameTable(component), renames.getRelationRenames(), cu);
         ConstructorCodeGenerator.updateConstructors(component, renames.getComponentRenames().getMembersRenameTable(component), cu);

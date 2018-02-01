@@ -166,7 +166,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 
         boolean focused = state.isFocused();
         boolean hovered = state.isHovered();
-
+        
         if (focused) {
             setBorder(getColorTheme().getSelectBorder());
             if (hovered) setBackground(getColorTheme().getHoverSelectColor());
@@ -174,20 +174,24 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
             for (SeparatorWidget separator : separators) {
                 separator.setForeground(getColorTheme().getSelectBorderColor());
             }
-        } else if (hovered) {
-            setBorder(getColorTheme().getHoverBorder());
-            setBackground(getColorTheme().getHoverColor());
-            for (SeparatorWidget separator : separators) {
-                separator.setForeground(getColorTheme().getHoverBorderColor());
-            }
-        } else {
-            setBorder(getColorTheme().getDefaultBorder());
-            if (component instanceof PackageComponent) {
-                setBackground(getColorTheme().getBackgroundColor());
-            }
-            else {
+        } else if (!(component instanceof PackageComponent)) {
+            if (hovered) {
+                setBorder(getColorTheme().getHoverBorder());
+                setBackground(getColorTheme().getHoverColor());
+                for (SeparatorWidget separator : separators) {
+                    separator.setForeground(getColorTheme().getHoverBorderColor());
+                }
+            } else {
+                setBorder(getColorTheme().getDefaultBorder());
                 setBackground(getColorTheme().getDefaultColor());
+                for (SeparatorWidget separator : separators) {
+                    separator.setForeground(getColorTheme().getDefaultBorderColor());
+                }
             }
+        }
+        else {
+            setBorder(getColorTheme().getDefaultBorder());
+            setBackground(getColorTheme().getBackgroundColor());
             for (SeparatorWidget separator : separators) {
                 separator.setForeground(getColorTheme().getDefaultBorderColor());
             }
@@ -205,8 +209,8 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 
     public void setName(String newName) {
         if (!getName().equals(newName)) {
-            if (component.getParentDiagram().signatureExists(component.getParentPackage() + "." + newName)) {
-                JOptionPane.showMessageDialog(getScene().getView(), "Name \"" + component.getParentPackage() + "." + newName + "\" already exists!");
+            if (component.getParentDiagram().signatureExists(component.getFullParentPackage() + "." + newName)) {
+                JOptionPane.showMessageDialog(getScene().getView(), "Name \"" + component.getFullParentPackage() + "." + newName + "\" already exists!");
             } else {
                 component.setName(newName);
             }

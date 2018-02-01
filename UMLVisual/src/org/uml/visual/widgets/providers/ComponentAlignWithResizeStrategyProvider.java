@@ -228,7 +228,7 @@ public final class ComponentAlignWithResizeStrategyProvider extends AlignWithSup
 
     public void resizingFinished(Widget widget) {
         hide();
-        // TODO enable notifyModified on resize, when component sizes are being persistedh
-//        scene.getUmlTopComponent().notifyModified();
+        scene.updateComponents();
+        scene.getUmlTopComponent().notifyModified();
     }
 }

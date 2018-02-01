@@ -84,6 +84,15 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
         components.remove(component);
         pcs.firePropertyChange("REMOVE_COMPONENT", null, component);
     }
+    
+    /**
+     * Remove all components from the container
+     * 
+     * Does not fire any event
+     */
+    public void removeAllComponentsFromContainer() {
+        components.clear();
+    }
 
     /**
      * Checks if the component with the provided signature exists 

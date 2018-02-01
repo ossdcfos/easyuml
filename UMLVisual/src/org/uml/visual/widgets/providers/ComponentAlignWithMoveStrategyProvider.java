@@ -62,6 +62,7 @@ public final class ComponentAlignWithMoveStrategyProvider extends AlignWithSuppo
     public void movementFinished(Widget widget) {
         hide();
         if(!startLocation.equals(widget.getLocation())) {
+            scene.updateComponents();
             scene.getUmlTopComponent().notifyModified();
         }
     }

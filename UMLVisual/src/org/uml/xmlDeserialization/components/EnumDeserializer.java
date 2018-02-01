@@ -2,6 +2,7 @@ package org.uml.xmlDeserialization.components;
 
 import org.uml.xmlDeserialization.members.LiteralDeserializer;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
 import org.uml.model.components.EnumComponent;
@@ -39,8 +40,16 @@ public class EnumDeserializer implements XmlDeserializer {
         if (name != null) enumComponent.setName(name);
         if (packageName != null) enumComponent.setParentPackage(packageName);
         if (visibility != null) enumComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
-        enumComponent.setLocation(new Point(xPos, yPos));
-
+        //enumComponent.setLocation(new Point(xPos, yPos));
+        int width = 0;
+        int height = 0;
+        if (node.attribute("width") != null && node.attribute("height") != null) {
+            width = (int) Double.parseDouble(node.attributeValue("width"));
+            height = (int) Double.parseDouble(node.attributeValue("height"));
+        }
+        Rectangle bounds = new Rectangle(xPos,yPos,width,height);
+        enumComponent.setBounds(bounds);
+        
         Iterator<?> literalIterator = node.element("Literals").elementIterator("Literal");
         while (literalIterator != null && literalIterator.hasNext()) {
             Element literalElement = (Element) literalIterator.next();

@@ -32,12 +32,14 @@ public abstract class ComponentPopupMenuProvider implements PopupMenuProvider {
         @Override
         public void actionPerformed(ActionEvent e) {
             widget.bringToFront();
+            widget.getClassDiagramScene().updateComponentsZOrder();
         }
     };    
     ActionListener moveToBackListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             widget.bringToBack();
+            widget.getClassDiagramScene().updateComponentsZOrder();
         }
     };     
 }

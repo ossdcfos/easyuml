@@ -85,24 +85,16 @@ public class ClassDiagramSerializer implements XmlSerializer {
 //        node.addAttribute("showMembers", Boolean.toString(classDiagramScene.isShowMembers()));
 //        node.addAttribute("showSimpleTypeNames", Boolean.toString(classDiagramScene.isShowSimpleTypes()));
         Element classDiagramComponents = node.addElement("ClassDiagramComponents");
-        for (Widget layer : classDiagramScene.getChildren()) {
-            for (Widget w : layer.getChildren()) {
-                if (!(w instanceof ComponentWidgetBase))
-                    continue;
-                ComponentWidgetBase widgetBase = (ComponentWidgetBase)w;
-                ComponentBase component = widgetBase.getComponent();
-                Element componentNode = classDiagramComponents.addElement(component.getClass().getSimpleName().replace("Component", ""));
-                ComponentSerializer serializer = componentSerializers.get(component.getClass());
-                serializer.setClassDiagramComponent(component);
-                serializer.serialize(componentNode);
-                componentNode.addAttribute("xPosition", String.valueOf(w.getPreferredLocation().getX()));
-                componentNode.addAttribute("yPosition", String.valueOf(w.getPreferredLocation().getY()));
-                Rectangle bounds = w.getBounds();
-                if (bounds != null) {
-                    componentNode.addAttribute("width", String.valueOf(bounds.getSize().width));
-                    componentNode.addAttribute("height", String.valueOf(bounds.getSize().height));
-                }
-            }
+        for (ComponentBase component : classDiagram.getComponents()) {
+            Element componentNode = classDiagramComponents.addElement(component.getClass().getSimpleName().replace("Component", ""));
+            ComponentSerializer serializer = componentSerializers.get(component.getClass());
+            serializer.setClassDiagramComponent(component);
+            serializer.serialize(componentNode);
+            Rectangle bounds = component.getBounds();
+            componentNode.addAttribute("xPosition", String.valueOf(bounds.getX()));
+            componentNode.addAttribute("yPosition", String.valueOf(bounds.getY()));
+            componentNode.addAttribute("width", String.valueOf(bounds.getSize().width));
+            componentNode.addAttribute("height", String.valueOf(bounds.getSize().height));
         }
 
         Element classDiagramRelations = node.addElement("ClassDiagramRelations");

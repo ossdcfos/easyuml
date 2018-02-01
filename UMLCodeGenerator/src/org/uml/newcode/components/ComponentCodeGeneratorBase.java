@@ -77,7 +77,7 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
         }
 
         // Add package to the path
-        String packag = component.getParentPackage();
+        String packag = component.getFullParentPackage();
         String fullPath;
         if (!packag.equals("")) {
             String packagePath = packag.replace(".", File.separator);

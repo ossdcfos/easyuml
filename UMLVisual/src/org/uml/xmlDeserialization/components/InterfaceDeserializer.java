@@ -2,6 +2,7 @@ package org.uml.xmlDeserialization.components;
 
 import org.uml.xmlDeserialization.members.MethodDeserializer;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
 import org.uml.model.components.InterfaceComponent;
@@ -42,8 +43,16 @@ public class InterfaceDeserializer implements XmlDeserializer {
         if (packageName != null) interfaceComponent.setParentPackage(packageName);
         if (visibility != null) interfaceComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         if (isStatic != null) interfaceComponent.setStatic(Boolean.parseBoolean(isStatic));
-        interfaceComponent.setLocation(new Point(xPos, yPos));
-
+        //interfaceComponent.setLocation(new Point(xPos, yPos));
+        int width = 0;
+        int height = 0;
+        if (node.attribute("width") != null && node.attribute("height") != null) {
+            width = (int) Double.parseDouble(node.attributeValue("width"));
+            height = (int) Double.parseDouble(node.attributeValue("height"));
+        }
+        Rectangle bounds = new Rectangle(xPos,yPos,width,height);
+        interfaceComponent.setBounds(bounds);
+        
         Iterator<?> methodIterator = node.element("Methods").elementIterator("Method");
         while (methodIterator != null && methodIterator.hasNext()) {
             Element methodElement = (Element) methodIterator.next();

@@ -36,7 +36,10 @@ public class InterfaceCodeGenerator extends ComponentCodeGeneratorBase<Interface
     protected String generateCode(InterfaceComponent component) {
         CompilationUnit cu = new CompilationUnit();
         cu.setTypes(new LinkedList<TypeDeclaration>());
-        if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));
+        }
         createSkeleton(component, cu);
         MethodCodeGenerator.createMethods(component, cu);
 
@@ -83,7 +86,10 @@ public class InterfaceCodeGenerator extends ComponentCodeGeneratorBase<Interface
 
     @Override
     protected String updateCode(InterfaceComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
-        if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));
+        }
         updateHeader(component, cu);
         MethodCodeGenerator.updateMethods(component, renames.getComponentRenames().getMembersRenameTable(component), cu);
 

@@ -4,9 +4,12 @@ import org.uml.visual.widgets.anchors.SelfLinkRouter;
 import com.timboudreau.vl.jung.ObjectSceneAdapter;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import org.uml.visual.widgets.components.ClassWidget;
@@ -20,6 +23,7 @@ import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.HasBaseRelation;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
@@ -160,8 +164,15 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         // Add all the components to the diagram
         for (ComponentBase comp : classDiagram.getComponents()) {
             Widget w = addNode(comp);
-            w.setPreferredLocation(convertLocalToScene(comp.getLocation()));
-            w.setPreferredBounds(comp.getBounds());
+            Rectangle bounds = comp.getBounds();
+            if (bounds == null || bounds.getWidth() == 0 || bounds.getHeight() == 0) {
+                w.setPreferredLocation(convertLocalToScene(comp.getLocation()));
+            }
+            else {
+                w.setPreferredLocation(convertLocalToScene(bounds.getLocation()));
+                bounds = new Rectangle(bounds.getSize());
+                w.setPreferredBounds(convertLocalToScene(bounds));
+            }
         }
 
         // Add all the relations to the diagram
@@ -567,4 +578,44 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     private void deselectAllBackgroundNodes() {
         selectBackgroundNode(null);
     }
+    
+    /**
+     * Return the list of component wigets (class, enum, interface and packages)
+     * in visual order, from background to foreground
+     * @return 
+     */
+    public List<ComponentWidgetBase> getComponentWidgets() {
+        List<ComponentWidgetBase> list = new ArrayList();
+        for (Widget layer : getChildren()) {
+            for (Widget w : layer.getChildren()) {
+                if (!(w instanceof ComponentWidgetBase))
+                    continue;    
+                ComponentWidgetBase widgetBase = (ComponentWidgetBase)w;
+                list.add(widgetBase);
+            }
+        }
+        return list;
+    }
+    
+    public void updateComponents() {
+        //System.out.println("Update components...");
+        for (ComponentWidgetBase widget : getComponentWidgets()) {
+            ComponentBase component = widget.getComponent();
+            Rectangle bounds = widget.getBounds();
+            Point location = widget.getPreferredLocation();
+            bounds.setLocation(location);
+            component.setBounds(bounds);
+        }
+        classDiagram.updateComponentPackages();
+    }    
+
+    public void updateComponentsZOrder() {
+        //System.out.println("Update components z order...");
+        classDiagram.removeAllComponentsFromContainer();
+        for (ComponentWidgetBase widget : getComponentWidgets()) {
+            ComponentBase component = widget.getComponent();
+            classDiagram.addComponent(component);
+        }
+        classDiagram.updateComponentPackages();
+    }    
 }

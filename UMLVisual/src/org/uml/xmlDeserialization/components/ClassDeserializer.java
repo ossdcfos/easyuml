@@ -4,6 +4,7 @@ import org.uml.xmlDeserialization.members.ConstructorDeserializer;
 import org.uml.xmlDeserialization.members.FieldDeserializer;
 import org.uml.xmlDeserialization.members.MethodDeserializer;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
 import org.uml.model.components.ClassComponent;
@@ -61,8 +62,16 @@ public class ClassDeserializer implements XmlDeserializer {
         if (isAbstract != null) classComponent.setAbstract(Boolean.parseBoolean(isAbstract));
         if (isStatic != null) classComponent.setStatic(Boolean.parseBoolean(isStatic));
         if (isFinal != null) classComponent.setFinal(Boolean.parseBoolean(isFinal));
-        classComponent.setLocation(new Point(xPos, yPos));
-
+        //classComponent.setLocation(new Point(xPos, yPos));
+        int width = 0;
+        int height = 0;
+        if (node.attribute("width") != null && node.attribute("height") != null) {
+            width = (int) Double.parseDouble(node.attributeValue("width"));
+            height = (int) Double.parseDouble(node.attributeValue("height"));
+        }
+        Rectangle bounds = new Rectangle(xPos,yPos,width,height);
+        classComponent.setBounds(bounds);
+        
         Iterator<?> fieldIterator = node.element("Fields").elementIterator("Field");
         while (fieldIterator != null && fieldIterator.hasNext()) {
             Element fieldElement = (Element) fieldIterator.next();

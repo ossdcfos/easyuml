@@ -1,6 +1,7 @@
 package org.uml.visual.widgets.popups;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -23,6 +24,7 @@ import org.openide.util.Exceptions;
 import org.openide.windows.WindowManager;
 import org.uml.jung.JUNGEngine;
 import org.uml.model.components.ClassComponent;
+import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.components.PackageComponent;

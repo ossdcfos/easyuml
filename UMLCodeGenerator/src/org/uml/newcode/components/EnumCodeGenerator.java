@@ -34,7 +34,10 @@ public class EnumCodeGenerator extends ComponentCodeGeneratorBase<EnumComponent>
     protected String generateCode(EnumComponent component) {
         CompilationUnit cu = new CompilationUnit();
         cu.setTypes(new LinkedList<TypeDeclaration>());
-        if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));
+        }
         createSkeleton(component, cu);
         LiteralCodeGenerator.createLiterals(component, cu);
 
@@ -62,7 +65,10 @@ public class EnumCodeGenerator extends ComponentCodeGeneratorBase<EnumComponent>
 
     @Override
     protected String updateCode(EnumComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
-        if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));
+        }
         updateSkeleton(component, cu);
         LiteralCodeGenerator.updateLiterals(component, renames.getComponentRenames().getMembersRenameTable(component), cu);
 
