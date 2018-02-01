@@ -25,6 +25,7 @@ import org.uml.jung.JUNGEngine;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
+import org.uml.model.components.PackageComponent;
 import org.uml.visual.dialogs.ConnectRelationPanel;
 import org.uml.visual.dialogs.CustomSizePanel;
 import org.uml.visual.widgets.ClassDiagramScene;
@@ -32,6 +33,7 @@ import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.InterfaceWidget;
+import org.uml.visual.widgets.components.PackageWidget;
 import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
 
 /**
@@ -45,6 +47,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem miCreateClass;
     private JMenuItem miCreateInterface;
     private JMenuItem miCreateEnum;
+    private JMenuItem miCreatePackage;
     private JMenuItem miCreateRelationship;
 //    private JMenuItem miGenerateCode;
     private JMenu mExportAsImage;
@@ -120,7 +123,22 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
             }
         });
+        miCreatePackage = new JMenuItem("Add Package");
+        miCreatePackage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PackageWidget widget = (PackageWidget) scene.addNode(new PackageComponent());
+                widget.bringToBack();
+                widget.setPreferredLocation(popupPoint);
+                widget.getComponent().setLocation(popupPoint);
+                scene.validate();
 
+                // Temp renamer
+                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(widget));
+                ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
+                scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
+            }
+        });
         miCreateRelationship = new JMenuItem("Add Relationship");
         miCreateRelationship.addActionListener(new ActionListener() {
             @Override
@@ -238,6 +256,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
         sceneMenu.add(miCreateEnum);
 
+        sceneMenu.add(miCreatePackage);
+        
         sceneMenu.addSeparator();
 
         sceneMenu.add(miCreateRelationship);

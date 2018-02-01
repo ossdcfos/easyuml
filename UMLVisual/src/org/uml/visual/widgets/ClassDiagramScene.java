@@ -40,6 +40,7 @@ import org.uml.explorer.ClassDiagramNode;
 import org.uml.explorer.ComponentNode;
 import org.uml.explorer.MemberNode;
 import org.uml.model.*;
+import org.uml.model.components.PackageComponent;
 import org.uml.model.members.MemberBase;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
@@ -48,6 +49,7 @@ import org.uml.visual.UMLTopComponent;
 import org.uml.visual.themes.Theme;
 import org.uml.visual.themes.ColorThemesStore;
 import org.uml.visual.widgets.anchors.ParallelNodeAnchor;
+import org.uml.visual.widgets.components.PackageWidget;
 import org.uml.visual.widgets.providers.*;
 import org.uml.visual.widgets.popups.ScenePopupMenuProvider;
 import org.uml.visual.widgets.relations.HasBaseRelationWidget;
@@ -159,7 +161,7 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         for (ComponentBase comp : classDiagram.getComponents()) {
             Widget w = addNode(comp);
             w.setPreferredLocation(convertLocalToScene(comp.getLocation()));
-//            w.setPreferredBounds(comp.getBounds());
+            w.setPreferredBounds(comp.getBounds());
         }
 
         // Add all the relations to the diagram
@@ -300,6 +302,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             widget = new InterfaceWidget(this, (InterfaceComponent) component);
         } else if (component instanceof EnumComponent) {
             widget = new EnumWidget(this, (EnumComponent) component);
+        } else if (component instanceof PackageComponent) {
+            widget = new PackageWidget(this, (PackageComponent) component);
         } else {
 //            throw new RuntimeException("Unknown component!");
         }

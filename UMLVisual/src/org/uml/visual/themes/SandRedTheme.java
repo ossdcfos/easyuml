@@ -13,6 +13,7 @@ public class SandRedTheme implements Theme {
 
     // Component - colors
     protected static final Color DEFAULT_COLOR = new Color(0xF2D3BD);
+    protected static final Color BACKGROUND_COLOR = new Color(0xFFFFFF);
     protected static final Color HOVER_COLOR = new Color(0xF2CFB6);
     protected static final Color SELECT_COLOR = new Color(0xEDC9AF);
     protected static final Color HOVER_SELECT_COLOR = new Color(0xEBC3A7);
@@ -57,6 +58,12 @@ public class SandRedTheme implements Theme {
         return DEFAULT_COLOR;
     }
 
+
+    @Override
+    public Color getBackgroundColor() {
+        return BACKGROUND_COLOR;
+    }
+    
     @Override
     public Color getHoverColor() {
         return HOVER_COLOR;

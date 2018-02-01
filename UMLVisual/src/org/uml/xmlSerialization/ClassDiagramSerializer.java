@@ -1,5 +1,6 @@
 package org.uml.xmlSerialization;
 
+import java.awt.Rectangle;
 import org.uml.xmlSerialization.components.ComponentSerializer;
 import org.uml.xmlSerialization.relations.HasRelationSerializer;
 import org.uml.xmlSerialization.relations.IsRelationSerializer;
@@ -19,6 +20,7 @@ import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.HasBaseRelation;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.components.InterfaceComponent;
+import org.uml.model.components.PackageComponent;
 import org.uml.model.relations.AggregationRelation;
 import org.uml.model.relations.CompositionRelation;
 import org.uml.model.relations.HasRelation;
@@ -26,6 +28,8 @@ import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.UseRelation;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.components.ComponentWidgetBase;
+import org.uml.xmlSerialization.components.PackageSerializer;
 //import org.uml.xmltesting.serialization.ClassDiagramXmlSerializerDeserializer;
 
 /**
@@ -45,6 +49,7 @@ public class ClassDiagramSerializer implements XmlSerializer {
         componentSerializers.put(ClassComponent.class, new ClassSerializer());
         componentSerializers.put(InterfaceComponent.class, new InterfaceSerializer());
         componentSerializers.put(EnumComponent.class, new EnumSerializer());
+        componentSerializers.put(PackageComponent.class, new PackageSerializer());
         relationSerializers.put(IsRelation.class, new IsRelationSerializer());
         relationSerializers.put(ImplementsRelation.class, new ImplementsRelationSerializer());
         relationSerializers.put(HasRelation.class, new HasRelationSerializer());
@@ -80,19 +85,24 @@ public class ClassDiagramSerializer implements XmlSerializer {
 //        node.addAttribute("showMembers", Boolean.toString(classDiagramScene.isShowMembers()));
 //        node.addAttribute("showSimpleTypeNames", Boolean.toString(classDiagramScene.isShowSimpleTypes()));
         Element classDiagramComponents = node.addElement("ClassDiagramComponents");
-        for (ComponentBase component : classDiagram.getComponents()) {
-            Element componentNode = classDiagramComponents.addElement(component.getClass().getSimpleName().replace("Component", ""));
-            Widget w = classDiagramScene.findWidget(component);
-//                componentNode.addAttribute("width", String.valueOf(w.getBounds().width));
-//                componentNode.addAttribute("height", String.valueOf(w.getBounds().height));
-//                componentNode.addAttribute("xOff", String.valueOf(w.getBounds().x));
-//                componentNode.addAttribute("yOff", String.valueOf(w.getBounds().y));
-
-            ComponentSerializer serializer = componentSerializers.get(component.getClass());
-            serializer.setClassDiagramComponent(component);
-            serializer.serialize(componentNode);
-            componentNode.addAttribute("xPosition", String.valueOf(w.getPreferredLocation().getX()));
-            componentNode.addAttribute("yPosition", String.valueOf(w.getPreferredLocation().getY()));
+        for (Widget layer : classDiagramScene.getChildren()) {
+            for (Widget w : layer.getChildren()) {
+                if (!(w instanceof ComponentWidgetBase))
+                    continue;
+                ComponentWidgetBase widgetBase = (ComponentWidgetBase)w;
+                ComponentBase component = widgetBase.getComponent();
+                Element componentNode = classDiagramComponents.addElement(component.getClass().getSimpleName().replace("Component", ""));
+                ComponentSerializer serializer = componentSerializers.get(component.getClass());
+                serializer.setClassDiagramComponent(component);
+                serializer.serialize(componentNode);
+                componentNode.addAttribute("xPosition", String.valueOf(w.getPreferredLocation().getX()));
+                componentNode.addAttribute("yPosition", String.valueOf(w.getPreferredLocation().getY()));
+                Rectangle bounds = w.getBounds();
+                if (bounds != null) {
+                    componentNode.addAttribute("width", String.valueOf(bounds.getSize().width));
+                    componentNode.addAttribute("height", String.valueOf(bounds.getSize().height));
+                }
+            }
         }
 
         Element classDiagramRelations = node.addElement("ClassDiagramRelations");

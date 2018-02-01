@@ -1,5 +1,6 @@
 package org.uml.visual.widgets.components;
 
+import java.awt.Color;
 import org.uml.visual.widgets.providers.ComponentAlignWithResizeStrategyProvider;
 import org.uml.visual.widgets.providers.ComponentAlignWithMoveStrategyProvider;
 import org.uml.visual.widgets.members.MemberWidgetBase;
@@ -28,6 +29,7 @@ import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
+import org.uml.model.components.PackageComponent;
 import org.uml.visual.themes.Theme;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.ResampledImageWidget;
@@ -82,10 +84,16 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setOpaque(true);
         setCheckClipping(true);
-        setBackground(getColorTheme().getDefaultColor());
 
         headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
-        headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0));
+        if (component instanceof PackageComponent) {
+            headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.LEFT_TOP, 0));
+            setBackground(getColorTheme().getBackgroundColor());
+        }
+        else {
+            setBackground(getColorTheme().getDefaultColor());
+            headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0));
+        }
         headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
 
         iconWidget.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 3));
@@ -97,6 +105,8 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
             iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "interface.png"));
         } else if (component instanceof EnumComponent) {
             iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "enum.png"));
+        } else if (component instanceof PackageComponent) {
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "other/package.png"));
         }
         iconNameContainer.setLayout(LayoutFactory.createHorizontalFlowLayout());
         nameLabel = new LabelWidget(scene);
@@ -172,7 +182,12 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
             }
         } else {
             setBorder(getColorTheme().getDefaultBorder());
-            setBackground(getColorTheme().getDefaultColor());
+            if (component instanceof PackageComponent) {
+                setBackground(getColorTheme().getBackgroundColor());
+            }
+            else {
+                setBackground(getColorTheme().getDefaultColor());
+            }
             for (SeparatorWidget separator : separators) {
                 separator.setForeground(getColorTheme().getDefaultBorderColor());
             }

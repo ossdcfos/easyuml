@@ -12,7 +12,7 @@ import org.uml.visual.widgets.components.ClassWidget;
  *
  * @author hrza
  */
-public class ClassPopupMenuProvider implements PopupMenuProvider {
+public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
 
     private ClassWidget classWidget;
     private JPopupMenu menu;
@@ -21,7 +21,9 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
 
+
     public ClassPopupMenuProvider(ClassWidget classWidget) {
+        super(classWidget);
         this.classWidget = classWidget;
         menu = new JPopupMenu("Class Menu");
 
@@ -34,6 +36,10 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
 
         menu.addSeparator();
 
+        addZMenuItems(menu);
+        
+        menu.addSeparator();
+        
         (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
         menu.add(deleteClass);
     }
@@ -66,6 +72,7 @@ public class ClassPopupMenuProvider implements PopupMenuProvider {
         }
     };
 
+    
     @Override
     public JPopupMenu getPopupMenu(Widget widget, Point point) {
         return menu;

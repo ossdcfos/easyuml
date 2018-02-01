@@ -12,6 +12,7 @@ public interface Theme {
     public static final Color TRANSPARENT = new Color(0, 0, 0, 1);
     
     public Color getDefaultColor();
+    public Color getBackgroundColor();
     public Color getHoverColor();
     public Color getSelectColor();
     public Color getHoverSelectColor();

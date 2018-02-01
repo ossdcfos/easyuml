@@ -14,7 +14,7 @@ import org.uml.visual.widgets.components.InterfaceWidget;
  *
  * @author Jelena
  */
-public class InterfacePopupMenuProvider implements PopupMenuProvider {
+public class InterfacePopupMenuProvider extends ComponentPopupMenuProvider {
 
     private InterfaceWidget interfaceWidget;
     private JPopupMenu menu;
@@ -22,12 +22,17 @@ public class InterfacePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem deleteInterface;
 
     public InterfacePopupMenuProvider(InterfaceWidget interfaceWidget) {
+        super(interfaceWidget);
         this.interfaceWidget = interfaceWidget;
         menu = new JPopupMenu("Interface Menu");
 
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
+        
+        menu.addSeparator();
 
+        addZMenuItems(menu);
+        
         menu.addSeparator();
 
         (deleteInterface = new JMenuItem("Delete Interface")).addActionListener(removeWidgetListener);

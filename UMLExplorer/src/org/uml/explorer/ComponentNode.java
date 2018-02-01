@@ -25,6 +25,7 @@ import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.Visibility;
+import org.uml.model.components.PackageComponent;
 
 /**
  *
@@ -98,6 +99,9 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         }
         if (component instanceof EnumComponent) {
             return ImageUtilities.loadImage(iconFolderPath + "enum.png");
+        }
+        if (component instanceof PackageComponent) {
+            return ImageUtilities.loadImage(iconFolderPath + "package.png");
         }
         return super.getIcon(type);
     }

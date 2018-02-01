@@ -13,6 +13,7 @@ public class BlueGrayTheme implements Theme {
 
     // Component - colors
     protected static final Color DEFAULT_COLOR = new Color(0xF7F7F7);
+    protected static final Color BACKGROUND_COLOR = new Color(0xFFFFFF);
     protected static final Color HOVER_COLOR = new Color(0xF4F4F4);
     protected static final Color SELECT_COLOR = new Color(0xF0F0F0);
     protected static final Color HOVER_SELECT_COLOR = new Color(0xEBEBEB);
@@ -54,6 +55,11 @@ public class BlueGrayTheme implements Theme {
     @Override
     public Color getDefaultColor() {
         return DEFAULT_COLOR;
+    }
+
+    @Override
+    public Color getBackgroundColor() {
+        return BACKGROUND_COLOR;
     }
 
     @Override
