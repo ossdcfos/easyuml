@@ -34,7 +34,7 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
         if (instance == null) instance = new ClassCodeGenerator();
         return instance;
     }
-
+    
     @Override
     protected String generateCode(ClassComponent component) {
         CompilationUnit cu = new CompilationUnit();

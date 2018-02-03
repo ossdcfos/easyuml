@@ -12,7 +12,6 @@ import org.uml.xmlSerialization.components.ClassSerializer;
 import org.uml.xmlSerialization.components.InterfaceSerializer;
 import java.util.HashMap;
 import org.dom4j.Element;
-import org.netbeans.api.visual.widget.Widget;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ComponentBase;
@@ -28,7 +27,6 @@ import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.UseRelation;
 import org.uml.visual.widgets.ClassDiagramScene;
-import org.uml.visual.widgets.components.ComponentWidgetBase;
 import org.uml.xmlSerialization.components.PackageSerializer;
 //import org.uml.xmltesting.serialization.ClassDiagramXmlSerializerDeserializer;
 
@@ -81,6 +79,9 @@ public class ClassDiagramSerializer implements XmlSerializer {
         if (classDiagram.getName() != null) {
             node.addAttribute("name", classDiagram.getName());
         }
+        if (classDiagram.getGetterGeneration() != null) node.addAttribute("gettersGeneration", classDiagram.getGetterGeneration().toString());
+        if (classDiagram.getSetterGeneration()!= null) node.addAttribute("settersGeneration", classDiagram.getSetterGeneration().toString());
+        
 //        node.addAttribute("showIcons", Boolean.toString(classDiagramScene.isShowIcons()));
 //        node.addAttribute("showMembers", Boolean.toString(classDiagramScene.isShowMembers()));
 //        node.addAttribute("showSimpleTypeNames", Boolean.toString(classDiagramScene.isShowSimpleTypes()));

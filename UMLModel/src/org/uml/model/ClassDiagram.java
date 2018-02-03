@@ -28,12 +28,23 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
     private final HashSet<RelationBase> relations;
 
     /**
+     * Getters automatic generation setting
+     */
+    private GetterSetterGeneration      getterGeneration;
+    /**
+     * Setters automatic generation setting
+     */
+    private GetterSetterGeneration      setterGeneration;
+    
+    /**
      * Constructs a ClassDiagram object with name set to "UML ClassDiagram"
      * and an empty relations set.
      */
     public ClassDiagram() {
         super("UML Class Diagram");
         this.relations = new HashSet<>();
+        getterGeneration = GetterSetterGeneration.DISABLED;
+        setterGeneration = GetterSetterGeneration.DISABLED;
     }
 
     /**
@@ -143,5 +154,21 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
             String fullPackage = component.getFullParentPackage();
             System.err.println(component.getName()+":"+fullPackage);
         }*/
+    }    
+    
+    public GetterSetterGeneration getGetterGeneration() {
+        return getterGeneration;
+    }
+
+    public void setGetterGeneration(GetterSetterGeneration generateGetters) {
+        this.getterGeneration = generateGetters;
+    }
+
+    public GetterSetterGeneration getSetterGeneration() {
+        return setterGeneration;
+    }
+
+    public void setSetterGeneration(GetterSetterGeneration generateSetters) {
+        this.setterGeneration = generateSetters;
     }    
 }

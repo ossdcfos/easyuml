@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
+import org.uml.model.GetterSetterGeneration;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
@@ -41,20 +42,10 @@ public class ClassDeserializer implements XmlDeserializer {
         String isAbstract = node.attributeValue("isAbstract");
         String isStatic = node.attributeValue("isStatic");
         String isFinal = node.attributeValue("isFinal");
+        String gettersGeneration = node.attributeValue("gettersGeneration");
+        String settersGeneration = node.attributeValue("settersGeneration");
         int xPos = (int) Double.parseDouble(node.attributeValue("xPosition"));
         int yPos = (int) Double.parseDouble(node.attributeValue("yPosition"));
-//        String widthString = node.attributeValue("width");
-//        String heightString = node.attributeValue("height");
-//        String xOffString = node.attributeValue("xOff");
-//        String yOffString = node.attributeValue("yOff");
-
-//        if (widthString != null) {
-//            int width = Integer.parseInt(widthString);
-//            int height = Integer.parseInt(heightString);
-//            int xOff = Integer.parseInt(xOffString);
-//            int yOff = Integer.parseInt(yOffString);
-//            classComponent.setBounds(new Rectangle(xOff, yOff, width, height));
-//        }
         
         if (name != null) classComponent.setName(name);
         if (packageName != null) classComponent.setParentPackage(packageName);
@@ -62,7 +53,9 @@ public class ClassDeserializer implements XmlDeserializer {
         if (isAbstract != null) classComponent.setAbstract(Boolean.parseBoolean(isAbstract));
         if (isStatic != null) classComponent.setStatic(Boolean.parseBoolean(isStatic));
         if (isFinal != null) classComponent.setFinal(Boolean.parseBoolean(isFinal));
-        //classComponent.setLocation(new Point(xPos, yPos));
+        if (gettersGeneration != null) classComponent.setGetterGeneration(GetterSetterGeneration.stringToGetterSetterGeneration(gettersGeneration));
+        if (settersGeneration != null) classComponent.setSetterGeneration(GetterSetterGeneration.stringToGetterSetterGeneration(settersGeneration));
+        
         int width = 0;
         int height = 0;
         if (node.attribute("width") != null && node.attribute("height") != null) {

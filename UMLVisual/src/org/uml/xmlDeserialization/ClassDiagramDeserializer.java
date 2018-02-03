@@ -12,6 +12,7 @@ import java.util.Iterator;
 import org.dom4j.Element;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
+import org.uml.model.GetterSetterGeneration;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.HasBaseRelation;
@@ -45,6 +46,11 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
     public void deserialize(Element node) {
         classDiagram.setName(node.attributeValue("name"));
 
+        String gettersGeneration = node.attributeValue("gettersGeneration");
+        String settersGeneration = node.attributeValue("settersGeneration");
+        if (gettersGeneration != null) classDiagram.setGetterGeneration(GetterSetterGeneration.stringToGetterSetterGeneration(gettersGeneration));
+        if (settersGeneration != null) classDiagram.setSetterGeneration(GetterSetterGeneration.stringToGetterSetterGeneration(settersGeneration));
+        
         Element classDiagramComponents = node.element("ClassDiagramComponents");
         
         Iterator<Element> nodeIterator = classDiagramComponents.elementIterator();

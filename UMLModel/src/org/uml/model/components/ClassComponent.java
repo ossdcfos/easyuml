@@ -1,11 +1,17 @@
 package org.uml.model.components;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import org.uml.model.ClassDiagram;
+import org.uml.model.GetterSetterGeneration;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
+import org.uml.model.members.MethodArgument;
 
 /**
  * Class component in a class diagram.
@@ -30,7 +36,16 @@ public class ClassComponent extends ComponentBase {
      * Set of method this class contains.
      */
     private LinkedHashSet<Method> methods;
-
+    
+    /**
+     * Getters automatic generation setting
+     */
+    private GetterSetterGeneration      getterGeneration;
+    /**
+     * Setters automatic generation setting
+     */
+    private GetterSetterGeneration      setterGeneration;
+    
     /**
      * Default constructor. Sets name to default value.
      * <p>
@@ -53,6 +68,8 @@ public class ClassComponent extends ComponentBase {
         fields = new LinkedHashSet<>();
         constructors = new LinkedHashSet<>();
         methods = new LinkedHashSet<>();
+        getterGeneration = GetterSetterGeneration.AUTO;
+        setterGeneration = GetterSetterGeneration.AUTO;
     }
 
     /**
@@ -205,4 +222,83 @@ public class ClassComponent extends ComponentBase {
         else if (member instanceof Constructor) constructors.remove((Constructor) member);
 //        else throw new RuntimeException("Removing unsupported member: " + member.toString());
     }
+
+    public GetterSetterGeneration getGetterGeneration() {
+        return getterGeneration;
+    }
+
+    public void setGetterGeneration(GetterSetterGeneration generateGetters) {
+        this.getterGeneration = generateGetters;
+    }
+
+    public GetterSetterGeneration getSetterGeneration() {
+        return setterGeneration;
+    }
+
+    public void setSetterGeneration(GetterSetterGeneration generateSetters) {
+        this.setterGeneration = generateSetters;
+    }
+    
+    /**
+     * Returns setting for getter generation if not auto, other wise returns
+     * parent setting
+     * @return 
+     */
+    public GetterSetterGeneration getInheritedGetterGeneration() {
+        if (getterGeneration == GetterSetterGeneration.AUTO) {
+            return getParentDiagram().getGetterGeneration();
+        }
+        return getterGeneration;
+    }
+
+    /**
+     * Returns setting for setter generation if not auto, other wise returns
+     * parent setting
+     * @return 
+     */
+    public GetterSetterGeneration getInheritedSetterGeneration() {
+        if (setterGeneration == GetterSetterGeneration.AUTO) {
+            return getParentDiagram().getSetterGeneration();
+        }
+        return setterGeneration;
+    }
+    
+    /**
+     * Get fields that need a getter method
+     * 
+     * @return list of getters
+     */
+    public List<Field> getRequestedGetters() {
+        List<Field> list = new ArrayList();
+        for (Field field: fields) {
+            if (!field.getterGenerationRequested())
+                continue;
+            Method method = field.createGetter();
+            if (signatureExists(method.getSignature()))
+                continue;
+            list.add(field);
+        }
+        return list;
+    }
+    
+    /**
+     * Get generated getter methods (not added to the class)
+     * 
+     * Only requested and undeclerared ones are created
+     * 
+     * @return list of getters
+     */
+    public List<Field> getRequestedSetters() {
+        List<Field> list = new ArrayList();
+        for (Field field: fields) {
+            if (!field.getterGenerationRequested())
+                continue;
+            Method method = field.createSetter();
+            if (signatureExists(method.getSignature()))
+                continue;
+            list.add(field);
+        }
+        return list;
+    }    
+
 }

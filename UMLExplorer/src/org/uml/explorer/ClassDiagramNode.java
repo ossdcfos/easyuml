@@ -18,6 +18,7 @@ import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.model.ClassDiagram;
+import org.uml.model.GetterSetterGeneration;
 
 /**
  *
@@ -95,15 +96,29 @@ public class ClassDiagramNode extends AbstractNode implements PropertyChangeList
         generalProperties.setName("generalSet");
         generalProperties.setDisplayName("General");
 
+        Sheet.Set generationProperties = Sheet.createPropertiesSet();
+        generationProperties.setName("generationSet");
+        generationProperties.setDisplayName("Code generation");
+                
         try {
             Property<String> nameProp = new PropertySupport.Reflection<>(classDiagram, String.class, "getName", "setName");
             nameProp.setName("Name");
             generalProperties.put(nameProp);
+            
+            Property<GetterSetterGeneration> getterGenerationProp = new PropertySupport.Reflection<>(classDiagram, GetterSetterGeneration.class, "getGetterGeneration", "setGetterGeneration");
+            getterGenerationProp.setName("Getters");
+            generationProperties.put(getterGenerationProp);
+
+            Property<GetterSetterGeneration> setterGenerationProp = new PropertySupport.Reflection<>(classDiagram, GetterSetterGeneration.class, "getSetterGeneration", "setSetterGeneration");
+            setterGenerationProp.setName("Setters");
+            generationProperties.put(setterGenerationProp);
+       
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
         }
 
         sheet.put(generalProperties);
+        sheet.put(generationProperties);
 //        Sheet.Set visualProperties = Sheet.createPropertiesSet();
 //        visualProperties.setName("visualSet");
 //        visualProperties.setDisplayName("Visual");

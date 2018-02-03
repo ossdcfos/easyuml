@@ -19,6 +19,7 @@ import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.memberparser.MemberParser;
+import org.uml.model.GetterSetterGeneration;
 import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.InterfaceComponent;
@@ -118,6 +119,10 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
         modifiersProperties.setName("modifiersSet");
         modifiersProperties.setDisplayName("Modifiers");
 
+        Sheet.Set generationProperties = Sheet.createPropertiesSet();
+        generationProperties.setName("generationSet");
+        generationProperties.setDisplayName("Code generation");
+                
         try {
             if (member instanceof Constructor) {
                 Property<Visibility> visibilityProp = new PropertySupport.Reflection<>(member, Visibility.class, "getVisibility", "setVisibility");
@@ -154,6 +159,18 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
                     Property<Boolean> isVolatileProp = new PropertySupport.Reflection<>(field, boolean.class, "isVolatile", "setVolatile");
                     isVolatileProp.setName("volatile");
                     modifiersProperties.put(isVolatileProp);
+                    
+                    if (!field.isStatic()) {
+                        Property<GetterSetterGeneration> getterGenerationProp = new PropertySupport.Reflection<>(field, GetterSetterGeneration.class, "getGetterGeneration", "setGetterGeneration");
+                        getterGenerationProp.setName("Getters");
+                        generationProperties.put(getterGenerationProp);
+
+                        Property<GetterSetterGeneration> setterGenerationProp = new PropertySupport.Reflection<>(field, GetterSetterGeneration.class, "getSetterGeneration", "setSetterGeneration");
+                        setterGenerationProp.setName("Setters");
+                        generationProperties.put(setterGenerationProp);
+                    }
+                                        
+                    
                 } else if (member instanceof Method) {
                     Method method = (Method) member;
 
@@ -196,6 +213,7 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
 
         sheet.put(generalProperties);
         sheet.put(modifiersProperties);
+        sheet.put(generationProperties);
         return sheet;
     }
 

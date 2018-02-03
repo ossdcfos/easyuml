@@ -1,7 +1,10 @@
 package org.uml.model.members;
 
 import java.lang.reflect.Modifier;
+import java.util.LinkedHashSet;
+import org.uml.model.GetterSetterGeneration;
 import org.uml.model.Visibility;
+import org.uml.model.components.ClassComponent;
 
 /**
  * Represents a field (fields inside a class).
@@ -14,6 +17,15 @@ import org.uml.model.Visibility;
 public class Field extends MemberBase {
 
     /**
+     * Getters automatic generation setting
+     */
+    private GetterSetterGeneration      getterGeneration;
+    /**
+     * Setters automatic generation setting
+     */
+    private GetterSetterGeneration      setterGeneration;
+        
+    /**
      * Constructor that sets the name, type and visibility of the field.
      *
      * @param name of the field
@@ -24,6 +36,8 @@ public class Field extends MemberBase {
         super(name);
         this.type = type;
         this.visibility = visibility;
+        this.getterGeneration = GetterSetterGeneration.AUTO;
+        this.setterGeneration = GetterSetterGeneration.AUTO;
     }
 
     /**
@@ -192,4 +206,66 @@ public class Field extends MemberBase {
         if ((modifier & Modifier.fieldModifiers()) == 0) return false;
         else return true;
     }
+    
+    public GetterSetterGeneration getGetterGeneration() {
+        return getterGeneration;
+    }
+
+    public void setGetterGeneration(GetterSetterGeneration generateGetters) {
+        this.getterGeneration = generateGetters;
+    }
+
+    public GetterSetterGeneration getSetterGeneration() {
+        return setterGeneration;
+    }
+
+    public void setSetterGeneration(GetterSetterGeneration generateSetters) {
+        this.setterGeneration = generateSetters;
+    }
+    
+    /**
+     * Returns true if this field need a getter to be auto generated.
+     * 
+     * This depends on this field setting; if auto it will depends on
+     * its class; if auto it will depends on diagram setting
+     * 
+     * @return 
+     */
+    public boolean getterGenerationRequested() {
+        GetterSetterGeneration setting = getterGeneration;
+        if (setting == GetterSetterGeneration.AUTO) {
+            setting = ((ClassComponent)getDeclaringComponent()).getInheritedGetterGeneration();
+        }
+        if (setting == GetterSetterGeneration.DISABLED) {
+            return false;
+        }
+        if (isStatic()) {
+            return false;
+        }
+        if (setting == GetterSetterGeneration.NOTPUBLIC) {
+            return visibility != Visibility.PUBLIC;
+        }
+        if (setting == GetterSetterGeneration.PRIVATE) {
+            return visibility == Visibility.PRIVATE;
+        }
+        if (setting == GetterSetterGeneration.PROTECTED) {
+            return visibility == Visibility.PROTECTED;
+        }
+        return false;
+    }
+
+    public Method createGetter() {
+        String methodName = "get"+name.substring(0,1).toUpperCase()+name.substring(1);
+        return new Method(methodName,type);
+    }
+    
+    public Method createSetter() {
+        String methodName = "set"+name.substring(0,1).toUpperCase()+name.substring(1);
+        Method method = new Method(methodName,"void");
+        LinkedHashSet<MethodArgument> args = new LinkedHashSet();
+        args.add(new MethodArgument(type,name));
+        method.setArguments(args);
+        return method;
+    }
+        
 }

@@ -6,6 +6,7 @@ import javax.swing.*;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.widget.*;
 import org.uml.model.ClassDiagram;
+import org.uml.model.components.ClassComponent;
 import org.uml.visual.widgets.components.ClassWidget;
 
 /**
@@ -42,6 +43,7 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
         
         (deleteClass = new JMenuItem("Delete Class")).addActionListener(removeWidgetListener);
         menu.add(deleteClass);
+        
     }
 
     ActionListener removeWidgetListener = new ActionListener() {

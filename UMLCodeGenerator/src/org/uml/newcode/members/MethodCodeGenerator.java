@@ -6,10 +6,16 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.ModifierSet;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclaratorId;
+import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.FieldAccessExpr;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.ThisExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.ThrowStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
@@ -19,6 +25,7 @@ import java.util.List;
 import org.uml.filetype.cdg.renaming.MyMembersRenameTable;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.InterfaceComponent;
+import org.uml.model.members.Field;
 import org.uml.model.members.Method;
 import org.uml.model.members.MethodArgument;
 import org.uml.newcode.CodeGeneratorUtils;
@@ -34,10 +41,22 @@ public class MethodCodeGenerator {
 
         for (Method method : component.getMethods()) {
             // create and add method declaration
-            MethodDeclaration declaration = createMethodDeclaration(method);
+            MethodDeclaration declaration = createMethodDeclaration(method,null);
+            members.add(declaration);
+        }
+        
+        // Generate getters 
+        for (Field field : component.getRequestedGetters()) {
+            MethodDeclaration declaration = createMethodDeclaration(field.createGetter(),createGetterBody(field));
             members.add(declaration);
         }
 
+        // Generate setters 
+        for (Field field : component.getRequestedSetters()) {
+            MethodDeclaration declaration = createMethodDeclaration(field.createSetter(),createSetterBody(field));
+            members.add(declaration);
+        }
+        
         // Do not generate methods for implemented or extended interfaces,
         // let NetBeans show error and take care of that
     }
@@ -87,15 +106,35 @@ public class MethodCodeGenerator {
                         }
                     }
                     if (!found) { // If the old method declaration has not been found and updated, create it and add it
-                        MethodDeclaration declaration = createMethodDeclaration(method);
+                        MethodDeclaration declaration = createMethodDeclaration(method,null);
                         members.add(declaration);
                     }
                 } else { // If the method has not been renamed, there is nothing to update, so create and add it
-                    MethodDeclaration declaration = createMethodDeclaration(method);
+                    MethodDeclaration declaration = createMethodDeclaration(method,null);
                     members.add(declaration);
                 }
             }
         }
+        // Generate getters 
+        for (Field field : component.getRequestedGetters()) {
+            Method method = field.createGetter();
+            MethodDeclaration existingDeclaration = findExistingDeclaration(members, method);
+            if (existingDeclaration != null)
+                continue;
+            MethodDeclaration declaration = createMethodDeclaration(method,createGetterBody(field));
+            members.add(declaration);
+        }
+
+        // Generate setters 
+        for (Field field : component.getRequestedSetters()) {
+            Method method = field.createSetter();
+            MethodDeclaration existingDeclaration = findExistingDeclaration(members, method);
+            if (existingDeclaration != null)
+                continue;
+            MethodDeclaration declaration = createMethodDeclaration(method,createSetterBody(field));
+            members.add(declaration);
+        }
+        
     }
 
     public static void updateMethods(InterfaceComponent component, MyMembersRenameTable renames, CompilationUnit cu) {
@@ -146,7 +185,7 @@ public class MethodCodeGenerator {
         }
     }
 
-    private static MethodDeclaration createMethodDeclaration(Method method) {
+    private static MethodDeclaration createMethodDeclaration(Method method,BlockStmt body) {
         MethodDeclaration declaration = new MethodDeclaration();
         // Set name
         declaration.setName(method.getName());
@@ -193,18 +232,20 @@ public class MethodCodeGenerator {
         }
         // Fill method body
         if (!method.isAbstract()) {
-            BlockStmt body = new BlockStmt();
-            // If the return type is not void, set the body to UnsupportedOperationException
-            // Otherwise, leave body empty
-            if (!(declaration.getType() instanceof VoidType)) {
-                List<Statement> statements = new LinkedList<>();
-                ObjectCreationExpr exception = new ObjectCreationExpr();
-                exception.setType(new ClassOrInterfaceType("UnsupportedOperationException"));
-                List<Expression> arguments = new LinkedList<>();
-                arguments.add(new StringLiteralExpr("Not supported yet."));
-                exception.setArgs(arguments);
-                statements.add(new ThrowStmt(exception));
-                body.setStmts(statements);
+            if (body == null) {
+                body = new BlockStmt();
+                // If the return type is not void, set the body to UnsupportedOperationException
+                // Otherwise, leave body empty
+                if (!(declaration.getType() instanceof VoidType)) {
+                    List<Statement> statements = new LinkedList<>();
+                    ObjectCreationExpr exception = new ObjectCreationExpr();
+                    exception.setType(new ClassOrInterfaceType("UnsupportedOperationException"));
+                    List<Expression> arguments = new LinkedList<>();
+                    arguments.add(new StringLiteralExpr("Not supported yet."));
+                    exception.setArgs(arguments);
+                    statements.add(new ThrowStmt(exception));
+                    body.setStmts(statements);
+                }
             }
             declaration.setBody(body);
         }
@@ -267,4 +308,22 @@ public class MethodCodeGenerator {
         result.append(args).append(")");
         return result.toString();
     }
+
+    public static BlockStmt createGetterBody(Field field) {
+        BlockStmt body = new BlockStmt();
+        List<Statement> statements = new LinkedList<>();
+        statements.add(new ReturnStmt(new NameExpr(field.getName())));
+        body.setStmts(statements);
+        return body;
+    }
+    
+    public static BlockStmt createSetterBody(Field field) {
+        BlockStmt body = new BlockStmt();
+        List<Statement> statements = new LinkedList<>();
+        Expression expr = new FieldAccessExpr(new ThisExpr(),field.getName());
+        statements.add(new ExpressionStmt(new AssignExpr(expr,new NameExpr(field.getName()),AssignExpr.Operator.assign)));
+        body.setStmts(statements);
+        return body;
+    }
+    
 }
