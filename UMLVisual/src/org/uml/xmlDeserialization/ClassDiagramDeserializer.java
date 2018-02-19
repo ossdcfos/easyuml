@@ -88,46 +88,7 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
             }
 
         }
-        
-/*        Iterator<?> classIterator = classDiagramComponents.elementIterator("Class");
-        while (classIterator != null && classIterator.hasNext()) {
-            Element componentNode = (Element) classIterator.next();
-
-            ClassComponent component = new ClassComponent();
-            ClassDeserializer cd = new ClassDeserializer(component);
-            cd.deserialize(componentNode);
-            classDiagram.addComponent(component);
-        }
-
-        Iterator<?> interfaceIterator = classDiagramComponents.elementIterator("Interface");
-        while (interfaceIterator != null && interfaceIterator.hasNext()) {
-            Element interfaceNode = (Element) interfaceIterator.next();
-
-            InterfaceComponent component = new InterfaceComponent();
-            InterfaceDeserializer id = new InterfaceDeserializer(component);
-            id.deserialize(interfaceNode);
-            classDiagram.addComponent(component);
-        }
-        
-        Iterator<?> enumIterator = classDiagramComponents.elementIterator("Enum");
-        while (enumIterator != null && enumIterator.hasNext()) {
-            Element enumNode = (Element) enumIterator.next();
-            
-            EnumComponent component = new EnumComponent();
-            EnumDeserializer ed = new EnumDeserializer(component);
-            ed.deserialize(enumNode);
-            classDiagram.addComponent(component);
-        }
-        
-        Iterator<?> packageIterator = classDiagramComponents.elementIterator("Package");
-        while (packageIterator != null && packageIterator.hasNext()) {
-            Element packageNode = (Element) packageIterator.next();
-            
-            PackageComponent component = new PackageComponent();
-            PackageDeserializer ed = new PackageDeserializer(component);
-            ed.deserialize(packageNode);
-            classDiagram.addComponent(component);
-        }        */
+        classDiagram.updateComponentPackages();
         
         ArrayList<ComponentBase> components = new ArrayList<>(classDiagram.getComponents());
         Element classDiagramRelations = node.element("ClassDiagramRelations");

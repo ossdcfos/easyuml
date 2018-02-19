@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Abstract class representing a container which can contain some components.
@@ -72,6 +73,14 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
         }
         components.add(component);
         pcs.firePropertyChange("ADD_COMPONENT", null, component);
+    }
+    
+    public void updateComponentOrder(List<T> list) {
+        components.clear();
+        for (T component : list) {
+            System.out.println(component.getName());
+            components.add(component);
+        }
     }
 
     /**

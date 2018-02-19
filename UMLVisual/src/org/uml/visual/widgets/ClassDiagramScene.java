@@ -612,11 +612,13 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
 
     public void updateComponentsZOrder() {
         //System.out.println("Update components z order...");
-        classDiagram.removeAllComponentsFromContainer();
-        for (ComponentWidgetBase widget : getComponentWidgets()) {
+        List<ComponentWidgetBase> list = getComponentWidgets();
+        List<ComponentBase> components = new ArrayList();
+        for (ComponentWidgetBase widget : list) {
             ComponentBase component = widget.getComponent();
-            classDiagram.addComponent(component);
+            components.add(component);
         }
+        classDiagram.updateComponentOrder(components);
         classDiagram.updateComponentPackages();
     }    
 }
