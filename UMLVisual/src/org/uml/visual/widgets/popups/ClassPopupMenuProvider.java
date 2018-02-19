@@ -2,11 +2,13 @@ package org.uml.visual.widgets.popups;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.LinkedHashSet;
 import javax.swing.*;
 import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.widget.*;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ClassComponent;
+import org.uml.model.members.Method;
 import org.uml.visual.widgets.components.ClassWidget;
 
 /**
@@ -21,6 +23,7 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
     private JMenuItem addField;
     private JMenuItem addMethod;
     private JMenuItem addConstructor;
+    private JMenuItem addUnimplementedMethods;
 
 
     public ClassPopupMenuProvider(ClassWidget classWidget) {
@@ -34,7 +37,9 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
         menu.add(addField);
         (addMethod = new JMenuItem("Add Method")).addActionListener(addMethodListener);
         menu.add(addMethod);
-
+        (addUnimplementedMethods = new JMenuItem("Add Unimplemented Method")).addActionListener(addUnimplementedMethodsListener);
+        menu.add(addUnimplementedMethods);
+        
         menu.addSeparator();
 
         addZMenuItems(menu);
@@ -73,6 +78,17 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
             classWidget.addDefaultConstructorWidget();
         }
     };
+    ActionListener addUnimplementedMethodsListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ClassComponent classComponent = classWidget.getComponent();
+            LinkedHashSet<Method> methods = classComponent.getUnimplementedMethods();
+            /*for (Method method : methods) {
+                System.out.println(method.getSignature());
+            }*/
+            classWidget.addMethodWidgets(methods);
+        }
+    };    
 
     
     @Override

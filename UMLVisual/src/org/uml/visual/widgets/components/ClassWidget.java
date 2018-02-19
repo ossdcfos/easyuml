@@ -6,6 +6,7 @@ import org.uml.visual.widgets.members.FieldWidget;
 import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
+import java.util.LinkedHashSet;
 import java.util.concurrent.Callable;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -126,6 +127,15 @@ public class ClassWidget extends ComponentWidgetBase {
         removeMember(fieldsContainer, field);
     }
 
+    public void addMethodWidgets(LinkedHashSet<Method> methods) {
+        for (Method method : methods) {
+            getComponent().addMethod(method);
+            MethodWidget methodWidget = new MethodWidget(getClassDiagramScene(), method);
+            addMember(methodsContainer, methodWidget);
+        }
+        getScene().validate();
+    }
+    
     public void addMethodWidget() {
         Method method = new Method("untitledMethod", "void");
         getComponent().addMethod(method);

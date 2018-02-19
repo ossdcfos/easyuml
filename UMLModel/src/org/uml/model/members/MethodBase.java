@@ -156,4 +156,19 @@ public abstract class MethodBase extends MemberBase {
         }
         return args.toString();
     }    
+
+/*    @Override
+    public boolean equals(Object other) {
+        if (other == null) 
+            return false;
+        if (!(other instanceof MethodBase))
+            return false;
+        MethodBase method = (MethodBase)other;
+        return getSignature().equals(method.getSignature());
+    }
+    
+    @Override
+    public int hashCode() {
+        return getSignature().hashCode();
+    }*/
 }

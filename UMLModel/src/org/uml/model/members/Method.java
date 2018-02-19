@@ -11,7 +11,7 @@ import java.lang.reflect.Modifier;
  * @see Constructor
  * @see Literal
  */
-public class Method extends MethodBase {
+public class Method extends MethodBase implements Cloneable {
 
     /**
      * Constructor that sets the name, return type and visibility of the method.
@@ -149,5 +149,10 @@ public class Method extends MethodBase {
         if (isSimpleTypeNames) result.append(getSimpleTypeUMLSignature());
         else result.append(getUMLSignature());
         return result.toString();
+    }
+    
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

@@ -2,16 +2,20 @@ package org.uml.model.components;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashSet;
 import org.uml.model.members.Field;
 import org.uml.model.members.Constructor;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.uml.model.ClassDiagram;
 import org.uml.model.GetterSetterGeneration;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
-import org.uml.model.members.MethodArgument;
+import org.uml.model.relations.ImplementsRelation;
+import org.uml.model.relations.IsRelation;
+import org.uml.model.relations.RelationBase;
 
 /**
  * Class component in a class diagram.
@@ -300,5 +304,77 @@ public class ClassComponent extends ComponentBase {
         }
         return list;
     }    
+    
+    public boolean hasMethod(String methodSignature) {
+        for (Method method : methods) {
+            if (methodSignature.equals(method.getSignature())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public LinkedHashSet<Method> getUnimplementedMethods() {
+        ClassDiagram diagram = getParentDiagram();
+        HashSet<RelationBase> relations = diagram.getRelations();
+        LinkedHashSet<Method> unimplementedMethods = new LinkedHashSet();
+        for(RelationBase relation : relations) {
+            if (relation.getSource() != this)
+                continue;
+            if (relation instanceof ImplementsRelation) {
+                InterfaceComponent interfaceComponent = (InterfaceComponent)relation.getTarget();
+                LinkedHashSet<Method> parentMethods = interfaceComponent.getMethods();
+                for(Method parentMethod : parentMethods) {
+                    String parentSignature = parentMethod.getSignature();
+                    if (hasMethod(parentSignature))
+                        continue;
+                    boolean found = false;
+                    for (Method method : unimplementedMethods) {
+                        if (parentSignature.equals(method.getSignature())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        try {
+                            Method method = (Method)parentMethod.clone();
+                            unimplementedMethods.add(method);
+                        } catch (CloneNotSupportedException ex) {
+                            Logger.getLogger(ClassComponent.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+            if (relation instanceof IsRelation) {
+                ClassComponent classComponent = (ClassComponent)relation.getTarget();
+                if (!classComponent.isAbstract())
+                    continue;
+                LinkedHashSet<Method> parentMethods = classComponent.getMethods();
+                for(Method parentMethod : parentMethods) {
+                    if (!parentMethod.isAbstract())
+                        continue;
+                    String parentSignature = parentMethod.getSignature();
+                    if (hasMethod(parentSignature))
+                        continue;
+                    boolean found = false;
+                    for (Method method : unimplementedMethods) {
+                        if (parentSignature.equals(method.getSignature())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        try {
+                            Method method = (Method)parentMethod.clone();
+                            unimplementedMethods.add(method);
+                        } catch (CloneNotSupportedException ex) {
+                            Logger.getLogger(ClassComponent.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        }
+        return unimplementedMethods;
+    }
 
 }
