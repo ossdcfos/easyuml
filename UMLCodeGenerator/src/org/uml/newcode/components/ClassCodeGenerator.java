@@ -37,6 +37,7 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
     
     @Override
     protected String generateCode(ClassComponent component) {
+        System.out.println("Generate class "+component.getSignature());
         CompilationUnit cu = new CompilationUnit();
         cu.setTypes(new LinkedList<TypeDeclaration>());
         String parentPackage = component.getFullParentPackage();
@@ -111,6 +112,7 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
 
     @Override
     protected String updateCode(ClassComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
+        System.out.println("Update class "+component.getSignature());
         String parentPackage = component.getFullParentPackage();
         if (!parentPackage.isEmpty()) {
             cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));

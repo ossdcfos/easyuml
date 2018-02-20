@@ -5,6 +5,7 @@ import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
@@ -34,7 +35,7 @@ public class MemberParser {
     /**
      * Type convention - one or more alphanum, <, >, [, ] characters
      */
-    static final String TYPE = "[\\w\\<\\>\\[\\]]+";
+    static final String TYPE = "[\\w\\<\\,\\>\\[\\]]+";
 
     /**
      * Field convention - optional type, spaces, name. .
@@ -197,7 +198,33 @@ public class MemberParser {
     private static LinkedHashSet<MethodArgument> getArguments(String signature) throws ParseException {
         LinkedHashSet<MethodArgument> arguments = new LinkedHashSet<>();
         String argumentString = signature.substring(signature.indexOf("(") + 1, signature.indexOf(")"));
-        String[] argumentsArray = argumentString.split(",");
+        
+        int start = 0;
+        int position = 0;
+        int level = 0;
+        ArrayList<String> argumentsArray = new ArrayList();
+        while(true) {
+            if (position >= argumentString.length()) {
+                String argument = argumentString.substring(start,position);
+                start = position;
+                argumentsArray.add(argument);
+                break;
+            }
+            char c = argumentString.charAt(position);
+            if (c == '<') {
+                level ++;
+            }
+            else if (c == '>') {
+                level --;
+            }
+            else if (c == ',' && level == 0) {
+                String argument = argumentString.substring(start,position);
+                start = position+1;
+                argumentsArray.add(argument);
+            }
+            position ++;
+        }
+  
         for (String argument : argumentsArray) {
             if (!argument.equals("")) {
                 argument = argument.trim() + ";";
