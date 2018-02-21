@@ -253,6 +253,37 @@ public class Field extends MemberBase {
         }
         return false;
     }
+    
+    /**
+     * Returns true if this field need a setter to be auto generated.
+     * 
+     * This depends on this field setting; if auto it will depends on
+     * its class; if auto it will depends on diagram setting
+     * 
+     * @return 
+     */
+    public boolean setterGenerationRequested() {
+        GetterSetterGeneration setting = setterGeneration;
+        if (setting == GetterSetterGeneration.AUTO) {
+            setting = ((ClassComponent)getDeclaringComponent()).getInheritedSetterGeneration();
+        }
+        if (setting == GetterSetterGeneration.DISABLED) {
+            return false;
+        }
+        if (isStatic()) {
+            return false;
+        }
+        if (setting == GetterSetterGeneration.NOTPUBLIC) {
+            return visibility != Visibility.PUBLIC;
+        }
+        if (setting == GetterSetterGeneration.PRIVATE) {
+            return visibility == Visibility.PRIVATE;
+        }
+        if (setting == GetterSetterGeneration.PROTECTED) {
+            return visibility == Visibility.PROTECTED;
+        }
+        return false;
+    }    
 
     public Method createGetter() {
         String methodName = "get"+name.substring(0,1).toUpperCase()+name.substring(1);
