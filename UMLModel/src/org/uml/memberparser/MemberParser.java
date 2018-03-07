@@ -137,7 +137,7 @@ public class MemberParser {
         String type;
         BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
         FieldDeclaration declaration = (FieldDeclaration) bd;
-        type = declaration.getType().toString();
+        type = declaration.getType().toString().replaceAll(SPACES,"");
         return type;
     }
 

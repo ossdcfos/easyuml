@@ -80,6 +80,7 @@ public class MethodCodeGenerator {
                 if (renames.contains(method)) { // If the method has been renamed
                     // Find the old method declaration
                     String oldSignature = renames.getOriginalSignature(method);
+                    System.out.println(component.getSignature()+"."+method.getSignature()+": renamed from "+oldSignature);
                     boolean found = false;
                     for (BodyDeclaration member : members) {
                         if (member instanceof MethodDeclaration) {
@@ -99,6 +100,7 @@ public class MethodCodeGenerator {
                                     }
                                     declaration.setParameters(parameters);
                                 }
+                                System.out.println("  => Found: update method declaration "+declaration.toString());
                                 // Finish updating the old method declaration
                                 found = true;
                                 break;
@@ -108,10 +110,12 @@ public class MethodCodeGenerator {
                     if (!found) { // If the old method declaration has not been found and updated, create it and add it
                         MethodDeclaration declaration = createMethodDeclaration(method,null);
                         members.add(declaration);
+                        System.out.println("  => Not found: create method declaration "+declaration.toString());
                     }
                 } else { // If the method has not been renamed, there is nothing to update, so create and add it
                     MethodDeclaration declaration = createMethodDeclaration(method,null);
                     members.add(declaration);
+                    System.out.println(component.getSignature()+"."+method.getSignature()+": create method declaration "+declaration.toString());
                 }
             }
         }

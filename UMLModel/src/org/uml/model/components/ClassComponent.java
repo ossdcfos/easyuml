@@ -295,7 +295,7 @@ public class ClassComponent extends ComponentBase {
     public List<Field> getRequestedSetters() {
         List<Field> list = new ArrayList();
         for (Field field: fields) {
-            if (!field.getterGenerationRequested())
+            if (!field.setterGenerationRequested())
                 continue;
             Method method = field.createSetter();
             if (signatureExists(method.getSignature()))
