@@ -1,6 +1,7 @@
 package org.uml.newcode.members;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
@@ -30,10 +31,10 @@ public class LiteralCodeGenerator {
     }
 
     public static void updateLiterals(EnumComponent component, MyMembersRenameTable memberRenames, CompilationUnit cu) {
-        List<TypeDeclaration> types = cu.getTypes();
+        NodeList<TypeDeclaration<?>> types = cu.getTypes();
         TypeDeclaration type = types.get(0);
         EnumDeclaration enumType = (EnumDeclaration)type;
-        List<EnumConstantDeclaration> entries = enumType.getEntries();
+        NodeList<EnumConstantDeclaration> entries = enumType.getEntries();
         // Generate or update all direct fields
         for (Literal literal : component.getLiterals()) {
             EnumConstantDeclaration existingDeclaration = findExistingDeclaration(entries, literal.getSignature());
@@ -65,9 +66,11 @@ public class LiteralCodeGenerator {
         ArrayList<EnumConstantDeclaration> toRemove = new ArrayList();
         for (EnumConstantDeclaration declaration : entries) {
             boolean found = false;
+            String name = declaration.getName().asString();
             for (Literal literal : component.getLiterals()) {
-                if (literal.getSignature().equals(declaration.getName())) {
+                if (literal.getSignature().equals(name)) {
                     found = true;
+                    break;
                 }
             }
             if (!found) {
@@ -84,7 +87,7 @@ public class LiteralCodeGenerator {
             return null;
         }
         for (EnumConstantDeclaration entry : entries) {
-            if (signature.equals(entry.getName())) {
+            if (signature.equals(entry.getName().asString())) {
                 return entry;
             }
         }
@@ -98,6 +101,6 @@ public class LiteralCodeGenerator {
     }
 
     private static String getEnumConstantDeclarationSignature(EnumConstantDeclaration declaration) {
-        return declaration.getName();
+        return declaration.getName().asString();
     }
 }

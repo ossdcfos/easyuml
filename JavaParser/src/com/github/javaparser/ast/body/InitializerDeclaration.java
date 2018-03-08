@@ -1,91 +1,174 @@
 /*
  * Copyright (C) 2007-2010 Júlio Vilmar Gesser.
- * Copyright (C) 2011, 2013-2015 The JavaParser Team.
+ * Copyright (C) 2011, 2013-2016 The JavaParser Team.
  *
  * This file is part of JavaParser.
  *
- * JavaParser is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * JavaParser can be used either under the terms of
+ * a) the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * b) the terms of the Apache License
+ *
+ * You should have received a copy of both licenses in LICENCE.LGPL and
+ * LICENCE.APACHE. Please refer to those files for details.
  *
  * JavaParser is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with JavaParser.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.github.javaparser.ast.body;
 
-import com.github.javaparser.ast.DocumentableNode;
-import com.github.javaparser.ast.comments.JavadocComment;
+import com.github.javaparser.ast.AllFieldsConstructor;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt;
+import com.github.javaparser.ast.nodeTypes.NodeWithJavadoc;
+import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
+import java.util.Arrays;
+import java.util.List;
+import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.InitializerDeclarationMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
+import javax.annotation.Generated;
+import com.github.javaparser.TokenRange;
+import java.util.function.Consumer;
+import java.util.Optional;
 
 /**
+ * A (possibly static) initializer body. "static { a=3; }" in this example: <code>class X { static { a=3; }  } </code>
+ *
  * @author Julio Vilmar Gesser
  */
-public final class InitializerDeclaration extends BodyDeclaration implements DocumentableNode {
+public final class InitializerDeclaration extends BodyDeclaration<InitializerDeclaration> implements NodeWithJavadoc<InitializerDeclaration>, NodeWithBlockStmt<InitializerDeclaration> {
 
     private boolean isStatic;
 
-    private BlockStmt block;
+    private BlockStmt body;
 
     public InitializerDeclaration() {
+        this(null, false, new BlockStmt());
     }
 
-    public InitializerDeclaration(boolean isStatic, BlockStmt block) {
-        super(null);
-        setStatic(isStatic);
-        setBlock(block);
+    @AllFieldsConstructor
+    public InitializerDeclaration(boolean isStatic, BlockStmt body) {
+        this(null, isStatic, body);
     }
 
-    public InitializerDeclaration(int beginLine, int beginColumn, int endLine, int endColumn, boolean isStatic, BlockStmt block) {
-        super(beginLine, beginColumn, endLine, endColumn, null);
+    /**
+     * This constructor is used by the parser and is considered private.
+     */
+    @Generated("com.github.javaparser.generator.core.node.MainConstructorGenerator")
+    public InitializerDeclaration(TokenRange tokenRange, boolean isStatic, BlockStmt body) {
+        super(tokenRange);
         setStatic(isStatic);
-        setBlock(block);
+        setBody(body);
+        customInitialization();
     }
 
     @Override
-    public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
+    @Generated("com.github.javaparser.generator.core.node.AcceptGenerator")
+    public <R, A> R accept(final GenericVisitor<R, A> v, final A arg) {
         return v.visit(this, arg);
     }
 
     @Override
-    public <A> void accept(VoidVisitor<A> v, A arg) {
+    @Generated("com.github.javaparser.generator.core.node.AcceptGenerator")
+    public <A> void accept(final VoidVisitor<A> v, final A arg) {
         v.visit(this, arg);
     }
 
-    public BlockStmt getBlock() {
-        return block;
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public BlockStmt getBody() {
+        return body;
     }
 
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
     public boolean isStatic() {
         return isStatic;
     }
 
-    public void setBlock(BlockStmt block) {
-        this.block = block;
-		setAsParentNodeOf(this.block);
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public InitializerDeclaration setBody(final BlockStmt body) {
+        assertNotNull(body);
+        if (body == this.body) {
+            return (InitializerDeclaration) this;
+        }
+        notifyPropertyChange(ObservableProperty.BODY, this.body, body);
+        if (this.body != null)
+            this.body.setParentNode(null);
+        this.body = body;
+        setAsParentNodeOf(body);
+        return this;
     }
 
-    public void setStatic(boolean isStatic) {
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public InitializerDeclaration setStatic(final boolean isStatic) {
+        if (isStatic == this.isStatic) {
+            return (InitializerDeclaration) this;
+        }
+        notifyPropertyChange(ObservableProperty.STATIC, this.isStatic, isStatic);
         this.isStatic = isStatic;
+        return this;
     }
 
     @Override
-    public void setJavaDoc(JavadocComment javadocComment) {
-        this.javadocComment = javadocComment;
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
     }
 
     @Override
-    public JavadocComment getJavaDoc() {
-        return javadocComment;
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
+    public InitializerDeclaration clone() {
+        return (InitializerDeclaration) accept(new CloneVisitor(), null);
     }
 
-    private JavadocComment javadocComment;
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
+    public InitializerDeclarationMetaModel getMetaModel() {
+        return JavaParserMetaModel.initializerDeclarationMetaModel;
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.ReplaceMethodGenerator")
+    public boolean replace(Node node, Node replacementNode) {
+        if (node == null)
+            return false;
+        if (node == body) {
+            setBody((BlockStmt) replacementNode);
+            return true;
+        }
+        return super.replace(node, replacementNode);
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.TypeCastingGenerator")
+    public boolean isInitializerDeclaration() {
+        return true;
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.TypeCastingGenerator")
+    public InitializerDeclaration asInitializerDeclaration() {
+        return this;
+    }
+
+    @Generated("com.github.javaparser.generator.core.node.TypeCastingGenerator")
+    public void ifInitializerDeclaration(Consumer<InitializerDeclaration> action) {
+        action.accept(this);
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.TypeCastingGenerator")
+    public Optional<InitializerDeclaration> toInitializerDeclaration() {
+        return Optional.of(this);
+    }
 }

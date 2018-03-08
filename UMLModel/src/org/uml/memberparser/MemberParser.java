@@ -2,9 +2,13 @@ package org.uml.memberparser;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.SimpleName;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import org.uml.model.members.Constructor;
@@ -137,7 +141,8 @@ public class MemberParser {
         String type;
         BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
         FieldDeclaration declaration = (FieldDeclaration) bd;
-        type = declaration.getType().toString().replaceAll(SPACES,"");
+        NodeList<VariableDeclarator> variables = declaration.getVariables();
+        type = variables.get(0).getType().asString().replaceAll(SPACES,"");
         return type;
     }
 
@@ -151,7 +156,7 @@ public class MemberParser {
         String name;
         BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
         FieldDeclaration declaration = (FieldDeclaration) bd;
-        name = declaration.getVariables().get(0).getId().getName();
+        name = declaration.getVariables().get(0).getName().asString();
         return name;
     }
 
@@ -183,16 +188,13 @@ public class MemberParser {
      * @return name
      */
     private static String getMethodName(String signature) throws ParseException {
-        String name;
-        // Need to empty the arguments list in order not to an argument exception
-        signature = signature.replaceAll("\\(.*\\)", "()");
-        if (signature.contains("void")) {
-            signature = signature.replace("void", "int"); // arbitrary type, not to have exception because of void
-        }
         BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
-        AnnotationMemberDeclaration declaration = (AnnotationMemberDeclaration) bd;
-        name = declaration.getName();
-        return name;
+        if (!(bd instanceof MethodDeclaration)) {
+            return "UnknownName";
+        }
+        MethodDeclaration declaration = (MethodDeclaration) bd;
+        SimpleName name = declaration.getName();
+        return name.asString();
     }
 
     private static LinkedHashSet<MethodArgument> getArguments(String signature) throws ParseException {
@@ -231,7 +233,10 @@ public class MemberParser {
 
                 BodyDeclaration bd = JavaParser.parseBodyDeclaration(argument);
                 FieldDeclaration declaration = (FieldDeclaration) bd;
-                arguments.add(new MethodArgument(declaration.getType().toString(), declaration.getVariables().get(0).getId().getName()));
+                arguments.add(new MethodArgument(
+                    declaration.getVariables().get(0).getType().asString(), 
+                    declaration.getVariables().get(0).getName().asString())
+                );
             }
         }
         return arguments;

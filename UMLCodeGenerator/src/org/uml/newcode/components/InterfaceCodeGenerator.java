@@ -1,10 +1,12 @@
 package org.uml.newcode.components;
 
+import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.ModifierSet;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
@@ -33,17 +35,17 @@ public class InterfaceCodeGenerator extends ComponentCodeGeneratorBase<Interface
     }
 
     @Override
-    protected String generateCode(InterfaceComponent component) {
+    protected CompilationUnit generateCode(InterfaceComponent component) {
         CompilationUnit cu = new CompilationUnit();
-        cu.setTypes(new LinkedList<TypeDeclaration>());
+        cu.setTypes(new NodeList<TypeDeclaration<?>>());
         String parentPackage = component.getFullParentPackage();
         if (!parentPackage.isEmpty()) {
-            cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));
+            cu.setPackageDeclaration(parentPackage);
         }
         createSkeleton(component, cu);
         MethodCodeGenerator.createMethods(component, cu);
 
-        return cu.toString();
+        return cu;
     }
 
     private static void createSkeleton(InterfaceComponent component, CompilationUnit cu) {
@@ -52,25 +54,26 @@ public class InterfaceCodeGenerator extends ComponentCodeGeneratorBase<Interface
         declaration.setName(component.getName());
         switch (component.getVisibility()) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PUBLIC));
+                declaration.setModifier(Modifier.PUBLIC, true);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PROTECTED));
+                declaration.setModifier(Modifier.PROTECTED, true);
                 break;
             case PRIVATE:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PRIVATE));
+                declaration.setModifier(Modifier.PRIVATE, true);
                 break;
         }
-        if (component.isStatic()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
+        if (component.isStatic())
+            declaration.setModifier(Modifier.STATIC, true);
+        
+        ComponentBase extendedClass = getExtendedInterface(component);
+        if (extendedClass != null) {
+            NodeList<ClassOrInterfaceType> extended = new NodeList();
+            extended.add(JavaParser.parseClassOrInterfaceType(extendedClass.getName()));
+            declaration.setExtendedTypes(extended);
+        }        
 
-        ComponentBase extendedInterface = getExtendedInterface(component);
-        if (extendedInterface != null) {
-            List<ClassOrInterfaceType> extended = new LinkedList<>();
-            extended.add(new ClassOrInterfaceType(extendedInterface.getName()));
-            declaration.setExtends(extended);
-        }
-
-        declaration.setMembers(new LinkedList<BodyDeclaration>());
+        declaration.setMembers(new NodeList<BodyDeclaration<?>>());
 
         cu.getTypes().add(declaration);
     }
@@ -85,19 +88,19 @@ public class InterfaceCodeGenerator extends ComponentCodeGeneratorBase<Interface
     }
 
     @Override
-    protected String updateCode(InterfaceComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
+    protected CompilationUnit updateCode(InterfaceComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
         String parentPackage = component.getFullParentPackage();
         if (!parentPackage.isEmpty()) {
-            cu.setPackage(new PackageDeclaration(new NameExpr(parentPackage)));
+            cu.setPackageDeclaration(parentPackage);
         }
         updateHeader(component, cu);
         MethodCodeGenerator.updateMethods(component, renames.getComponentRenames().getMembersRenameTable(component), cu);
 
-        return cu.toString();
+        return cu;
     }
 
     private static void updateHeader(InterfaceComponent component, CompilationUnit cu) {
-        List<TypeDeclaration> types = cu.getTypes();
+        NodeList<TypeDeclaration<?>> types = cu.getTypes();
         for (TypeDeclaration type : types) {
             if (type instanceof ClassOrInterfaceDeclaration) {
                 ClassOrInterfaceDeclaration declaration = (ClassOrInterfaceDeclaration) type;
@@ -105,15 +108,14 @@ public class InterfaceCodeGenerator extends ComponentCodeGeneratorBase<Interface
 
                 updateVisibility(declaration, component.getVisibility());
 
-                if (component.isStatic()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
-                else declaration.setModifiers(ModifierSet.removeModifier(declaration.getModifiers(), ModifierSet.STATIC));
+                declaration.setModifier(Modifier.STATIC, component.isStatic());
 
-                ComponentBase extendedInterface = getExtendedInterface(component);
-                if (extendedInterface != null) {
-                    List<ClassOrInterfaceType> extended = new LinkedList<>();
-                    extended.add(new ClassOrInterfaceType(extendedInterface.getName()));
-                    declaration.setExtends(extended);
-                }
+                ComponentBase extendedClass = getExtendedInterface(component);
+                if (extendedClass != null) {
+                    NodeList<ClassOrInterfaceType> extended = new NodeList();
+                    extended.add(JavaParser.parseClassOrInterfaceType(extendedClass.getName()));
+                    declaration.setExtendedTypes(extended);
+                }   
             }
             // Process only the first one
             // TODO what if there are more classes in one file
@@ -122,20 +124,16 @@ public class InterfaceCodeGenerator extends ComponentCodeGeneratorBase<Interface
     }
 
     private static void updateVisibility(TypeDeclaration declaration, Visibility visibility) {
-        int modifiers = declaration.getModifiers();
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PUBLIC);
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PROTECTED);
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PRIVATE);
-
+        declaration.removeModifier(Modifier.PUBLIC,Modifier.PROTECTED,Modifier.PRIVATE);
         switch (visibility) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PUBLIC));
+                declaration.setModifier(Modifier.PUBLIC, true);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PROTECTED));
+                declaration.setModifier(Modifier.PROTECTED, true);
                 break;
             case PRIVATE:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PRIVATE));
+                declaration.setModifier(Modifier.PRIVATE, true);
                 break;
         }
     }

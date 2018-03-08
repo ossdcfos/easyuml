@@ -1,87 +1,169 @@
 /*
  * Copyright (C) 2007-2010 Júlio Vilmar Gesser.
- * Copyright (C) 2011, 2013-2015 The JavaParser Team.
+ * Copyright (C) 2011, 2013-2016 The JavaParser Team.
  *
  * This file is part of JavaParser.
  *
- * JavaParser is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * JavaParser can be used either under the terms of
+ * a) the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * b) the terms of the Apache License
+ *
+ * You should have received a copy of both licenses in LICENCE.LGPL and
+ * LICENCE.APACHE. Please refer to those files for details.
  *
  * JavaParser is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with JavaParser.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.github.javaparser.ast.stmt;
 
+import com.github.javaparser.ast.AllFieldsConstructor;
+import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.body.MultiTypeParameter;
-import com.github.javaparser.ast.body.VariableDeclaratorId;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.nodeTypes.NodeWithBlockStmt;
+import com.github.javaparser.ast.observer.ObservableProperty;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
-import java.util.List;
+import java.util.EnumSet;
+import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.CatchClauseMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
+import javax.annotation.Generated;
+import com.github.javaparser.TokenRange;
 
 /**
+ * The catch part of a try-catch-finally. <br/>In <code>try { ... } catch (Exception e) { ... }</code> the CatchClause
+ * is <code>catch (Exception e) { ... }</code>. Exception e is the parameter. The { ... } is the body.
+ *
  * @author Julio Vilmar Gesser
  */
-public final class CatchClause extends Node {
+public final class CatchClause extends Node implements NodeWithBlockStmt<CatchClause> {
 
-    private MultiTypeParameter except;
+    private Parameter parameter;
 
-    private BlockStmt catchBlock;
+    private BlockStmt body;
 
     public CatchClause() {
+        this(null, new Parameter(), new BlockStmt());
     }
 
-    public CatchClause(final MultiTypeParameter except, final BlockStmt catchBlock) {
-        setExcept(except);
-        setCatchBlock(catchBlock);
-    }
-	
-    public CatchClause(int exceptModifier, List<AnnotationExpr> exceptAnnotations, List<Type> exceptTypes, VariableDeclaratorId exceptId, BlockStmt catchBlock) {
-        this(new MultiTypeParameter(exceptModifier, exceptAnnotations, exceptTypes, exceptId), catchBlock);
+    public CatchClause(final EnumSet<Modifier> exceptModifier, final NodeList<AnnotationExpr> exceptAnnotations, final ClassOrInterfaceType exceptType, final SimpleName exceptName, final BlockStmt body) {
+        this(null, new Parameter(null, exceptModifier, exceptAnnotations, exceptType, false, new NodeList<>(), exceptName), body);
     }
 
-    public CatchClause(final int beginLine, final int beginColumn, final int endLine, final int endColumn,
-    	    final int exceptModifier, final List<AnnotationExpr> exceptAnnotations, final List<Type> exceptTypes, 
-    	    final VariableDeclaratorId exceptId, final BlockStmt catchBlock) {
-        super(beginLine, beginColumn, endLine, endColumn);
-        setExcept(new MultiTypeParameter(beginLine, beginColumn, endLine, endColumn, exceptModifier, exceptAnnotations, exceptTypes, exceptId));
-        setCatchBlock(catchBlock);
+    @AllFieldsConstructor
+    public CatchClause(final Parameter parameter, final BlockStmt body) {
+        this(null, parameter, body);
     }
 
-	@Override public <R, A> R accept(final GenericVisitor<R, A> v, final A arg) {
-		return v.visit(this, arg);
-	}
+    /**
+     * This constructor is used by the parser and is considered private.
+     */
+    @Generated("com.github.javaparser.generator.core.node.MainConstructorGenerator")
+    public CatchClause(TokenRange tokenRange, Parameter parameter, BlockStmt body) {
+        super(tokenRange);
+        setParameter(parameter);
+        setBody(body);
+        customInitialization();
+    }
 
-	@Override public <A> void accept(final VoidVisitor<A> v, final A arg) {
-		v.visit(this, arg);
-	}
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.AcceptGenerator")
+    public <R, A> R accept(final GenericVisitor<R, A> v, final A arg) {
+        return v.visit(this, arg);
+    }
 
-	public BlockStmt getCatchBlock() {
-		return catchBlock;
-	}
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.AcceptGenerator")
+    public <A> void accept(final VoidVisitor<A> v, final A arg) {
+        v.visit(this, arg);
+    }
 
-	public MultiTypeParameter getExcept() {
-		return except;
-	}
+    /**
+     * Note that the type of the Parameter can be a UnionType. In this case, any annotations found at the start of the
+     * catch(@X A a |...) are found directly in the Parameter. Annotations that are on the second or later type -
+     * catch(A a | @X B b ...) are found on those types.
+     */
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public Parameter getParameter() {
+        return parameter;
+    }
 
-	public void setCatchBlock(final BlockStmt catchBlock) {
-		this.catchBlock = catchBlock;
-		setAsParentNodeOf(this.catchBlock);
-	}
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public CatchClause setParameter(final Parameter parameter) {
+        assertNotNull(parameter);
+        if (parameter == this.parameter) {
+            return (CatchClause) this;
+        }
+        notifyPropertyChange(ObservableProperty.PARAMETER, this.parameter, parameter);
+        if (this.parameter != null)
+            this.parameter.setParentNode(null);
+        this.parameter = parameter;
+        setAsParentNodeOf(parameter);
+        return this;
+    }
 
-	public void setExcept(final MultiTypeParameter except) {
-		this.except = except;
-		setAsParentNodeOf(this.except);
-	}
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public BlockStmt getBody() {
+        return body;
+    }
+
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public CatchClause setBody(final BlockStmt body) {
+        assertNotNull(body);
+        if (body == this.body) {
+            return (CatchClause) this;
+        }
+        notifyPropertyChange(ObservableProperty.BODY, this.body, body);
+        if (this.body != null)
+            this.body.setParentNode(null);
+        this.body = body;
+        setAsParentNodeOf(body);
+        return this;
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        return super.remove(node);
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
+    public CatchClause clone() {
+        return (CatchClause) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
+    public CatchClauseMetaModel getMetaModel() {
+        return JavaParserMetaModel.catchClauseMetaModel;
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.ReplaceMethodGenerator")
+    public boolean replace(Node node, Node replacementNode) {
+        if (node == null)
+            return false;
+        if (node == body) {
+            setBody((BlockStmt) replacementNode);
+            return true;
+        }
+        if (node == parameter) {
+            setParameter((Parameter) replacementNode);
+            return true;
+        }
+        return super.replace(node, replacementNode);
+    }
 }

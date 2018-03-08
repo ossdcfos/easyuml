@@ -1,11 +1,13 @@
 package org.uml.newcode.members;
 
+import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.ModifierSet;
 import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.body.VariableDeclaratorId;
+import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
@@ -37,7 +39,7 @@ import org.uml.newcode.CodeGeneratorUtils;
 public class MethodCodeGenerator {
 
     public static void createMethods(ClassComponent component, CompilationUnit cu) {
-        List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
+        NodeList<BodyDeclaration<?>> members = cu.getTypes().get(0).getMembers();
 
         for (Method method : component.getMethods()) {
             // create and add method declaration
@@ -62,7 +64,7 @@ public class MethodCodeGenerator {
     }
 
     public static void createMethods(InterfaceComponent component, CompilationUnit cu) {
-        List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
+        NodeList<BodyDeclaration<?>> members = cu.getTypes().get(0).getMembers();
 
         for (Method method : component.getMethods()) {
             // create and add method declaration
@@ -72,7 +74,7 @@ public class MethodCodeGenerator {
     }
 
     public static void updateMethods(ClassComponent component, MyMembersRenameTable renames, CompilationUnit cu) {
-        List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
+        NodeList<BodyDeclaration<?>> members = cu.getTypes().get(0).getMembers();
         // Generate or update all direct methods
         for (Method method : component.getMethods()) {
             MethodDeclaration existingDeclaration = findExistingDeclaration(members, method);
@@ -90,12 +92,12 @@ public class MethodCodeGenerator {
                                 declaration.setName(method.getName());
                                 declaration.setType(CodeGeneratorUtils.parseType(method.getType()));
                                 if (!method.getArguments().isEmpty()) {
-                                    List<Parameter> parameters = new LinkedList<>();
+                                    NodeList<Parameter> parameters = new NodeList<>();
                                     for (MethodArgument argument : method.getArguments()) {
                                         Parameter parameter = new Parameter();
                                         String type = argument.getType();
                                         parameter.setType(CodeGeneratorUtils.parseType(type));
-                                        parameter.setId(new VariableDeclaratorId(argument.getName()));
+                                        parameter.setName(argument.getName());
                                         parameters.add(parameter);
                                     }
                                     declaration.setParameters(parameters);
@@ -142,7 +144,7 @@ public class MethodCodeGenerator {
     }
 
     public static void updateMethods(InterfaceComponent component, MyMembersRenameTable renames, CompilationUnit cu) {
-        List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
+        NodeList<BodyDeclaration<?>> members = cu.getTypes().get(0).getMembers();
         // Generate or update all direct methods
         for (Method method : component.getMethods()) {
             // If the method has been renamed update or generate
@@ -157,12 +159,12 @@ public class MethodCodeGenerator {
                         if (oldSignature.equals(getMethodDeclarationSignature(declaration))) {
                             declaration.setName(oldSignature);
                             if (!method.getArguments().isEmpty()) {
-                                List<Parameter> parameters = new LinkedList<>();
+                                NodeList<Parameter> parameters = new NodeList<>();
                                 for (MethodArgument argument : method.getArguments()) {
                                     Parameter parameter = new Parameter();
                                     String type = argument.getType();
                                     parameter.setType(CodeGeneratorUtils.parseType(type));
-                                    parameter.setId(new VariableDeclaratorId(argument.getName()));
+                                    parameter.setName(argument.getName());
                                     parameters.add(parameter);
                                 }
                                 declaration.setParameters(parameters);
@@ -199,37 +201,36 @@ public class MethodCodeGenerator {
         // Set visibility
         switch (method.getVisibility()) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PUBLIC));
+                declaration.addModifier(Modifier.PUBLIC);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PROTECTED));
+                declaration.addModifier(Modifier.PROTECTED);
                 break;
             case PRIVATE:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PRIVATE));
+                declaration.addModifier(Modifier.PRIVATE);
                 break;
         }
-        // Set modifiers
         if (method.isStatic()) {
-            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
+            declaration.addModifier(Modifier.STATIC);
         }
         if (method.isFinal()) {
-            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.FINAL));
+            declaration.addModifier(Modifier.FINAL);
         }
         if (method.isAbstract()) {
-            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.ABSTRACT));
+            declaration.addModifier(Modifier.ABSTRACT);
         }
         if (method.isSynchronized()) {
-            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.SYNCHRONIZED));
+            declaration.addModifier(Modifier.SYNCHRONIZED);
         }
 
         // Set arguments
         if (!method.getArguments().isEmpty()) {
-            List<Parameter> parameters = new LinkedList<>();
+            NodeList<Parameter> parameters = new NodeList<>();
             for (MethodArgument argument : method.getArguments()) {
                 Parameter parameter = new Parameter();
                 String type = argument.getType();
                 parameter.setType(CodeGeneratorUtils.parseType(type));
-                parameter.setId(new VariableDeclaratorId(argument.getName()));
+                parameter.setName(argument.getName());
                 parameters.add(parameter);
             }
             declaration.setParameters(parameters);
@@ -241,14 +242,14 @@ public class MethodCodeGenerator {
                 // If the return type is not void, set the body to UnsupportedOperationException
                 // Otherwise, leave body empty
                 if (!(declaration.getType() instanceof VoidType)) {
-                    List<Statement> statements = new LinkedList<>();
+                    NodeList<Statement> statements = new NodeList<>();
                     ObjectCreationExpr exception = new ObjectCreationExpr();
-                    exception.setType(new ClassOrInterfaceType("UnsupportedOperationException"));
-                    List<Expression> arguments = new LinkedList<>();
+                    exception.setType(JavaParser.parseClassOrInterfaceType("UnsupportedOperationException"));
+                    NodeList<Expression> arguments = new NodeList<>();
                     arguments.add(new StringLiteralExpr("Not supported yet."));
-                    exception.setArgs(arguments);
+                    exception.setArguments(arguments);
                     statements.add(new ThrowStmt(exception));
-                    body.setStmts(statements);
+                    body.setStatements(statements);
                 }
             }
             declaration.setBody(body);
@@ -256,7 +257,7 @@ public class MethodCodeGenerator {
         return declaration;
     }
 
-    private static MethodDeclaration findExistingDeclaration(List<BodyDeclaration> declarations, Method method) {
+    private static MethodDeclaration findExistingDeclaration(NodeList<BodyDeclaration<?>> declarations, Method method) {
         for (BodyDeclaration declaration : declarations) {
             if (declaration instanceof MethodDeclaration && method.getSignature().equals(getMethodDeclarationSignature((MethodDeclaration) declaration))) {
                 return (MethodDeclaration) declaration;
@@ -270,29 +271,32 @@ public class MethodCodeGenerator {
         declaration.setName(method.getName());
         String returnType = method.getType();
         declaration.setType(CodeGeneratorUtils.parseType(returnType));
+
         switch (method.getVisibility()) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PUBLIC));
+                declaration.addModifier(Modifier.PUBLIC);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PROTECTED));
+                declaration.addModifier(Modifier.PROTECTED);
                 break;
         }
-        if (method.isStatic()) {
-            declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
-        }
+        if (method.isStatic()) 
+            declaration.addModifier(Modifier.STATIC);
 
         if (!method.getArguments().isEmpty()) {
-            List<Parameter> parameters = new LinkedList<>();
+            NodeList<Parameter> parameters = new NodeList<>();
             for (MethodArgument argument : method.getArguments()) {
                 Parameter parameter = new Parameter();
                 String type = argument.getType();
                 parameter.setType(CodeGeneratorUtils.parseType(type));
-                parameter.setId(new VariableDeclaratorId(argument.getName()));
+                parameter.setName(argument.getName());
                 parameters.add(parameter);
             }
             declaration.setParameters(parameters);
         }
+        
+        declaration.setBody(null);
+        
         return declaration;
     }
 
@@ -303,7 +307,7 @@ public class MethodCodeGenerator {
         String args = "";
         if (declaration.getParameters() != null) {
             for (Parameter parameter : declaration.getParameters()) {
-                args += parameter.getType() + " " + parameter.getId().getName() + ", ";
+                args += parameter.getType() + " " + parameter.getName() + ", ";
             }
             if (!args.equals("")) {
                 args = args.substring(0, args.length() - 2);
@@ -315,18 +319,18 @@ public class MethodCodeGenerator {
 
     public static BlockStmt createGetterBody(Field field) {
         BlockStmt body = new BlockStmt();
-        List<Statement> statements = new LinkedList<>();
+        NodeList<Statement> statements = new NodeList<>();
         statements.add(new ReturnStmt(new NameExpr(field.getName())));
-        body.setStmts(statements);
+        body.setStatements(statements);
         return body;
     }
     
     public static BlockStmt createSetterBody(Field field) {
         BlockStmt body = new BlockStmt();
-        List<Statement> statements = new LinkedList<>();
+        NodeList<Statement> statements = new NodeList<>();
         Expression expr = new FieldAccessExpr(new ThisExpr(),field.getName());
-        statements.add(new ExpressionStmt(new AssignExpr(expr,new NameExpr(field.getName()),AssignExpr.Operator.assign)));
-        body.setStmts(statements);
+        statements.add(new ExpressionStmt(new AssignExpr(expr,new NameExpr(field.getName()),AssignExpr.Operator.ASSIGN)));
+        body.setStatements(statements);
         return body;
     }
     

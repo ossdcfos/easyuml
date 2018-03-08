@@ -2,8 +2,10 @@ package org.uml.newcode.components;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
+import com.github.javaparser.ParseProblemException;
 import com.github.javaparser.Token;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,8 +24,8 @@ import org.uml.model.components.ComponentBase;
  */
 public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
     
-    protected abstract String generateCode(T component);
-    protected abstract String updateCode(T component, MyClassDiagramRenameTable renames, CompilationUnit cu);
+    protected abstract CompilationUnit generateCode(T component);
+    protected abstract CompilationUnit updateCode(T component, MyClassDiagramRenameTable renames, CompilationUnit cu);
 
     /**
      * Generates the code of the component to the given path.
@@ -34,7 +36,6 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
      */
     public void generateOrUpdateCode(T component, MyClassDiagramRenameTable renames, String sourcePath) {
 
-        String code = "";
         File sourceFile;
         // If the component has been renamed, the source file should have the old name
         if (renames.getComponentRenames().contains(component)) {  //-> new to old
@@ -49,22 +50,18 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
         }
 
         // If source exists, update code
+        CompilationUnit code = null;
         if (sourceFile.exists()) {
             try {
                 CompilationUnit cu;
                 try (FileReader fileReader = new FileReader(sourceFile)) {
-                    // TODO doesn't parse comments, as there is trobule generating them back to code
-                    // In the current parser implementation, comments need to be anchored to some element,
-                    // so the comments which are freely writen throughout the code are not well placed
-                    // when generating the code.
-                    cu = JavaParser.parse(fileReader, true);
-                    System.out.println("2:"+cu.toString());
+                    cu = JavaParser.parse(fileReader);
+                    LexicalPreservingPrinter.setup(cu);      
                 }
                 code = updateCode(component, renames, cu);
                 sourceFile.delete();
-            } catch (ParseException ex) {
-                Token tok = ex.currentToken;
-                JOptionPane.showMessageDialog(null, "Malformed code at line " + tok.beginLine + " column " + tok.beginColumn + ". Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ParseProblemException ex) {
+                JOptionPane.showMessageDialog(null, "Parse problem. Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (FileNotFoundException ex) {
                 // Already checked for file existance, but if file is somehow deleted, generate code.
                 code = generateCode(component);
@@ -75,6 +72,10 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
         } // If source does not exist, generate code from scratch
         else {
             code = generateCode(component);
+        }
+        
+        if (code == null) {
+            return;
         }
 
         // Add package to the path
@@ -94,7 +95,7 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
         // Write-out the source file
         File outSourceFile = new File(fullPath + name + ".java");
         try {
-            FileUtils.writeStringToFile(outSourceFile, code);
+            FileUtils.writeStringToFile(outSourceFile, LexicalPreservingPrinter.print(code));
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Cannot write file " + outSourceFile.getName() + "!", "Error", JOptionPane.ERROR_MESSAGE);
         }

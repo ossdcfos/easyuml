@@ -2,7 +2,11 @@ package org.uml.reveng;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
+import com.github.javaparser.ParseProblemException;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
@@ -10,9 +14,10 @@ import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.ModifierSet;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.Name;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import java.awt.Point;
 import java.io.File;
@@ -22,6 +27,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import org.openide.util.Exceptions;
 import org.uml.model.ClassDiagram;
 import org.uml.model.Visibility;
@@ -94,7 +100,7 @@ public class ReverseEngineer {
         List<ComponentBase> components = new LinkedList<>();
         try {
             CompilationUnit cu = JavaParser.parse(file);
-            List<TypeDeclaration> types = cu.getTypes();
+            NodeList<TypeDeclaration<?>> types = cu.getTypes();
             for (TypeDeclaration type : types) {
                 ComponentBase component = null;
                 if (type instanceof ClassOrInterfaceDeclaration) {
@@ -112,21 +118,26 @@ public class ReverseEngineer {
                     components.add(component);
                 }
             }
-        } catch (ParseException | IOException ex) {
+        } catch (ParseProblemException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
         return components;
     }
 
     private static ClassComponent createClass(ClassOrInterfaceDeclaration declaration) {
-        ClassComponent clazz = new ClassComponent(declaration.getName());
-        clazz.setAbstract(ModifierSet.isAbstract(declaration.getModifiers()));
-        clazz.setFinal(ModifierSet.isFinal(declaration.getModifiers()));
-        clazz.setStatic(ModifierSet.isStatic(declaration.getModifiers()));
+        ClassComponent clazz = new ClassComponent(declaration.getName().asString());
+        clazz.setAbstract(declaration.isAbstract());
+        clazz.setFinal(declaration.isFinal());
+        clazz.setStatic(declaration.isStatic());
+        
         // TODO fix for inner classes
-        CompilationUnit parent = (CompilationUnit) declaration.getParentNode();
-        if (parent.getPackage() != null) {
-            clazz.setParentPackage(parent.getPackage().getName().toString());
+        Optional<Node> optionalNode = declaration.getParentNode();
+        Node parentNode = optionalNode.get();
+        Optional<CompilationUnit> optionalCU = parentNode.findCompilationUnit();
+        CompilationUnit cu = optionalCU.get();
+        Optional<PackageDeclaration> parentPackage = cu.getPackageDeclaration();
+        if (parentPackage.isPresent()) {
+            clazz.setParentPackage(parentPackage.get().getName().asString());
         } else {
             clazz.setParentPackage("");
         }
@@ -149,12 +160,16 @@ public class ReverseEngineer {
     }
 
     private static ComponentBase createInterface(ClassOrInterfaceDeclaration declaration) {
-        InterfaceComponent interfaze = new InterfaceComponent(declaration.getName());
-        interfaze.setStatic(ModifierSet.isStatic(declaration.getModifiers()));
-
-        CompilationUnit parent = (CompilationUnit) declaration.getParentNode();
-        if (parent.getPackage() != null) {
-            interfaze.setParentPackage(parent.getPackage().getName().toString());
+        InterfaceComponent interfaze = new InterfaceComponent(declaration.getName().asString());
+        interfaze.setStatic(declaration.isStatic());
+        
+        Optional<Node> optionalNode = declaration.getParentNode();
+        Node parentNode = optionalNode.get();
+        Optional<CompilationUnit> optionalCU = parentNode.findCompilationUnit();
+        CompilationUnit cu = optionalCU.get();
+        Optional<PackageDeclaration> parentPackage = cu.getPackageDeclaration();
+        if (parentPackage.isPresent()) {
+            interfaze.setParentPackage(parentPackage.get().getName().asString());
         } else {
             interfaze.setParentPackage("");
         }
@@ -171,14 +186,18 @@ public class ReverseEngineer {
     }
 
     private static ComponentBase createEnum(EnumDeclaration declaration) {
-        EnumComponent enumm = new EnumComponent(declaration.getName());
-
-        CompilationUnit parent = (CompilationUnit) declaration.getParentNode();
-        if (parent.getPackage() != null) {
-            enumm.setParentPackage(parent.getPackage().getName().toString());
+        EnumComponent enumm = new EnumComponent(declaration.getName().asString());
+        
+        Optional<Node> optionalNode = declaration.getParentNode();
+        Node parentNode = optionalNode.get();
+        Optional<CompilationUnit> optionalCU = parentNode.findCompilationUnit();
+        CompilationUnit cu = optionalCU.get();
+        Optional<PackageDeclaration> parentPackage = cu.getPackageDeclaration();
+        if (parentPackage.isPresent()) {
+            enumm.setParentPackage(parentPackage.get().getName().asString());
         } else {
             enumm.setParentPackage("");
-        }
+        }        
 
         for (BodyDeclaration entry : safe(declaration.getEntries())) {
             if (entry instanceof EnumConstantDeclaration) {
@@ -192,26 +211,23 @@ public class ReverseEngineer {
     }
 
     private static Field createField(FieldDeclaration declaration) {
-        String name = declaration.getVariables().get(0).getId().getName();
-        Field field = new Field(name, declaration.getType().toString(), getVisibility(declaration));
+        VariableDeclarator variable = declaration.getVariables().get(0);
+        Field field = new Field(variable.getName().asString(), variable.getType().asString(), getVisibility(declaration));
 
-        int modifiers = declaration.getModifiers();
-        field.setStatic(ModifierSet.isStatic(modifiers));
-        field.setFinal(ModifierSet.isFinal(modifiers));
-        field.setVolatile(ModifierSet.isVolatile(modifiers));
-        field.setTransient(ModifierSet.isTransient(modifiers));
+        field.setStatic(declaration.isStatic());
+        field.setFinal(declaration.isFinal());
+        field.setVolatile(declaration.isVolatile());
+        field.setTransient(declaration.isTransient());
 
         return field;
     }
 
     private static Visibility getVisibility(FieldDeclaration declaration) {
-        int modifiers = declaration.getModifiers();
-
-        if (ModifierSet.isPublic(modifiers)) {
+        if (declaration.isPublic()) {
             return Visibility.PUBLIC;
-        } else if (ModifierSet.isProtected(modifiers)) {
+        } else if (declaration.isProtected()) {
             return Visibility.PROTECTED;
-        } else if (ModifierSet.isPrivate(modifiers)) {
+        } else if (declaration.isPrivate()) {
             return Visibility.PRIVATE;
         } else {
             return Visibility.PACKAGE;
@@ -219,18 +235,17 @@ public class ReverseEngineer {
     }
 
     private static Method createMethod(MethodDeclaration declaration) {
-        Method method = new Method(declaration.getName(), declaration.getType().toString());
+        Method method = new Method(declaration.getName().asString(), declaration.getType().asString());
         method.setVisibility(getVisibility(declaration));
 
-        int modifiers = declaration.getModifiers();
-        method.setAbstract(ModifierSet.isAbstract(modifiers));
-        method.setStatic(ModifierSet.isStatic(modifiers));
-        method.setFinal(ModifierSet.isFinal(modifiers));
-        method.setSynchronized(ModifierSet.isSynchronized(modifiers));
-
+        method.setAbstract(declaration.isAbstract());
+        method.setStatic(declaration.isStatic());
+        method.setFinal(declaration.isFinal());
+        method.setSynchronized(declaration.isSynchronized());
+        
         LinkedHashSet<MethodArgument> arguments = method.getArguments();
         for (Parameter parameter : safe(declaration.getParameters())) {
-            MethodArgument arg = new MethodArgument(parameter.getType().toString(), parameter.getId().getName());
+            MethodArgument arg = new MethodArgument(parameter.getType().asString(), parameter.getName().asString());
             arguments.add(arg);
         }
 
@@ -238,12 +253,11 @@ public class ReverseEngineer {
     }
 
     private static Visibility getVisibility(MethodDeclaration declaration) {
-        int modifiers = declaration.getModifiers();
-        if (ModifierSet.isPublic(modifiers)) {
+        if (declaration.isPublic()) {
             return Visibility.PUBLIC;
-        } else if (ModifierSet.isProtected(modifiers)) {
+        } else if (declaration.isProtected()) {
             return Visibility.PROTECTED;
-        } else if (ModifierSet.isPrivate(modifiers)) {
+        } else if (declaration.isPrivate()) {
             return Visibility.PRIVATE;
         } else {
             return Visibility.PACKAGE;
@@ -251,13 +265,13 @@ public class ReverseEngineer {
     }
 
     private static Constructor createConstructor(ConstructorDeclaration declaration) {
-        Constructor constructor = new Constructor(declaration.getName());
+        Constructor constructor = new Constructor(declaration.getName().asString());
         constructor.setVisibility(getVisibility(declaration));
 
         LinkedHashSet<MethodArgument> arguments = constructor.getArguments();
 
         for (Parameter parameter : safe(declaration.getParameters())) {
-            MethodArgument arg = new MethodArgument(parameter.getType().toString(), parameter.getId().getName());
+            MethodArgument arg = new MethodArgument(parameter.getType().asString(), parameter.getName().asString());
             arguments.add(arg);
         }
 
@@ -265,12 +279,11 @@ public class ReverseEngineer {
     }
 
     private static Visibility getVisibility(ConstructorDeclaration declaration) {
-        int modifiers = declaration.getModifiers();
-        if (ModifierSet.isPublic(modifiers)) {
+        if (declaration.isPublic()) {
             return Visibility.PUBLIC;
-        } else if (ModifierSet.isProtected(modifiers)) {
+        } else if (declaration.isProtected()) {
             return Visibility.PROTECTED;
-        } else if (ModifierSet.isPrivate(modifiers)) {
+        } else if (declaration.isPrivate()) {
             return Visibility.PRIVATE;
         } else {
             return Visibility.PACKAGE;
@@ -278,13 +291,14 @@ public class ReverseEngineer {
     }
 
     private static Literal createLiteral(EnumConstantDeclaration declaration) {
-        Literal literal = new Literal(declaration.getName());
+        Literal literal = new Literal(declaration.getName().asString());
         return literal;
     }
 
     private static List<RelationBase> createRelations(File file, ClassDiagram classDiagram) {
         List<RelationBase> relations = new LinkedList<>();
-        try {
+        //!TODO: Update to JavaParser 9
+        /*try {
             CompilationUnit cu = JavaParser.parse(file);
             for (TypeDeclaration typedecl : safe(cu.getTypes())) {
                 if (typedecl instanceof ClassOrInterfaceDeclaration) {
@@ -405,7 +419,7 @@ public class ReverseEngineer {
             }
         } catch (ParseException | IOException ex) {
             Exceptions.printStackTrace(ex);
-        }
+        }*/
         return relations;
     }
 

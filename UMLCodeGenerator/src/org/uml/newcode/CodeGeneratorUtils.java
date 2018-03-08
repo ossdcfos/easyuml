@@ -2,6 +2,7 @@ package org.uml.newcode;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
+import com.github.javaparser.ParseProblemException;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.type.Type;
@@ -27,8 +28,8 @@ public class CodeGeneratorUtils {
             try {
                 BodyDeclaration bd = JavaParser.parseBodyDeclaration(typeString + " field;");
                 FieldDeclaration declaration = (FieldDeclaration) bd;
-                type = declaration.getType();
-            } catch (ParseException ex) {
+                type = declaration.getVariables().get(0).getType();
+            } catch (ParseProblemException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
