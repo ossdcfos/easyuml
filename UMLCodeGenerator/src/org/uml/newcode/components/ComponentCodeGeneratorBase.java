@@ -57,7 +57,8 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
                     // In the current parser implementation, comments need to be anchored to some element,
                     // so the comments which are freely writen throughout the code are not well placed
                     // when generating the code.
-                    cu = JavaParser.parse(fileReader, false);
+                    cu = JavaParser.parse(fileReader, true);
+                    System.out.println("2:"+cu.toString());
                 }
                 code = updateCode(component, renames, cu);
                 sourceFile.delete();

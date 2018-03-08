@@ -1,6 +1,9 @@
 package org.uml.visual.widgets.components;
 
 import java.awt.Font;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.EditProvider;
@@ -9,6 +12,7 @@ import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
+import org.uml.model.members.MemberBase;
 import org.uml.visual.themes.Theme;
 import org.uml.visual.widgets.ClassDiagramScene;
 import static org.uml.visual.widgets.components.ComponentWidgetBase.ADD_LABEL_FONT_SIZE;
@@ -101,7 +105,35 @@ public class MemberContainerWidget extends Widget {
             addChild(getChildren().size() - 1, memberWidget); // add so it's 1 before "add" LabelWidget
         }
     }
-
+    
+    public void moveUpMemberWidget(MemberWidgetBase memberWidget) {
+        List<Widget> children = new ArrayList(getChildren());
+        for (int i=1;i<children.size();i++) {
+            if (children.get(i) == memberWidget) {
+                Widget previous = children.get(i-1);
+                children.set(i-1, memberWidget);
+                children.set(i, previous);
+                removeChildren();
+                addChildren(children);
+                break;
+            }
+        }
+    }
+    
+    public void moveDownMemberWidget(MemberWidgetBase memberWidget) {
+        List<Widget> children = new ArrayList(getChildren());
+        for (int i=0;i<children.size()-1;i++) {
+            if (children.get(i) == memberWidget) {
+                Widget next = children.get(i+1);
+                children.set(i+1, memberWidget);
+                children.set(i, next);
+                removeChildren();
+                addChildren(children);
+                break;
+            }
+        }
+    }    
+    
     void updateColor() {
         for (Widget widget : getChildren()) {
             if (widget instanceof MemberWidgetBase) {

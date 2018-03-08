@@ -2,8 +2,8 @@ package org.uml.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     /**
      * Components contained in the container.
      */
-    protected LinkedHashSet<T> components = new LinkedHashSet<>();
+    protected List<T> components = new ArrayList();
         
     /**
      * Property change support and related methods.
@@ -78,8 +78,18 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     public void updateComponentOrder(List<T> list) {
         components.clear();
         for (T component : list) {
-            System.out.println(component.getName());
             components.add(component);
+        }
+        pcs.firePropertyChange("COMPONENT_ORDER", null, this);
+    }
+    
+    public void moveUpComponent(T component) {
+        for (int i=1;i<components.size();i++) {
+            if (components.get(i) == component) {
+                components.set(i, components.get(i-1));
+                components.set(i-1, component);
+                break;
+            }
         }
     }
 

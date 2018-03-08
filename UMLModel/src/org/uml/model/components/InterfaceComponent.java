@@ -1,7 +1,9 @@
 package org.uml.model.components;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 
@@ -18,7 +20,7 @@ public class InterfaceComponent extends ComponentBase {
     /**
      * Set of method this class contains.
      */
-    private LinkedHashSet<Method> methods;
+    private List<Method> methods;
 
     /**
      * Default constructor. Sets name to default value.
@@ -39,7 +41,7 @@ public class InterfaceComponent extends ComponentBase {
     // Used when reverse engineering
     public InterfaceComponent(String name) {
         super(name);
-        methods = new LinkedHashSet<>();
+        methods = new ArrayList();
     }
 
     /**
@@ -48,7 +50,7 @@ public class InterfaceComponent extends ComponentBase {
      * @return HashSet of methods contained
      */
     public LinkedHashSet<Method> getMethods() {
-        return methods;
+        return new LinkedHashSet<Method>(methods);
     }
 
     /**
@@ -98,4 +100,37 @@ public class InterfaceComponent extends ComponentBase {
         if (member instanceof Method) methods.remove((Method) member);
 //        else throw new RuntimeException("Removing unsupported member: " + member.toString());
     }
+    
+    @Override
+    public boolean moveUpMember(MemberBase member) {
+        if (member instanceof Method) {
+            for (int i=1;i<methods.size();i++) {
+                if (methods.get(i) == member) {
+                    MemberBase previous = methods.get(i-1);
+                    methods.set(i, (Method)previous);
+                    methods.set(i-1, (Method)member);
+                    pcs.firePropertyChange("MOVE_FIELD", null, member);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean moveDownMember(MemberBase member) {
+        if (member instanceof Method) {
+            for (int i=0;i<methods.size()-1;i++) {
+                if (methods.get(i) == member) {
+                    MemberBase next = methods.get(i+1);
+                    methods.set(i, (Method)next);
+                    methods.set(i+1, (Method)member);
+                    pcs.firePropertyChange("MOVE_FIELD", null, member);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }    
+    
 }

@@ -29,17 +29,17 @@ public class ClassComponent extends ComponentBase {
     /**
      * Set of fields this class contains.
      */
-    private LinkedHashSet<Field> fields;
+    private List<Field> fields;
 
     /**
      * Set of constructors this class contains.
      */
-    private LinkedHashSet<Constructor> constructors;
+    private List<Constructor> constructors;
 
     /**
      * Set of method this class contains.
      */
-    private LinkedHashSet<Method> methods;
+    private List<Method> methods;
     
     /**
      * Getters automatic generation setting
@@ -69,9 +69,9 @@ public class ClassComponent extends ComponentBase {
     // Used when reverse engineering
     public ClassComponent(String name) {
         super(name);
-        fields = new LinkedHashSet<>();
-        constructors = new LinkedHashSet<>();
-        methods = new LinkedHashSet<>();
+        fields = new ArrayList();
+        constructors = new ArrayList();
+        methods = new ArrayList();
         getterGeneration = GetterSetterGeneration.AUTO;
         setterGeneration = GetterSetterGeneration.AUTO;
     }
@@ -82,7 +82,7 @@ public class ClassComponent extends ComponentBase {
      * @return HashSet of fields contained
      */
     public LinkedHashSet<Field> getFields() {
-        return fields;
+        return new LinkedHashSet<Field>(fields);
     }
 
     /**
@@ -91,7 +91,7 @@ public class ClassComponent extends ComponentBase {
      * @return HashSet of methods contained
      */
     public LinkedHashSet<Method> getMethods() {
-        return methods;
+        return new LinkedHashSet<Method>(methods);
     }
 
     /**
@@ -100,7 +100,7 @@ public class ClassComponent extends ComponentBase {
      * @return HashSet of constructors contained
      */
     public LinkedHashSet<Constructor> getConstructors() {
-        return constructors;
+        return new LinkedHashSet<Constructor>(constructors);
     }
 
     /**
@@ -227,6 +227,82 @@ public class ClassComponent extends ComponentBase {
 //        else throw new RuntimeException("Removing unsupported member: " + member.toString());
     }
 
+    @Override
+    public boolean moveUpMember(MemberBase member) {
+        if (member instanceof Field) {
+            for (int i=1;i<fields.size();i++) {
+                if (fields.get(i) == member) {
+                    MemberBase previous = fields.get(i-1);
+                    fields.set(i, (Field)previous);
+                    fields.set(i-1, (Field)member);
+                    pcs.firePropertyChange("MOVE_FIELD", null, member);
+                    return true;
+                }
+            }
+        }
+        else if (member instanceof Method) {
+            for (int i=1;i<methods.size();i++) {
+                if (methods.get(i) == member) {
+                    MemberBase previous = methods.get(i-1);
+                    methods.set(i, (Method)previous);
+                    methods.set(i-1, (Method)member);
+                    pcs.firePropertyChange("MOVE_METHOD", null, member);
+                    return true;
+                }
+            }
+        }
+        else if (member instanceof Constructor) {
+            for (int i=1;i<constructors.size();i++) {
+                if (constructors.get(i) == member) {
+                    MemberBase previous = constructors.get(i-1);
+                    constructors.set(i, (Constructor)previous);
+                    constructors.set(i-1, (Constructor)member);
+                    pcs.firePropertyChange("MOVE_CONSTRUCTOR", null, member);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean moveDownMember(MemberBase member) {
+        if (member instanceof Field) {
+            for (int i=0;i<fields.size()-1;i++) {
+                if (fields.get(i) == member) {
+                    MemberBase next = fields.get(i+1);
+                    fields.set(i, (Field)next);
+                    fields.set(i+1, (Field)member);
+                    pcs.firePropertyChange("MOVE_FIELD", null, member);
+                    return true;
+                }
+            }
+        }
+        else if (member instanceof Method) {
+            for (int i=0;i<methods.size()-1;i++) {
+                if (methods.get(i) == member) {
+                    MemberBase next = methods.get(i+1);
+                    methods.set(i, (Method)next);
+                    methods.set(i+1, (Method)member);
+                    pcs.firePropertyChange("MOVE_METHOD", null, member);
+                    return true;
+                }
+            }
+        }
+        else if (member instanceof Constructor) {
+            for (int i=0;i<constructors.size()-1;i++) {
+                if (constructors.get(i) == member) {
+                    MemberBase next = constructors.get(i+1);
+                    constructors.set(i, (Constructor)next);
+                    constructors.set(i+1, (Constructor)member);
+                    pcs.firePropertyChange("MOVE_CONSTRUCTOR", null, member);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }    
+    
     public GetterSetterGeneration getGetterGeneration() {
         return getterGeneration;
     }

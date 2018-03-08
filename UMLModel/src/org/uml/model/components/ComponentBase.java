@@ -89,7 +89,19 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @param member
      */
     public abstract void removeMember(MemberBase member);
+    
+    /**
+     * Move up the given member, if possible.
+     * @param member 
+     */
+    public abstract boolean moveUpMember(MemberBase member);
 
+    /**
+     * Move up the given member, if possible.
+     * @param member 
+     */
+    public abstract boolean moveDownMember(MemberBase member);
+    
     /**
      * Returns members that this component has.
      *
