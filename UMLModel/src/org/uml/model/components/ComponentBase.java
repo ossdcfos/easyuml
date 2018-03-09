@@ -357,7 +357,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @param newComponentName new type
      */
     private void updateTypes(ComponentBase component, String oldComponentName, String newComponentName) {
-        for (MemberBase member : component.getMembers()) {
+         for (MemberBase member : component.getMembers()) {
             if (member instanceof Constructor && component == this) {
                 member.setName(newComponentName);
             } else if (member instanceof Method) {
@@ -366,7 +366,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
                 method.setType(newMethodType);
                 for (MethodArgument argument : method.getArguments()) {
                     String newArgumentType = argument.getType().replaceAll("(?<!\\w)" + oldComponentName + "(?!\\w)", newComponentName);
-                    method.setType(newArgumentType);
+                    argument.setType(newArgumentType);
                 }
             } else if (member instanceof Field) {
                 Field field = (Field) member;
