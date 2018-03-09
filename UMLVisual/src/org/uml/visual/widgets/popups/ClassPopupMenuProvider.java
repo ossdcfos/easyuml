@@ -1,10 +1,14 @@
 package org.uml.visual.widgets.popups;
 
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashSet;
 import javax.swing.*;
-import org.netbeans.api.visual.action.*;
 import org.netbeans.api.visual.widget.*;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ClassComponent;
@@ -21,7 +25,7 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
     private JPopupMenu menu;
     private JMenuItem deleteClass;
     private JMenuItem addField;
-    private JMenuItem addMethod;
+    private JMenuItem addMethod,copyMethods,pasteMethods;
     private JMenuItem addConstructor;
     private JMenuItem addUnimplementedMethods;
 
@@ -39,6 +43,13 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
         menu.add(addMethod);
         (addUnimplementedMethods = new JMenuItem("Add Unimplemented Method")).addActionListener(addUnimplementedMethodsListener);
         menu.add(addUnimplementedMethods);
+        (pasteMethods = new JMenuItem("Paste methods from clipboard")).addActionListener(pasteMethodsListener);
+        menu.add(pasteMethods);
+
+        menu.addSeparator();
+
+        (copyMethods = new JMenuItem("Copy methods to clipboard")).addActionListener(copyMethodsListener);
+        menu.add(copyMethods);
         
         menu.addSeparator();
 
@@ -89,6 +100,32 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
             classWidget.addMethodWidgets(methods);
         }
     };    
+    ActionListener pasteMethodsListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                String clipboard = (String)Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                classWidget.addMethods(clipboard);
+            } catch (Exception ex) {
+            }
+        }
+    };      
+    ActionListener copyMethodsListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ClassComponent classComponent = classWidget.getComponent();
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                PrintStream ps = new PrintStream(baos, true, "utf-8");
+                for (Method method : classComponent.getMethods()) {
+                    ps.println(method.getSignature());
+                }
+                StringSelection selection = new StringSelection(baos.toString());
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection,selection);
+            } catch (UnsupportedEncodingException ex) {
+            }
+        }
+    };   
 
     
     @Override

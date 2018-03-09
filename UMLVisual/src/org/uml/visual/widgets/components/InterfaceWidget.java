@@ -2,7 +2,9 @@ package org.uml.visual.widgets.components;
 
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
+import java.util.List;
 import java.util.concurrent.Callable;
+import javax.swing.JOptionPane;
 import org.uml.visual.widgets.members.MethodWidget;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
@@ -10,6 +12,7 @@ import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.SeparatorWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.uml.memberparser.MemberParser;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.members.Method;
 import org.uml.visual.widgets.ClassDiagramScene;
@@ -84,4 +87,34 @@ public class InterfaceWidget extends ComponentWidgetBase {
         MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
     }
+    
+    public void addMethod(String methodSignature) {
+        if (getComponent().signatureExists(methodSignature))
+            return;
+        Method method = new Method("untitledMethod", "void");
+        try {
+            MemberParser.fillMethodComponents(method, methodSignature);
+        }
+        catch(Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error while parsing method "+methodSignature, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        getComponent().addMethod(method);
+        MethodWidget methodWidget = new MethodWidget(getClassDiagramScene(), method);
+        addMember(methodsContainer, methodWidget);
+        getScene().validate();
+    }
+    
+    public void addMethods(List<String> methodSignatures) {
+        for (String method : methodSignatures) {
+            addMethod(method);
+        }        
+    }
+    
+    public void addMethods(String methodSignatures) {
+        String[] list = methodSignatures.split("[\\r\\n]+");
+        for (String method : list) {
+            addMethod(method);
+        }        
+    }    
 }

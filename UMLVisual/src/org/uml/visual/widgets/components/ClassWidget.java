@@ -7,12 +7,14 @@ import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.concurrent.Callable;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.WidgetAction;
 import org.netbeans.api.visual.widget.LabelWidget;
 import org.netbeans.api.visual.widget.SeparatorWidget;
+import org.uml.memberparser.MemberParser;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
@@ -149,6 +151,36 @@ public class ClassWidget extends ComponentWidgetBase {
         MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
     }
+    
+    public void addMethod(String methodSignature) {
+        if (getComponent().signatureExists(methodSignature))
+            return;
+        Method method = new Method("untitledMethod", "void");
+        try {
+            MemberParser.fillMethodComponents(method, methodSignature);
+        }
+        catch(Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error while parsing method "+methodSignature, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        getComponent().addMethod(method);
+        MethodWidget methodWidget = new MethodWidget(getClassDiagramScene(), method);
+        addMember(methodsContainer, methodWidget);
+        getScene().validate();
+    }
+    
+    public void addMethods(List<String> methodSignatures) {
+        for (String method : methodSignatures) {
+            addMethod(method);
+        }        
+    }
+    
+    public void addMethods(String methodSignatures) {
+        String[] list = methodSignatures.split("[\\r\\n]+");
+        for (String method : list) {
+            addMethod(method);
+        }        
+    }        
 
     public final void addDefaultConstructorWidget() {
         Constructor constructor = new Constructor(getName());
