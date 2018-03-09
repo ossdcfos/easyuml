@@ -7,8 +7,10 @@ import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.type.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import org.uml.model.members.Constructor;
@@ -167,18 +169,13 @@ public class MemberParser {
      * @return return type of a method
      */
     private static String getReturnType(String signature) throws ParseException {
-        String type;
-        // has to empty the arguments list in order not to have an argument exception
-        signature = signature.replaceAll("\\(.*\\)", "()");
-        if (signature.contains("void")) {
-            type = "void";
-        } else {
-            BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
-
-            AnnotationMemberDeclaration declaration = (AnnotationMemberDeclaration) bd;
-            type = declaration.getType().toString();
+        BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
+        if (!(bd instanceof MethodDeclaration)) {
+            throw new ParseException("Invalid method '"+signature+"'");
         }
-        return type;
+        MethodDeclaration declaration = (MethodDeclaration) bd;
+        Type type = declaration.getType();
+        return type.asString();        
     }
 
     /**
@@ -190,7 +187,7 @@ public class MemberParser {
     private static String getMethodName(String signature) throws ParseException {
         BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
         if (!(bd instanceof MethodDeclaration)) {
-            return "UnknownName";
+            throw new ParseException("Invalid method '"+signature+"'");
         }
         MethodDeclaration declaration = (MethodDeclaration) bd;
         SimpleName name = declaration.getName();
@@ -198,46 +195,17 @@ public class MemberParser {
     }
 
     private static LinkedHashSet<MethodArgument> getArguments(String signature) throws ParseException {
-        LinkedHashSet<MethodArgument> arguments = new LinkedHashSet<>();
-        String argumentString = signature.substring(signature.indexOf("(") + 1, signature.indexOf(")"));
-        
-        int start = 0;
-        int position = 0;
-        int level = 0;
-        ArrayList<String> argumentsArray = new ArrayList();
-        while(true) {
-            if (position >= argumentString.length()) {
-                String argument = argumentString.substring(start,position);
-                start = position;
-                argumentsArray.add(argument);
-                break;
-            }
-            char c = argumentString.charAt(position);
-            if (c == '<') {
-                level ++;
-            }
-            else if (c == '>') {
-                level --;
-            }
-            else if (c == ',' && level == 0) {
-                String argument = argumentString.substring(start,position);
-                start = position+1;
-                argumentsArray.add(argument);
-            }
-            position ++;
+        BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
+        if (!(bd instanceof MethodDeclaration)) {
+            throw new ParseException("Invalid method '"+signature+"'");
         }
-  
-        for (String argument : argumentsArray) {
-            if (!argument.equals("")) {
-                argument = argument.trim() + ";";
-
-                BodyDeclaration bd = JavaParser.parseBodyDeclaration(argument);
-                FieldDeclaration declaration = (FieldDeclaration) bd;
-                arguments.add(new MethodArgument(
-                    declaration.getVariables().get(0).getType().asString(), 
-                    declaration.getVariables().get(0).getName().asString())
-                );
-            }
+        MethodDeclaration declaration = (MethodDeclaration) bd;
+        LinkedHashSet<MethodArgument> arguments = new LinkedHashSet();
+        NodeList<Parameter> parameters = declaration.getParameters();
+        for (Parameter parameter : parameters) {
+            String name = parameter.getName().asString();
+            String type = parameter.getType().asString();
+            arguments.add(new MethodArgument(type,name));            
         }
         return arguments;
     }
