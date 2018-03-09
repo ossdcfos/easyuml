@@ -132,7 +132,7 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
 
         return cu;
     }
-
+    
     private static void updateSkeleton(ClassComponent component, CompilationUnit cu) {
         NodeList<TypeDeclaration<?>> types = cu.getTypes();
         for (TypeDeclaration type : types) {
@@ -152,19 +152,54 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
                     extended.add(JavaParser.parseClassOrInterfaceType(extendedClass.getName()));
                     declaration.setExtendedTypes(extended);
                 }
-                List<ComponentBase> implementedInterfaces = getImplementedInterfaces(component);
-                if (!implementedInterfaces.isEmpty()) {
-                    NodeList<ClassOrInterfaceType> implemented = new NodeList();
-                    for (ComponentBase implementedComponent : implementedInterfaces) {
-                        implemented.add(JavaParser.parseClassOrInterfaceType(implementedComponent.getName()));
-                    }
-                    declaration.setImplementedTypes(implemented);
-                }
+                
+                updateImplementedInterfaces(component,declaration);
             }
             // Process only the first one
             // TODO what if there are more classes in one file
             break;
         }
+    }
+    
+    /**
+     * Update implemented inferfaces
+     * @param component
+     * @param declaration
+     * @return true if changes were made
+     */
+    private static boolean updateImplementedInterfaces(ClassComponent component,ClassOrInterfaceDeclaration declaration) 
+    {
+        System.out.println(component.getSignature());
+        NodeList<ClassOrInterfaceType> implementedTypes = declaration.getImplementedTypes();
+        List<ComponentBase> implementedInterfaces = getImplementedInterfaces(component);
+        if(implementedTypes.size() == implementedInterfaces.size()) {
+            boolean similar = true;
+            for (ComponentBase implementedComponent : implementedInterfaces) {
+                ClassOrInterfaceType type = JavaParser.parseClassOrInterfaceType(implementedComponent.getName());
+                boolean found = false;
+                for(ClassOrInterfaceType implementedType : implementedTypes) {
+                    if (implementedType.equals(type)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    similar = false;
+                    break;
+                }
+            }
+            if (similar) {
+                return false;
+            }
+        }
+        NodeList<ClassOrInterfaceType> implemented = new NodeList();
+        if (!implementedInterfaces.isEmpty()) {
+            for (ComponentBase implementedComponent : implementedInterfaces) {
+                implemented.add(JavaParser.parseClassOrInterfaceType(implementedComponent.getName()));
+            }
+        }
+        declaration.setImplementedTypes(implemented);
+        return true;
     }
     
     private static void updateVisibility(TypeDeclaration declaration, Visibility visibility) {

@@ -1,18 +1,13 @@
 package org.uml.newcode.components;
 
 import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseException;
-import com.github.javaparser.ParseProblemException;
-import com.github.javaparser.Token;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FileUtils;
-import org.openide.util.Exceptions;
 import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;
 import org.uml.model.components.ComponentBase;
 
@@ -51,22 +46,20 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
 
         // If source exists, update code
         CompilationUnit code = null;
+        boolean lexicallyPreserved = false;
         if (sourceFile.exists()) {
             try {
                 CompilationUnit cu;
                 try (FileReader fileReader = new FileReader(sourceFile)) {
                     cu = JavaParser.parse(fileReader);
-                    LexicalPreservingPrinter.setup(cu);      
+                    LexicalPreservingPrinter.setup(cu);
+                    lexicallyPreserved = true;
                 }
                 code = updateCode(component, renames, cu);
-            } catch (ParseProblemException ex) {
-                JOptionPane.showMessageDialog(null, "Parse problem. Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (FileNotFoundException ex) {
-                // Already checked for file existance, but if file is somehow deleted, generate code.
-                code = generateCode(component);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "IOException!", "Error", JOptionPane.ERROR_MESSAGE);
-                Exceptions.printStackTrace(ex);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Parse problem in "+sourceFile+". Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
         } // If source does not exist, generate code from scratch
         else {
@@ -90,18 +83,23 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
         String name = component.getName();
         // Try to generate while preserving presentation
         String output;
-        try {
-            output = LexicalPreservingPrinter.print(code);
+        if (lexicallyPreserved) {
+            try {
+                output = LexicalPreservingPrinter.print(code);
+            }
+            catch(Exception ex) {
+                int result = JOptionPane.showConfirmDialog(null, 
+                    "Code for "+name+" cannot be generated with lexical preservation.\n"
+                  + "Many spaces and line returnes will diseapear.\n"
+                  + "Generate code anyway ?",
+                    "Problem in code generation",
+                    JOptionPane.YES_NO_OPTION);
+                if (result != JOptionPane.YES_OPTION)
+                    return;
+                output = code.toString();
+            }
         }
-        catch(Exception ex) {
-            int result = JOptionPane.showConfirmDialog(null, 
-                "Code for "+name+" cannot be generated with lexical preservation.\n"
-              + "Many spaces and line returnes will diseapear.\n"
-              + "Generate code anyway ?",
-                "Problem in code generation",
-                JOptionPane.YES_NO_OPTION);
-            if (result != JOptionPane.YES_OPTION)
-                return;
+        else {
             output = code.toString();
         }
 
@@ -129,4 +127,5 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
 //        } catch (FileNotFoundException ex) {
 //        }
     }
+    
 }
