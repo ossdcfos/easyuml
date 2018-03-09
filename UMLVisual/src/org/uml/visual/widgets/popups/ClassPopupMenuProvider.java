@@ -12,6 +12,7 @@ import javax.swing.*;
 import org.netbeans.api.visual.widget.*;
 import org.uml.model.ClassDiagram;
 import org.uml.model.components.ClassComponent;
+import org.uml.model.members.Field;
 import org.uml.model.members.Method;
 import org.uml.visual.widgets.components.ClassWidget;
 
@@ -24,7 +25,7 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
     private ClassWidget classWidget;
     private JPopupMenu menu;
     private JMenuItem deleteClass;
-    private JMenuItem addField;
+    private JMenuItem addField,copyFields,pasteFields;
     private JMenuItem addMethod,copyMethods,pasteMethods;
     private JMenuItem addConstructor;
     private JMenuItem addUnimplementedMethods;
@@ -43,11 +44,15 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
         menu.add(addMethod);
         (addUnimplementedMethods = new JMenuItem("Add Unimplemented Method")).addActionListener(addUnimplementedMethodsListener);
         menu.add(addUnimplementedMethods);
+        (pasteFields = new JMenuItem("Paste fields from clipboard")).addActionListener(pasteFieldsListener);
+        menu.add(pasteFields);
         (pasteMethods = new JMenuItem("Paste methods from clipboard")).addActionListener(pasteMethodsListener);
         menu.add(pasteMethods);
 
         menu.addSeparator();
 
+        (copyFields = new JMenuItem("Copy fields to clipboard")).addActionListener(copyFieldsListener);
+        menu.add(copyFields);
         (copyMethods = new JMenuItem("Copy methods to clipboard")).addActionListener(copyMethodsListener);
         menu.add(copyMethods);
         
@@ -119,6 +124,32 @@ public class ClassPopupMenuProvider extends ComponentPopupMenuProvider {
                 PrintStream ps = new PrintStream(baos, true, "utf-8");
                 for (Method method : classComponent.getMethods()) {
                     ps.println(method.getSignature());
+                }
+                StringSelection selection = new StringSelection(baos.toString());
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection,selection);
+            } catch (UnsupportedEncodingException ex) {
+            }
+        }
+    };   
+   ActionListener pasteFieldsListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                String clipboard = (String)Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                classWidget.addFields(clipboard);
+            } catch (Exception ex) {
+            }
+        }
+    };      
+    ActionListener copyFieldsListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ClassComponent classComponent = classWidget.getComponent();
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                PrintStream ps = new PrintStream(baos, true, "utf-8");
+                for (Field field : classComponent.getFields()) {
+                    ps.println(field.getSignature());
                 }
                 StringSelection selection = new StringSelection(baos.toString());
                 Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection,selection);

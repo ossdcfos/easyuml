@@ -124,6 +124,36 @@ public class ClassWidget extends ComponentWidgetBase {
         MouseListener mouseListener = new CloseInplaceEditorOnClickAdapter(nameEditorAction);
         getScene().getView().addMouseListener(mouseListener);
     }
+    
+    public void addField(String fieldSignature) {
+        if (getComponent().signatureExists(fieldSignature))
+            return;
+        Field field = new Field("untitledField", "Object", Visibility.PRIVATE);
+        try {
+            MemberParser.fillFieldComponents(field, fieldSignature);
+        }
+        catch(Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error while parsing field "+fieldSignature, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        getComponent().addField(field);
+        FieldWidget fieldWidget = new FieldWidget(getClassDiagramScene(), field);
+        addMember(fieldsContainer, fieldWidget);
+        getScene().validate();
+    }
+    
+    public void addFields(List<String> fieldSignatures) {
+        for (String field : fieldSignatures) {
+            addField(field);
+        }        
+    }
+    
+    public void addFields(String fieldSignatures) {
+        String[] list = fieldSignatures.split("[\\r\\n]+");
+        for (String field : list) {
+            addField(field);
+        }        
+    }            
 
     public void removeField(FieldWidget field) {
         removeMember(fieldsContainer, field);
