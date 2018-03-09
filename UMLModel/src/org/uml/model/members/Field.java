@@ -2,7 +2,7 @@ package org.uml.model.members;
 
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashSet;
-import org.uml.model.GetterSetterGeneration;
+import org.uml.model.GenerationSetting;
 import org.uml.model.Visibility;
 import org.uml.model.components.ClassComponent;
 
@@ -19,11 +19,11 @@ public class Field extends MemberBase {
     /**
      * Getters automatic generation setting
      */
-    private GetterSetterGeneration      getterGeneration;
+    private GenerationSetting      getterGeneration;
     /**
      * Setters automatic generation setting
      */
-    private GetterSetterGeneration      setterGeneration;
+    private GenerationSetting      setterGeneration;
         
     /**
      * Constructor that sets the name, type and visibility of the field.
@@ -36,8 +36,8 @@ public class Field extends MemberBase {
         super(name);
         this.type = type;
         this.visibility = visibility;
-        this.getterGeneration = GetterSetterGeneration.AUTO;
-        this.setterGeneration = GetterSetterGeneration.AUTO;
+        this.getterGeneration = GenerationSetting.AUTO;
+        this.setterGeneration = GenerationSetting.AUTO;
     }
 
     /**
@@ -207,19 +207,19 @@ public class Field extends MemberBase {
         else return true;
     }
     
-    public GetterSetterGeneration getGetterGeneration() {
+    public GenerationSetting getGetterGeneration() {
         return getterGeneration;
     }
 
-    public void setGetterGeneration(GetterSetterGeneration generateGetters) {
+    public void setGetterGeneration(GenerationSetting generateGetters) {
         this.getterGeneration = generateGetters;
     }
 
-    public GetterSetterGeneration getSetterGeneration() {
+    public GenerationSetting getSetterGeneration() {
         return setterGeneration;
     }
 
-    public void setSetterGeneration(GetterSetterGeneration generateSetters) {
+    public void setSetterGeneration(GenerationSetting generateSetters) {
         this.setterGeneration = generateSetters;
     }
     
@@ -232,23 +232,26 @@ public class Field extends MemberBase {
      * @return 
      */
     public boolean getterGenerationRequested() {
-        GetterSetterGeneration setting = getterGeneration;
-        if (setting == GetterSetterGeneration.AUTO) {
+        GenerationSetting setting = getterGeneration;
+        if (setting == GenerationSetting.AUTO) {
             setting = ((ClassComponent)getDeclaringComponent()).getInheritedGetterGeneration();
         }
-        if (setting == GetterSetterGeneration.DISABLED) {
+        if (setting == GenerationSetting.ENABLED) {
+            return true;
+        }
+        if (setting == GenerationSetting.DISABLED) {
             return false;
         }
         if (isStatic()) {
             return false;
         }
-        if (setting == GetterSetterGeneration.NOTPUBLIC) {
+        if (setting == GenerationSetting.NOTPUBLIC) {
             return visibility != Visibility.PUBLIC;
         }
-        if (setting == GetterSetterGeneration.PRIVATE) {
+        if (setting == GenerationSetting.PRIVATE) {
             return visibility == Visibility.PRIVATE;
         }
-        if (setting == GetterSetterGeneration.PROTECTED) {
+        if (setting == GenerationSetting.PROTECTED) {
             return visibility == Visibility.PROTECTED;
         }
         return false;
@@ -263,23 +266,26 @@ public class Field extends MemberBase {
      * @return 
      */
     public boolean setterGenerationRequested() {
-        GetterSetterGeneration setting = setterGeneration;
-        if (setting == GetterSetterGeneration.AUTO) {
+        GenerationSetting setting = setterGeneration;
+        if (setting == GenerationSetting.AUTO) {
             setting = ((ClassComponent)getDeclaringComponent()).getInheritedSetterGeneration();
         }
-        if (setting == GetterSetterGeneration.DISABLED) {
+        if (setting == GenerationSetting.ENABLED) {
+            return true;
+        }
+        if (setting == GenerationSetting.DISABLED) {
             return false;
         }
         if (isStatic()) {
             return false;
         }
-        if (setting == GetterSetterGeneration.NOTPUBLIC) {
+        if (setting == GenerationSetting.NOTPUBLIC) {
             return visibility != Visibility.PUBLIC;
         }
-        if (setting == GetterSetterGeneration.PRIVATE) {
+        if (setting == GenerationSetting.PRIVATE) {
             return visibility == Visibility.PRIVATE;
         }
-        if (setting == GetterSetterGeneration.PROTECTED) {
+        if (setting == GenerationSetting.PROTECTED) {
             return visibility == Visibility.PROTECTED;
         }
         return false;

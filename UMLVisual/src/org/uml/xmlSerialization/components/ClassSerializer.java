@@ -2,7 +2,7 @@ package org.uml.xmlSerialization.components;
 
 import org.dom4j.Element;
 import org.openide.util.Exceptions;
-import org.uml.model.GetterSetterGeneration;
+import org.uml.model.GenerationSetting;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.xmlSerialization.members.ConstructorSerializer;
@@ -48,6 +48,7 @@ public class ClassSerializer implements ComponentSerializer {
         if (classComponent.isFinal()) node.addAttribute("isFinal", Boolean.toString(classComponent.isFinal()));
         if (classComponent.getGetterGeneration() != null) node.addAttribute("gettersGeneration", classComponent.getGetterGeneration().toString());
         if (classComponent.getSetterGeneration()!= null) node.addAttribute("settersGeneration", classComponent.getSetterGeneration().toString());
+        if (classComponent.getGeneration()!= null) node.addAttribute("generation", classComponent.getGeneration().toString());
 
         Element fields = node.addElement("Fields");
         XmlSerializer serializer = new FieldSerializer(classComponent.getFields());

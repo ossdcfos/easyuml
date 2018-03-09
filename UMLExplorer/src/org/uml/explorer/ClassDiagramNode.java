@@ -18,7 +18,7 @@ import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.model.ClassDiagram;
-import org.uml.model.GetterSetterGeneration;
+import org.uml.model.GenerationSetting;
 
 /**
  *
@@ -105,11 +105,11 @@ public class ClassDiagramNode extends AbstractNode implements PropertyChangeList
             nameProp.setName("Name");
             generalProperties.put(nameProp);
             
-            Property<GetterSetterGeneration> getterGenerationProp = new PropertySupport.Reflection<>(classDiagram, GetterSetterGeneration.class, "getGetterGeneration", "setGetterGeneration");
+            Property<GenerationSetting> getterGenerationProp = new PropertySupport.Reflection<>(classDiagram, GenerationSetting.class, "getGetterGeneration", "setGetterGeneration");
             getterGenerationProp.setName("Getters");
             generationProperties.put(getterGenerationProp);
 
-            Property<GetterSetterGeneration> setterGenerationProp = new PropertySupport.Reflection<>(classDiagram, GetterSetterGeneration.class, "getSetterGeneration", "setSetterGeneration");
+            Property<GenerationSetting> setterGenerationProp = new PropertySupport.Reflection<>(classDiagram, GenerationSetting.class, "getSetterGeneration", "setSetterGeneration");
             setterGenerationProp.setName("Setters");
             generationProperties.put(setterGenerationProp);
        

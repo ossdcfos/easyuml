@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.List;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ContainerBase;
+import org.uml.model.GenerationSetting;
 import org.uml.model.IHasSignature;
 import org.uml.model.INameable;
 import org.uml.model.Visibility;
@@ -42,6 +43,11 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      */
     private PackageComponent componentPackage;
     
+    /**
+     * Enable / disable code generation
+     */
+    private GenerationSetting      generation;
+        
     /**
      * Visibility of the component. Can be public, private, package, protected in general, but
      * depends on the actual component.
@@ -79,6 +85,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         super(name);
         parentPackage = "";
         visibility = Visibility.PUBLIC;
+        generation = GenerationSetting.AUTO;
     }
 
     /**
@@ -385,4 +392,38 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         }
         return relevantRelations;
     }
+    
+
+    public GenerationSetting getGeneration() {
+        return generation;
+    }
+
+    public void setGeneration(GenerationSetting generation) {
+        GenerationSetting oldGeneration = this.generation;
+        this.generation = generation;
+        pcs.firePropertyChange("generation", oldGeneration, generation);
+    }    
+    
+    public boolean generationRequested() {
+        GenerationSetting setting = generation;
+        if (setting == GenerationSetting.AUTO) {
+            return true;
+        }
+        if (setting == GenerationSetting.ENABLED) {
+            return true;
+        }
+        if (setting == GenerationSetting.DISABLED) {
+            return false;
+        }
+        if (setting == GenerationSetting.NOTPUBLIC) {
+            return visibility != Visibility.PUBLIC;
+        }
+        if (setting == GenerationSetting.PRIVATE) {
+            return visibility == Visibility.PRIVATE;
+        }
+        if (setting == GenerationSetting.PROTECTED) {
+            return visibility == Visibility.PROTECTED;
+        }
+        return false;
+    }        
 }

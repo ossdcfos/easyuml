@@ -20,7 +20,7 @@ import org.openide.util.WeakListeners;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.uml.model.GetterSetterGeneration;
+import org.uml.model.GenerationSetting;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
@@ -136,6 +136,10 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
             Property<String> packageProp = new PropertySupport.Reflection<>(this, String.class, "getParentPackage", "setParentPackage");
             packageProp.setName("Package");
             generalProperties.put(packageProp);
+            
+            Property<GenerationSetting> generationProp = new PropertySupport.Reflection<>(component, GenerationSetting.class, "getGeneration", "setGeneration");
+            generationProp.setName("Generation");
+            generationProperties.put(generationProp);
 
             if (component instanceof ClassComponent || component instanceof InterfaceComponent) {
 
@@ -157,11 +161,11 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
                     isAbstractProp.setName("abstract");
                     modifiersProperties.put(isAbstractProp);
                     
-                    Property<GetterSetterGeneration> getterGenerationProp = new PropertySupport.Reflection<>(component, GetterSetterGeneration.class, "getGetterGeneration", "setGetterGeneration");
+                    Property<GenerationSetting> getterGenerationProp = new PropertySupport.Reflection<>(component, GenerationSetting.class, "getGetterGeneration", "setGetterGeneration");
                     getterGenerationProp.setName("Getters");
                     generationProperties.put(getterGenerationProp);
                     
-                    Property<GetterSetterGeneration> setterGenerationProp = new PropertySupport.Reflection<>(component, GetterSetterGeneration.class, "getSetterGeneration", "setSetterGeneration");
+                    Property<GenerationSetting> setterGenerationProp = new PropertySupport.Reflection<>(component, GenerationSetting.class, "getSetterGeneration", "setSetterGeneration");
                     setterGenerationProp.setName("Setters");
                     generationProperties.put(setterGenerationProp);
                     

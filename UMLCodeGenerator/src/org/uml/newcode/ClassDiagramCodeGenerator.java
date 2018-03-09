@@ -29,6 +29,8 @@ public class ClassDiagramCodeGenerator {
     public static void generateOrUpdateCode(ClassDiagram classDiagram, MyClassDiagramRenameTable renames, String srcPath) {
         classDiagram.updateComponentPackages();
         for (ComponentBase component : classDiagram.getComponents()) {
+            if (!component.generationRequested())
+                continue;
             // Generate code
             if (component instanceof ClassComponent) {
                 ClassCodeGenerator.getInstance().generateOrUpdateCode((ClassComponent) component, renames, srcPath);

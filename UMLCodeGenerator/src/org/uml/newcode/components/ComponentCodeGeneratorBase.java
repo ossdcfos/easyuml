@@ -59,7 +59,6 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
                     LexicalPreservingPrinter.setup(cu);      
                 }
                 code = updateCode(component, renames, cu);
-                sourceFile.delete();
             } catch (ParseProblemException ex) {
                 JOptionPane.showMessageDialog(null, "Parse problem. Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (FileNotFoundException ex) {
@@ -87,15 +86,35 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
         } else {
             fullPath = sourcePath;
         }
+        
+        String name = component.getName();
+        // Try to generate while preserving presentation
+        String output;
+        try {
+            output = LexicalPreservingPrinter.print(code);
+        }
+        catch(Exception ex) {
+            int result = JOptionPane.showConfirmDialog(null, 
+                "Code for "+name+" cannot be generated with lexical preservation.\n"
+              + "Many spaces and line returnes will diseapear.\n"
+              + "Generate code anyway ?",
+                "Problem in code generation",
+                JOptionPane.YES_NO_OPTION);
+            if (result != JOptionPane.YES_OPTION)
+                return;
+            output = code.toString();
+        }
 
         // Create path folder structure
         new File(fullPath).mkdirs();
 
-        String name = component.getName();
         // Write-out the source file
         File outSourceFile = new File(fullPath + name + ".java");
         try {
-            FileUtils.writeStringToFile(outSourceFile, LexicalPreservingPrinter.print(code));
+            if (sourceFile.exists()) {
+                sourceFile.delete();
+            }
+            FileUtils.writeStringToFile(outSourceFile, output);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Cannot write file " + outSourceFile.getName() + "!", "Error", JOptionPane.ERROR_MESSAGE);
         }

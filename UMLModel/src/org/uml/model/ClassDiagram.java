@@ -30,11 +30,12 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
     /**
      * Getters automatic generation setting
      */
-    private GetterSetterGeneration      getterGeneration;
+    private GenerationSetting      getterGeneration;
     /**
      * Setters automatic generation setting
      */
-    private GetterSetterGeneration      setterGeneration;
+    private GenerationSetting      setterGeneration;
+    
     
     /**
      * Constructs a ClassDiagram object with name set to "UML ClassDiagram"
@@ -43,8 +44,8 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
     public ClassDiagram() {
         super("UML Class Diagram");
         this.relations = new HashSet<>();
-        getterGeneration = GetterSetterGeneration.DISABLED;
-        setterGeneration = GetterSetterGeneration.DISABLED;
+        getterGeneration = GenerationSetting.DISABLED;
+        setterGeneration = GenerationSetting.DISABLED;
     }
 
     /**
@@ -156,19 +157,19 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
         }*/
     }    
     
-    public GetterSetterGeneration getGetterGeneration() {
+    public GenerationSetting getGetterGeneration() {
         return getterGeneration;
     }
 
-    public void setGetterGeneration(GetterSetterGeneration generateGetters) {
+    public void setGetterGeneration(GenerationSetting generateGetters) {
         this.getterGeneration = generateGetters;
     }
 
-    public GetterSetterGeneration getSetterGeneration() {
+    public GenerationSetting getSetterGeneration() {
         return setterGeneration;
     }
 
-    public void setSetterGeneration(GetterSetterGeneration generateSetters) {
+    public void setSetterGeneration(GenerationSetting generateSetters) {
         this.setterGeneration = generateSetters;
     }    
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.uml.model.ClassDiagram;
-import org.uml.model.GetterSetterGeneration;
+import org.uml.model.GenerationSetting;
 import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 import org.uml.model.relations.ImplementsRelation;
@@ -44,11 +44,11 @@ public class ClassComponent extends ComponentBase {
     /**
      * Getters automatic generation setting
      */
-    private GetterSetterGeneration      getterGeneration;
+    private GenerationSetting      getterGeneration;
     /**
      * Setters automatic generation setting
      */
-    private GetterSetterGeneration      setterGeneration;
+    private GenerationSetting      setterGeneration;
     
     /**
      * Default constructor. Sets name to default value.
@@ -72,8 +72,8 @@ public class ClassComponent extends ComponentBase {
         fields = new ArrayList();
         constructors = new ArrayList();
         methods = new ArrayList();
-        getterGeneration = GetterSetterGeneration.AUTO;
-        setterGeneration = GetterSetterGeneration.AUTO;
+        getterGeneration = GenerationSetting.AUTO;
+        setterGeneration = GenerationSetting.AUTO;
     }
 
     /**
@@ -303,19 +303,19 @@ public class ClassComponent extends ComponentBase {
         return false;
     }    
     
-    public GetterSetterGeneration getGetterGeneration() {
+    public GenerationSetting getGetterGeneration() {
         return getterGeneration;
     }
 
-    public void setGetterGeneration(GetterSetterGeneration generateGetters) {
+    public void setGetterGeneration(GenerationSetting generateGetters) {
         this.getterGeneration = generateGetters;
     }
 
-    public GetterSetterGeneration getSetterGeneration() {
+    public GenerationSetting getSetterGeneration() {
         return setterGeneration;
     }
 
-    public void setSetterGeneration(GetterSetterGeneration generateSetters) {
+    public void setSetterGeneration(GenerationSetting generateSetters) {
         this.setterGeneration = generateSetters;
     }
     
@@ -324,8 +324,8 @@ public class ClassComponent extends ComponentBase {
      * parent setting
      * @return 
      */
-    public GetterSetterGeneration getInheritedGetterGeneration() {
-        if (getterGeneration == GetterSetterGeneration.AUTO) {
+    public GenerationSetting getInheritedGetterGeneration() {
+        if (getterGeneration == GenerationSetting.AUTO) {
             return getParentDiagram().getGetterGeneration();
         }
         return getterGeneration;
@@ -336,8 +336,8 @@ public class ClassComponent extends ComponentBase {
      * parent setting
      * @return 
      */
-    public GetterSetterGeneration getInheritedSetterGeneration() {
-        if (setterGeneration == GetterSetterGeneration.AUTO) {
+    public GenerationSetting getInheritedSetterGeneration() {
+        if (setterGeneration == GenerationSetting.AUTO) {
             return getParentDiagram().getSetterGeneration();
         }
         return setterGeneration;

@@ -37,5 +37,6 @@ public class PackageSerializer implements ComponentSerializer {
         if (packageComponent.getName() != null) node.addAttribute("name", packageComponent.getName());
         if (packageComponent.getParentPackage() != null) node.addAttribute("package", packageComponent.getParentPackage());
         if (packageComponent.getVisibility() != null) node.addAttribute("visibility", packageComponent.getVisibility().name().toLowerCase());
+        if (packageComponent.getGeneration()!= null) node.addAttribute("generation", packageComponent.getGeneration().toString());
     }
 }

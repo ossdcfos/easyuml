@@ -4,8 +4,15 @@ package org.uml.model;
  *
  * @author Philippe-Henri Gosselin
  */
-public enum GetterSetterGeneration {
+public enum GenerationSetting {
     
+    ENABLED {
+            @Override
+            public String toString() {
+                return "enabled";
+            }
+
+        },
     DISABLED {
             @Override
             public String toString() {
@@ -41,8 +48,9 @@ public enum GetterSetterGeneration {
         }
     };
     
-    public static GetterSetterGeneration stringToGetterSetterGeneration(String value) {
-        if(value.equalsIgnoreCase(DISABLED.toString())) return DISABLED;
+    public static GenerationSetting stringToGenerationSetting(String value) {
+        if(value.equalsIgnoreCase(ENABLED.toString())) return ENABLED;
+        else if(value.equalsIgnoreCase(DISABLED.toString())) return DISABLED;
         else if(value.equalsIgnoreCase(AUTO.toString())) return AUTO;
         else if(value.equalsIgnoreCase(PRIVATE.toString())) return PRIVATE;
         else if(value.equalsIgnoreCase(PROTECTED.toString())) return PROTECTED;

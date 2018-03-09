@@ -40,6 +40,7 @@ public class InterfaceSerializer implements ComponentSerializer {
         if (interfaceComponent.getParentPackage() != null) node.addAttribute("package", interfaceComponent.getParentPackage());
         if (interfaceComponent.getVisibility() != null) node.addAttribute("visibility", interfaceComponent.getVisibility().name().toLowerCase());
         if (interfaceComponent.isStatic()) node.addAttribute("isStatic", Boolean.toString(interfaceComponent.isStatic()));
+        if (interfaceComponent.getGeneration()!= null) node.addAttribute("generation", interfaceComponent.getGeneration().toString());
 
         Element methods = node.addElement("Methods");
         XmlSerializer serializer = new MethodSerializer(interfaceComponent.getMethods());

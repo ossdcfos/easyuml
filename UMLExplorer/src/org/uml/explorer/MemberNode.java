@@ -19,7 +19,7 @@ import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.uml.memberparser.MemberParser;
-import org.uml.model.GetterSetterGeneration;
+import org.uml.model.GenerationSetting;
 import org.uml.model.Visibility;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.InterfaceComponent;
@@ -161,11 +161,11 @@ public class MemberNode extends AbstractNode implements PropertyChangeListener {
                     modifiersProperties.put(isVolatileProp);
                     
                     if (!field.isStatic()) {
-                        Property<GetterSetterGeneration> getterGenerationProp = new PropertySupport.Reflection<>(field, GetterSetterGeneration.class, "getGetterGeneration", "setGetterGeneration");
+                        Property<GenerationSetting> getterGenerationProp = new PropertySupport.Reflection<>(field, GenerationSetting.class, "getGetterGeneration", "setGetterGeneration");
                         getterGenerationProp.setName("Getters");
                         generationProperties.put(getterGenerationProp);
 
-                        Property<GetterSetterGeneration> setterGenerationProp = new PropertySupport.Reflection<>(field, GetterSetterGeneration.class, "getSetterGeneration", "setSetterGeneration");
+                        Property<GenerationSetting> setterGenerationProp = new PropertySupport.Reflection<>(field, GenerationSetting.class, "getSetterGeneration", "setSetterGeneration");
                         setterGenerationProp.setName("Setters");
                         generationProperties.put(setterGenerationProp);
                     }

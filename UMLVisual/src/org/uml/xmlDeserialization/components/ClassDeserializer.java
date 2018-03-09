@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
-import org.uml.model.GetterSetterGeneration;
+import org.uml.model.GenerationSetting;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
@@ -42,6 +42,7 @@ public class ClassDeserializer implements XmlDeserializer {
         String isAbstract = node.attributeValue("isAbstract");
         String isStatic = node.attributeValue("isStatic");
         String isFinal = node.attributeValue("isFinal");
+        String generation = node.attributeValue("generation");
         String gettersGeneration = node.attributeValue("gettersGeneration");
         String settersGeneration = node.attributeValue("settersGeneration");
         int xPos = (int) Double.parseDouble(node.attributeValue("xPosition"));
@@ -53,8 +54,9 @@ public class ClassDeserializer implements XmlDeserializer {
         if (isAbstract != null) classComponent.setAbstract(Boolean.parseBoolean(isAbstract));
         if (isStatic != null) classComponent.setStatic(Boolean.parseBoolean(isStatic));
         if (isFinal != null) classComponent.setFinal(Boolean.parseBoolean(isFinal));
-        if (gettersGeneration != null) classComponent.setGetterGeneration(GetterSetterGeneration.stringToGetterSetterGeneration(gettersGeneration));
-        if (settersGeneration != null) classComponent.setSetterGeneration(GetterSetterGeneration.stringToGetterSetterGeneration(settersGeneration));
+        if (generation != null) classComponent.setGeneration(GenerationSetting.stringToGenerationSetting(generation));
+        if (gettersGeneration != null) classComponent.setGetterGeneration(GenerationSetting.stringToGenerationSetting(gettersGeneration));
+        if (settersGeneration != null) classComponent.setSetterGeneration(GenerationSetting.stringToGenerationSetting(settersGeneration));
         
         int width = 0;
         int height = 0;

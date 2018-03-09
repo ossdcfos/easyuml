@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
+import org.uml.model.GenerationSetting;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.Visibility;
 import org.uml.model.members.Method;
@@ -35,7 +36,7 @@ public class InterfaceDeserializer implements XmlDeserializer {
         String packageName = node.attributeValue("package");
         String visibility = node.attributeValue("visibility");
         String isStatic = node.attributeValue("isStatic");
-
+        String generation = node.attributeValue("generation");
         int xPos = (int) Double.parseDouble(node.attributeValue("xPosition"));
         int yPos = (int) Double.parseDouble(node.attributeValue("yPosition"));
 
@@ -43,6 +44,7 @@ public class InterfaceDeserializer implements XmlDeserializer {
         if (packageName != null) interfaceComponent.setParentPackage(packageName);
         if (visibility != null) interfaceComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         if (isStatic != null) interfaceComponent.setStatic(Boolean.parseBoolean(isStatic));
+        if (generation != null) interfaceComponent.setGeneration(GenerationSetting.stringToGenerationSetting(generation));
         //interfaceComponent.setLocation(new Point(xPos, yPos));
         int width = 0;
         int height = 0;
