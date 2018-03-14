@@ -37,6 +37,7 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
             String oldFullQualifiedName = renames.getComponentRenames().getOriginalSignature(component);
             String pathToOldFile = sourcePath + oldFullQualifiedName.replace(".", File.separator) + ".java";
             sourceFile = new File(pathToOldFile);
+            System.out.println("Component "+component.getSignature()+" renamed from "+pathToOldFile);
         } // If the component has not been renamed, the source should have the new name
         else {
             String fullQualifiedName = component.getSignature();
@@ -88,6 +89,7 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
                 output = LexicalPreservingPrinter.print(code);
             }
             catch(Exception ex) {
+                ex.printStackTrace();
                 int result = JOptionPane.showConfirmDialog(null, 
                     "Code for "+name+" cannot be generated with lexical preservation.\n"
                   + "Many spaces and line returnes will diseapear.\n"

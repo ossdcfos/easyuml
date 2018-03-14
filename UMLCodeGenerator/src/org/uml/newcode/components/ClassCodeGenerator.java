@@ -4,14 +4,10 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
-import com.github.javaparser.ast.expr.Name;
-import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;
@@ -46,7 +42,6 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
         cu.setTypes(new NodeList<TypeDeclaration<?>>());
         String parentPackage = component.getFullParentPackage();
         if (!parentPackage.isEmpty()) {
-            System.out.println(parentPackage);
             cu.setPackageDeclaration(parentPackage);
         }
         createSkeleton(component, cu);
@@ -122,7 +117,6 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
         System.out.println("Update class "+component.getSignature());
         String parentPackage = component.getFullParentPackage();
         if (!parentPackage.isEmpty()) {
-            //!JavaParser9
             cu.setPackageDeclaration(parentPackage);
         }
         updateSkeleton(component, cu);
@@ -169,7 +163,6 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
      */
     private static boolean updateImplementedInterfaces(ClassComponent component,ClassOrInterfaceDeclaration declaration) 
     {
-        System.out.println(component.getSignature());
         NodeList<ClassOrInterfaceType> implementedTypes = declaration.getImplementedTypes();
         List<ComponentBase> implementedInterfaces = getImplementedInterfaces(component);
         if(implementedTypes.size() == implementedInterfaces.size()) {

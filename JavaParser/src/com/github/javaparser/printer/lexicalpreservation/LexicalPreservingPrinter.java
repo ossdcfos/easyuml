@@ -52,6 +52,8 @@ import java.util.stream.Collectors;
 
 import static com.github.javaparser.GeneratedJavaParserConstants.*;
 import static com.github.javaparser.TokenTypes.eolTokenKind;
+import com.github.javaparser.printer.concretesyntaxmodel.CsmIndent;
+import com.github.javaparser.printer.concretesyntaxmodel.CsmUnindent;
 import static com.github.javaparser.utils.Utils.assertNotNull;
 import static com.github.javaparser.utils.Utils.decapitalize;
 import static java.util.Comparator.*;
@@ -398,6 +400,10 @@ public class LexicalPreservingPrinter {
             } else if (element instanceof CsmMix) {
                 CsmMix csmMix = (CsmMix) element;
                 csmMix.getElements().forEach(e -> interpret(node, e, nodeText));
+            } else if (element instanceof CsmIndent) {
+                System.out.println("Warning: CsmIndent in lexical parser");
+            } else if (element instanceof CsmUnindent) {
+                System.out.println("Warning: CsmUnindent in lexical parser");
             } else {
                 throw new UnsupportedOperationException(element.getClass().getSimpleName());
             }

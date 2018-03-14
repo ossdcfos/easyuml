@@ -23,6 +23,7 @@ import com.github.javaparser.ast.stmt.ThrowStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.VoidType;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import org.uml.filetype.cdg.renaming.MyMembersRenameTable;
@@ -103,7 +104,7 @@ public class MethodCodeGenerator {
                                     }
                                     declaration.setParameters(parameters);
                                 }
-                                System.out.println("  => Found: update method declaration "+declaration.toString());
+                                System.out.println("  Update method "+method.getSignature());
                                 // Finish updating the old method declaration
                                 found = true;
                                 break;
@@ -113,12 +114,12 @@ public class MethodCodeGenerator {
                     if (!found) { // If the old method declaration has not been found and updated, create it and add it
                         MethodDeclaration declaration = createMethodDeclaration(method,null);
                         members.add(declaration);
-                        System.out.println("  => Not found: create method declaration "+declaration.toString());
+                        System.out.println("  Add renamed method "+method.getSignature());
                     }
                 } else { // If the method has not been renamed, there is nothing to update, so create and add it
                     MethodDeclaration declaration = createMethodDeclaration(method,null);
                     members.add(declaration);
-                    System.out.println(component.getSignature()+"."+method.getSignature()+": create method declaration "+declaration.toString());
+                    System.out.println("  Add method "+method.getSignature());
                 }
             }
         }
@@ -130,6 +131,7 @@ public class MethodCodeGenerator {
                 continue;
             MethodDeclaration declaration = createMethodDeclaration(method,createGetterBody(field));
             members.add(declaration);
+            System.out.println("  Add getter "+method.getSignature());
         }
 
         // Generate setters 
@@ -140,6 +142,7 @@ public class MethodCodeGenerator {
                 continue;
             MethodDeclaration declaration = createMethodDeclaration(method,createSetterBody(field));
             members.add(declaration);
+            System.out.println("  Add setter "+method.getSignature());
         }
         
     }
@@ -255,12 +258,19 @@ public class MethodCodeGenerator {
             }
             declaration.setBody(body);
         }
+        else {
+            declaration.setBody(null);
+        }
         return declaration;
     }
 
     private static MethodDeclaration findExistingDeclaration(NodeList<BodyDeclaration<?>> declarations, Method method) {
         for (BodyDeclaration declaration : declarations) {
-            if (declaration instanceof MethodDeclaration && method.getSignature().equals(getMethodDeclarationSignature((MethodDeclaration) declaration))) {
+            if (!(declaration instanceof MethodDeclaration))
+                continue;
+            String methodSignature = method.getSignature();
+            String declarationSignature = getMethodDeclarationSignature((MethodDeclaration) declaration);
+            if (methodSignature.equals(declarationSignature)) {
                 return (MethodDeclaration) declaration;
             }
         }
@@ -300,22 +310,17 @@ public class MethodCodeGenerator {
         
         return declaration;
     }
-
+    
     private static String getMethodDeclarationSignature(MethodDeclaration declaration) {
-        StringBuilder result = new StringBuilder();
-        result.append(declaration.getType().toString()).append(" ");
-        result.append(declaration.getName()).append("(");
-        String args = "";
-        if (declaration.getParameters() != null) {
-            for (Parameter parameter : declaration.getParameters()) {
-                args += parameter.getType() + " " + parameter.getName() + ", ";
-            }
-            if (!args.equals("")) {
-                args = args.substring(0, args.length() - 2);
-            }
+        Method method = new Method(declaration.getName().asString(), declaration.getType().asString());
+        
+        LinkedHashSet<MethodArgument> arguments = method.getArguments();
+        for (Parameter parameter : declaration.getParameters()) {
+            MethodArgument arg = new MethodArgument(parameter.getType().asString(), parameter.getName().asString());
+            arguments.add(arg);
         }
-        result.append(args).append(")");
-        return result.toString();
+
+        return method.getSignature();
     }
 
     public static BlockStmt createGetterBody(Field field) {

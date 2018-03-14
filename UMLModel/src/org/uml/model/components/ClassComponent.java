@@ -414,6 +414,7 @@ public class ClassComponent extends ComponentBase {
                     if (!found) {
                         try {
                             Method method = (Method)parentMethod.clone();
+                            method.setAbstract(false);
                             unimplementedMethods.add(method);
                         } catch (CloneNotSupportedException ex) {
                             Logger.getLogger(ClassComponent.class.getName()).log(Level.SEVERE, null, ex);
@@ -442,6 +443,7 @@ public class ClassComponent extends ComponentBase {
                     if (!found) {
                         try {
                             Method method = (Method)parentMethod.clone();
+                            method.setAbstract(false);
                             unimplementedMethods.add(method);
                         } catch (CloneNotSupportedException ex) {
                             Logger.getLogger(ClassComponent.class.getName()).log(Level.SEVERE, null, ex);
