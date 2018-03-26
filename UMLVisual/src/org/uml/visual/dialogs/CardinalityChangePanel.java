@@ -86,6 +86,7 @@ public class CardinalityChangePanel extends javax.swing.JPanel {
         comboBox.addItem(CardinalityEnum.One2Many);
         comboBox.addItem(CardinalityEnum.Zero2One);
         comboBox.addItem(CardinalityEnum.Zero2Many);
+        comboBox.addItem(CardinalityEnum.Nothing);
         comboBox.setRenderer(new CardinalityListCellRenderer());
         comboBox.setEnabled(true);
     }

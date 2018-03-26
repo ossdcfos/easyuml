@@ -258,7 +258,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
         sceneMenu.add(miCreateEnum);
 
-        sceneMenu.add(miCreatePackage);
+//        sceneMenu.add(miCreatePackage);
         
         sceneMenu.addSeparator();
 
