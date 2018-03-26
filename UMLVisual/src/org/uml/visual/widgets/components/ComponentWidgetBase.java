@@ -251,6 +251,15 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         }
     }
     
+    public void updateAddMemberDisplay(boolean addMemberDisplayEnabled) {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof MemberContainerWidget) {
+                MemberContainerWidget mcw = (MemberContainerWidget) widget;
+                mcw.updateAddMemberDisplay(addMemberDisplayEnabled);
+            }
+        }
+    }
+    
     public void updateTypeNamesDisplay(boolean simpleTypeNamesDisplayEnabled) {
         for (Widget widget : getChildren()) {
             if (widget instanceof MemberContainerWidget) {

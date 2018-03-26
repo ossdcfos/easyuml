@@ -104,6 +104,10 @@ public class ClassDiagramNode extends AbstractNode implements PropertyChangeList
             Property<String> nameProp = new PropertySupport.Reflection<>(classDiagram, String.class, "getName", "setName");
             nameProp.setName("Name");
             generalProperties.put(nameProp);
+
+            Property<Boolean> showAddMemberProp = new PropertySupport.Reflection<>(classDiagram, boolean.class, "isShowAddMember", "setShowAddMember");
+            showAddMemberProp.setName("Show add member");
+            generalProperties.put(showAddMemberProp);
             
             Property<GenerationSetting> getterGenerationProp = new PropertySupport.Reflection<>(classDiagram, GenerationSetting.class, "getGetterGeneration", "setGetterGeneration");
             getterGenerationProp.setName("Getters");

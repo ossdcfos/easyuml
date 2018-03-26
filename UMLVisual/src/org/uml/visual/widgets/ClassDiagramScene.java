@@ -117,7 +117,6 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
      * Visual options flags and themes.
      */
     private boolean showIcons = true;
-    private boolean showMembers = true;
     private boolean showSimpleTypes = false;
     private Theme colorTheme = ColorThemesStore.DEFAULT_COLOR_THEME;
 
@@ -240,23 +239,19 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         }
         repaint();
         validate();
-    }
+    }    
 
-    public boolean isShowMembers() {
-        return showMembers;
-    }
-
-    public void setShowMembers(boolean showMembers) {
-        this.showMembers = showMembers;
+    public void updateMembersDisplay() {
         for (Widget widget : mainLayer.getChildren()) {
             if (widget instanceof ComponentWidgetBase) {
                 ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;
-                componentWidget.updateMemberDisplay(showMembers);
+                componentWidget.updateMemberDisplay(classDiagram.isShowMembers());
+                componentWidget.updateAddMemberDisplay(classDiagram.isShowAddMember());
             }
         }
         repaint();
         validate();
-    }
+    }    
 
     public boolean isShowSimpleTypes() {
         return showSimpleTypes;
@@ -480,6 +475,12 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         if (null != evt.getPropertyName()) {
             switch (evt.getPropertyName()) {
                 case "name":
+                    break;
+                case "SHOW_MEMBERS":
+                    updateMembersDisplay();
+                    break;
+                case "SHOW_ADD_MEMBER":
+                    updateMembersDisplay();
                     break;
                 case "ADD_COMPONENT":
                     break;

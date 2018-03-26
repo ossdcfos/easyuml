@@ -35,7 +35,16 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
      * Setters automatic generation setting
      */
     private GenerationSetting      setterGeneration;
+
+    /**
+     * Show/Hide members
+     */
+    private boolean                 showMembers;
     
+    /**
+     * Leave space for adding a member with double-click
+     */
+    private boolean                 showAddMember;
     
     /**
      * Constructs a ClassDiagram object with name set to "UML ClassDiagram"
@@ -46,6 +55,8 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
         this.relations = new HashSet<>();
         getterGeneration = GenerationSetting.DISABLED;
         setterGeneration = GenerationSetting.DISABLED;
+        showMembers = true;
+        showAddMember = true;
     }
 
     /**
@@ -124,6 +135,26 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
         String oldName = name;
         name = newName;
         pcs.firePropertyChange("name", oldName, newName);
+    }
+    
+    public boolean isShowMembers() {
+        return showMembers;
+    }
+
+    public void setShowMembers(boolean showMembers) {
+        boolean old = this.showMembers;
+        this.showMembers = showMembers;
+        pcs.firePropertyChange("SHOW_MEMBERS", old, showMembers);
+    }
+    
+    public boolean isShowAddMember() {
+        return showAddMember;
+    }
+
+    public void setShowAddMember(boolean showAddMember) {
+        boolean old = this.showAddMember;
+        this.showAddMember = showAddMember;
+        pcs.firePropertyChange("SHOW_ADD_MEMBER", old, showAddMember);
     }
     
         /**

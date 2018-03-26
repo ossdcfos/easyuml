@@ -51,6 +51,11 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
         if (gettersGeneration != null) classDiagram.setGetterGeneration(GenerationSetting.stringToGenerationSetting(gettersGeneration));
         if (settersGeneration != null) classDiagram.setSetterGeneration(GenerationSetting.stringToGenerationSetting(settersGeneration));
         
+        String showMembers = node.attributeValue("showMembers");
+        String showAddMember = node.attributeValue("showAddMember");
+        if (showMembers != null) classDiagram.setShowMembers(showMembers.equalsIgnoreCase("true"));
+        if (showAddMember != null) classDiagram.setShowAddMember(showAddMember.equalsIgnoreCase("true"));
+        
         Element classDiagramComponents = node.element("ClassDiagramComponents");
         
         Iterator<Element> nodeIterator = classDiagramComponents.elementIterator();

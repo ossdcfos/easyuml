@@ -81,6 +81,8 @@ public class ClassDiagramSerializer implements XmlSerializer {
         }
         if (classDiagram.getGetterGeneration() != null) node.addAttribute("gettersGeneration", classDiagram.getGetterGeneration().toString());
         if (classDiagram.getSetterGeneration()!= null) node.addAttribute("settersGeneration", classDiagram.getSetterGeneration().toString());
+        node.addAttribute("showMembers", classDiagram.isShowMembers()?"true":"false");
+        node.addAttribute("showAddMember", classDiagram.isShowAddMember()?"true":"false");
         
 //        node.addAttribute("showIcons", Boolean.toString(classDiagramScene.isShowIcons()));
 //        node.addAttribute("showMembers", Boolean.toString(classDiagramScene.isShowMembers()));

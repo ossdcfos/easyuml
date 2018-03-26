@@ -66,7 +66,8 @@ public class MemberContainerWidget extends Widget {
         addMemberLabel.setFont(getScene().getFont().deriveFont(Font.ITALIC, ADD_LABEL_FONT_SIZE));
         addChild(addMemberLabel);
         
-        updateMemberDisplay(scene.isShowMembers());
+        updateMemberDisplay(scene.getClassDiagram().isShowMembers());
+        updateAddMemberDisplay(scene.getClassDiagram().isShowAddMember());
     }
 
     public void addAddAction(final Callable<Void> function) {
@@ -160,6 +161,10 @@ public class MemberContainerWidget extends Widget {
             widget.setVisible(memberDisplayEnabled);
         }
         if (!memberDisplayEnabled) addChild(emptyLabel);
+    }
+    
+    final void updateAddMemberDisplay(boolean addMemberDisplayEnabled) {
+        addMemberLabel.setVisible(addMemberDisplayEnabled);
     }
 
     void updateTypeNamesDisplay(boolean simpleTypeNamesDisplayEnabled) {

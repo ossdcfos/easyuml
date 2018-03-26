@@ -23,6 +23,7 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
 import org.openide.windows.WindowManager;
 import org.uml.jung.JUNGEngine;
+import org.uml.model.ClassDiagram;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
@@ -56,6 +57,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem miApplyJUNGLayout;
     private JMenu mVisualOptions;
     private JCheckBoxMenuItem miShowIcons;
+    private JCheckBoxMenuItem miShowAddMember;
     private JCheckBoxMenuItem miShowMembers;
     private JCheckBoxMenuItem miShowSimpleTypeNames;
     private final JRadioButtonMenuItem miBlueGray = new JRadioButtonMenuItem("Blue-gray");
@@ -198,7 +200,6 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
         miShowIcons = new JCheckBoxMenuItem("Show icons");
         miShowIcons.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 scene.setShowIcons(!scene.isShowIcons());
@@ -207,12 +208,23 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         });
         mVisualOptions.add(miShowIcons);
 
-        miShowMembers = new JCheckBoxMenuItem("Show members");
-        miShowMembers.addActionListener(new ActionListener() {
-
+        miShowAddMember = new JCheckBoxMenuItem("Show add member");
+        miShowAddMember.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                scene.setShowMembers(!scene.isShowMembers());
+                ClassDiagram classDiagram = scene.getClassDiagram();
+                classDiagram.setShowAddMember(!classDiagram.isShowAddMember());
+                WindowManager.getDefault().findTopComponent("properties").repaint();
+            }
+        });
+        mVisualOptions.add(miShowAddMember);
+        
+        miShowMembers = new JCheckBoxMenuItem("Show members");
+        miShowMembers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ClassDiagram classDiagram = scene.getClassDiagram();
+                classDiagram.setShowMembers(!classDiagram.isShowMembers());
                 WindowManager.getDefault().findTopComponent("properties").repaint();
             }
         });
@@ -281,7 +293,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
     private void updateMenu() {
         miShowIcons.setSelected(scene.isShowIcons());
-        miShowMembers.setSelected(scene.isShowMembers());
+        miShowMembers.setSelected(scene.getClassDiagram().isShowMembers());
+        miShowAddMember.setSelected(scene.getClassDiagram().isShowAddMember());
         miShowSimpleTypeNames.setSelected(scene.isShowSimpleTypes());
         switch(scene.getColorTheme().getName()){
             case "blue-gray":
