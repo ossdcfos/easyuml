@@ -473,7 +473,9 @@ public class ConnectRelationPanel extends javax.swing.JPanel {
             txfName.setEnabled(true);
             fillCardinalityComboBox(cbxCardinalitySource);
             lblCardinalitySource.setEnabled(true);
+            cbxCardinalitySource.setSelectedItem(CardinalityEnum.Nothing);
             fillCardinalityComboBox(cbxCardinalityTarget);
+            cbxCardinalityTarget.setSelectedItem(CardinalityEnum.Nothing);
             lblCardinalityTarget.setEnabled(true);
         }
         adaptLayoutBasedOnRelation(relation);
