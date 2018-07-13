@@ -401,6 +401,8 @@ public class ClassComponent extends ComponentBase {
                 InterfaceComponent interfaceComponent = (InterfaceComponent)relation.getTarget();
                 LinkedHashSet<Method> parentMethods = interfaceComponent.getMethods();
                 for(Method parentMethod : parentMethods) {
+                    if (parentMethod.isStatic())
+                        continue;
                     String parentSignature = parentMethod.getSignature();
                     if (hasMethod(parentSignature))
                         continue;
