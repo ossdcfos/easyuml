@@ -306,7 +306,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         }
     }
 
-    private File currentSaveDirectory;
+    private static File currentSaveDirectory;
     private void exportAsImage(boolean onlyVisiblePart,boolean customSize) {    
         int customWidth = 4*scene.getPreferredBounds().width;
         int customHeight = 4*scene.getPreferredBounds().height;
