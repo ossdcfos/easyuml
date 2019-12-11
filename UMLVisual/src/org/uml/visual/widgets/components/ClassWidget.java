@@ -47,7 +47,7 @@ public class ClassWidget extends ComponentWidgetBase {
         } else {
             setMinimumSize(MIN_DIMENSION_1ROW);
         }
-        iconNameContainer.addChild(iconWidget);
+        //iconNameContainer.addChild(iconWidget);
         iconNameContainer.addChild(nameLabel);
         headerWidget.addChild(iconNameContainer);
         addChild(headerWidget);

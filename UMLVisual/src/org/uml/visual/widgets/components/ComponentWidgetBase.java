@@ -111,7 +111,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         iconNameContainer.setLayout(LayoutFactory.createHorizontalFlowLayout());
         nameLabel = new LabelWidget(scene);
         nameLabel.setLabel(component.getName());
-        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12 + 3));
+        //nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12 + 3));
         nameLabel.setFont(scene.getFont().deriveFont(Font.BOLD));
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new ComponentNameEditor(this)));
 
