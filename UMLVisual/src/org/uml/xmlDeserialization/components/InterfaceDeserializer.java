@@ -2,8 +2,10 @@ package org.uml.xmlDeserialization.components;
 
 import org.uml.xmlDeserialization.members.MethodDeserializer;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
+import org.uml.model.GenerationSetting;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.Visibility;
 import org.uml.model.members.Method;
@@ -34,7 +36,7 @@ public class InterfaceDeserializer implements XmlDeserializer {
         String packageName = node.attributeValue("package");
         String visibility = node.attributeValue("visibility");
         String isStatic = node.attributeValue("isStatic");
-
+        String generation = node.attributeValue("generation");
         int xPos = (int) Double.parseDouble(node.attributeValue("xPosition"));
         int yPos = (int) Double.parseDouble(node.attributeValue("yPosition"));
 
@@ -42,8 +44,17 @@ public class InterfaceDeserializer implements XmlDeserializer {
         if (packageName != null) interfaceComponent.setParentPackage(packageName);
         if (visibility != null) interfaceComponent.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         if (isStatic != null) interfaceComponent.setStatic(Boolean.parseBoolean(isStatic));
-        interfaceComponent.setLocation(new Point(xPos, yPos));
-
+        if (generation != null) interfaceComponent.setGeneration(GenerationSetting.stringToGenerationSetting(generation));
+        //interfaceComponent.setLocation(new Point(xPos, yPos));
+        int width = 0;
+        int height = 0;
+        if (node.attribute("width") != null && node.attribute("height") != null) {
+            width = (int) Double.parseDouble(node.attributeValue("width"));
+            height = (int) Double.parseDouble(node.attributeValue("height"));
+        }
+        Rectangle bounds = new Rectangle(xPos,yPos,width,height);
+        interfaceComponent.setBounds(bounds);
+        
         Iterator<?> methodIterator = node.element("Methods").elementIterator("Method");
         while (methodIterator != null && methodIterator.hasNext()) {
             Element methodElement = (Element) methodIterator.next();

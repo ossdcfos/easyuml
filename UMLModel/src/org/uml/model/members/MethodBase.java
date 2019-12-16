@@ -81,6 +81,30 @@ public abstract class MethodBase extends MemberBase {
         result.append(")");
         return result.toString();
     }
+    
+    @Override
+    public String getUMLSignature() {
+        StringBuilder result = new StringBuilder();
+        result.append(getName()).append("(");
+        if (getArguments() != null) {
+            result.append(getUMLArgumentsString(false));
+        }
+        result.append("): ");
+        if (type != null) result.append(type);
+        return result.toString();
+    }
+
+    @Override
+    public String getSimpleTypeUMLSignature() {
+        StringBuilder result = new StringBuilder();
+        result.append(getName()).append("(");
+        if (getArguments() != null) {
+            result.append(getUMLArgumentsString(true));
+        }
+        result.append("): ");
+        if (type != null) result.append(getSimpleType(type));
+        return result.toString();
+    }    
 
     @Override
     public String deriveSignatureFromName(String newName) {
@@ -121,4 +145,30 @@ public abstract class MethodBase extends MemberBase {
         }
         return args.toString();
     }
+    
+    private String getUMLArgumentsString(boolean isSimple) {
+        StringBuilder args = new StringBuilder();
+        String delimiter = "";
+        for (MethodArgument argument : getArguments()) {
+            String argType = isSimple ? getSimpleType(argument.getType()) : argument.getType();
+            args.append(delimiter).append(argument.getName()).append(": ").append(argType);
+            delimiter = ", ";
+        }
+        return args.toString();
+    }    
+
+/*    @Override
+    public boolean equals(Object other) {
+        if (other == null) 
+            return false;
+        if (!(other instanceof MethodBase))
+            return false;
+        MethodBase method = (MethodBase)other;
+        return getSignature().equals(method.getSignature());
+    }
+    
+    @Override
+    public int hashCode() {
+        return getSignature().hashCode();
+    }*/
 }

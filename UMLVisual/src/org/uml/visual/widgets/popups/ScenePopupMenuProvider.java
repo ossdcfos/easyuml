@@ -1,6 +1,7 @@
 package org.uml.visual.widgets.popups;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -22,15 +23,20 @@ import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.Exceptions;
 import org.openide.windows.WindowManager;
 import org.uml.jung.JUNGEngine;
+import org.uml.model.ClassDiagram;
 import org.uml.model.components.ClassComponent;
+import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
+import org.uml.model.components.PackageComponent;
 import org.uml.visual.dialogs.ConnectRelationPanel;
+import org.uml.visual.dialogs.CustomSizePanel;
 import org.uml.visual.widgets.ClassDiagramScene;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
 import org.uml.visual.widgets.components.ClassWidget;
 import org.uml.visual.widgets.components.EnumWidget;
 import org.uml.visual.widgets.components.InterfaceWidget;
+import org.uml.visual.widgets.components.PackageWidget;
 import org.uml.visual.widgets.providers.CloseInplaceEditorOnClickAdapter;
 
 /**
@@ -44,12 +50,14 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
     private JMenuItem miCreateClass;
     private JMenuItem miCreateInterface;
     private JMenuItem miCreateEnum;
+    private JMenuItem miCreatePackage;
     private JMenuItem miCreateRelationship;
 //    private JMenuItem miGenerateCode;
     private JMenu mExportAsImage;
     private JMenuItem miApplyJUNGLayout;
     private JMenu mVisualOptions;
     private JCheckBoxMenuItem miShowIcons;
+    private JCheckBoxMenuItem miShowAddMember;
     private JCheckBoxMenuItem miShowMembers;
     private JCheckBoxMenuItem miShowSimpleTypeNames;
     private final JRadioButtonMenuItem miBlueGray = new JRadioButtonMenuItem("Blue-gray");
@@ -119,7 +127,22 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
             }
         });
+        miCreatePackage = new JMenuItem("Add Package");
+        miCreatePackage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PackageWidget widget = (PackageWidget) scene.addNode(new PackageComponent());
+                widget.bringToBack();
+                widget.setPreferredLocation(popupPoint);
+                widget.getComponent().setLocation(popupPoint);
+                scene.validate();
 
+                // Temp renamer
+                WidgetAction editorAction = ActionFactory.createInplaceEditorAction(new ComponentNameEditor(widget));
+                ActionFactory.getInplaceEditorController(editorAction).openEditor(widget.getNameLabel());
+                scene.getView().addMouseListener(new CloseInplaceEditorOnClickAdapter(editorAction));
+            }
+        });
         miCreateRelationship = new JMenuItem("Add Relationship");
         miCreateRelationship.addActionListener(new ActionListener() {
             @Override
@@ -144,7 +167,7 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         miExportAsImageCurrent.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                exportAsImage(true);
+                exportAsImage(true,false);
             }
         });
         mExportAsImage.add(miExportAsImageCurrent);
@@ -152,11 +175,18 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         miExportAsImageWhole.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                exportAsImage(false);
+                exportAsImage(false,false);
             }
         });
         mExportAsImage.add(miExportAsImageWhole);
-
+        miExportAsImageWhole = new JMenuItem("Whole diagram (custom size)");
+        miExportAsImageWhole.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exportAsImage(false,true);
+            }
+        });
+        mExportAsImage.add(miExportAsImageWhole);
         miApplyJUNGLayout = new JMenuItem("Arrange diagram (experimental)");
         miApplyJUNGLayout.addActionListener(new ActionListener() {
             @Override
@@ -170,7 +200,6 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
         miShowIcons = new JCheckBoxMenuItem("Show icons");
         miShowIcons.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 scene.setShowIcons(!scene.isShowIcons());
@@ -179,12 +208,23 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         });
         mVisualOptions.add(miShowIcons);
 
-        miShowMembers = new JCheckBoxMenuItem("Show members");
-        miShowMembers.addActionListener(new ActionListener() {
-
+        miShowAddMember = new JCheckBoxMenuItem("Show add member");
+        miShowAddMember.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                scene.setShowMembers(!scene.isShowMembers());
+                ClassDiagram classDiagram = scene.getClassDiagram();
+                classDiagram.setShowAddMember(!classDiagram.isShowAddMember());
+                WindowManager.getDefault().findTopComponent("properties").repaint();
+            }
+        });
+        mVisualOptions.add(miShowAddMember);
+        
+        miShowMembers = new JCheckBoxMenuItem("Show members");
+        miShowMembers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ClassDiagram classDiagram = scene.getClassDiagram();
+                classDiagram.setShowMembers(!classDiagram.isShowMembers());
                 WindowManager.getDefault().findTopComponent("properties").repaint();
             }
         });
@@ -230,6 +270,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
         sceneMenu.add(miCreateEnum);
 
+//        sceneMenu.add(miCreatePackage);
+        
         sceneMenu.addSeparator();
 
         sceneMenu.add(miCreateRelationship);
@@ -251,7 +293,8 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
 
     private void updateMenu() {
         miShowIcons.setSelected(scene.isShowIcons());
-        miShowMembers.setSelected(scene.isShowMembers());
+        miShowMembers.setSelected(scene.getClassDiagram().isShowMembers());
+        miShowAddMember.setSelected(scene.getClassDiagram().isShowAddMember());
         miShowSimpleTypeNames.setSelected(scene.isShowSimpleTypes());
         switch(scene.getColorTheme().getName()){
             case "blue-gray":
@@ -263,7 +306,17 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
         }
     }
 
-    private void exportAsImage(boolean onlyVisiblePart) {
+    private static File currentSaveDirectory;
+    private void exportAsImage(boolean onlyVisiblePart,boolean customSize) {    
+        int customWidth = 4*scene.getPreferredBounds().width;
+        int customHeight = 4*scene.getPreferredBounds().height;
+        if (customSize) {
+            CustomSizePanel customSizePanel = new CustomSizePanel(customWidth,customHeight);
+            if (!customSizePanel.openDialog())
+                return;
+            customWidth = customSizePanel.getWidth();
+            customHeight = customSizePanel.getHeight();            
+        }
         JFileChooser chooser = new JFileChooser() {
             @Override
             public void approveSelection() {
@@ -286,15 +339,21 @@ public class ScenePopupMenuProvider implements PopupMenuProvider {
                 super.approveSelection();
             }
         };
+        if (currentSaveDirectory != null) {
+            chooser.setCurrentDirectory(currentSaveDirectory);
+        }
         chooser.setFileFilter(new FileNameExtensionFilter("Portable Network Graphics (.png)", "png"));
         if (chooser.showSaveDialog(scene.getView()) == JFileChooser.APPROVE_OPTION) {
             File f = chooser.getSelectedFile();
+            if (f != null && f.getParentFile() != null) {
+                currentSaveDirectory = f;
+            }
             if (!f.getName().toLowerCase().endsWith(".png")) {
                 f = new File(f.getParentFile(), f.getName() + ".png");
             }
             try {
                 // Zoom type is overriden if onlyVisiblePart is set
-                SceneExporter.createImage(scene, f, SceneExporter.ImageType.PNG, SceneExporter.ZoomType.ACTUAL_SIZE, onlyVisiblePart, false, 0, 0, 0);
+                SceneExporter.createImage(scene, f, SceneExporter.ImageType.PNG, customSize?SceneExporter.ZoomType.CUSTOM_SIZE:SceneExporter.ZoomType.ACTUAL_SIZE, onlyVisiblePart, false, 0, customWidth, customHeight);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Cannot export scene as image!", "Input-output error!", JOptionPane.ERROR_MESSAGE);
                 Exceptions.printStackTrace(ex);

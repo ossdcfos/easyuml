@@ -12,10 +12,28 @@
                 <package>com.github.javaparser.ast.body</package>
                 <package>com.github.javaparser.ast.comments</package>
                 <package>com.github.javaparser.ast.expr</package>
-                <package>com.github.javaparser.ast.internal</package>
+                <package>com.github.javaparser.ast.modules</package>
+                <package>com.github.javaparser.ast.nodeTypes</package>
+                <package>com.github.javaparser.ast.nodeTypes.modifiers</package>
+                <package>com.github.javaparser.ast.observer</package>
                 <package>com.github.javaparser.ast.stmt</package>
                 <package>com.github.javaparser.ast.type</package>
+                <package>com.github.javaparser.ast.validator</package>
+                <package>com.github.javaparser.ast.validator.chunks</package>
                 <package>com.github.javaparser.ast.visitor</package>
+                <package>com.github.javaparser.javadoc</package>
+                <package>com.github.javaparser.javadoc.description</package>
+                <package>com.github.javaparser.metamodel</package>
+                <package>com.github.javaparser.printer</package>
+                <package>com.github.javaparser.printer.concretesyntaxmodel</package>
+                <package>com.github.javaparser.printer.lexicalpreservation</package>
+                <package>com.github.javaparser.printer.lexicalpreservation.changes</package>
+                <package>com.github.javaparser.resolution</package>
+                <package>com.github.javaparser.resolution.declarations</package>
+                <package>com.github.javaparser.resolution.types</package>
+                <package>com.github.javaparser.resolution.types.parametrization</package>
+                <package>com.github.javaparser.utils</package>
+                <package>com.github.javaparser.version</package>
             </public-packages>
         </data>
     </configuration>

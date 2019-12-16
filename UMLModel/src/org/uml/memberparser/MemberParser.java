@@ -2,9 +2,16 @@ package org.uml.memberparser;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.type.Type;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
@@ -34,7 +41,7 @@ public class MemberParser {
     /**
      * Type convention - one or more alphanum, <, >, [, ] characters
      */
-    static final String TYPE = "[\\w\\<\\>\\[\\]]+";
+    static final String TYPE = "[\\w\\<\\,\\>\\[\\]]+";
 
     /**
      * Field convention - optional type, spaces, name. .
@@ -136,7 +143,8 @@ public class MemberParser {
         String type;
         BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
         FieldDeclaration declaration = (FieldDeclaration) bd;
-        type = declaration.getType().toString();
+        NodeList<VariableDeclarator> variables = declaration.getVariables();
+        type = variables.get(0).getType().asString().replaceAll(SPACES,"");
         return type;
     }
 
@@ -150,7 +158,7 @@ public class MemberParser {
         String name;
         BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
         FieldDeclaration declaration = (FieldDeclaration) bd;
-        name = declaration.getVariables().get(0).getId().getName();
+        name = declaration.getVariables().get(0).getName().asString();
         return name;
     }
 
@@ -161,18 +169,13 @@ public class MemberParser {
      * @return return type of a method
      */
     private static String getReturnType(String signature) throws ParseException {
-        String type;
-        // has to empty the arguments list in order not to have an argument exception
-        signature = signature.replaceAll("\\(.*\\)", "()");
-        if (signature.contains("void")) {
-            type = "void";
-        } else {
-            BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
-
-            AnnotationMemberDeclaration declaration = (AnnotationMemberDeclaration) bd;
-            type = declaration.getType().toString();
+        BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
+        if (!(bd instanceof MethodDeclaration)) {
+            throw new ParseException("Invalid method '"+signature+"'");
         }
-        return type;
+        MethodDeclaration declaration = (MethodDeclaration) bd;
+        Type type = declaration.getType();
+        return type.asString();        
     }
 
     /**
@@ -182,30 +185,27 @@ public class MemberParser {
      * @return name
      */
     private static String getMethodName(String signature) throws ParseException {
-        String name;
-        // Need to empty the arguments list in order not to an argument exception
-        signature = signature.replaceAll("\\(.*\\)", "()");
-        if (signature.contains("void")) {
-            signature = signature.replace("void", "int"); // arbitrary type, not to have exception because of void
-        }
         BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
-        AnnotationMemberDeclaration declaration = (AnnotationMemberDeclaration) bd;
-        name = declaration.getName();
-        return name;
+        if (!(bd instanceof MethodDeclaration)) {
+            throw new ParseException("Invalid method '"+signature+"'");
+        }
+        MethodDeclaration declaration = (MethodDeclaration) bd;
+        SimpleName name = declaration.getName();
+        return name.asString();
     }
 
     private static LinkedHashSet<MethodArgument> getArguments(String signature) throws ParseException {
-        LinkedHashSet<MethodArgument> arguments = new LinkedHashSet<>();
-        String argumentString = signature.substring(signature.indexOf("(") + 1, signature.indexOf(")"));
-        String[] argumentsArray = argumentString.split(",");
-        for (String argument : argumentsArray) {
-            if (!argument.equals("")) {
-                argument = argument.trim() + ";";
-
-                BodyDeclaration bd = JavaParser.parseBodyDeclaration(argument);
-                FieldDeclaration declaration = (FieldDeclaration) bd;
-                arguments.add(new MethodArgument(declaration.getType().toString(), declaration.getVariables().get(0).getId().getName()));
-            }
+        BodyDeclaration bd = JavaParser.parseBodyDeclaration(signature + ";");
+        if (!(bd instanceof MethodDeclaration)) {
+            throw new ParseException("Invalid method '"+signature+"'");
+        }
+        MethodDeclaration declaration = (MethodDeclaration) bd;
+        LinkedHashSet<MethodArgument> arguments = new LinkedHashSet();
+        NodeList<Parameter> parameters = declaration.getParameters();
+        for (Parameter parameter : parameters) {
+            String name = parameter.getName().asString();
+            String type = parameter.getType().asString();
+            arguments.add(new MethodArgument(type,name));            
         }
         return arguments;
     }

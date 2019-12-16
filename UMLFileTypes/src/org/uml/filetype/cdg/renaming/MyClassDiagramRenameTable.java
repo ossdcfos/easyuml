@@ -15,6 +15,7 @@ public class MyClassDiagramRenameTable implements PropertyChangeListener {
     MyRelationsRenameTable relationRenames;
 
     public MyClassDiagramRenameTable(ClassDiagram classDiagram) {
+        classDiagram.updateComponentPackages();
         this.componentRenames = new MyComponentsRenameTable(this, classDiagram);
         this.relationRenames = new MyRelationsRenameTable(this, classDiagram);
         
@@ -30,6 +31,7 @@ public class MyClassDiagramRenameTable implements PropertyChangeListener {
     }
     
     public final void updateClassDiagram(ClassDiagram classDiagram) {
+        classDiagram.updateComponentPackages();
         componentRenames.updateComponents(classDiagram);
         relationRenames.updateRelations(classDiagram);
         

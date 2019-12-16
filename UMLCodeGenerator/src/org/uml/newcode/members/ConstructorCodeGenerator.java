@@ -1,11 +1,11 @@
 package org.uml.newcode.members;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
-import com.github.javaparser.ast.body.ModifierSet;
 import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.body.VariableDeclaratorId;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +22,7 @@ import org.uml.newcode.CodeGeneratorUtils;
 public class ConstructorCodeGenerator {
 
     public static void createConstructors(ClassComponent component, CompilationUnit cu) {
-        List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
+        NodeList<BodyDeclaration<?>> members = cu.getTypes().get(0).getMembers();
 
         for (Constructor constructor : component.getConstructors()) {
             // create and add constructor declaration
@@ -32,7 +32,7 @@ public class ConstructorCodeGenerator {
     }
 
     public static void updateConstructors(ClassComponent component, MyMembersRenameTable renames, CompilationUnit cu) {
-        List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
+        NodeList<BodyDeclaration<?>> members = cu.getTypes().get(0).getMembers();
         // Generate or update all direct constructors
         for (Constructor constructor : component.getConstructors()) {
             ConstructorDeclaration existingDeclaration = findExistingDeclaration(members, constructor);
@@ -48,12 +48,12 @@ public class ConstructorCodeGenerator {
                                 // Update the old constructor declaration
                                 declaration.setName(constructor.getName());
                                 if (!constructor.getArguments().isEmpty()) {
-                                    List<Parameter> parameters = new LinkedList<>();
+                                    NodeList<Parameter> parameters = new NodeList<>();
                                     for (MethodArgument argument : constructor.getArguments()) {
                                         Parameter parameter = new Parameter();
                                         String type = argument.getType();
                                         parameter.setType(CodeGeneratorUtils.parseType(type));
-                                        parameter.setId(new VariableDeclaratorId(argument.getName()));
+                                        parameter.setName(argument.getName());
                                         parameters.add(parameter);
                                     }
                                     declaration.setParameters(parameters);
@@ -76,7 +76,7 @@ public class ConstructorCodeGenerator {
         }
     }
 
-    private static ConstructorDeclaration findExistingDeclaration(List<BodyDeclaration> declarations, Constructor constructor) {
+    private static ConstructorDeclaration findExistingDeclaration(NodeList<BodyDeclaration<?>> declarations, Constructor constructor) {
         for (BodyDeclaration declaration : declarations) {
             if (declaration instanceof ConstructorDeclaration && constructor.getSignature().equals(getConstructorDeclarationSignature((ConstructorDeclaration) declaration))) {
                 return (ConstructorDeclaration) declaration;
@@ -90,27 +90,27 @@ public class ConstructorCodeGenerator {
         declaration.setName(constructor.getDeclaringComponent().getName());
         switch (constructor.getVisibility()) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PUBLIC));
+                declaration.setModifier(Modifier.PUBLIC, true);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PROTECTED));
+                declaration.setModifier(Modifier.PROTECTED, true);
                 break;
             case PRIVATE:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PRIVATE));
+                declaration.setModifier(Modifier.PRIVATE, true);
                 break;
         }
         if (!constructor.getArguments().isEmpty()) {
-            List<Parameter> parameters = new LinkedList<>();
+            NodeList<Parameter> parameters = new NodeList<>();
             for (MethodArgument argument : constructor.getArguments()) {
                 Parameter parameter = new Parameter();
                 String type = argument.getType();
                 parameter.setType(CodeGeneratorUtils.parseType(type));
-                parameter.setId(new VariableDeclaratorId(argument.getName()));
+                parameter.setName(argument.getName());
                 parameters.add(parameter);
             }
             declaration.setParameters(parameters);
         }
-        declaration.setBlock(new BlockStmt());
+        declaration.setBody(new BlockStmt());
         return declaration;
     }
 
@@ -120,7 +120,7 @@ public class ConstructorCodeGenerator {
         String args = "";
         if (declaration.getParameters() != null) {
             for (Parameter parameter : declaration.getParameters()) {
-                args += parameter.getType() + " " + parameter.getId().getName() + ", ";
+                args += parameter.getType() + " " + parameter.getName() + ", ";
             }
             if (!args.equals("")) {
                 args = args.substring(0, args.length() - 2);

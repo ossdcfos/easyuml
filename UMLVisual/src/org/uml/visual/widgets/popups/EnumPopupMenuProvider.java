@@ -13,7 +13,7 @@ import org.uml.visual.widgets.components.EnumWidget;
  *
  * @author Jelena
  */
-public class EnumPopupMenuProvider implements PopupMenuProvider {
+public class EnumPopupMenuProvider extends ComponentPopupMenuProvider {
 
     private EnumWidget enumWidget;
     private JPopupMenu menu;
@@ -21,12 +21,17 @@ public class EnumPopupMenuProvider implements PopupMenuProvider {
     private JMenuItem addLiteral;
 
     public EnumPopupMenuProvider(EnumWidget enumWidget) {
+        super(enumWidget);
         this.enumWidget = enumWidget;
         menu = new JPopupMenu("Enum Menu");
 
         (addLiteral = new JMenuItem("Add Literal")).addActionListener(addLiteralListener);
         menu.add(addLiteral);
         
+        menu.addSeparator();
+
+        addZMenuItems(menu);
+
         menu.addSeparator();
 
         (deleteClass = new JMenuItem("Delete Enum")).addActionListener(removeWidgetListener);

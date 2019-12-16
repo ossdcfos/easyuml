@@ -1,7 +1,10 @@
 package org.uml.model.members;
 
 import java.lang.reflect.Modifier;
+import java.util.LinkedHashSet;
+import org.uml.model.GenerationSetting;
 import org.uml.model.Visibility;
+import org.uml.model.components.ClassComponent;
 
 /**
  * Represents a field (fields inside a class).
@@ -14,6 +17,15 @@ import org.uml.model.Visibility;
 public class Field extends MemberBase {
 
     /**
+     * Getters automatic generation setting
+     */
+    private GenerationSetting      getterGeneration;
+    /**
+     * Setters automatic generation setting
+     */
+    private GenerationSetting      setterGeneration;
+        
+    /**
      * Constructor that sets the name, type and visibility of the field.
      *
      * @param name of the field
@@ -24,6 +36,8 @@ public class Field extends MemberBase {
         super(name);
         this.type = type;
         this.visibility = visibility;
+        this.getterGeneration = GenerationSetting.AUTO;
+        this.setterGeneration = GenerationSetting.AUTO;
     }
 
     /**
@@ -144,14 +158,30 @@ public class Field extends MemberBase {
         result = result.append(getName());
         return result.toString();
     }
+    
+    @Override
+    public String getUMLSignature() {
+        StringBuilder result = new StringBuilder();
+        result = result.append(getName()).append(": ");
+        result = result.append(type);
+        return result.toString();
+    }
+
+    @Override
+    protected String getSimpleTypeUMLSignature() {
+        StringBuilder result = new StringBuilder();
+        result = result.append(getName()).append(": ");
+        result = result.append(getSimpleType(type));
+        return result.toString();
+    }
 
     @Override
     public String getLabelText(boolean isSimpleTypeNames) {
         StringBuilder result = new StringBuilder();
         // removes static because it is rendered as underline
         if (isStatic()) result.append(Modifier.toString(modifiers).replace("static ", "").trim().replace("\\s+", " ")).append(" ");
-        if (isSimpleTypeNames) result.append(getSimpleTypeSignature());
-        else result.append(getSignature());
+        if (isSimpleTypeNames) result.append(getSimpleTypeUMLSignature());
+        else result.append(getUMLSignature());
         return result.toString();
     }
 
@@ -176,4 +206,103 @@ public class Field extends MemberBase {
         if ((modifier & Modifier.fieldModifiers()) == 0) return false;
         else return true;
     }
+    
+    public GenerationSetting getGetterGeneration() {
+        return getterGeneration;
+    }
+
+    public void setGetterGeneration(GenerationSetting generateGetters) {
+        this.getterGeneration = generateGetters;
+    }
+
+    public GenerationSetting getSetterGeneration() {
+        return setterGeneration;
+    }
+
+    public void setSetterGeneration(GenerationSetting generateSetters) {
+        this.setterGeneration = generateSetters;
+    }
+    
+    /**
+     * Returns true if this field need a getter to be auto generated.
+     * 
+     * This depends on this field setting; if auto it will depends on
+     * its class; if auto it will depends on diagram setting
+     * 
+     * @return 
+     */
+    public boolean getterGenerationRequested() {
+        GenerationSetting setting = getterGeneration;
+        if (setting == GenerationSetting.AUTO) {
+            setting = ((ClassComponent)getDeclaringComponent()).getInheritedGetterGeneration();
+        }
+        if (setting == GenerationSetting.ENABLED) {
+            return true;
+        }
+        if (setting == GenerationSetting.DISABLED) {
+            return false;
+        }
+        if (isStatic()) {
+            return false;
+        }
+        if (setting == GenerationSetting.NOTPUBLIC) {
+            return visibility != Visibility.PUBLIC;
+        }
+        if (setting == GenerationSetting.PRIVATE) {
+            return visibility == Visibility.PRIVATE;
+        }
+        if (setting == GenerationSetting.PROTECTED) {
+            return visibility == Visibility.PROTECTED;
+        }
+        return false;
+    }
+    
+    /**
+     * Returns true if this field need a setter to be auto generated.
+     * 
+     * This depends on this field setting; if auto it will depends on
+     * its class; if auto it will depends on diagram setting
+     * 
+     * @return 
+     */
+    public boolean setterGenerationRequested() {
+        GenerationSetting setting = setterGeneration;
+        if (setting == GenerationSetting.AUTO) {
+            setting = ((ClassComponent)getDeclaringComponent()).getInheritedSetterGeneration();
+        }
+        if (setting == GenerationSetting.ENABLED) {
+            return true;
+        }
+        if (setting == GenerationSetting.DISABLED) {
+            return false;
+        }
+        if (isStatic()) {
+            return false;
+        }
+        if (setting == GenerationSetting.NOTPUBLIC) {
+            return visibility != Visibility.PUBLIC;
+        }
+        if (setting == GenerationSetting.PRIVATE) {
+            return visibility == Visibility.PRIVATE;
+        }
+        if (setting == GenerationSetting.PROTECTED) {
+            return visibility == Visibility.PROTECTED;
+        }
+        return false;
+    }    
+
+    public Method createGetter() {
+        String methodName = "get"+name.substring(0,1).toUpperCase()+name.substring(1);
+        return new Method(methodName,type);
+    }
+    
+    public Method createSetter() {
+        String methodName = "set"+name.substring(0,1).toUpperCase()+name.substring(1);
+        Method method = new Method(methodName,"void");
+        LinkedHashSet<MethodArgument> args = new LinkedHashSet();
+        args.add(new MethodArgument(type,name));
+        method.setArguments(args);
+        return method;
+    }
+        
 }

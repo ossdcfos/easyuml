@@ -11,7 +11,7 @@ import java.lang.reflect.Modifier;
  * @see Constructor
  * @see Literal
  */
-public class Method extends MethodBase {
+public class Method extends MethodBase implements Cloneable {
 
     /**
      * Constructor that sets the name, return type and visibility of the method.
@@ -146,8 +146,13 @@ public class Method extends MethodBase {
         StringBuilder result = new StringBuilder();
         // removes static because it is rendered as underline
         if (isStatic()) result.append(Modifier.toString(modifiers).replace("static ", "").trim().replace("\\s+", " ")).append(" ");
-        if (isSimpleTypeNames) result.append(getSimpleTypeSignature());
-        else result.append(getSignature());
+        if (isSimpleTypeNames) result.append(getSimpleTypeUMLSignature());
+        else result.append(getUMLSignature());
         return result.toString();
+    }
+    
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

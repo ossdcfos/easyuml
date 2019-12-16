@@ -1,5 +1,6 @@
 package org.uml.visual.widgets.members;
 
+import java.awt.Font;
 import org.uml.memberparser.MemberParser;
 import java.awt.font.TextAttribute;
 import java.beans.PropertyChangeEvent;
@@ -31,6 +32,7 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new MemberNameEditor(this)));
         nameLabel.setFont(scene.getFont());
         setStatic(method.isStatic());
+        setAbstract(method.isAbstract());
         this.addChild(nameLabel);
         setChildConstraint(nameLabel, 1);   // any number, as it defines weight by which it will occupy the parent space
     }
@@ -66,6 +68,19 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
         nameLabel.setFont(nameLabel.getFont().deriveFont(fontAttributes));
     }
 
+    private void setAbstract(boolean isAbstract) {
+        Font font = nameLabel.getFont();
+        if (isAbstract) {
+            if (!font.isItalic()) {
+                nameLabel.setFont(font.deriveFont(Font.ITALIC));
+            }
+        } else {
+            if (font.isItalic()) {
+                nameLabel.setFont(font.deriveFont(Font.ITALIC));
+            }
+        }
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propName = evt.getPropertyName();
@@ -74,6 +89,9 @@ public class MethodWidget extends MemberWidgetBase implements ISignedUMLWidget {
             setStatic((boolean) evt.getNewValue());
         } else if ("isFinal".equals(propName) || "isAbstract".equals(propName) || "isSynchronized".equals(propName) || "name".equals(propName) || "type".equals(propName) || "arguments".equals(propName)) {
             nameLabel.setLabel(((Method) member).getLabelText(getClassDiagramScene().isShowSimpleTypes()));
+            if ("isAbstract".equals(propName)) {
+                setAbstract(((Method) member).isAbstract());
+            }
         } else if ("visibility".equals(evt.getPropertyName())) {
             updateIcon();
             updateVisibilityLabel();

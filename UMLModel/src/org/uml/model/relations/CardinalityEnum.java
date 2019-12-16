@@ -47,6 +47,15 @@ public enum CardinalityEnum {
                 public String toString() {
                     return "0..*";
                 }
+            },
+    /**
+     * No cardinality
+     */
+    Nothing {
+                @Override
+                public String toString() {
+                    return "";
+                }
             };
     
     /**
@@ -68,6 +77,9 @@ public enum CardinalityEnum {
         }
         if (cardinalityEnum.equalsIgnoreCase("0..*")) {
             return CardinalityEnum.Zero2Many;
+        }
+        if (cardinalityEnum.equalsIgnoreCase("")) {
+            return CardinalityEnum.Nothing;
         }
         return CardinalityEnum.Zero2One;
     }

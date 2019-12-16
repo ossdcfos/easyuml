@@ -1,304 +1,348 @@
 /*
  * Copyright (C) 2007-2010 Júlio Vilmar Gesser.
- * Copyright (C) 2011, 2013-2015 The JavaParser Team.
+ * Copyright (C) 2011, 2013-2017 The JavaParser Team.
  *
  * This file is part of JavaParser.
  *
- * JavaParser is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * JavaParser can be used either under the terms of
+ * a) the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * b) the terms of the Apache License
+ *
+ * You should have received a copy of both licenses in LICENCE.LGPL and
+ * LICENCE.APACHE. Please refer to those files for details.
  *
  * JavaParser is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with JavaParser.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.github.javaparser.ast.body;
 
 import com.github.javaparser.ast.AccessSpecifier;
-import com.github.javaparser.ast.DocumentableNode;
-import com.github.javaparser.ast.NamedNode;
-import com.github.javaparser.ast.TypeParameter;
-import com.github.javaparser.ast.comments.JavadocComment;
+import com.github.javaparser.ast.AllFieldsConstructor;
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.nodeTypes.*;
+import com.github.javaparser.ast.nodeTypes.modifiers.*;
+import com.github.javaparser.ast.observer.ObservableProperty;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.type.ReferenceType;
 import com.github.javaparser.ast.type.Type;
+import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.ast.visitor.GenericVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitor;
-
-import java.util.List;
-import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Optional;
+import static com.github.javaparser.ast.Modifier.*;
+import static com.github.javaparser.utils.Utils.assertNotNull;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.visitor.CloneVisitor;
+import com.github.javaparser.metamodel.MethodDeclarationMetaModel;
+import com.github.javaparser.metamodel.JavaParserMetaModel;
+import javax.annotation.Generated;
+import com.github.javaparser.TokenRange;
+import com.github.javaparser.metamodel.OptionalProperty;
+import com.github.javaparser.resolution.Resolvable;
+import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
+import java.util.function.Consumer;
 
 /**
+ * A method declaration. "public int abc() {return 1;}" in this example: <code>class X { public int abc() {return 1;}
+ * }</code>
+ *
+ * <br/>All annotations preceding the return type will be set on this object, not on the return type.
+ * JavaParser doesn't know if it they are applicable to the method or the type.
+ *
  * @author Julio Vilmar Gesser
  */
-public final class MethodDeclaration extends BodyDeclaration implements DocumentableNode, WithDeclaration, NamedNode {
+public final class MethodDeclaration extends CallableDeclaration<MethodDeclaration> implements NodeWithType<MethodDeclaration, Type>, NodeWithOptionalBlockStmt<MethodDeclaration>, NodeWithJavadoc<MethodDeclaration>, NodeWithDeclaration, NodeWithSimpleName<MethodDeclaration>, NodeWithParameters<MethodDeclaration>, NodeWithThrownExceptions<MethodDeclaration>, NodeWithTypeParameters<MethodDeclaration>, NodeWithAccessModifiers<MethodDeclaration>, NodeWithAbstractModifier<MethodDeclaration>, NodeWithStaticModifier<MethodDeclaration>, NodeWithFinalModifier<MethodDeclaration>, NodeWithStrictfpModifier<MethodDeclaration>, Resolvable<ResolvedMethodDeclaration> {
 
-	private int modifiers;
+    private Type type;
 
-	private List<TypeParameter> typeParameters;
-
-	private Type type;
-
-	private NameExpr name;
-
-	private List<Parameter> parameters;
-
-	private int arrayCount;
-
-	private List<NameExpr> throws_;
-
-	private BlockStmt body;
-
-    private boolean isDefault = false;
+    @OptionalProperty
+    private BlockStmt body;
 
     public MethodDeclaration() {
-	}
-
-	public MethodDeclaration(final int modifiers, final Type type, final String name) {
-		setModifiers(modifiers);
-		setType(type);
-		setName(name);
-	}
-
-	public MethodDeclaration(final int modifiers, final Type type, final String name, final List<Parameter> parameters) {
-		setModifiers(modifiers);
-		setType(type);
-		setName(name);
-		setParameters(parameters);
-	}
-
-	public MethodDeclaration(final int modifiers, final List<AnnotationExpr> annotations,
-			final List<TypeParameter> typeParameters, final Type type, final String name,
-			final List<Parameter> parameters, final int arrayCount, final List<NameExpr> throws_, final BlockStmt block) {
-		super(annotations);
-		setModifiers(modifiers);
-		setTypeParameters(typeParameters);
-		setType(type);
-		setName(name);
-		setParameters(parameters);
-		setArrayCount(arrayCount);
-		setThrows(throws_);
-		setBody(block);
-	}
-
-	public MethodDeclaration(final int beginLine, final int beginColumn, final int endLine, final int endColumn,
-			final int modifiers, final List<AnnotationExpr> annotations,
-			final List<TypeParameter> typeParameters, final Type type, final String name,
-			final List<Parameter> parameters, final int arrayCount, final List<NameExpr> throws_, final BlockStmt block) {
-		super(beginLine, beginColumn, endLine, endColumn, annotations);
-		setModifiers(modifiers);
-		setTypeParameters(typeParameters);
-		setType(type);
-		setName(name);
-		setParameters(parameters);
-		setArrayCount(arrayCount);
-		setThrows(throws_);
-		setBody(block);
-	}
-
-	@Override public <R, A> R accept(final GenericVisitor<R, A> v, final A arg) {
-		return v.visit(this, arg);
-	}
-
-	@Override public <A> void accept(final VoidVisitor<A> v, final A arg) {
-		v.visit(this, arg);
-	}
-
-	public int getArrayCount() {
-		return arrayCount;
-	}
-
-	// FIXME this is called "Block" in the constructor. Pick one.
-	public BlockStmt getBody() {
-		return body;
-	}
-
-	/**
-	 * Return the modifiers of this member declaration.
-	 * 
-	 * @see ModifierSet
-	 * @return modifiers
-	 */
-	public int getModifiers() {
-		return modifiers;
-	}
-
-	public String getName() {
-		return name.getName();
-	}
-
-    public NameExpr getNameExpr() {
-        return name;
+        this(null, EnumSet.noneOf(Modifier.class), new NodeList<>(), new NodeList<>(), new ClassOrInterfaceType(), new SimpleName(), new NodeList<>(), new NodeList<>(), new BlockStmt(), null);
     }
 
-	public List<Parameter> getParameters() {
-        if (parameters == null) {
-            parameters = new ArrayList<Parameter>();
-        }
-		return parameters;
-	}
-
-	public List<NameExpr> getThrows() {
-        if (throws_ == null) {
-            throws_ = new ArrayList<NameExpr>();
-        }
-		return throws_;
-	}
-
-	public Type getType() {
-		return type;
-	}
-
-	public List<TypeParameter> getTypeParameters() {
-		return typeParameters;
-	}
-
-	public void setArrayCount(final int arrayCount) {
-		this.arrayCount = arrayCount;
-	}
-
-	public void setBody(final BlockStmt body) {
-		this.body = body;
-		setAsParentNodeOf(this.body);
-	}
-
-	public void setModifiers(final int modifiers) {
-		this.modifiers = modifiers;
-	}
-
-	public void setName(final String name) {
-		this.name = new NameExpr(name);
-	}
-
-    public void setNameExpr(final NameExpr name) {
-        this.name = name;
+    public MethodDeclaration(final EnumSet<Modifier> modifiers, final Type type, final String name) {
+        this(null, modifiers, new NodeList<>(), new NodeList<>(), type, new SimpleName(name), new NodeList<>(), new NodeList<>(), new BlockStmt(), null);
     }
 
-    public void setParameters(final List<Parameter> parameters) {
-		this.parameters = parameters;
-		setAsParentNodeOf(this.parameters);
-	}
-
-	public void setThrows(final List<NameExpr> throws_) {
-		this.throws_ = throws_;
-		setAsParentNodeOf(this.throws_);
-	}
-
-	public void setType(final Type type) {
-		this.type = type;
-		setAsParentNodeOf(this.type);
-	}
-
-	public void setTypeParameters(final List<TypeParameter> typeParameters) {
-		this.typeParameters = typeParameters;
-		setAsParentNodeOf(typeParameters);
-	}
-
-
-    public boolean isDefault() {
-        return isDefault;
+    public MethodDeclaration(final EnumSet<Modifier> modifiers, final String name, final Type type, final NodeList<Parameter> parameters) {
+        this(null, modifiers, new NodeList<>(), new NodeList<>(), type, new SimpleName(name), parameters, new NodeList<>(), new BlockStmt(), null);
     }
 
-    public void setDefault(boolean isDefault) {
-        this.isDefault = isDefault;
+    public MethodDeclaration(final EnumSet<Modifier> modifiers, final NodeList<AnnotationExpr> annotations, final NodeList<TypeParameter> typeParameters, final Type type, final SimpleName name, final NodeList<Parameter> parameters, final NodeList<ReferenceType> thrownExceptions, final BlockStmt body) {
+        this(null, modifiers, annotations, typeParameters, type, name, parameters, thrownExceptions, body, null);
     }
 
+    @AllFieldsConstructor
+    public MethodDeclaration(final EnumSet<Modifier> modifiers, final NodeList<AnnotationExpr> annotations, final NodeList<TypeParameter> typeParameters, final Type type, final SimpleName name, final NodeList<Parameter> parameters, final NodeList<ReferenceType> thrownExceptions, final BlockStmt body, ReceiverParameter receiverParameter) {
+        this(null, modifiers, annotations, typeParameters, type, name, parameters, thrownExceptions, body, receiverParameter);
+    }
 
-    @Override
-    public String getDeclarationAsString() {
-        return getDeclarationAsString(true, true, true);
+    /**
+     * @deprecated this constructor allows you to set "isDefault", but this is no longer a field of this node, but simply one of the modifiers. Use setDefault(boolean) or add DEFAULT to the modifiers set.
+     */
+    @Deprecated
+    public MethodDeclaration(final EnumSet<Modifier> modifiers, final NodeList<AnnotationExpr> annotations, final NodeList<TypeParameter> typeParameters, final Type type, final SimpleName name, final boolean isDefault, final NodeList<Parameter> parameters, final NodeList<ReferenceType> thrownExceptions, final BlockStmt body) {
+        this(null, modifiers, annotations, typeParameters, type, name, parameters, thrownExceptions, body, null);
+        setDefault(isDefault);
+    }
+
+    /**
+     * This constructor is used by the parser and is considered private.
+     */
+    @Generated("com.github.javaparser.generator.core.node.MainConstructorGenerator")
+    public MethodDeclaration(TokenRange tokenRange, EnumSet<Modifier> modifiers, NodeList<AnnotationExpr> annotations, NodeList<TypeParameter> typeParameters, Type type, SimpleName name, NodeList<Parameter> parameters, NodeList<ReferenceType> thrownExceptions, BlockStmt body, ReceiverParameter receiverParameter) {
+        super(tokenRange, modifiers, annotations, typeParameters, name, parameters, thrownExceptions, receiverParameter);
+        setType(type);
+        setBody(body);
+        customInitialization();
     }
 
     @Override
-    public String getDeclarationAsString(boolean includingModifiers, boolean includingThrows) {
-        return getDeclarationAsString(includingModifiers, includingThrows, true);
+    @Generated("com.github.javaparser.generator.core.node.AcceptGenerator")
+    public <R, A> R accept(final GenericVisitor<R, A> v, final A arg) {
+        return v.visit(this, arg);
     }
-    
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.AcceptGenerator")
+    public <A> void accept(final VoidVisitor<A> v, final A arg) {
+        v.visit(this, arg);
+    }
+
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public Optional<BlockStmt> getBody() {
+        return Optional.ofNullable(body);
+    }
+
+    /**
+     * Sets the body
+     *
+     * @param body the body, can be null
+     * @return this, the MethodDeclaration
+     */
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public MethodDeclaration setBody(final BlockStmt body) {
+        if (body == this.body) {
+            return (MethodDeclaration) this;
+        }
+        notifyPropertyChange(ObservableProperty.BODY, this.body, body);
+        if (this.body != null)
+            this.body.setParentNode(null);
+        this.body = body;
+        setAsParentNodeOf(body);
+        return this;
+    }
+
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public Type getType() {
+        return type;
+    }
+
+    @Generated("com.github.javaparser.generator.core.node.PropertyGenerator")
+    public MethodDeclaration setType(final Type type) {
+        assertNotNull(type);
+        if (type == this.type) {
+            return (MethodDeclaration) this;
+        }
+        notifyPropertyChange(ObservableProperty.TYPE, this.type, type);
+        if (this.type != null)
+            this.type.setParentNode(null);
+        this.type = type;
+        setAsParentNodeOf(type);
+        return this;
+    }
+
+    @Override
+    public MethodDeclaration setModifiers(final EnumSet<Modifier> modifiers) {
+        return super.setModifiers(modifiers);
+    }
+
+    @Override
+    public MethodDeclaration setName(final SimpleName name) {
+        return super.setName(name);
+    }
+
+    @Override
+    public MethodDeclaration setParameters(final NodeList<Parameter> parameters) {
+        return super.setParameters(parameters);
+    }
+
+    @Override
+    public MethodDeclaration setThrownExceptions(final NodeList<ReferenceType> thrownExceptions) {
+        return super.setThrownExceptions(thrownExceptions);
+    }
+
+    @Override
+    public MethodDeclaration setTypeParameters(final NodeList<TypeParameter> typeParameters) {
+        return super.setTypeParameters(typeParameters);
+    }
+
     /**
      * The declaration returned has this schema:
-     *
+     * <p>
      * [accessSpecifier] [static] [abstract] [final] [native]
      * [synchronized] returnType methodName ([paramType [paramName]])
      * [throws exceptionsList]
+     *
      * @return method declaration as String
      */
     @Override
     public String getDeclarationAsString(boolean includingModifiers, boolean includingThrows, boolean includingParameterName) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (includingModifiers) {
-            AccessSpecifier accessSpecifier = ModifierSet.getAccessSpecifier(getModifiers());
-            sb.append(accessSpecifier.getCodeRepresenation());
+            AccessSpecifier accessSpecifier = getAccessSpecifier(getModifiers());
+            sb.append(accessSpecifier.asString());
             sb.append(accessSpecifier == AccessSpecifier.DEFAULT ? "" : " ");
-            if (ModifierSet.isStatic(getModifiers())){
+            if (getModifiers().contains(STATIC)) {
                 sb.append("static ");
             }
-            if (ModifierSet.isAbstract(getModifiers())){
+            if (getModifiers().contains(ABSTRACT)) {
                 sb.append("abstract ");
             }
-            if (ModifierSet.isFinal(getModifiers())){
+            if (getModifiers().contains(FINAL)) {
                 sb.append("final ");
             }
-            if (ModifierSet.isNative(getModifiers())){
+            if (getModifiers().contains(NATIVE)) {
                 sb.append("native ");
             }
-            if (ModifierSet.isSynchronized(getModifiers())){
+            if (getModifiers().contains(SYNCHRONIZED)) {
                 sb.append("synchronized ");
             }
         }
-        // TODO verify it does not print comments connected to the type
-        sb.append(getType().toStringWithoutComments());
+        sb.append(getType().toString(prettyPrinterNoCommentsConfiguration));
         sb.append(" ");
         sb.append(getName());
         sb.append("(");
         boolean firstParam = true;
-        for (Parameter param : getParameters())
-        {
+        for (Parameter param : getParameters()) {
             if (firstParam) {
                 firstParam = false;
             } else {
                 sb.append(", ");
             }
             if (includingParameterName) {
-                sb.append(param.toStringWithoutComments());
+                sb.append(param.toString(prettyPrinterNoCommentsConfiguration));
             } else {
-                sb.append(param.getType().toStringWithoutComments());
+                sb.append(param.getType().toString(prettyPrinterNoCommentsConfiguration));
                 if (param.isVarArgs()) {
-                	sb.append("...");
+                    sb.append("...");
                 }
             }
         }
         sb.append(")");
-        if (includingThrows) {
-            boolean firstThrow = true;
-            for (NameExpr thr : getThrows()) {
-                if (firstThrow) {
-                    firstThrow = false;
-                    sb.append(" throws ");
-                } else {
-                    sb.append(", ");
-                }
-                sb.append(thr.toStringWithoutComments());
-            }
-        }
+        sb.append(appendThrowsIfRequested(includingThrows));
         return sb.toString();
     }
 
-    @Override
-    public void setJavaDoc(JavadocComment javadocComment) {
-        this.javadocComment = javadocComment;
+    public boolean isNative() {
+        return getModifiers().contains(NATIVE);
+    }
+
+    public boolean isSynchronized() {
+        return getModifiers().contains(SYNCHRONIZED);
+    }
+
+    public boolean isDefault() {
+        return getModifiers().contains(DEFAULT);
+    }
+
+    public MethodDeclaration setNative(boolean set) {
+        return setModifier(NATIVE, set);
+    }
+
+    public MethodDeclaration setSynchronized(boolean set) {
+        return setModifier(SYNCHRONIZED, set);
+    }
+
+    public MethodDeclaration setDefault(boolean set) {
+        return setModifier(DEFAULT, set);
     }
 
     @Override
-    public JavadocComment getJavaDoc() {
-        return javadocComment;
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
+    public boolean remove(Node node) {
+        if (node == null)
+            return false;
+        if (body != null) {
+            if (node == body) {
+                removeBody();
+                return true;
+            }
+        }
+        return super.remove(node);
     }
 
-    private JavadocComment javadocComment;
+    @Generated("com.github.javaparser.generator.core.node.RemoveMethodGenerator")
+    public MethodDeclaration removeBody() {
+        return setBody((BlockStmt) null);
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.CloneGenerator")
+    public MethodDeclaration clone() {
+        return (MethodDeclaration) accept(new CloneVisitor(), null);
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.GetMetaModelGenerator")
+    public MethodDeclarationMetaModel getMetaModel() {
+        return JavaParserMetaModel.methodDeclarationMetaModel;
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.ReplaceMethodGenerator")
+    public boolean replace(Node node, Node replacementNode) {
+        if (node == null)
+            return false;
+        if (body != null) {
+            if (node == body) {
+                setBody((BlockStmt) replacementNode);
+                return true;
+            }
+        }
+        if (node == type) {
+            setType((Type) replacementNode);
+            return true;
+        }
+        return super.replace(node, replacementNode);
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.TypeCastingGenerator")
+    public boolean isMethodDeclaration() {
+        return true;
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.TypeCastingGenerator")
+    public MethodDeclaration asMethodDeclaration() {
+        return this;
+    }
+
+    @Generated("com.github.javaparser.generator.core.node.TypeCastingGenerator")
+    public void ifMethodDeclaration(Consumer<MethodDeclaration> action) {
+        action.accept(this);
+    }
+
+    @Override
+    public ResolvedMethodDeclaration resolve() {
+        return getSymbolResolver().resolveDeclaration(this, ResolvedMethodDeclaration.class);
+    }
+
+    @Override
+    @Generated("com.github.javaparser.generator.core.node.TypeCastingGenerator")
+    public Optional<MethodDeclaration> toMethodDeclaration() {
+        return Optional.of(this);
+    }
 }

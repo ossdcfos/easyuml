@@ -2,8 +2,9 @@ package org.uml.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Abstract class representing a container which can contain some components.
@@ -25,7 +26,7 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     /**
      * Components contained in the container.
      */
-    protected LinkedHashSet<T> components = new LinkedHashSet<>();
+    protected List<T> components = new ArrayList();
         
     /**
      * Property change support and related methods.
@@ -73,6 +74,24 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
         components.add(component);
         pcs.firePropertyChange("ADD_COMPONENT", null, component);
     }
+    
+    public void updateComponentOrder(List<T> list) {
+        components.clear();
+        for (T component : list) {
+            components.add(component);
+        }
+        pcs.firePropertyChange("COMPONENT_ORDER", null, this);
+    }
+    
+    public void moveUpComponent(T component) {
+        for (int i=1;i<components.size();i++) {
+            if (components.get(i) == component) {
+                components.set(i, components.get(i-1));
+                components.set(i-1, component);
+                break;
+            }
+        }
+    }
 
     /**
      * Removes the given component from the container.
@@ -83,6 +102,15 @@ public abstract class ContainerBase<T extends INameable & IHasSignature> impleme
     public void removeComponentFromContainer(T component) {
         components.remove(component);
         pcs.firePropertyChange("REMOVE_COMPONENT", null, component);
+    }
+    
+    /**
+     * Remove all components from the container
+     * 
+     * Does not fire any event
+     */
+    public void removeAllComponentsFromContainer() {
+        components.clear();
     }
 
     /**

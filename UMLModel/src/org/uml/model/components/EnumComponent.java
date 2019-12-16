@@ -1,6 +1,8 @@
 package org.uml.model.components;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import org.uml.model.members.Literal;
 import org.uml.model.members.MemberBase;
 
@@ -17,7 +19,7 @@ public class EnumComponent extends ComponentBase {
     /**
      * Set of literals this enum contains.
      */
-    private LinkedHashSet<Literal> literals;
+    private List<Literal> literals;
 
     /**
      * Default constructor. Sets name to default value.
@@ -38,7 +40,7 @@ public class EnumComponent extends ComponentBase {
     // Used when reverse engineering
     public EnumComponent(String name) {
         super(name);
-        literals = new LinkedHashSet<>();
+        literals = new ArrayList();
     }
 
     /**
@@ -47,7 +49,7 @@ public class EnumComponent extends ComponentBase {
      * @return HashSet of literals contained
      */
     public LinkedHashSet<Literal> getLiterals() {
-        return literals;
+        return new LinkedHashSet<Literal>(literals);
     }
 
     /**
@@ -76,4 +78,37 @@ public class EnumComponent extends ComponentBase {
         if (member instanceof Literal) literals.remove((Literal) member);
 //        else throw new RuntimeException("Removing unsupported member: " + member.toString());
     }
+    
+    @Override
+    public boolean moveUpMember(MemberBase member) {
+        if (member instanceof Literal) {
+            for (int i=1;i<literals.size();i++) {
+                if (literals.get(i) == member) {
+                    MemberBase previous = literals.get(i-1);
+                    literals.set(i, (Literal)previous);
+                    literals.set(i-1, (Literal)member);
+                    pcs.firePropertyChange("MOVE_FIELD", null, member);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean moveDownMember(MemberBase member) {
+        if (member instanceof Literal) {
+            for (int i=0;i<literals.size()-1;i++) {
+                if (literals.get(i) == member) {
+                    MemberBase next = literals.get(i+1);
+                    literals.set(i, (Literal)next);
+                    literals.set(i+1, (Literal)member);
+                    pcs.firePropertyChange("MOVE_FIELD", null, member);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }    
+     
 }

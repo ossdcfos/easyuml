@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.List;
 import org.uml.model.ClassDiagram;
 import org.uml.model.ContainerBase;
+import org.uml.model.GenerationSetting;
 import org.uml.model.IHasSignature;
 import org.uml.model.INameable;
 import org.uml.model.Visibility;
@@ -38,6 +39,16 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     private String parentPackage;
 
     /**
+     * Parent package component (e.g., as visually seen on screen)
+     */
+    private PackageComponent componentPackage;
+    
+    /**
+     * Enable / disable code generation
+     */
+    private GenerationSetting      generation;
+        
+    /**
      * Visibility of the component. Can be public, private, package, protected in general, but
      * depends on the actual component.
      */
@@ -54,7 +65,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
     /**
      * Location of the component on the diagram.
      */
-    private Point location;
+    //private Point location;
     /**
      * Bounds of the component on the diagram.
      */
@@ -74,6 +85,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         super(name);
         parentPackage = "";
         visibility = Visibility.PUBLIC;
+        generation = GenerationSetting.AUTO;
     }
 
     /**
@@ -84,7 +96,19 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @param member
      */
     public abstract void removeMember(MemberBase member);
+    
+    /**
+     * Move up the given member, if possible.
+     * @param member 
+     */
+    public abstract boolean moveUpMember(MemberBase member);
 
+    /**
+     * Move up the given member, if possible.
+     * @param member 
+     */
+    public abstract boolean moveDownMember(MemberBase member);
+    
     /**
      * Returns members that this component has.
      *
@@ -122,7 +146,10 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @return point representing X and Y coordinates
      */
     public Point getLocation() {
-        return location;
+        if (bounds == null) {
+            return null;
+        }
+        return bounds.getLocation();
     }
 
     /**
@@ -131,7 +158,10 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @param location point representing X and Y coordinates of the new location
      */
     public void setLocation(Point location) {
-        this.location = location;
+        if (bounds == null) {
+            bounds = new Rectangle(0,0,0,0);
+        }
+        bounds.setLocation(location);
     }
 
     // TODO bounds
@@ -164,6 +194,46 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         pcs.firePropertyChange("parentPackage", oldParentPackage, parentPackage);
     }
 
+    /**
+     * Returns the component package of the component.
+     *
+     * @return component package
+     */
+    public PackageComponent getComponentPackage() {
+        return componentPackage;
+    }
+
+    /**
+     * Sets component package of the component. 
+     *
+     * @param componentPackage
+     */
+    public void setComponentPackage(PackageComponent componentPackage) {
+        this.componentPackage = componentPackage;
+    }        
+        
+    /**
+     * Returns the full parent package of the component, including
+     * component packages inclusions
+     *
+     * @return full parent package
+     */
+    public String getFullParentPackage() {
+        if (componentPackage == null)
+            return parentPackage;
+        String fullParentPackage = componentPackage.getFullParentPackage();
+        if (fullParentPackage == null || fullParentPackage.isEmpty()) {
+            fullParentPackage = componentPackage.getName();
+        }
+        else {
+            fullParentPackage = fullParentPackage+"."+componentPackage.getName();
+        }
+        if (parentPackage == null || parentPackage.isEmpty()) {
+            return fullParentPackage;
+        }
+        return fullParentPackage+"."+parentPackage;
+    }
+        
     /**
      * Returns the visibility of this component.
      *
@@ -221,12 +291,17 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      */
     @Override
     public String getSignature() {
-        if (getParentPackage().equals("")) {
+        if (getFullParentPackage().equals("")) {
             return getName();
         } else {
-            return getParentPackage() + "." + getName();
+            return getFullParentPackage() + "." + getName();
         }
     }
+    
+    @Override
+    public String getUMLSignature() {
+        return getSignature();
+    }    
 
     /**
      * Makes a signature with a potential new name so that we can check if the component
@@ -236,10 +311,10 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @return
      */
     public String deriveSignatureFromNewName(String newName) {
-        if (getParentPackage().equals("")) {
+        if (getFullParentPackage().equals("")) {
             return newName;
         } else {
-            return getParentPackage() + "." + newName;
+            return getFullParentPackage() + "." + newName;
         }
     }
 
@@ -289,7 +364,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
      * @param newComponentName new type
      */
     private void updateTypes(ComponentBase component, String oldComponentName, String newComponentName) {
-        for (MemberBase member : component.getMembers()) {
+         for (MemberBase member : component.getMembers()) {
             if (member instanceof Constructor && component == this) {
                 member.setName(newComponentName);
             } else if (member instanceof Method) {
@@ -298,7 +373,7 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
                 method.setType(newMethodType);
                 for (MethodArgument argument : method.getArguments()) {
                     String newArgumentType = argument.getType().replaceAll("(?<!\\w)" + oldComponentName + "(?!\\w)", newComponentName);
-                    method.setType(newArgumentType);
+                    argument.setType(newArgumentType);
                 }
             } else if (member instanceof Field) {
                 Field field = (Field) member;
@@ -317,4 +392,38 @@ public abstract class ComponentBase extends ContainerBase<MemberBase> implements
         }
         return relevantRelations;
     }
+    
+
+    public GenerationSetting getGeneration() {
+        return generation;
+    }
+
+    public void setGeneration(GenerationSetting generation) {
+        GenerationSetting oldGeneration = this.generation;
+        this.generation = generation;
+        pcs.firePropertyChange("generation", oldGeneration, generation);
+    }    
+    
+    public boolean generationRequested() {
+        GenerationSetting setting = generation;
+        if (setting == GenerationSetting.AUTO) {
+            return true;
+        }
+        if (setting == GenerationSetting.ENABLED) {
+            return true;
+        }
+        if (setting == GenerationSetting.DISABLED) {
+            return false;
+        }
+        if (setting == GenerationSetting.NOTPUBLIC) {
+            return visibility != Visibility.PUBLIC;
+        }
+        if (setting == GenerationSetting.PRIVATE) {
+            return visibility == Visibility.PRIVATE;
+        }
+        if (setting == GenerationSetting.PROTECTED) {
+            return visibility == Visibility.PROTECTED;
+        }
+        return false;
+    }        
 }

@@ -20,11 +20,13 @@ import org.openide.util.WeakListeners;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.uml.model.GenerationSetting;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
 import org.uml.model.Visibility;
+import org.uml.model.components.PackageComponent;
 
 /**
  *
@@ -99,6 +101,9 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         if (component instanceof EnumComponent) {
             return ImageUtilities.loadImage(iconFolderPath + "enum.png");
         }
+        if (component instanceof PackageComponent) {
+            return ImageUtilities.loadImage(iconFolderPath + "package.png");
+        }
         return super.getIcon(type);
     }
 
@@ -119,6 +124,10 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
         modifiersProperties.setName("modifiersSet");
         modifiersProperties.setDisplayName("Modifiers");
 
+        Sheet.Set generationProperties = Sheet.createPropertiesSet();
+        generationProperties.setName("generationSet");
+        generationProperties.setDisplayName("Code generation");
+        
         try {
             Property<String> nameProp = new PropertySupport.Reflection<>(this, String.class, "getComponentName", "setComponentName");
             nameProp.setName("Name");
@@ -127,6 +136,10 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
             Property<String> packageProp = new PropertySupport.Reflection<>(this, String.class, "getParentPackage", "setParentPackage");
             packageProp.setName("Package");
             generalProperties.put(packageProp);
+            
+            Property<GenerationSetting> generationProp = new PropertySupport.Reflection<>(component, GenerationSetting.class, "getGeneration", "setGeneration");
+            generationProp.setName("Generation");
+            generationProperties.put(generationProp);
 
             if (component instanceof ClassComponent || component instanceof InterfaceComponent) {
 
@@ -147,6 +160,15 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
                     Property<Boolean> isAbstractProp = new PropertySupport.Reflection<>(classComponent, boolean.class, "isAbstract", "setAbstract");
                     isAbstractProp.setName("abstract");
                     modifiersProperties.put(isAbstractProp);
+                    
+                    Property<GenerationSetting> getterGenerationProp = new PropertySupport.Reflection<>(component, GenerationSetting.class, "getGetterGeneration", "setGetterGeneration");
+                    getterGenerationProp.setName("Getters");
+                    generationProperties.put(getterGenerationProp);
+                    
+                    Property<GenerationSetting> setterGenerationProp = new PropertySupport.Reflection<>(component, GenerationSetting.class, "getSetterGeneration", "setSetterGeneration");
+                    setterGenerationProp.setName("Setters");
+                    generationProperties.put(setterGenerationProp);
+                    
                 } else if (component instanceof InterfaceComponent) {
                     InterfaceComponent interfaceComponent = (InterfaceComponent) component;
                     Property<Boolean> isStaticProp = new PropertySupport.Reflection<>(interfaceComponent, boolean.class, "isStatic", "setStatic");
@@ -160,6 +182,7 @@ public class ComponentNode extends AbstractNode implements PropertyChangeListene
 
         sheet.put(generalProperties);
         sheet.put(modifiersProperties);
+        sheet.put(generationProperties);
         return sheet;
     }
 

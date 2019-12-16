@@ -1,16 +1,13 @@
 package org.uml.newcode.components;
 
 import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseException;
-import com.github.javaparser.Token;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FileUtils;
-import org.openide.util.Exceptions;
 import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;
 import org.uml.model.components.ComponentBase;
 
@@ -22,8 +19,8 @@ import org.uml.model.components.ComponentBase;
  */
 public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
     
-    protected abstract String generateCode(T component);
-    protected abstract String updateCode(T component, MyClassDiagramRenameTable renames, CompilationUnit cu);
+    protected abstract CompilationUnit generateCode(T component);
+    protected abstract CompilationUnit updateCode(T component, MyClassDiagramRenameTable renames, CompilationUnit cu);
 
     /**
      * Generates the code of the component to the given path.
@@ -34,13 +31,13 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
      */
     public void generateOrUpdateCode(T component, MyClassDiagramRenameTable renames, String sourcePath) {
 
-        String code = "";
         File sourceFile;
         // If the component has been renamed, the source file should have the old name
         if (renames.getComponentRenames().contains(component)) {  //-> new to old
             String oldFullQualifiedName = renames.getComponentRenames().getOriginalSignature(component);
             String pathToOldFile = sourcePath + oldFullQualifiedName.replace(".", File.separator) + ".java";
             sourceFile = new File(pathToOldFile);
+            System.out.println("Component "+component.getSignature()+" renamed from "+pathToOldFile);
         } // If the component has not been renamed, the source should have the new name
         else {
             String fullQualifiedName = component.getSignature();
@@ -49,35 +46,33 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
         }
 
         // If source exists, update code
+        CompilationUnit code = null;
+        boolean lexicallyPreserved = false;
         if (sourceFile.exists()) {
             try {
                 CompilationUnit cu;
                 try (FileReader fileReader = new FileReader(sourceFile)) {
-                    // TODO doesn't parse comments, as there is trobule generating them back to code
-                    // In the current parser implementation, comments need to be anchored to some element,
-                    // so the comments which are freely writen throughout the code are not well placed
-                    // when generating the code.
-                    cu = JavaParser.parse(fileReader, false);
+                    cu = JavaParser.parse(fileReader);
+                    LexicalPreservingPrinter.setup(cu);
+                    lexicallyPreserved = true;
                 }
                 code = updateCode(component, renames, cu);
-                sourceFile.delete();
-            } catch (ParseException ex) {
-                Token tok = ex.currentToken;
-                JOptionPane.showMessageDialog(null, "Malformed code at line " + tok.beginLine + " column " + tok.beginColumn + ". Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (FileNotFoundException ex) {
-                // Already checked for file existance, but if file is somehow deleted, generate code.
-                code = generateCode(component);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "IOException!", "Error", JOptionPane.ERROR_MESSAGE);
-                Exceptions.printStackTrace(ex);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Parse problem in "+sourceFile+". Cannot update!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
         } // If source does not exist, generate code from scratch
         else {
             code = generateCode(component);
         }
+        
+        if (code == null) {
+            return;
+        }
 
         // Add package to the path
-        String packag = component.getParentPackage();
+        String packag = component.getFullParentPackage();
         String fullPath;
         if (!packag.equals("")) {
             String packagePath = packag.replace(".", File.separator);
@@ -85,15 +80,41 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
         } else {
             fullPath = sourcePath;
         }
+        
+        String name = component.getName();
+        // Try to generate while preserving presentation
+        String output;
+        if (lexicallyPreserved) {
+            try {
+                output = LexicalPreservingPrinter.print(code);
+            }
+            catch(Exception ex) {
+                ex.printStackTrace();
+                int result = JOptionPane.showConfirmDialog(null, 
+                    "Code for "+name+" cannot be generated with lexical preservation.\n"
+                  + "Many spaces and line returnes will diseapear.\n"
+                  + "Generate code anyway ?",
+                    "Problem in code generation",
+                    JOptionPane.YES_NO_OPTION);
+                if (result != JOptionPane.YES_OPTION)
+                    return;
+                output = code.toString();
+            }
+        }
+        else {
+            output = code.toString();
+        }
 
         // Create path folder structure
         new File(fullPath).mkdirs();
 
-        String name = component.getName();
         // Write-out the source file
         File outSourceFile = new File(fullPath + name + ".java");
         try {
-            FileUtils.writeStringToFile(outSourceFile, code);
+            if (sourceFile.exists()) {
+                sourceFile.delete();
+            }
+            FileUtils.writeStringToFile(outSourceFile, output);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Cannot write file " + outSourceFile.getName() + "!", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -108,4 +129,5 @@ public abstract class ComponentCodeGeneratorBase<T extends ComponentBase> {
 //        } catch (FileNotFoundException ex) {
 //        }
     }
+    
 }

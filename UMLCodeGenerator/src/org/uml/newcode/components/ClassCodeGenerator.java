@@ -1,12 +1,12 @@
 package org.uml.newcode.components;
 
+import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.ModifierSet;
 import com.github.javaparser.ast.body.TypeDeclaration;
-import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,18 +34,22 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
         if (instance == null) instance = new ClassCodeGenerator();
         return instance;
     }
-
+    
     @Override
-    protected String generateCode(ClassComponent component) {
+    protected CompilationUnit generateCode(ClassComponent component) {
+        System.out.println("Generate class "+component.getSignature());
         CompilationUnit cu = new CompilationUnit();
-        cu.setTypes(new LinkedList<TypeDeclaration>());
-        if (!component.getParentPackage().isEmpty()) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+        cu.setTypes(new NodeList<TypeDeclaration<?>>());
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackageDeclaration(parentPackage);
+        }
         createSkeleton(component, cu);
         FieldCodeGenerator.createFields(component, cu);
         ConstructorCodeGenerator.createConstructors(component, cu);
         MethodCodeGenerator.createMethods(component, cu);
 
-        return cu.toString();
+        return cu;
     }
 
     private static void createSkeleton(ClassComponent component, CompilationUnit cu) {
@@ -53,35 +57,38 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
         declaration.setName(component.getName());
         switch (component.getVisibility()) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PUBLIC));
+                declaration.addModifier(Modifier.PUBLIC);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PROTECTED));
+                declaration.addModifier(Modifier.PROTECTED);
                 break;
             case PRIVATE:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PRIVATE));
+                declaration.addModifier(Modifier.PRIVATE);
                 break;
         }
-        if (component.isAbstract()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.ABSTRACT));
-        if (component.isStatic()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
-        if (component.isFinal()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.FINAL));
+        if (component.isAbstract()) 
+            declaration.addModifier(Modifier.ABSTRACT);
+        if (component.isStatic()) 
+            declaration.addModifier(Modifier.STATIC);
+        if (component.isFinal()) 
+            declaration.addModifier(Modifier.FINAL);
 
         ComponentBase extendedClass = getExtendedClass(component);
         if (extendedClass != null) {
-            List<ClassOrInterfaceType> extended = new LinkedList<>();
-            extended.add(new ClassOrInterfaceType(extendedClass.getName()));
-            declaration.setExtends(extended);
+            NodeList<ClassOrInterfaceType> extended = new NodeList();
+            extended.add(JavaParser.parseClassOrInterfaceType(extendedClass.getName()));
+            declaration.setExtendedTypes(extended);
         }
         List<ComponentBase> implementedInterfaces = getImplementedInterfaces(component);
         if (!implementedInterfaces.isEmpty()) {
-            List<ClassOrInterfaceType> implemented = new LinkedList<>();
+            NodeList<ClassOrInterfaceType> implemented = new NodeList();
             for (ComponentBase implementedComponent : implementedInterfaces) {
-                implemented.add(new ClassOrInterfaceType(implementedComponent.getName()));
+                implemented.add(JavaParser.parseClassOrInterfaceType(implementedComponent.getName()));
             }
-            declaration.setImplements(implemented);
+            declaration.setImplementedTypes(implemented);
         }
 
-        declaration.setMembers(new LinkedList<BodyDeclaration>());
+        declaration.setMembers(new NodeList<BodyDeclaration<?>>());
 
         cu.getTypes().add(declaration);
     }
@@ -106,18 +113,22 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
     }
 
     @Override
-    protected String updateCode(ClassComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
-        if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+    protected CompilationUnit updateCode(ClassComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
+        System.out.println("Update class "+component.getSignature());
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackageDeclaration(parentPackage);
+        }
         updateSkeleton(component, cu);
         FieldCodeGenerator.updateFields(component, renames.getComponentRenames().getMembersRenameTable(component), renames.getRelationRenames(), cu);
         ConstructorCodeGenerator.updateConstructors(component, renames.getComponentRenames().getMembersRenameTable(component), cu);
         MethodCodeGenerator.updateMethods(component, renames.getComponentRenames().getMembersRenameTable(component), cu);
 
-        return cu.toString();
+        return cu;
     }
-
+    
     private static void updateSkeleton(ClassComponent component, CompilationUnit cu) {
-        List<TypeDeclaration> types = cu.getTypes();
+        NodeList<TypeDeclaration<?>> types = cu.getTypes();
         for (TypeDeclaration type : types) {
             if (type instanceof ClassOrInterfaceDeclaration) {
                 ClassOrInterfaceDeclaration declaration = (ClassOrInterfaceDeclaration) type;
@@ -125,27 +136,18 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
                 
                 updateVisibility(declaration, component.getVisibility());
                 
-                if (component.isAbstract()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.ABSTRACT));
-                else declaration.setModifiers(ModifierSet.removeModifier(declaration.getModifiers(), ModifierSet.ABSTRACT));
-                if (component.isFinal()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.FINAL));
-                else declaration.setModifiers(ModifierSet.removeModifier(declaration.getModifiers(), ModifierSet.FINAL));
-                if (component.isStatic()) declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.STATIC));
-                else declaration.setModifiers(ModifierSet.removeModifier(declaration.getModifiers(), ModifierSet.STATIC));
-
+                declaration.setModifier(Modifier.ABSTRACT, component.isAbstract());
+                declaration.setModifier(Modifier.FINAL, component.isFinal());
+                declaration.setModifier(Modifier.STATIC, component.isStatic());
+                
                 ComponentBase extendedClass = getExtendedClass(component);
                 if (extendedClass != null) {
-                    List<ClassOrInterfaceType> extended = new LinkedList<>();
-                    extended.add(new ClassOrInterfaceType(extendedClass.getName()));
-                    declaration.setExtends(extended);
+                    NodeList<ClassOrInterfaceType> extended = new NodeList();
+                    extended.add(JavaParser.parseClassOrInterfaceType(extendedClass.getName()));
+                    declaration.setExtendedTypes(extended);
                 }
-                List<ComponentBase> implementedInterfaces = getImplementedInterfaces(component);
-                if (!implementedInterfaces.isEmpty()) {
-                    List<ClassOrInterfaceType> implemented = new LinkedList<>();
-                    for (ComponentBase implementedComponent : implementedInterfaces) {
-                        implemented.add(new ClassOrInterfaceType(implementedComponent.getName()));
-                    }
-                    declaration.setImplements(implemented);
-                }
+                
+                updateImplementedInterfaces(component,declaration);
             }
             // Process only the first one
             // TODO what if there are more classes in one file
@@ -153,21 +155,57 @@ public class ClassCodeGenerator extends ComponentCodeGeneratorBase<ClassComponen
         }
     }
     
+    /**
+     * Update implemented inferfaces
+     * @param component
+     * @param declaration
+     * @return true if changes were made
+     */
+    private static boolean updateImplementedInterfaces(ClassComponent component,ClassOrInterfaceDeclaration declaration) 
+    {
+        NodeList<ClassOrInterfaceType> implementedTypes = declaration.getImplementedTypes();
+        List<ComponentBase> implementedInterfaces = getImplementedInterfaces(component);
+        if(implementedTypes.size() == implementedInterfaces.size()) {
+            boolean similar = true;
+            for (ComponentBase implementedComponent : implementedInterfaces) {
+                ClassOrInterfaceType type = JavaParser.parseClassOrInterfaceType(implementedComponent.getName());
+                boolean found = false;
+                for(ClassOrInterfaceType implementedType : implementedTypes) {
+                    if (implementedType.equals(type)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    similar = false;
+                    break;
+                }
+            }
+            if (similar) {
+                return false;
+            }
+        }
+        NodeList<ClassOrInterfaceType> implemented = new NodeList();
+        if (!implementedInterfaces.isEmpty()) {
+            for (ComponentBase implementedComponent : implementedInterfaces) {
+                implemented.add(JavaParser.parseClassOrInterfaceType(implementedComponent.getName()));
+            }
+        }
+        declaration.setImplementedTypes(implemented);
+        return true;
+    }
+    
     private static void updateVisibility(TypeDeclaration declaration, Visibility visibility) {
-        int modifiers = declaration.getModifiers();
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PUBLIC);
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PROTECTED);
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PRIVATE);
-
+        declaration.removeModifier(Modifier.PUBLIC,Modifier.PROTECTED,Modifier.PRIVATE);
         switch (visibility) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PUBLIC));
+                declaration.setModifier(Modifier.PUBLIC, true);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PROTECTED));
+                declaration.setModifier(Modifier.PROTECTED, true);
                 break;
             case PRIVATE:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PRIVATE));
+                declaration.setModifier(Modifier.PRIVATE, true);
                 break;
         }
     }

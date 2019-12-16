@@ -1,253 +1,319 @@
 /*
  * Copyright (C) 2007-2010 Júlio Vilmar Gesser.
- * Copyright (C) 2011, 2013-2015 The JavaParser Team.
+ * Copyright (C) 2011, 2013-2016 The JavaParser Team.
  *
  * This file is part of JavaParser.
  *
- * JavaParser is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * JavaParser can be used either under the terms of
+ * a) the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * b) the terms of the Apache License
+ *
+ * You should have received a copy of both licenses in LICENCE.LGPL and
+ * LICENCE.APACHE. Please refer to those files for details.
  *
  * JavaParser is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with JavaParser.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.github.javaparser.ast.visitor;
 
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.comments.BlockComment;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.comments.LineComment;
-import com.github.javaparser.ast.PackageDeclaration;
-import com.github.javaparser.ast.TypeParameter;
-import com.github.javaparser.ast.body.AnnotationDeclaration;
-import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
-import com.github.javaparser.ast.body.EmptyMemberDeclaration;
-import com.github.javaparser.ast.body.EmptyTypeDeclaration;
-import com.github.javaparser.ast.body.EnumConstantDeclaration;
-import com.github.javaparser.ast.body.EnumDeclaration;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.InitializerDeclaration;
 import com.github.javaparser.ast.comments.JavadocComment;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.MultiTypeParameter;
-import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.body.VariableDeclarator;
-import com.github.javaparser.ast.body.VariableDeclaratorId;
+import com.github.javaparser.ast.comments.LineComment;
 import com.github.javaparser.ast.expr.*;
-import com.github.javaparser.ast.stmt.AssertStmt;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.BreakStmt;
-import com.github.javaparser.ast.stmt.CatchClause;
-import com.github.javaparser.ast.stmt.ContinueStmt;
-import com.github.javaparser.ast.stmt.DoStmt;
-import com.github.javaparser.ast.stmt.EmptyStmt;
-import com.github.javaparser.ast.stmt.ExplicitConstructorInvocationStmt;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
-import com.github.javaparser.ast.stmt.ForStmt;
-import com.github.javaparser.ast.stmt.ForeachStmt;
-import com.github.javaparser.ast.stmt.IfStmt;
-import com.github.javaparser.ast.stmt.LabeledStmt;
-import com.github.javaparser.ast.stmt.ReturnStmt;
-import com.github.javaparser.ast.stmt.SwitchEntryStmt;
-import com.github.javaparser.ast.stmt.SwitchStmt;
-import com.github.javaparser.ast.stmt.SynchronizedStmt;
-import com.github.javaparser.ast.stmt.ThrowStmt;
-import com.github.javaparser.ast.stmt.TryStmt;
-import com.github.javaparser.ast.stmt.TypeDeclarationStmt;
-import com.github.javaparser.ast.stmt.WhileStmt;
+import com.github.javaparser.ast.modules.*;
+import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.*;
+import javax.annotation.Generated;
 
 /**
  * A visitor that has a return value.
- * 
+ *
  * @author Julio Vilmar Gesser
  */
 public interface GenericVisitor<R, A> {
 
-	//- Compilation Unit ----------------------------------
+    // - Compilation Unit ----------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(CompilationUnit n, A arg);
 
-	public R visit(CompilationUnit n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(PackageDeclaration n, A arg);
 
-	public R visit(PackageDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(TypeParameter n, A arg);
 
-	public R visit(ImportDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(LineComment n, A arg);
 
-	public R visit(TypeParameter n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(BlockComment n, A arg);
 
-	public R visit(LineComment n, A arg);
+    // - Body ----------------------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ClassOrInterfaceDeclaration n, A arg);
 
-	public R visit(BlockComment n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(EnumDeclaration n, A arg);
 
-	//- Body ----------------------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(EnumConstantDeclaration n, A arg);
 
-	public R visit(ClassOrInterfaceDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(AnnotationDeclaration n, A arg);
 
-	public R visit(EnumDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(AnnotationMemberDeclaration n, A arg);
 
-	public R visit(EmptyTypeDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(FieldDeclaration n, A arg);
 
-	public R visit(EnumConstantDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(VariableDeclarator n, A arg);
 
-	public R visit(AnnotationDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ConstructorDeclaration n, A arg);
 
-	public R visit(AnnotationMemberDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(MethodDeclaration n, A arg);
 
-	public R visit(FieldDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(Parameter n, A arg);
 
-	public R visit(VariableDeclarator n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(InitializerDeclaration n, A arg);
 
-	public R visit(VariableDeclaratorId n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(JavadocComment n, A arg);
 
-	public R visit(ConstructorDeclaration n, A arg);
+    // - Type ----------------------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ClassOrInterfaceType n, A arg);
 
-	public R visit(MethodDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(PrimitiveType n, A arg);
 
-	public R visit(Parameter n, A arg);
-	
-	public R visit(MultiTypeParameter n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ArrayType n, A arg);
 
-	public R visit(EmptyMemberDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ArrayCreationLevel n, A arg);
 
-	public R visit(InitializerDeclaration n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(IntersectionType n, A arg);
 
-	public R visit(JavadocComment n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(UnionType n, A arg);
 
-	//- Type ----------------------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(VoidType n, A arg);
 
-	public R visit(ClassOrInterfaceType n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(WildcardType n, A arg);
 
-	public R visit(PrimitiveType n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(UnknownType n, A arg);
 
-	public R visit(ReferenceType n, A arg);
+    // - Expression ----------------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ArrayAccessExpr n, A arg);
 
-	public R visit(VoidType n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ArrayCreationExpr n, A arg);
 
-	public R visit(WildcardType n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ArrayInitializerExpr n, A arg);
 
-	public R visit(UnknownType n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(AssignExpr n, A arg);
 
-	//- Expression ----------------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(BinaryExpr n, A arg);
 
-	public R visit(ArrayAccessExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(CastExpr n, A arg);
 
-	public R visit(ArrayCreationExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ClassExpr n, A arg);
 
-	public R visit(ArrayInitializerExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ConditionalExpr n, A arg);
 
-	public R visit(AssignExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(EnclosedExpr n, A arg);
 
-	public R visit(BinaryExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(FieldAccessExpr n, A arg);
 
-	public R visit(CastExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(InstanceOfExpr n, A arg);
 
-	public R visit(ClassExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(StringLiteralExpr n, A arg);
 
-	public R visit(ConditionalExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(IntegerLiteralExpr n, A arg);
 
-	public R visit(EnclosedExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(LongLiteralExpr n, A arg);
 
-	public R visit(FieldAccessExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(CharLiteralExpr n, A arg);
 
-	public R visit(InstanceOfExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(DoubleLiteralExpr n, A arg);
 
-	public R visit(StringLiteralExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(BooleanLiteralExpr n, A arg);
 
-	public R visit(IntegerLiteralExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(NullLiteralExpr n, A arg);
 
-	public R visit(LongLiteralExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(MethodCallExpr n, A arg);
 
-	public R visit(IntegerLiteralMinValueExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(NameExpr n, A arg);
 
-	public R visit(LongLiteralMinValueExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ObjectCreationExpr n, A arg);
 
-	public R visit(CharLiteralExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ThisExpr n, A arg);
 
-	public R visit(DoubleLiteralExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(SuperExpr n, A arg);
 
-	public R visit(BooleanLiteralExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(UnaryExpr n, A arg);
 
-	public R visit(NullLiteralExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(VariableDeclarationExpr n, A arg);
 
-	public R visit(MethodCallExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(MarkerAnnotationExpr n, A arg);
 
-	public R visit(NameExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(SingleMemberAnnotationExpr n, A arg);
 
-	public R visit(ObjectCreationExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(NormalAnnotationExpr n, A arg);
 
-	public R visit(QualifiedNameExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(MemberValuePair n, A arg);
 
-	public R visit(ThisExpr n, A arg);
+    // - Statements ----------------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ExplicitConstructorInvocationStmt n, A arg);
 
-	public R visit(SuperExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(LocalClassDeclarationStmt n, A arg);
 
-	public R visit(UnaryExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(AssertStmt n, A arg);
 
-	public R visit(VariableDeclarationExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(BlockStmt n, A arg);
 
-	public R visit(MarkerAnnotationExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(LabeledStmt n, A arg);
 
-	public R visit(SingleMemberAnnotationExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(EmptyStmt n, A arg);
 
-	public R visit(NormalAnnotationExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ExpressionStmt n, A arg);
 
-	public R visit(MemberValuePair n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(SwitchStmt n, A arg);
 
-	//- Statements ----------------------------------------
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(SwitchEntryStmt n, A arg);
 
-	public R visit(ExplicitConstructorInvocationStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(BreakStmt n, A arg);
 
-	public R visit(TypeDeclarationStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ReturnStmt n, A arg);
 
-	public R visit(AssertStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(IfStmt n, A arg);
 
-	public R visit(BlockStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(WhileStmt n, A arg);
 
-	public R visit(LabeledStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ContinueStmt n, A arg);
 
-	public R visit(EmptyStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(DoStmt n, A arg);
 
-	public R visit(ExpressionStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ForeachStmt n, A arg);
 
-	public R visit(SwitchStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ForStmt n, A arg);
 
-	public R visit(SwitchEntryStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ThrowStmt n, A arg);
 
-	public R visit(BreakStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(SynchronizedStmt n, A arg);
 
-	public R visit(ReturnStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(TryStmt n, A arg);
 
-	public R visit(IfStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(CatchClause n, A arg);
 
-	public R visit(WhileStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(LambdaExpr n, A arg);
 
-	public R visit(ContinueStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(MethodReferenceExpr n, A arg);
 
-	public R visit(DoStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(TypeExpr n, A arg);
 
-	public R visit(ForeachStmt n, A arg);
+    R visit(NodeList n, A arg);
 
-	public R visit(ForStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(Name n, A arg);
 
-	public R visit(ThrowStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(SimpleName n, A arg);
 
-	public R visit(SynchronizedStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ImportDeclaration n, A arg);
 
-	public R visit(TryStmt n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ModuleDeclaration n, A arg);
 
-	public R visit(CatchClause n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ModuleRequiresStmt n, A arg);
 
-    public R visit(LambdaExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ModuleExportsStmt n, A arg);
 
-    public R visit(MethodReferenceExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ModuleProvidesStmt n, A arg);
 
-    public R visit(TypeExpr n, A arg);
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ModuleUsesStmt n, A arg);
+
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ModuleOpensStmt n, A arg);
+
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(UnparsableStmt n, A arg);
+
+    @Generated("com.github.javaparser.generator.core.visitor.GenericVisitorGenerator")
+    R visit(ReceiverParameter n, A arg);
+
+    R visit(VarType n, A arg);
 }

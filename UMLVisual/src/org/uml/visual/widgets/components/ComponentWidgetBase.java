@@ -1,5 +1,6 @@
 package org.uml.visual.widgets.components;
 
+import java.awt.Color;
 import org.uml.visual.widgets.providers.ComponentAlignWithResizeStrategyProvider;
 import org.uml.visual.widgets.providers.ComponentAlignWithMoveStrategyProvider;
 import org.uml.visual.widgets.members.MemberWidgetBase;
@@ -28,8 +29,10 @@ import org.uml.model.components.ClassComponent;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.components.InterfaceComponent;
+import org.uml.model.components.PackageComponent;
 import org.uml.visual.themes.Theme;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.ResampledImageWidget;
 import org.uml.visual.widgets.actions.ComponentNameEditor;
 //import org.uml.visual.widgets.actions.ComponentWidgetKeyboardAction;
 import org.uml.visual.widgets.providers.ComponentConnectProvider;
@@ -45,7 +48,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
     protected final Widget headerWidget;
     protected Widget iconNameContainer = new Widget(getScene());
     protected static String iconFolderPath = "org/uml/visual/widgets/icons/";
-    protected ImageWidget iconWidget = new ImageWidget(getScene());
+    protected ResampledImageWidget iconWidget = new ResampledImageWidget(getScene());
     protected LabelWidget nameLabel;
 
     protected LinkedList<SeparatorWidget> separators = new LinkedList<>();
@@ -81,25 +84,34 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
         setLayout(LayoutFactory.createVerticalFlowLayout());
         setOpaque(true);
         setCheckClipping(true);
-        setBackground(getColorTheme().getDefaultColor());
 
         headerWidget = new Widget(scene); // mora ovako zbog layouta ne moze this 
-        headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0));
+        if (component instanceof PackageComponent) {
+            headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.LEFT_TOP, 0));
+            setBackground(getColorTheme().getBackgroundColor());
+        }
+        else {
+            setBackground(getColorTheme().getDefaultColor());
+            headerWidget.setLayout(LayoutFactory.createVerticalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 0));
+        }
         headerWidget.setBorder(EMPTY_CONTAINER_BORDER);
 
         iconWidget.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 3));
         iconWidget.setVisible(scene.isShowIcons());
+        iconWidget.setMaximumSize(new Dimension(12,12));
         if (component instanceof ClassComponent) {
             iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "class.png"));
         } else if (component instanceof InterfaceComponent) {
             iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "interface.png"));
         } else if (component instanceof EnumComponent) {
             iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "enum.png"));
+        } else if (component instanceof PackageComponent) {
+            iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "other/package.png"));
         }
         iconNameContainer.setLayout(LayoutFactory.createHorizontalFlowLayout());
         nameLabel = new LabelWidget(scene);
         nameLabel.setLabel(component.getName());
-        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12 + 3));
+        //nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12 + 3));
         nameLabel.setFont(scene.getFont().deriveFont(Font.BOLD));
         nameLabel.getActions().addAction(ActionFactory.createInplaceEditorAction(new ComponentNameEditor(this)));
 
@@ -154,7 +166,7 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 
         boolean focused = state.isFocused();
         boolean hovered = state.isHovered();
-
+        
         if (focused) {
             setBorder(getColorTheme().getSelectBorder());
             if (hovered) setBackground(getColorTheme().getHoverSelectColor());
@@ -162,15 +174,24 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
             for (SeparatorWidget separator : separators) {
                 separator.setForeground(getColorTheme().getSelectBorderColor());
             }
-        } else if (hovered) {
-            setBorder(getColorTheme().getHoverBorder());
-            setBackground(getColorTheme().getHoverColor());
-            for (SeparatorWidget separator : separators) {
-                separator.setForeground(getColorTheme().getHoverBorderColor());
+        } else if (!(component instanceof PackageComponent)) {
+            if (hovered) {
+                setBorder(getColorTheme().getHoverBorder());
+                setBackground(getColorTheme().getHoverColor());
+                for (SeparatorWidget separator : separators) {
+                    separator.setForeground(getColorTheme().getHoverBorderColor());
+                }
+            } else {
+                setBorder(getColorTheme().getDefaultBorder());
+                setBackground(getColorTheme().getDefaultColor());
+                for (SeparatorWidget separator : separators) {
+                    separator.setForeground(getColorTheme().getDefaultBorderColor());
+                }
             }
-        } else {
+        }
+        else {
             setBorder(getColorTheme().getDefaultBorder());
-            setBackground(getColorTheme().getDefaultColor());
+            setBackground(getColorTheme().getBackgroundColor());
             for (SeparatorWidget separator : separators) {
                 separator.setForeground(getColorTheme().getDefaultBorderColor());
             }
@@ -188,8 +209,8 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
 
     public void setName(String newName) {
         if (!getName().equals(newName)) {
-            if (component.getParentDiagram().signatureExists(component.getParentPackage() + "." + newName)) {
-                JOptionPane.showMessageDialog(getScene().getView(), "Name \"" + component.getParentPackage() + "." + newName + "\" already exists!");
+            if (component.getParentDiagram().signatureExists(component.getFullParentPackage() + "." + newName)) {
+                JOptionPane.showMessageDialog(getScene().getView(), "Name \"" + component.getFullParentPackage() + "." + newName + "\" already exists!");
             } else {
                 component.setName(newName);
             }
@@ -226,6 +247,15 @@ abstract public class ComponentWidgetBase extends Widget implements PropertyChan
             if (widget instanceof MemberContainerWidget) {
                 MemberContainerWidget mcw = (MemberContainerWidget) widget;
                 mcw.updateMemberDisplay(memberDisplayEnabled);
+            }
+        }
+    }
+    
+    public void updateAddMemberDisplay(boolean addMemberDisplayEnabled) {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof MemberContainerWidget) {
+                MemberContainerWidget mcw = (MemberContainerWidget) widget;
+                mcw.updateAddMemberDisplay(addMemberDisplayEnabled);
             }
         }
     }

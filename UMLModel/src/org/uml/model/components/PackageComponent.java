@@ -87,4 +87,15 @@ public class PackageComponent extends ComponentBase {
     public String getName() {
         return name;
     }
+    
+    @Override
+    public boolean moveUpMember(MemberBase member) {
+        return false;
+    }
+    
+    @Override
+    public boolean moveDownMember(MemberBase member) {
+        return false;
+    }    
+    
 }

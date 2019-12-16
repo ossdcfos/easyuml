@@ -1,12 +1,15 @@
 package org.uml.model;
 
+import java.awt.Rectangle;
 import java.io.Serializable;
+import java.util.ArrayList;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.relations.RelationBase;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import org.uml.model.components.PackageComponent;
 
 /**
  * UML Class Diagrams which can contain class, interface and enum components,
@@ -25,12 +28,35 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
     private final HashSet<RelationBase> relations;
 
     /**
+     * Getters automatic generation setting
+     */
+    private GenerationSetting      getterGeneration;
+    /**
+     * Setters automatic generation setting
+     */
+    private GenerationSetting      setterGeneration;
+
+    /**
+     * Show/Hide members
+     */
+    private boolean                 showMembers;
+    
+    /**
+     * Leave space for adding a member with double-click
+     */
+    private boolean                 showAddMember;
+    
+    /**
      * Constructs a ClassDiagram object with name set to "UML ClassDiagram"
      * and an empty relations set.
      */
     public ClassDiagram() {
         super("UML Class Diagram");
         this.relations = new HashSet<>();
+        getterGeneration = GenerationSetting.DISABLED;
+        setterGeneration = GenerationSetting.DISABLED;
+        showMembers = true;
+        showAddMember = true;
     }
 
     /**
@@ -110,4 +136,71 @@ public class ClassDiagram extends ContainerBase<ComponentBase> implements Serial
         name = newName;
         pcs.firePropertyChange("name", oldName, newName);
     }
+    
+    public boolean isShowMembers() {
+        return showMembers;
+    }
+
+    public void setShowMembers(boolean showMembers) {
+        boolean old = this.showMembers;
+        this.showMembers = showMembers;
+        pcs.firePropertyChange("SHOW_MEMBERS", old, showMembers);
+    }
+    
+    public boolean isShowAddMember() {
+        return showAddMember;
+    }
+
+    public void setShowAddMember(boolean showAddMember) {
+        boolean old = this.showAddMember;
+        this.showAddMember = showAddMember;
+        pcs.firePropertyChange("SHOW_ADD_MEMBER", old, showAddMember);
+    }
+    
+        /**
+     * Automatically sets component packages: 
+     *  - if a PackageComponent visually includes a component, then it is its component package
+     *  - otherwise it is null
+     */
+    public void updateComponentPackages() {
+        //System.out.println("Update component packages...");
+        List<ComponentBase> list = new ArrayList(components);
+        // For each components,
+        for (int j=0;j<list.size();j++) {
+            if (!(list.get(j) instanceof PackageComponent))
+                continue;
+            // If it is a package, find the component that it includes
+            PackageComponent packageComponent = (PackageComponent)list.get(j);
+            Rectangle packageBounds = packageComponent.getBounds();
+            System.err.println(packageBounds);
+            for (int i=j+1;i<list.size();i++) { // i>j components are visually after j
+                ComponentBase component = list.get(i);
+                Rectangle componentBounds = component.getBounds();
+                if (!packageBounds.contains(componentBounds))
+                    continue;
+                component.setComponentPackage(packageComponent);
+                //System.err.println(packageComponent.getName()+" includes "+component.getName());
+            }
+        }
+        /*for (ComponentBase component : components) {
+            String fullPackage = component.getFullParentPackage();
+            System.err.println(component.getName()+":"+fullPackage);
+        }*/
+    }    
+    
+    public GenerationSetting getGetterGeneration() {
+        return getterGeneration;
+    }
+
+    public void setGetterGeneration(GenerationSetting generateGetters) {
+        this.getterGeneration = generateGetters;
+    }
+
+    public GenerationSetting getSetterGeneration() {
+        return setterGeneration;
+    }
+
+    public void setSetterGeneration(GenerationSetting generateSetters) {
+        this.setterGeneration = generateSetters;
+    }    
 }

@@ -1,7 +1,9 @@
 package org.uml.visual.widgets.members;
 
+import java.awt.Dimension;
 import org.uml.visual.widgets.providers.MemberParentAlignWithMoveStrategyProvider;
 import java.awt.Font;
+import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.border.BorderFactory;
@@ -19,6 +21,7 @@ import org.uml.model.members.MemberBase;
 import org.uml.model.members.Method;
 import org.uml.visual.themes.Theme;
 import org.uml.visual.widgets.ClassDiagramScene;
+import org.uml.visual.widgets.ResampledImageWidget;
 import org.uml.visual.widgets.components.ComponentWidgetBase;
 import org.uml.visual.widgets.popups.MemberBasePopupProvider;
 
@@ -33,7 +36,7 @@ public abstract class MemberWidgetBase extends Widget implements PropertyChangeL
     protected LabelWidget nameLabel = new LabelWidget(getScene());
 
     protected static String iconFolderPath = "org/uml/visual/widgets/icons/";
-    protected ImageWidget iconWidget = new ImageWidget(getScene());
+    protected ResampledImageWidget iconWidget = new ResampledImageWidget(getScene());
 
     public MemberWidgetBase(ClassDiagramScene scene, MemberBase member) {
         super(scene);
@@ -149,6 +152,7 @@ public abstract class MemberWidgetBase extends Widget implements PropertyChangeL
         } else if (member instanceof Literal) {
             iconWidget.setImage(ImageUtilities.loadImage(iconFolderPath + "other/literal.png"));
         }
+        iconWidget.setMaximumSize(new Dimension(12,12));
     }
 
     // used for setting the font etc.

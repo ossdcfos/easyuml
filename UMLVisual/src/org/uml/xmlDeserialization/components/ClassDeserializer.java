@@ -4,8 +4,10 @@ import org.uml.xmlDeserialization.members.ConstructorDeserializer;
 import org.uml.xmlDeserialization.members.FieldDeserializer;
 import org.uml.xmlDeserialization.members.MethodDeserializer;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Iterator;
 import org.dom4j.Element;
+import org.uml.model.GenerationSetting;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.members.Constructor;
 import org.uml.model.members.Field;
@@ -40,20 +42,11 @@ public class ClassDeserializer implements XmlDeserializer {
         String isAbstract = node.attributeValue("isAbstract");
         String isStatic = node.attributeValue("isStatic");
         String isFinal = node.attributeValue("isFinal");
+        String generation = node.attributeValue("generation");
+        String gettersGeneration = node.attributeValue("gettersGeneration");
+        String settersGeneration = node.attributeValue("settersGeneration");
         int xPos = (int) Double.parseDouble(node.attributeValue("xPosition"));
         int yPos = (int) Double.parseDouble(node.attributeValue("yPosition"));
-//        String widthString = node.attributeValue("width");
-//        String heightString = node.attributeValue("height");
-//        String xOffString = node.attributeValue("xOff");
-//        String yOffString = node.attributeValue("yOff");
-
-//        if (widthString != null) {
-//            int width = Integer.parseInt(widthString);
-//            int height = Integer.parseInt(heightString);
-//            int xOff = Integer.parseInt(xOffString);
-//            int yOff = Integer.parseInt(yOffString);
-//            classComponent.setBounds(new Rectangle(xOff, yOff, width, height));
-//        }
         
         if (name != null) classComponent.setName(name);
         if (packageName != null) classComponent.setParentPackage(packageName);
@@ -61,8 +54,19 @@ public class ClassDeserializer implements XmlDeserializer {
         if (isAbstract != null) classComponent.setAbstract(Boolean.parseBoolean(isAbstract));
         if (isStatic != null) classComponent.setStatic(Boolean.parseBoolean(isStatic));
         if (isFinal != null) classComponent.setFinal(Boolean.parseBoolean(isFinal));
-        classComponent.setLocation(new Point(xPos, yPos));
-
+        if (generation != null) classComponent.setGeneration(GenerationSetting.stringToGenerationSetting(generation));
+        if (gettersGeneration != null) classComponent.setGetterGeneration(GenerationSetting.stringToGenerationSetting(gettersGeneration));
+        if (settersGeneration != null) classComponent.setSetterGeneration(GenerationSetting.stringToGenerationSetting(settersGeneration));
+        
+        int width = 0;
+        int height = 0;
+        if (node.attribute("width") != null && node.attribute("height") != null) {
+            width = (int) Double.parseDouble(node.attributeValue("width"));
+            height = (int) Double.parseDouble(node.attributeValue("height"));
+        }
+        Rectangle bounds = new Rectangle(xPos,yPos,width,height);
+        classComponent.setBounds(bounds);
+        
         Iterator<?> fieldIterator = node.element("Fields").elementIterator("Field");
         while (fieldIterator != null && fieldIterator.hasNext()) {
             Element fieldElement = (Element) fieldIterator.next();

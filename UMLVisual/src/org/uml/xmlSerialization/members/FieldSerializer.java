@@ -35,6 +35,8 @@ public class FieldSerializer implements XmlSerializer {
             if (field.isFinal()) fieldNode.addAttribute("isFinal", Boolean.toString(field.isFinal()));
             if (field.isTransient()) fieldNode.addAttribute("isTransient", Boolean.toString(field.isTransient()));
             if (field.isVolatile()) fieldNode.addAttribute("isVolatile", Boolean.toString(field.isVolatile()));
+            if (field.getGetterGeneration() != null) fieldNode.addAttribute("gettersGeneration", field.getGetterGeneration().toString());
+            if (field.getSetterGeneration()!= null) fieldNode.addAttribute("settersGeneration", field.getSetterGeneration().toString());
         }
     }
 }

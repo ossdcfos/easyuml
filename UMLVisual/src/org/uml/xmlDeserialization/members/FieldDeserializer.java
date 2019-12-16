@@ -1,6 +1,7 @@
 package org.uml.xmlDeserialization.members;
 
 import org.dom4j.Element;
+import org.uml.model.GenerationSetting;
 import org.uml.model.members.Field;
 import org.uml.model.Visibility;
 import org.uml.xmlDeserialization.XmlDeserializer;
@@ -30,6 +31,8 @@ public class FieldDeserializer implements XmlDeserializer{
         String isFinal = node.attributeValue("isFinal");
         String isTransient = node.attributeValue("isTransient");
         String isVolatile = node.attributeValue("isVolatile");
+        String gettersGeneration = node.attributeValue("gettersGeneration");
+        String settersGeneration = node.attributeValue("settersGeneration");
         if (name != null) field.setName(name);
         if (visibility != null) field.setVisibility(Visibility.valueOf(visibility.toUpperCase()));
         if (type != null) field.setType(type);
@@ -37,5 +40,7 @@ public class FieldDeserializer implements XmlDeserializer{
         if (isFinal != null) field.setFinal(Boolean.parseBoolean(isFinal));
         if (isTransient != null) field.setTransient(Boolean.parseBoolean(isTransient));
         if (isVolatile != null) field.setTransient(Boolean.parseBoolean(isVolatile));
+        if (gettersGeneration != null) field.setGetterGeneration(GenerationSetting.stringToGenerationSetting(gettersGeneration));
+        if (settersGeneration != null) field.setSetterGeneration(GenerationSetting.stringToGenerationSetting(settersGeneration));
     }
 }

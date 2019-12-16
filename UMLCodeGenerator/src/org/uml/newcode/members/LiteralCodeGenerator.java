@@ -1,9 +1,11 @@
 package org.uml.newcode.members;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
+import java.util.ArrayList;
 import java.util.List;
 import org.uml.filetype.cdg.renaming.MyMembersRenameTable;
 import org.uml.model.components.EnumComponent;
@@ -29,43 +31,64 @@ public class LiteralCodeGenerator {
     }
 
     public static void updateLiterals(EnumComponent component, MyMembersRenameTable memberRenames, CompilationUnit cu) {
-        List<BodyDeclaration> members = cu.getTypes().get(0).getMembers();
+        NodeList<TypeDeclaration<?>> types = cu.getTypes();
+        TypeDeclaration type = types.get(0);
+        EnumDeclaration enumType = (EnumDeclaration)type;
+        NodeList<EnumConstantDeclaration> entries = enumType.getEntries();
         // Generate or update all direct fields
         for (Literal literal : component.getLiterals()) {
-            EnumConstantDeclaration existingDeclaration = findExistingDeclaration(members, literal.getSignature());
+            EnumConstantDeclaration existingDeclaration = findExistingDeclaration(entries, literal.getSignature());
             if (existingDeclaration == null) { // If there is not existing declaration in the class body
                 if (memberRenames.contains(literal)) { // If the lieteral has been renamed
                     // Find the old literal declaration
                     String oldSignature = memberRenames.getOriginalSignature(literal);
                     boolean found = false;
-                    for (BodyDeclaration member : members) {
-                        if (member instanceof EnumConstantDeclaration) {
-                            EnumConstantDeclaration declaration = (EnumConstantDeclaration) member;
-                            if (oldSignature.equals(getEnumConstantDeclarationSignature(declaration))) {
-                                // Update the old literal declaration
-                                declaration.setName(literal.getName());
-                                // Finish updating the old literal declaration
-                                found = true;
-                                break;
-                            }
+                    for (EnumConstantDeclaration declaration : entries) {
+                        if (oldSignature.equals(getEnumConstantDeclarationSignature(declaration))) {
+                            // Update the old literal declaration
+                            declaration.setName(literal.getName());
+                            // Finish updating the old literal declaration
+                            found = true;
+                            break;
                         }
                     }
                     if (!found) { // If the old literal declaration has not been found and updated, create it and add it
                         EnumConstantDeclaration declaration = createLiteralDeclaration(literal);
-                        members.add(declaration);
+                        entries.add(declaration);
                     }
                 } else { // If the literal has not been renamed, there is nothing to update, so create and add it
                     EnumConstantDeclaration declaration = createLiteralDeclaration(literal);
-                    members.add(declaration);
+                    entries.add(declaration);
                 }
             }
         }
+        // Find removed declarations
+        ArrayList<EnumConstantDeclaration> toRemove = new ArrayList();
+        for (EnumConstantDeclaration declaration : entries) {
+            boolean found = false;
+            String name = declaration.getName().asString();
+            for (Literal literal : component.getLiterals()) {
+                if (literal.getSignature().equals(name)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                toRemove.add(declaration);
+            }
+        }
+        for (EnumConstantDeclaration declaration : toRemove) {
+            entries.remove(declaration);
+        }
     }
 
-    private static EnumConstantDeclaration findExistingDeclaration(List<BodyDeclaration> declarations, String signature) {
-        for (BodyDeclaration declaration : declarations) {
-            if (declaration instanceof EnumConstantDeclaration && signature.equals(((EnumConstantDeclaration) declaration).getName())) {
-                return (EnumConstantDeclaration) declaration;
+    private static EnumConstantDeclaration findExistingDeclaration(List<EnumConstantDeclaration> entries, String signature) {
+        if (entries == null) {
+            return null;
+        }
+        for (EnumConstantDeclaration entry : entries) {
+            if (signature.equals(entry.getName().asString())) {
+                return entry;
             }
         }
         return null;
@@ -78,6 +101,6 @@ public class LiteralCodeGenerator {
     }
 
     private static String getEnumConstantDeclarationSignature(EnumConstantDeclaration declaration) {
-        return declaration.getName();
+        return declaration.getName().asString();
     }
 }

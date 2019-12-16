@@ -12,13 +12,16 @@ import java.util.Iterator;
 import org.dom4j.Element;
 import org.uml.model.components.ClassComponent;
 import org.uml.model.ClassDiagram;
+import org.uml.model.GenerationSetting;
 import org.uml.model.components.ComponentBase;
 import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.HasBaseRelation;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.components.InterfaceComponent;
+import org.uml.model.components.PackageComponent;
 import org.uml.model.relations.IsRelation;
 import org.uml.model.relations.UseRelation;
+import org.uml.xmlDeserialization.components.PackageDeserializer;
 
 /**
  *
@@ -43,36 +46,54 @@ public class ClassDiagramDeserializer implements XmlDeserializer {
     public void deserialize(Element node) {
         classDiagram.setName(node.attributeValue("name"));
 
-        Element classDiagramComponents = node.element("ClassDiagramComponents");
-        Iterator<?> classIterator = classDiagramComponents.elementIterator("Class");
-        while (classIterator != null && classIterator.hasNext()) {
-            Element componentNode = (Element) classIterator.next();
-
-            ClassComponent component = new ClassComponent();
-            ClassDeserializer cd = new ClassDeserializer(component);
-            cd.deserialize(componentNode);
-            classDiagram.addComponent(component);
-        }
-
-        Iterator<?> interfaceIterator = classDiagramComponents.elementIterator("Interface");
-        while (interfaceIterator != null && interfaceIterator.hasNext()) {
-            Element interfaceNode = (Element) interfaceIterator.next();
-
-            InterfaceComponent component = new InterfaceComponent();
-            InterfaceDeserializer id = new InterfaceDeserializer(component);
-            id.deserialize(interfaceNode);
-            classDiagram.addComponent(component);
-        }
+        String gettersGeneration = node.attributeValue("gettersGeneration");
+        String settersGeneration = node.attributeValue("settersGeneration");
+        if (gettersGeneration != null) classDiagram.setGetterGeneration(GenerationSetting.stringToGenerationSetting(gettersGeneration));
+        if (settersGeneration != null) classDiagram.setSetterGeneration(GenerationSetting.stringToGenerationSetting(settersGeneration));
         
-        Iterator<?> enumIterator = classDiagramComponents.elementIterator("Enum");
-        while (enumIterator != null && enumIterator.hasNext()) {
-            Element enumNode = (Element) enumIterator.next();
-            
-            EnumComponent component = new EnumComponent();
-            EnumDeserializer ed = new EnumDeserializer(component);
-            ed.deserialize(enumNode);
-            classDiagram.addComponent(component);
+        String showMembers = node.attributeValue("showMembers");
+        String showAddMember = node.attributeValue("showAddMember");
+        if (showMembers != null) classDiagram.setShowMembers(showMembers.equalsIgnoreCase("true"));
+        if (showAddMember != null) classDiagram.setShowAddMember(showAddMember.equalsIgnoreCase("true"));
+        
+        Element classDiagramComponents = node.element("ClassDiagramComponents");
+        
+        Iterator<Element> nodeIterator = classDiagramComponents.elementIterator();
+        while (nodeIterator != null && nodeIterator.hasNext()) {
+            Element componentNode = nodeIterator.next();
+            String name = componentNode.getName();
+            if (name == null)
+                continue;
+            if (name.equals("Class")) {
+                ClassComponent component = new ClassComponent();
+                ClassDeserializer cd = new ClassDeserializer(component);
+                cd.deserialize(componentNode);
+                classDiagram.addComponent(component);                
+            }
+            else if (name.equals("Interface")) {
+                InterfaceComponent component = new InterfaceComponent();
+                InterfaceDeserializer id = new InterfaceDeserializer(component);
+                id.deserialize(componentNode);
+                classDiagram.addComponent(component);
+            }
+            else if (name.equals("Enum")) {
+                EnumComponent component = new EnumComponent();
+                EnumDeserializer ed = new EnumDeserializer(component);
+                ed.deserialize(componentNode);
+                classDiagram.addComponent(component);
+            }
+            else if (name.equals("Package")) {
+                PackageComponent component = new PackageComponent();
+                PackageDeserializer ed = new PackageDeserializer(component);
+                ed.deserialize(componentNode);
+                classDiagram.addComponent(component);
+            }
+            else {
+                System.err.println("Unsupported node "+name);
+            }
+
         }
+        classDiagram.updateComponentPackages();
         
         ArrayList<ComponentBase> components = new ArrayList<>(classDiagram.getComponents());
         Element classDiagramRelations = node.element("ClassDiagramRelations");

@@ -1,15 +1,12 @@
 package org.uml.newcode.components;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
-import com.github.javaparser.ast.body.ModifierSet;
 import com.github.javaparser.ast.body.TypeDeclaration;
-import com.github.javaparser.ast.expr.NameExpr;
 import org.uml.newcode.members.LiteralCodeGenerator;
-import java.util.LinkedList;
-import java.util.List;
 import org.uml.filetype.cdg.renaming.MyClassDiagramRenameTable;
 import org.uml.model.Visibility;
 import static org.uml.model.Visibility.PRIVATE;
@@ -31,14 +28,17 @@ public class EnumCodeGenerator extends ComponentCodeGeneratorBase<EnumComponent>
     }
 
     @Override
-    protected String generateCode(EnumComponent component) {
+    protected CompilationUnit generateCode(EnumComponent component) {
         CompilationUnit cu = new CompilationUnit();
-        cu.setTypes(new LinkedList<TypeDeclaration>());
-        if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+        cu.setTypes(new NodeList<TypeDeclaration<?>>());
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackageDeclaration(parentPackage);
+        }
         createSkeleton(component, cu);
         LiteralCodeGenerator.createLiterals(component, cu);
 
-        return cu.toString();
+        return cu;
     }
 
     private static void createSkeleton(EnumComponent component, CompilationUnit cu) {
@@ -46,31 +46,34 @@ public class EnumCodeGenerator extends ComponentCodeGeneratorBase<EnumComponent>
         declaration.setName(component.getName());
         switch (component.getVisibility()) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PUBLIC));
+                declaration.setModifier(Modifier.PUBLIC, true);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PROTECTED));
+                declaration.setModifier(Modifier.PROTECTED, true);
                 break;
             case PRIVATE:
-                declaration.setModifiers(ModifierSet.addModifier(declaration.getModifiers(), ModifierSet.PRIVATE));
+                declaration.setModifier(Modifier.PRIVATE, true);
                 break;
         }
 
-        declaration.setEntries(new LinkedList<EnumConstantDeclaration>());
+        declaration.setEntries(new NodeList<EnumConstantDeclaration>());
         cu.getTypes().add(declaration);
     }
 
     @Override
-    protected String updateCode(EnumComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
-        if (!component.getParentPackage().equals("")) cu.setPackage(new PackageDeclaration(new NameExpr(component.getParentPackage())));
+    protected CompilationUnit updateCode(EnumComponent component, MyClassDiagramRenameTable renames, CompilationUnit cu) {
+        String parentPackage = component.getFullParentPackage();
+        if (!parentPackage.isEmpty()) {
+            cu.setPackageDeclaration(parentPackage);
+        }
         updateSkeleton(component, cu);
         LiteralCodeGenerator.updateLiterals(component, renames.getComponentRenames().getMembersRenameTable(component), cu);
 
-        return cu.toString();
+        return cu;
     }
 
     private static void updateSkeleton(EnumComponent component, CompilationUnit cu) {
-        List<TypeDeclaration> types = cu.getTypes();
+        NodeList<TypeDeclaration<?>> types = cu.getTypes();
         for (TypeDeclaration type : types) {
             if (type instanceof EnumDeclaration) {
                 EnumDeclaration declaration = (EnumDeclaration) type;
@@ -85,20 +88,16 @@ public class EnumCodeGenerator extends ComponentCodeGeneratorBase<EnumComponent>
     }
 
     private static void updateVisibility(TypeDeclaration declaration, Visibility visibility) {
-        int modifiers = declaration.getModifiers();
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PUBLIC);
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PROTECTED);
-        modifiers = ModifierSet.removeModifier(modifiers, ModifierSet.PRIVATE);
-
+        declaration.removeModifier(Modifier.PUBLIC,Modifier.PROTECTED,Modifier.PRIVATE);
         switch (visibility) {
             case PUBLIC:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PUBLIC));
+                declaration.setModifier(Modifier.PUBLIC, true);
                 break;
             case PROTECTED:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PROTECTED));
+                declaration.setModifier(Modifier.PROTECTED, true);
                 break;
             case PRIVATE:
-                declaration.setModifiers(ModifierSet.addModifier(modifiers, ModifierSet.PRIVATE));
+                declaration.setModifier(Modifier.PRIVATE, true);
                 break;
         }
     }

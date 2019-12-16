@@ -39,6 +39,7 @@ public class EnumSerializer implements ComponentSerializer {
         if (enumComponent.getName() != null) node.addAttribute("name", enumComponent.getName());
         if (enumComponent.getParentPackage() != null) node.addAttribute("package", enumComponent.getParentPackage());
         if (enumComponent.getVisibility() != null) node.addAttribute("visibility", enumComponent.getVisibility().name().toLowerCase());
+        if (enumComponent.getGeneration()!= null) node.addAttribute("generation", enumComponent.getGeneration().toString());
 
         Element literals = node.addElement("Literals");
         XmlSerializer serializer = new LiteralSerializer(enumComponent.getLiterals());

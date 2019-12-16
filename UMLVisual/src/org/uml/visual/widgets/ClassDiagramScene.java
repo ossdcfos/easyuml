@@ -2,10 +2,14 @@ package org.uml.visual.widgets;
 
 import org.uml.visual.widgets.anchors.SelfLinkRouter;
 import com.timboudreau.vl.jung.ObjectSceneAdapter;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import org.uml.visual.widgets.components.ClassWidget;
@@ -19,6 +23,7 @@ import org.uml.model.components.EnumComponent;
 import org.uml.model.relations.RelationBase;
 import org.uml.model.relations.HasBaseRelation;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import org.netbeans.api.visual.action.*;
@@ -29,6 +34,7 @@ import org.netbeans.api.visual.model.ObjectSceneEventType;
 import org.netbeans.api.visual.widget.*;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
+import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -39,6 +45,7 @@ import org.uml.explorer.ClassDiagramNode;
 import org.uml.explorer.ComponentNode;
 import org.uml.explorer.MemberNode;
 import org.uml.model.*;
+import org.uml.model.components.PackageComponent;
 import org.uml.model.members.MemberBase;
 import org.uml.model.relations.ImplementsRelation;
 import org.uml.model.relations.IsRelation;
@@ -47,6 +54,7 @@ import org.uml.visual.UMLTopComponent;
 import org.uml.visual.themes.Theme;
 import org.uml.visual.themes.ColorThemesStore;
 import org.uml.visual.widgets.anchors.ParallelNodeAnchor;
+import org.uml.visual.widgets.components.PackageWidget;
 import org.uml.visual.widgets.providers.*;
 import org.uml.visual.widgets.popups.ScenePopupMenuProvider;
 import org.uml.visual.widgets.relations.HasBaseRelationWidget;
@@ -109,7 +117,6 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
      * Visual options flags and themes.
      */
     private boolean showIcons = true;
-    private boolean showMembers = true;
     private boolean showSimpleTypes = false;
     private Theme colorTheme = ColorThemesStore.DEFAULT_COLOR_THEME;
 
@@ -123,6 +130,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     @SuppressWarnings("LeakingThisInConstructor")
     public ClassDiagramScene(ClassDiagram umlClassDiagram, final UMLTopComponent umlTopComponent) {
 
+        setBackground(Color.WHITE); 
+        
         classDiagram = umlClassDiagram;
         addObject(classDiagram, this); // seleciton of scene
         classDiagram.addPropertyChangeListener(this);
@@ -155,8 +164,15 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         // Add all the components to the diagram
         for (ComponentBase comp : classDiagram.getComponents()) {
             Widget w = addNode(comp);
-            w.setPreferredLocation(convertLocalToScene(comp.getLocation()));
-//            w.setPreferredBounds(comp.getBounds());
+            Rectangle bounds = comp.getBounds();
+            if (bounds == null || bounds.getWidth() == 0 || bounds.getHeight() == 0) {
+                w.setPreferredLocation(convertLocalToScene(comp.getLocation()));
+            }
+            else {
+                w.setPreferredLocation(convertLocalToScene(bounds.getLocation()));
+                bounds = new Rectangle(bounds.getSize());
+                w.setPreferredBounds(convertLocalToScene(bounds));
+            }
         }
 
         // Add all the relations to the diagram
@@ -223,23 +239,19 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
         }
         repaint();
         validate();
-    }
+    }    
 
-    public boolean isShowMembers() {
-        return showMembers;
-    }
-
-    public void setShowMembers(boolean showMembers) {
-        this.showMembers = showMembers;
+    public void updateMembersDisplay() {
         for (Widget widget : mainLayer.getChildren()) {
             if (widget instanceof ComponentWidgetBase) {
                 ComponentWidgetBase componentWidget = (ComponentWidgetBase) widget;
-                componentWidget.updateMemberDisplay(showMembers);
+                componentWidget.updateMemberDisplay(classDiagram.isShowMembers());
+                componentWidget.updateAddMemberDisplay(classDiagram.isShowAddMember());
             }
         }
         repaint();
         validate();
-    }
+    }    
 
     public boolean isShowSimpleTypes() {
         return showSimpleTypes;
@@ -297,6 +309,8 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             widget = new InterfaceWidget(this, (InterfaceComponent) component);
         } else if (component instanceof EnumComponent) {
             widget = new EnumWidget(this, (EnumComponent) component);
+        } else if (component instanceof PackageComponent) {
+            widget = new PackageWidget(this, (PackageComponent) component);
         } else {
 //            throw new RuntimeException("Unknown component!");
         }
@@ -462,6 +476,12 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
             switch (evt.getPropertyName()) {
                 case "name":
                     break;
+                case "SHOW_MEMBERS":
+                    updateMembersDisplay();
+                    break;
+                case "SHOW_ADD_MEMBER":
+                    updateMembersDisplay();
+                    break;
                 case "ADD_COMPONENT":
                     break;
                 case "REMOVE_COMPONENT":
@@ -560,4 +580,46 @@ public class ClassDiagramScene extends GraphScene<ComponentBase, RelationBase> i
     private void deselectAllBackgroundNodes() {
         selectBackgroundNode(null);
     }
+    
+    /**
+     * Return the list of component wigets (class, enum, interface and packages)
+     * in visual order, from background to foreground
+     * @return 
+     */
+    public List<ComponentWidgetBase> getComponentWidgets() {
+        List<ComponentWidgetBase> list = new ArrayList();
+        for (Widget layer : getChildren()) {
+            for (Widget w : layer.getChildren()) {
+                if (!(w instanceof ComponentWidgetBase))
+                    continue;    
+                ComponentWidgetBase widgetBase = (ComponentWidgetBase)w;
+                list.add(widgetBase);
+            }
+        }
+        return list;
+    }
+    
+    public void updateComponents() {
+        //System.out.println("Update components...");
+        for (ComponentWidgetBase widget : getComponentWidgets()) {
+            ComponentBase component = widget.getComponent();
+            Rectangle bounds = widget.getBounds();
+            Point location = widget.getPreferredLocation();
+            bounds.setLocation(location);
+            component.setBounds(bounds);
+        }
+        classDiagram.updateComponentPackages();
+    }    
+
+    public void updateComponentsZOrder() {
+        //System.out.println("Update components z order...");
+        List<ComponentWidgetBase> list = getComponentWidgets();
+        List<ComponentBase> components = new ArrayList();
+        for (ComponentWidgetBase widget : list) {
+            ComponentBase component = widget.getComponent();
+            components.add(component);
+        }
+        classDiagram.updateComponentOrder(components);
+        classDiagram.updateComponentPackages();
+    }    
 }
